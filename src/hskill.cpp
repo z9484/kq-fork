@@ -477,7 +477,7 @@ int skill_use(size_t attack_fighter_index) {
     display_attack_string = 1;
     tempa.fighterStats[A_ATT] = fighter[attack_fighter_index].fighterStats[A_ATT];
     tempa.fighterStats[A_HIT] = fighter[attack_fighter_index].fighterStats[A_HIT];
-    if (fighter[enemy_index].crit == 1) {
+    if (fighter[enemy_index].fighterCanCriticalHit == 1) {
       tempa.fighterStats[A_ATT] += b;
       tempa.fighterStats[A_HIT] += b;
     }

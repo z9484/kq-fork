@@ -718,7 +718,7 @@ static void load_enemies(void)
 		f->unl = tmp;
 		// Critical attacks
 		fscanf(edat, "%d", &tmp);
-		f->crit = tmp;
+		f->fighterCanCriticalHit = tmp;
 		// Temp Sag & Int for Imbued
 		fscanf(edat, "%d", &tmp);
 		f->imb_s = tmp;

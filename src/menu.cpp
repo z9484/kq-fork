@@ -500,7 +500,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 			tf.fighterStats[j] = 1;
 		}
 	}
-	tf.crit = 1;
+	tf.fighterCanCriticalHit = 1;
 	tf.aux = 0;
 	tf.unl = 0;
 	memcpy(pf, &tf, sizeof(tf));

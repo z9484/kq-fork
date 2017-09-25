@@ -175,7 +175,7 @@ eAttackResult attack_result(int ar, int dr) {
   }
 
   if (mult > 0) {
-    if (tempd.crit == 1) {
+    if (tempd.fighterCanCriticalHit == 1) {
       check_for_critical_hit = 1;
       if (attacker_critical_status == 1) {
         check_for_critical_hit = 2;

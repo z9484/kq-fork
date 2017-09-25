@@ -75,7 +75,8 @@ typedef struct {
 	/** Battle sprite to display (standing, casting, attacking) */
 	uint8_t fighterAttackSpriteFrame;
 
-	uint8_t crit;
+	/** Player frequently (or always) gets a "critical hit" buff (Sensar's "rage") */
+	uint8_t fighterCanCriticalHit;
 
 	/** eSpellType */
 	uint8_t sts[NUM_SPELLTYPES];
