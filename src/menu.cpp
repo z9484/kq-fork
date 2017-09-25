@@ -353,7 +353,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.imb_a = 0;
 	tf.imb[0] = 0;
 	tf.imb[1] = 0;
-	strcpy(tf.name, plr.name);
+	strcpy(tf.fighterName, plr.name);
 	tf.xp = plr.xp;
 	tf.lvl = plr.lvl;
 	tf.hp = plr.hp;

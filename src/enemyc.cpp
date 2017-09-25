@@ -651,7 +651,7 @@ static void load_enemies(void)
 		f = enemy_fighters[enemies_n++] = (s_fighter*)malloc(sizeof(s_fighter));
 		memset(f, 0, sizeof(s_fighter));
 		// Enemy name
-		strncpy(f->name, strbuf, sizeof(f->name));
+		strncpy(f->fighterName, strbuf, sizeof(f->fighterName));
 		// Index number (ignored; automatically generated)
 		fscanf(edat, "%d", &tmp);
 		// x-coord of image in datafile

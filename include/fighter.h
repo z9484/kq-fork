@@ -11,7 +11,7 @@ class Raster;
  */
 typedef struct {
 	/** Name */
-	char name[25];
+	char fighterName[25];
 
 	/** Experience Points */
 	int xp;
