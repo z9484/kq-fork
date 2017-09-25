@@ -662,10 +662,10 @@ static void load_enemies(void)
 		ly = tmp;
 		// Image width
 		fscanf(edat, "%d", &tmp);
-		f->cw = tmp;
+		f->fighterImageDatafileWidth = tmp;
 		// Image length (height)
 		fscanf(edat, "%d", &tmp);
-		f->cl = tmp;
+		f->fighterImageDatafileHeight = tmp;
 		// Experience points earned
 		fscanf(edat, "%d", &tmp);
 		f->fighterExperience = tmp;
@@ -733,8 +733,8 @@ static void load_enemies(void)
 		// Imbued stat type (Spd, Spi, Att, Hit, Def, Evd, Mag)
 		fscanf(edat, "%d", &tmp);
 		f->imb_a = tmp;
-		f->img = new Raster(f->cw, f->cl);
-		enemy_gfx->blitTo(f->img, lx, ly, 0, 0, f->cw, f->cl);
+		f->img = new Raster(f->fighterImageDatafileWidth, f->fighterImageDatafileHeight);
+		enemy_gfx->blitTo(f->img, lx, ly, 0, 0, f->fighterImageDatafileWidth, f->fighterImageDatafileHeight);
 		for (p = 0; p < 2; p++)
 		{
 			fscanf(edat, "%d", &tmp);

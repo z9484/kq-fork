@@ -895,8 +895,8 @@ void hero_init(void) {
                       cframes[fighter_index][frame_index]);
     }
 
-    fighter[fighter_index].cw = 32;
-    fighter[fighter_index].cl = 32;
+    fighter[fighter_index].fighterImageDatafileWidth = 32;
+    fighter[fighter_index].fighterImageDatafileHeight = 32;
     fighter[fighter_index].aframe = 0;
   }
 }

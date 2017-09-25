@@ -31,10 +31,10 @@ typedef struct {
 	int fighterImageDatafileY;
 
 	/** width in datafile */
-	int cw;
+	int fighterImageDatafileWidth;
 
 	/** height in datafile */
-	int cl;
+	int fighterImageDatafileHeight;
 
 	/** Hit Points */
 	int hp;

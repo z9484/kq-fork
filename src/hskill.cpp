@@ -542,8 +542,8 @@ int skill_use(size_t attack_fighter_index) {
       fullblit(double_buffer, back);
       for (p = 0; p < 2; p++) {
         for (a = 0; a < 16; a++) {
-          tx = fighter[attack_fighter_index].fighterImageDatafileX + (fighter[attack_fighter_index].cw / 2);
-          ty = fighter[attack_fighter_index].fighterImageDatafileY + (fighter[attack_fighter_index].cl / 2);
+          tx = fighter[attack_fighter_index].fighterImageDatafileX + (fighter[attack_fighter_index].fighterImageDatafileWidth / 2);
+          ty = fighter[attack_fighter_index].fighterImageDatafileY + (fighter[attack_fighter_index].fighterImageDatafileHeight / 2);
           if (p == 0) {
             circlefill(
                 double_buffer, tx, ty, a,
@@ -708,7 +708,7 @@ int skill_use(size_t attack_fighter_index) {
 	tx = fighter[attack_fighter_index].fighterImageDatafileX;
     ty = fighter[attack_fighter_index].fighterImageDatafileY;
     fighter[attack_fighter_index].fighterImageDatafileX = fighter[enemy_index].fighterImageDatafileX - 16;
-    fighter[attack_fighter_index].fighterImageDatafileY = fighter[enemy_index].fighterImageDatafileY + fighter[enemy_index].cl - 40;
+    fighter[attack_fighter_index].fighterImageDatafileY = fighter[enemy_index].fighterImageDatafileY + fighter[enemy_index].fighterImageDatafileHeight - 40;
     fighter[attack_fighter_index].facing = 1;
     strcpy(attack_string, _("Steal"));
     display_attack_string = 1;

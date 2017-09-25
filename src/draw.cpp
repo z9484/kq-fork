@@ -1724,7 +1724,7 @@ void revert_cframes(size_t fighter_index, int revert_heroes) {
     for (cframe_index = 0; cframe_index < MAXCFRAMES; cframe_index++) {
       blit(tcframes[start_fighter_index][cframe_index],
            cframes[start_fighter_index][cframe_index], 0, 0, 0, 0,
-           fighter[start_fighter_index].cw, fighter[start_fighter_index].cl);
+           fighter[start_fighter_index].fighterImageDatafileWidth, fighter[start_fighter_index].fighterImageDatafileHeight);
     }
     ++start_fighter_index;
   }

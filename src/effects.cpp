@@ -90,8 +90,8 @@ void death_animation(size_t target_fighter_index, int target_all_flag) {
       for (fighter_index = start_fighter_index;
            fighter_index < start_fighter_index + num_targets; fighter_index++) {
         if (deffect[fighter_index] == 1) {
-          dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2);
-          dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].cl / 2);
+          dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2);
+          dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2);
           if (p == 0) {
             circlefill(double_buffer, dx, dy, color_range, 0);
             draw_fighter(fighter_index, 0);
@@ -164,12 +164,12 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
       fighter_index < start_fighter_index + num_fighters;
         fighter_index++) {
         if (is_active(fighter_index) == 1) {
-          dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2);
-          if (fighter[fighter_index].cl <= 64) {
+          dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2);
+          if (fighter[fighter_index].fighterImageDatafileHeight <= 64) {
             dy = fighter[fighter_index].fighterImageDatafileY;
           }
           else {
-            dy = fighter[fighter_index].fighterImageDatafileY + fighter[fighter_index].cl - 8;
+            dy = fighter[fighter_index].fighterImageDatafileY + fighter[fighter_index].fighterImageDatafileHeight - 8;
           }
           if (ta[fighter_index] == NODISPLAY) {
             sprintf(strbuf, "_");
@@ -259,16 +259,16 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
     for (fighter_index = start_fighter_index;
          fighter_index < start_fighter_index + num_fighters; fighter_index++) {
       if (is_active(fighter_index) == 1) {
-        dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2) - (eff[magic_effect_index].xsize / 2);
-        dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].cl / 2) - (eff[magic_effect_index].ysize / 2);
+        dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - (eff[magic_effect_index].xsize / 2);
+        dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - (eff[magic_effect_index].ysize / 2);
         draw_fighter(fighter_index, 0);
         if (shows == 1 && fighter[fighter_index].sts[S_SHIELD] > 0) {
           // The shield sprite in MISC is 48x48 pixels, so center it over the
           // fighter.
           draw_trans_sprite(
               double_buffer, b_shield,
-              fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2) - 24,
-              fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].cl / 2) - 24);
+              fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
+              fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
         }
         masked_blit(eb, double_buffer, 0, eff[magic_effect_index].ysize * a, dx,
                     dy, eff[magic_effect_index].xsize,
@@ -326,8 +326,8 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color) {
   // This animation has 10 frames, each 32 pixels tall/wide.
   for (frame_index = 0; frame_index < 10; frame_index++) {
     if (is_active(caster_fighter_index) == 1) {
-      dx = fighter[caster_fighter_index].fighterImageDatafileX + (fighter[caster_fighter_index].cw / 2);
-      dy = fighter[caster_fighter_index].fighterImageDatafileY + (fighter[caster_fighter_index].cl / 2);
+      dx = fighter[caster_fighter_index].fighterImageDatafileX + (fighter[caster_fighter_index].fighterImageDatafileWidth / 2);
+      dy = fighter[caster_fighter_index].fighterImageDatafileY + (fighter[caster_fighter_index].fighterImageDatafileHeight / 2);
       draw_fighter(caster_fighter_index, 0);
       masked_blit(cs, double_buffer, 0, frame_index * 32, dx - 16, dy - 16, 32,
                   32);
@@ -387,8 +387,8 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
         if (shows == 1 && fighter[fighter_index].sts[S_RESIST] > 0) {
           draw_trans_sprite(
               double_buffer, b_shell,
-              fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2) - 24,
-              fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].cl / 2) - 24);
+              fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
+              fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
         }
         draw_fighter(fighter_index, 0);
       }
@@ -453,13 +453,13 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
     for (fighter_index = start_fighter_index;
          fighter_index < start_fighter_index + num_fighers; fighter_index++) {
       if (is_active(fighter_index) == 1) {
-        dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2) - (eff[effect_index].xsize / 2);
+        dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - (eff[effect_index].xsize / 2);
         switch (eff[effect_index].orient) {
         case 0:
-          dy = fighter[fighter_index].fighterImageDatafileY + fighter[fighter_index].cl - eff[effect_index].ysize;
+          dy = fighter[fighter_index].fighterImageDatafileY + fighter[fighter_index].fighterImageDatafileHeight - eff[effect_index].ysize;
           break;
         case 1:
-          dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].cl / 2) - (eff[effect_index].ysize / 2);
+          dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - (eff[effect_index].ysize / 2);
           break;
         case 2:
           dy = fighter[fighter_index].fighterImageDatafileY + eff[effect_index].ysize;
@@ -469,7 +469,7 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
         if (shows == 1 && fighter[fighter_index].sts[S_RESIST] > 0) {
           draw_trans_sprite(
               double_buffer, b_shell,
-              fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].cw / 2) - 24, fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].cl / 2) - 24);
+              fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24, fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
         }
         masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * num_frames,
                     dx, dy, eff[effect_index].xsize, eff[effect_index].ysize);

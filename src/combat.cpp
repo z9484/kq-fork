@@ -270,7 +270,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
 
   if (plyr > 0) {
     current_fighter_index = plyr - 1;
-    curw = fighter[current_fighter_index].cw;
+    curw = fighter[current_fighter_index].fighterImageDatafileWidth;
     curx = fighter[current_fighter_index].fighterImageDatafileX;
     cury = fighter[current_fighter_index].fighterImageDatafileY;
   } else {
@@ -288,7 +288,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
       t = curx + (curw / 2);
       t -= (fighter[current_fighter_index].fighterName.length() * 4);
       z = (fighter[current_fighter_index].fighterImageDatafileY < 32
-		  ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].cl
+		  ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].fighterImageDatafileHeight
 		  : fighter[current_fighter_index].fighterImageDatafileY - 32);
 
       menubox(double_buffer, t - 8, z, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
@@ -847,7 +847,7 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	}
 
 	if (dcur == 1) {
-		draw_sprite(double_buffer, bptr, xx + (fr->cw / 2) - 8, yy - 8);
+		draw_sprite(double_buffer, bptr, xx + (fr->fighterImageDatafileWidth / 2) - 8, yy - 8);
 	}
 
 	if ((vspell == 1) && (fighter_index >= PSIZE)) {
@@ -856,18 +856,18 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 			ff = 1;
 		}
 
-		xx += fr->cw / 2;
-		rect(double_buffer, xx - 16, yy + fr->cl + 2, xx + 15, yy + fr->cl + 5, 0);
+		xx += fr->fighterImageDatafileWidth / 2;
+		rect(double_buffer, xx - 16, yy + fr->fighterImageDatafileHeight + 2, xx + 15, yy + fr->fighterImageDatafileHeight + 5, 0);
 		if (ff > AUGMENT_STRONGEST) {
-			rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 40);
+			rectfill(double_buffer, xx - 15, yy + fr->fighterImageDatafileHeight + 3, xx - 15 + ff - 1, yy + fr->fighterImageDatafileHeight + 4, 40);
 		}
 
 		else if ((ff <= AUGMENT_STRONGEST) && (ff > AUGMENT_STRONG)) {
-			rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 104);
+			rectfill(double_buffer, xx - 15, yy + fr->fighterImageDatafileHeight + 3, xx - 15 + ff - 1, yy + fr->fighterImageDatafileHeight + 4, 104);
 		}
 
 		else if ((ff <= AUGMENT_STRONG) && (ff > AUGMENT_NORMAL)) {
-			rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 24);
+			rectfill(double_buffer, xx - 15, yy + fr->fighterImageDatafileHeight + 3, xx - 15 + ff - 1, yy + fr->fighterImageDatafileHeight + 4, 24);
 		}
 	}
 }
@@ -1450,14 +1450,14 @@ static void snap_togrid(void) {
     fighter[fighter_index].fighterImageDatafileY = 128;
   }
 
-  a = fighter[PSIZE].cw + 16;
+  a = fighter[PSIZE].fighterImageDatafileWidth + 16;
   mf = 170 - (num_enemies * a / 2);
   for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
        fighter_index++) {
     fighter[fighter_index].fighterImageDatafileX = (fighter_index - PSIZE) * a + mf;
 
-    if (fighter[fighter_index].cl < 104) {
-      fighter[fighter_index].fighterImageDatafileY = 104 - fighter[fighter_index].cl;
+    if (fighter[fighter_index].fighterImageDatafileHeight < 104) {
+      fighter[fighter_index].fighterImageDatafileY = 104 - fighter[fighter_index].fighterImageDatafileHeight;
     } else {
       fighter[fighter_index].fighterImageDatafileY = 8;
     }
