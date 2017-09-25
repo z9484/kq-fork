@@ -1081,27 +1081,30 @@ int non_dmg_save(int tgt, int per) {
  * \param   amt Amount of resistence to given rune
  * \returns difference of resistance to damage given by rune
  */
-int res_adjust(size_t target_fighter_index, size_t rune_index, int amt) {
-  int ad, b;
-  s_fighter tf;
-  char current_res;
+int res_adjust(size_t target_fighter_index, size_t rune_index, int amt)
+{
+	int ad, b;
+	s_fighter tf;
+	char current_res;
 
-  if (rune_index >= R_TOTAL_RES) {
-    return amt;
-  }
-  ad = amt;
-  tf = status_adjust(target_fighter_index);
-  current_res = tf.res[rune_index];
-  if (current_res < 0) {
-    b = 10 + abs(current_res);
-    ad = ad * b / 10;
-  } else if (current_res > 10) {
-    b = (current_res - 10) * ad;
-    ad = -1 * (b / 10);
-  } else if (current_res >= 1 && current_res <= 10) {
-    ad -= ad * current_res / 10;
-  }
-  return ad;
+	if (rune_index >= R_TOTAL_RES) {
+		return amt;
+	}
+	ad = amt;
+	tf = status_adjust(target_fighter_index);
+	current_res = tf.res[rune_index];
+	if (current_res < 0) {
+		b = 10 + abs(current_res);
+		ad = ad * b / 10;
+	}
+	else if (current_res > 10) {
+		b = (current_res - 10) * ad;
+		ad = -1 * (b / 10);
+	}
+	else if (current_res >= 1 && current_res <= 10) {
+		ad -= ad * current_res / 10;
+	}
+	return ad;
 }
 
 /*! \brief See if resistance is effective
@@ -1113,23 +1116,24 @@ int res_adjust(size_t target_fighter_index, size_t rune_index, int amt) {
  * \param   rs Rune/spell used
  * \returns 0 if not resistant, 1 otherwise
  */
-int res_throw(int tgt, int rs) {
-  s_fighter tf;
+int res_throw(int tgt, int rs)
+{
+	s_fighter tf;
 
-  if (rs > R_TIME || rs < R_EARTH) {
-    return 0;
-  }
-  tf = status_adjust(tgt);
-  if (tf.res[rs] < 1) {
-    return 0;
-  }
-  if (tf.res[rs] >= 10) {
-    return 1;
-  }
-  if (kqrandom->random_range_exclusive(0, 10) < tf.res[rs]) {
-    return 1;
-  }
-  return 0;
+	if (rs > R_TIME || rs < R_EARTH) {
+		return 0;
+	}
+	tf = status_adjust(tgt);
+	if (tf.res[rs] < 1) {
+		return 0;
+	}
+	if (tf.res[rs] >= 10) {
+		return 1;
+	}
+	if (kqrandom->random_range_exclusive(0, 10) < tf.res[rs]) {
+		return 1;
+	}
+	return 0;
 }
 
 /*! \brief Set counter for effects
@@ -1404,56 +1408,57 @@ static void spell_damage(size_t caster_fighter_index, int spell_number,
  *
  * \returns a struct by value (PH: a good thing???)
  */
-s_fighter status_adjust(size_t fighter_index) {
-  s_fighter tf;
+s_fighter status_adjust(size_t fighter_index)
+{
+	s_fighter tf;
 
-  tf = fighter[fighter_index];
-  if (tf.sts[S_STRENGTH] > 0) {
-    tf.stats[A_ATT] += tf.stats[A_STR] * tf.sts[S_STRENGTH] * 50 / 100;
-  }
-  if (tf.sts[S_MALISON] == 1) {
-    tf.stats[A_HIT] = tf.stats[A_HIT] * 75 / 100;
-    tf.stats[A_EVD] = tf.stats[A_EVD] * 75 / 100;
-  }
-  if (tf.sts[S_MALISON] == 2) {
-    tf.stats[A_HIT] = tf.stats[A_HIT] * 50 / 100;
-    tf.stats[A_EVD] = tf.stats[A_EVD] * 50 / 100;
-  }
-  if (tf.sts[S_BLESS] > 0) {
-    tf.stats[A_HIT] += tf.sts[S_BLESS] * 25;
-    tf.stats[A_EVD] += tf.sts[S_BLESS] * 10;
-  }
-  if (tf.sts[S_TIME] == 1) {
-    tf.stats[A_SPD] = tf.stats[A_SPD] * 5 / 10;
-    tf.stats[A_HIT] = tf.stats[A_HIT] * 75 / 100;
-    tf.stats[A_EVD] = tf.stats[A_EVD] * 75 / 100;
-  }
-  if (tf.sts[S_TIME] == 2) {
-    tf.stats[A_SPD] = tf.stats[A_SPD] * 15 / 10;
-    tf.stats[A_HIT] = tf.stats[A_HIT] * 15 / 10;
-    tf.stats[A_EVD] = tf.stats[A_EVD] * 15 / 10;
-  }
-  if (tf.sts[S_TIME] == 3) {
-    tf.stats[A_SPD] = tf.stats[A_SPD] * 2;
-    tf.stats[A_HIT] = tf.stats[A_HIT] * 2;
-    tf.stats[A_EVD] = tf.stats[A_EVD] * 2;
-  }
-  if (tf.sts[S_BLIND] > 0) {
-    tf.stats[A_HIT] /= 4;
-    if (tf.stats[A_HIT] < 1) {
-      tf.stats[A_HIT] = 1;
-    }
-    tf.stats[A_EVD] /= 4;
-    if (tf.stats[A_EVD] < 1) {
-      tf.stats[A_EVD] = 1;
-    }
-  }
-  if (tf.sts[S_SLEEP] > 0 || tf.sts[S_STOP] > 0) {
-    tf.stats[A_EVD] = 0;
-  }
-  if (tf.sts[S_STONE] > 0) {
-    tf.stats[A_DEF] *= 2;
-    tf.stats[A_EVD] = 0;
-  }
-  return tf;
+	tf = fighter[fighter_index];
+	if (tf.sts[S_STRENGTH] > 0) {
+		tf.stats[A_ATT] += tf.stats[A_STR] * tf.sts[S_STRENGTH] * 50 / 100;
+	}
+	if (tf.sts[S_MALISON] == 1) {
+		tf.stats[A_HIT] = tf.stats[A_HIT] * 75 / 100;
+		tf.stats[A_EVD] = tf.stats[A_EVD] * 75 / 100;
+	}
+	if (tf.sts[S_MALISON] == 2) {
+		tf.stats[A_HIT] = tf.stats[A_HIT] * 50 / 100;
+		tf.stats[A_EVD] = tf.stats[A_EVD] * 50 / 100;
+	}
+	if (tf.sts[S_BLESS] > 0) {
+		tf.stats[A_HIT] += tf.sts[S_BLESS] * 25;
+		tf.stats[A_EVD] += tf.sts[S_BLESS] * 10;
+	}
+	if (tf.sts[S_TIME] == 1) {
+		tf.stats[A_SPD] = tf.stats[A_SPD] * 5 / 10;
+		tf.stats[A_HIT] = tf.stats[A_HIT] * 75 / 100;
+		tf.stats[A_EVD] = tf.stats[A_EVD] * 75 / 100;
+	}
+	if (tf.sts[S_TIME] == 2) {
+		tf.stats[A_SPD] = tf.stats[A_SPD] * 15 / 10;
+		tf.stats[A_HIT] = tf.stats[A_HIT] * 15 / 10;
+		tf.stats[A_EVD] = tf.stats[A_EVD] * 15 / 10;
+	}
+	if (tf.sts[S_TIME] == 3) {
+		tf.stats[A_SPD] = tf.stats[A_SPD] * 2;
+		tf.stats[A_HIT] = tf.stats[A_HIT] * 2;
+		tf.stats[A_EVD] = tf.stats[A_EVD] * 2;
+	}
+	if (tf.sts[S_BLIND] > 0) {
+		tf.stats[A_HIT] /= 4;
+		if (tf.stats[A_HIT] < 1) {
+			tf.stats[A_HIT] = 1;
+		}
+		tf.stats[A_EVD] /= 4;
+		if (tf.stats[A_EVD] < 1) {
+			tf.stats[A_EVD] = 1;
+		}
+	}
+	if (tf.sts[S_SLEEP] > 0 || tf.sts[S_STOP] > 0) {
+		tf.stats[A_EVD] = 0;
+	}
+	if (tf.sts[S_STONE] > 0) {
+		tf.stats[A_DEF] *= 2;
+		tf.stats[A_EVD] = 0;
+	}
+	return tf;
 }

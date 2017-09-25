@@ -56,7 +56,7 @@ static void enemy_skillcheck(int, int);
 static void enemy_spellcheck(size_t, size_t);
 static int enemy_stscheck(int, int);
 static void load_enemies(void);
-static s_fighter *make_enemy(int, s_fighter *);
+static s_fighter* make_enemy(int who, s_fighter* en);
 static int skill_setup(int, int);
 static int spell_setup(int, int);
 void unload_enemies(void);
@@ -104,7 +104,7 @@ void unload_enemies(void);
  */
 
 /*! \brief Array of enemy 'fighters'  */
-static s_fighter **enemy_fighters = NULL;
+static s_fighter** enemy_fighters = NULL;
 static int enemies_n = 0;
 static int enemies_cap = 0;
 
@@ -342,29 +342,31 @@ static void enemy_curecheck(int w) {
  * \author PH
  * \date 2003????
  */
-void enemy_init(void) {
-  size_t fighter_index, frame_index;
-  s_fighter *f;
+void enemy_init(void)
+{
+	size_t fighter_index, frame_index;
+	s_fighter* f;
 
-  if (enemy_fighters == NULL) {
-    load_enemies();
-  }
-  for (fighter_index = 0; fighter_index < num_enemies; ++fighter_index) {
-    f = make_enemy(cf[fighter_index], &fighter[fighter_index + PSIZE]);
-    for (frame_index = 0; frame_index < MAXCFRAMES; ++frame_index) {
-      /* If, in a previous combat, we made a bitmap, destroy it now */
-      if (cframes[fighter_index + PSIZE][frame_index]) {
-        delete (cframes[fighter_index + PSIZE][frame_index]);
-      }
-      /* and create a new one */
-      cframes[fighter_index + PSIZE][frame_index] =
-          new Raster(f->img->width, f->img->height);
-      blit(f->img, cframes[fighter_index + PSIZE][frame_index], 0, 0, 0, 0,
-           f->img->width, f->img->height);
-      tcframes[fighter_index + PSIZE][frame_index] =
-          copy_bitmap(tcframes[fighter_index + PSIZE][frame_index], f->img);
-    }
-  }
+	if (enemy_fighters == NULL)
+	{
+		load_enemies();
+	}
+	for (fighter_index = 0; fighter_index < num_enemies; ++fighter_index)
+	{
+		f = make_enemy(cf[fighter_index], &fighter[fighter_index + PSIZE]);
+		for (frame_index = 0; frame_index < MAXCFRAMES; ++frame_index)
+		{
+			/* If, in a previous combat, we made a bitmap, destroy it now */
+			if (cframes[fighter_index + PSIZE][frame_index])
+			{
+				delete (cframes[fighter_index + PSIZE][frame_index]);
+			}
+			/* and create a new one */
+			cframes[fighter_index + PSIZE][frame_index] = new Raster(f->img->width, f->img->height);
+			blit(f->img, cframes[fighter_index + PSIZE][frame_index], 0, 0, 0, 0, f->img->width, f->img->height);
+			tcframes[fighter_index + PSIZE][frame_index] = copy_bitmap(tcframes[fighter_index + PSIZE][frame_index], f->img);
+		}
+	}
 }
 
 /*! \brief Check skills
@@ -597,12 +599,12 @@ static int enemy_stscheck(int ws, int s) {
 }
 
 static void dump_en() {
-  extern int save_fighters(const char *, s_fighter *, int);
-  std::unique_ptr<s_fighter[]> tmp(new s_fighter[enemies_n]);
-  for (int i = 0; i < enemies_n; ++i) {
-    tmp[i] = *enemy_fighters[i];
-  }
-  save_fighters("save-f.xml", tmp.get(), enemies_n);
+	extern int save_fighters(const char* filename, s_fighter* fighters, int count);
+	std::unique_ptr<s_fighter[]> tmp(new s_fighter[enemies_n]);
+	for (int i = 0; i < enemies_n; ++i) {
+		tmp[i] = *enemy_fighters[i];
+	}
+	save_fighters("save-f.xml", tmp.get(), enemies_n);
 }
 
 /*! \brief Load all enemies from disk
@@ -611,159 +613,172 @@ static void dump_en() {
  * \author PH
  * \date 2003????
  */
-static void load_enemies(void) {
-  int i, tmp, lx, ly, p;
-  FILE *edat;
-  s_fighter *f;
+static void load_enemies(void)
+{
+	int i, tmp, lx, ly, p;
+	FILE* edat;
+	s_fighter* f;
 
-  if (enemy_fighters != NULL) {
-    /* Already done the loading */
-    return;
-  }
+	if (enemy_fighters != NULL)
+	{
+		/* Already done the loading */
+		return;
+	}
 
-  Raster *enemy_gfx = get_cached_image("enemy.png");
+	Raster* enemy_gfx = get_cached_image("enemy.png");
 
-  if (!enemy_gfx) {
-    Game.program_death(_("Could not load enemy sprites!"));
-  }
-  edat = fopen(kqres(DATA_DIR, "allstat.mon").c_str(), "r");
-  if (!edat) {
-    Game.program_death(_("Could not load 1st enemy datafile!"));
-  }
-  enemies_n = 0;
-  enemies_cap = 128;
-  enemy_fighters = (s_fighter **)malloc(sizeof(s_fighter *) * enemies_cap);
-  // Loop through for every monster in allstat.mon
-  while (fscanf(edat, "%s", strbuf) != EOF) {
-    if (enemies_n >= enemies_cap) {
-      enemies_cap *= 2;
-      enemy_fighters = (s_fighter **)realloc(enemy_fighters,
-                                             sizeof(s_fighter *) * enemies_cap);
-    }
-    f = enemy_fighters[enemies_n++] = (s_fighter *)malloc(sizeof(s_fighter));
-    memset(f, 0, sizeof(s_fighter));
-    // Enemy name
-    strncpy(f->name, strbuf, sizeof(f->name));
-    // Index number (ignored; automatically generated)
-    fscanf(edat, "%d", &tmp);
-    // x-coord of image in datafile
-    fscanf(edat, "%d", &tmp);
-    lx = tmp;
-    // y-coord of image in datafile
-    fscanf(edat, "%d", &tmp);
-    ly = tmp;
-    // Image width
-    fscanf(edat, "%d", &tmp);
-    f->cw = tmp;
-    // Image length (height)
-    fscanf(edat, "%d", &tmp);
-    f->cl = tmp;
-    // Experience points earned
-    fscanf(edat, "%d", &tmp);
-    f->xp = tmp;
-    // Gold received
-    fscanf(edat, "%d", &tmp);
-    f->gp = tmp;
-    // Level
-    fscanf(edat, "%d", &tmp);
-    f->lvl = tmp;
-    // Max HP
-    fscanf(edat, "%d", &tmp);
-    f->mhp = tmp;
-    // Max MP
-    fscanf(edat, "%d", &tmp);
-    f->mmp = tmp;
-    // Defeat Item Probability: chance of finding any items after defeat
-    fscanf(edat, "%d", &tmp);
-    f->dip = tmp;
-    // Defeat Item Common: item found commonly of the time
-    fscanf(edat, "%d", &tmp);
-    f->defeat_item_common = tmp;
-    // Defeat Item Rare: item found rarely
-    fscanf(edat, "%d", &tmp);
-    f->defeat_item_rare = tmp;
-    // Steal Item Common: item found commonly from stealing
-    fscanf(edat, "%d", &tmp);
-    f->steal_item_common = tmp;
-    // Steal Item Rare: item found rarely when stealing
-    fscanf(edat, "%d", &tmp);
-    f->steal_item_rare = tmp;
-    // Enemy's strength (agility & vitality set to zero)
-    fscanf(edat, "%d", &tmp);
-    f->stats[A_STR] = tmp;
-    f->stats[A_AGI] = 0;
-    f->stats[A_VIT] = 0;
-    // Intelligence & Sagacity (both the same)
-    fscanf(edat, "%d", &tmp);
-    f->stats[A_INT] = tmp;
-    f->stats[A_SAG] = tmp;
-    // Defense against: Speed, Spirit, Attack, Hit, Defence, Evade, Magic (in
-    // that order)
-    for (p = 5; p < 13; p++) {
-      fscanf(edat, "%d", &tmp);
-      f->stats[p] = tmp;
-    }
-    // Bonus
-    fscanf(edat, "%d", &tmp);
-    f->bonus = tmp;
-    f->bstat = 0;
-    // Current weapon type
-    fscanf(edat, "%d", &tmp);
-    f->current_weapon_type = (uint32_t)tmp;
-    // Weapon elemental type
-    fscanf(edat, "%d", &tmp);
-    f->welem = tmp;
-    // Undead Level (defense against Undead attacks)
-    fscanf(edat, "%d", &tmp);
-    f->unl = tmp;
-    // Critical attacks
-    fscanf(edat, "%d", &tmp);
-    f->crit = tmp;
-    // Temp Sag & Int for Imbued
-    fscanf(edat, "%d", &tmp);
-    f->imb_s = tmp;
-    // Imbued stat type (Spd, Spi, Att, Hit, Def, Evd, Mag)
-    fscanf(edat, "%d", &tmp);
-    f->imb_a = tmp;
-    f->img = new Raster(f->cw, f->cl);
-    enemy_gfx->blitTo(f->img, lx, ly, 0, 0, f->cw, f->cl);
-    for (p = 0; p < 2; p++) {
-      fscanf(edat, "%d", &tmp);
-      f->imb[p] = tmp;
-    }
-  }
-  fclose(edat);
-  edat = fopen(kqres(DATA_DIR, "resabil.mon").c_str(), "r");
-  if (!edat) {
-    Game.program_death(_("Could not load 2nd enemy datafile!"));
-  }
-  for (i = 0; i < enemies_n; i++) {
-    f = enemy_fighters[i];
-    fscanf(edat, "%s", strbuf);
-    fscanf(edat, "%d", &tmp);
-    for (p = 0; p < R_TOTAL_RES; p++) {
-      fscanf(edat, "%d", &tmp);
-      f->res[p] = tmp;
-    }
-    for (p = 0; p < 8; p++) {
-      fscanf(edat, "%d", &tmp);
-      f->ai[p] = tmp;
-    }
-    for (p = 0; p < 8; p++) {
-      fscanf(edat, "%d", &tmp);
-      f->aip[p] = tmp;
-      f->atrack[p] = 0;
-    }
-    f->hp = f->mhp;
-    f->mp = f->mmp;
-    for (p = 0; p < 24; p++) {
-      f->sts[p] = 0;
-    }
-    f->aux = 0;
-    f->mrp = 100;
-  }
-  fclose(edat);
-  dump_en();
+	if (!enemy_gfx)
+	{
+		Game.program_death(_("Could not load enemy sprites!"));
+	}
+	edat = fopen(kqres(DATA_DIR, "allstat.mon").c_str(), "r");
+	if (!edat)
+	{
+		Game.program_death(_("Could not load 1st enemy datafile!"));
+	}
+	enemies_n = 0;
+	enemies_cap = 128;
+	enemy_fighters = (s_fighter**)malloc(sizeof(s_fighter*) * enemies_cap);
+
+	// Loop through for every monster in allstat.mon
+	while (fscanf(edat, "%s", strbuf) != EOF)
+	{
+		if (enemies_n >= enemies_cap)
+		{
+			enemies_cap *= 2;
+			enemy_fighters = (s_fighter**)realloc(enemy_fighters, sizeof(s_fighter*) * enemies_cap);
+		}
+		f = enemy_fighters[enemies_n++] = (s_fighter*)malloc(sizeof(s_fighter));
+		memset(f, 0, sizeof(s_fighter));
+		// Enemy name
+		strncpy(f->name, strbuf, sizeof(f->name));
+		// Index number (ignored; automatically generated)
+		fscanf(edat, "%d", &tmp);
+		// x-coord of image in datafile
+		fscanf(edat, "%d", &tmp);
+		lx = tmp;
+		// y-coord of image in datafile
+		fscanf(edat, "%d", &tmp);
+		ly = tmp;
+		// Image width
+		fscanf(edat, "%d", &tmp);
+		f->cw = tmp;
+		// Image length (height)
+		fscanf(edat, "%d", &tmp);
+		f->cl = tmp;
+		// Experience points earned
+		fscanf(edat, "%d", &tmp);
+		f->xp = tmp;
+		// Gold received
+		fscanf(edat, "%d", &tmp);
+		f->gp = tmp;
+		// Level
+		fscanf(edat, "%d", &tmp);
+		f->lvl = tmp;
+		// Max HP
+		fscanf(edat, "%d", &tmp);
+		f->mhp = tmp;
+		// Max MP
+		fscanf(edat, "%d", &tmp);
+		f->mmp = tmp;
+		// Defeat Item Probability: chance of finding any items after defeat
+		fscanf(edat, "%d", &tmp);
+		f->dip = tmp;
+		// Defeat Item Common: item found commonly of the time
+		fscanf(edat, "%d", &tmp);
+		f->defeat_item_common = tmp;
+		// Defeat Item Rare: item found rarely
+		fscanf(edat, "%d", &tmp);
+		f->defeat_item_rare = tmp;
+		// Steal Item Common: item found commonly from stealing
+		fscanf(edat, "%d", &tmp);
+		f->steal_item_common = tmp;
+		// Steal Item Rare: item found rarely when stealing
+		fscanf(edat, "%d", &tmp);
+		f->steal_item_rare = tmp;
+		// Enemy's strength (agility & vitality set to zero)
+		fscanf(edat, "%d", &tmp);
+		f->stats[A_STR] = tmp;
+		f->stats[A_AGI] = 0;
+		f->stats[A_VIT] = 0;
+		// Intelligence & Sagacity (both the same)
+		fscanf(edat, "%d", &tmp);
+		f->stats[A_INT] = tmp;
+		f->stats[A_SAG] = tmp;
+		// Defense against: Speed, Spirit, Attack, Hit, Defense, Evade, Magic (in that order)
+		for (p = 5; p < 13; p++)
+		{
+			fscanf(edat, "%d", &tmp);
+			f->stats[p] = tmp;
+		}
+		// Bonus
+		fscanf(edat, "%d", &tmp);
+		f->bonus = tmp;
+		f->bstat = 0;
+		// Current weapon type
+		fscanf(edat, "%d", &tmp);
+		f->current_weapon_type = (uint32_t)tmp;
+		// Weapon elemental type
+		fscanf(edat, "%d", &tmp);
+		f->welem = tmp;
+		// Undead Level (defense against Undead attacks)
+		fscanf(edat, "%d", &tmp);
+		f->unl = tmp;
+		// Critical attacks
+		fscanf(edat, "%d", &tmp);
+		f->crit = tmp;
+		// Temp Sag & Int for Imbued
+		fscanf(edat, "%d", &tmp);
+		f->imb_s = tmp;
+		// Imbued stat type (Spd, Spi, Att, Hit, Def, Evd, Mag)
+		fscanf(edat, "%d", &tmp);
+		f->imb_a = tmp;
+		f->img = new Raster(f->cw, f->cl);
+		enemy_gfx->blitTo(f->img, lx, ly, 0, 0, f->cw, f->cl);
+		for (p = 0; p < 2; p++)
+		{
+			fscanf(edat, "%d", &tmp);
+			f->imb[p] = tmp;
+		}
+	}
+	fclose(edat);
+	edat = fopen(kqres(DATA_DIR, "resabil.mon").c_str(), "r");
+	if (!edat)
+	{
+		Game.program_death(_("Could not load 2nd enemy datafile!"));
+	}
+	for (i = 0; i < enemies_n; i++)
+	{
+		f = enemy_fighters[i];
+		fscanf(edat, "%s", strbuf);
+		fscanf(edat, "%d", &tmp);
+		for (p = 0; p < R_TOTAL_RES; p++)
+		{
+			fscanf(edat, "%d", &tmp);
+			f->res[p] = tmp;
+		}
+		for (p = 0; p < 8; p++)
+		{
+			fscanf(edat, "%d", &tmp);
+			f->ai[p] = tmp;
+		}
+		for (p = 0; p < 8; p++)
+		{
+			fscanf(edat, "%d", &tmp);
+			f->aip[p] = tmp;
+			f->atrack[p] = 0;
+		}
+		f->hp = f->mhp;
+		f->mp = f->mmp;
+		for (p = 0; p < 24; p++)
+		{
+			f->sts[p] = 0;
+		}
+		f->aux = 0;
+		f->mrp = 100;
+	}
+	fclose(edat);
+	dump_en();
 }
 
 /*! \brief Prepare an enemy for battle
@@ -777,14 +792,18 @@ static void load_enemies(void) {
  * \returns the value of en, for convenience, or NULL if an error occurred.
  * \sa make_enemy_by_name()
  */
-static s_fighter *make_enemy(int who, s_fighter *en) {
-  if (enemy_fighters && who >= 0 && who < enemies_n) {
-    memcpy(en, enemy_fighters[who], sizeof(s_fighter));
-    return en;
-  } else {
-    /* PH probably should call program_death() here? */
-    return NULL;
-  }
+static s_fighter* make_enemy(int who, s_fighter* en)
+{
+	if (enemy_fighters && who >= 0 && who < enemies_n)
+	{
+		memcpy(en, enemy_fighters[who], sizeof(s_fighter));
+		return en;
+	}
+	else
+	{
+		/* PH probably should call program_death() here? */
+		return NULL;
+	}
 }
 
 /*! \brief Enemy initialization

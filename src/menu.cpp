@@ -228,28 +228,29 @@ static void ilist_clear(ILIST *l) {
  *
  * \param   pr - Person leveling up
  */
-static void level_up(int pr) {
-  int a, b = 0;
-  float z;
-  int bxp, xpi;
-  s_fighter tmpf;
-  unsigned short *lup = party[pr].lup;
+static void level_up(int pr)
+{
+	int a, b = 0;
+	float z;
+	int bxp, xpi;
+	s_fighter tmpf;
+	unsigned short *lup = party[pr].lup;
 
-  player2fighter(pr, &tmpf);
-  xpi = lup[0];
-  bxp = lup[1];
-  party[pr].lvl++;
-  a = party[pr].lvl + 1;
-  z = ((a / 3) + (xpi * (a / 20 + 1) - 1)) * (((a - 2) / 2) * (a - 1));
-  z += (bxp * (a / 20 + 1) * (a - 1));
-  party[pr].next += (int)z;
-  a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] + (tmpf.stats[A_VIT] / 5);
-  party[pr].hp += a;
-  party[pr].mhp += a;
-  b = (kqrandom->random_range_exclusive(0, lup[3] / 2)) + lup[3];
-  b += (tmpf.stats[A_INT] + tmpf.stats[A_SAG]) / 25;
-  party[pr].mp += b;
-  party[pr].mmp += b;
+	player2fighter(pr, &tmpf);
+	xpi = lup[0];
+	bxp = lup[1];
+	party[pr].lvl++;
+	a = party[pr].lvl + 1;
+	z = ((a / 3) + (xpi * (a / 20 + 1) - 1)) * (((a - 2) / 2) * (a - 1));
+	z += (bxp * (a / 20 + 1) * (a - 1));
+	party[pr].next += (int)z;
+	a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] + (tmpf.stats[A_VIT] / 5);
+	party[pr].hp += a;
+	party[pr].mhp += a;
+	b = (kqrandom->random_range_exclusive(0, lup[3] / 2)) + lup[3];
+	b += (tmpf.stats[A_INT] + tmpf.stats[A_SAG]) / 25;
+	party[pr].mp += b;
+	party[pr].mmp += b;
 }
 
 /*! \brief Main menu
@@ -343,157 +344,167 @@ void menu(void) {
  * \param   who - Index of player to convert
  * \returns tf (fighter structure)
  */
-s_fighter *player2fighter(int who, s_fighter *pf) {
-  s_fighter tf;
-  s_player &plr = party[who];
+s_fighter* player2fighter(int who, s_fighter* pf)
+{
+	s_fighter tf;
+	s_player& plr = party[who];
 
-  tf.imb_s = 0;
-  tf.imb_a = 0;
-  tf.imb[0] = 0;
-  tf.imb[1] = 0;
-  strcpy(tf.name, plr.name);
-  tf.xp = plr.xp;
-  tf.lvl = plr.lvl;
-  tf.hp = plr.hp;
-  tf.mhp = plr.mhp;
-  tf.mp = plr.mp;
-  tf.mmp = plr.mmp;
-  for (int j = 0; j < 8; j++) {
-    tf.sts[j] = plr.sts[j];
-  }
-  for (int j = 8; j < NUM_SPELLTYPES; j++) {
-    tf.sts[j] = 0;
-  }
-  for (int j = 0; j < NUM_ATTRIBUTES; j++) {
-    tf.stats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
-  }
-  for (int j = 0; j < R_TOTAL_RES; j++) {
-    tf.res[j] = plr.res[j];
-  }
+	tf.imb_s = 0;
+	tf.imb_a = 0;
+	tf.imb[0] = 0;
+	tf.imb[1] = 0;
+	strcpy(tf.name, plr.name);
+	tf.xp = plr.xp;
+	tf.lvl = plr.lvl;
+	tf.hp = plr.hp;
+	tf.mhp = plr.mhp;
+	tf.mp = plr.mp;
+	tf.mmp = plr.mmp;
+	for (int j = 0; j < 8; j++) {
+		tf.sts[j] = plr.sts[j];
+	}
+	for (int j = 8; j < NUM_SPELLTYPES; j++) {
+		tf.sts[j] = 0;
+	}
+	for (int j = 0; j < NUM_ATTRIBUTES; j++) {
+		tf.stats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
+	}
+	for (int j = 0; j < R_TOTAL_RES; j++) {
+		tf.res[j] = plr.res[j];
+	}
 
-  /* set weapon elemental power and imbuements for easy use in combat */
-  int weapon_index = plr.eqp[EQP_WEAPON];
-  tf.welem = items[weapon_index].elem;
-  if (items[weapon_index].use == USE_ATTACK) {
-    tf.imb_s = items[weapon_index].imb;
-    tf.imb_a = items[weapon_index].stats[A_ATT];
-  }
+	/* set weapon elemental power and imbuements for easy use in combat */
+	int weapon_index = plr.eqp[EQP_WEAPON];
+	tf.welem = items[weapon_index].elem;
+	if (items[weapon_index].use == USE_ATTACK) {
+		tf.imb_s = items[weapon_index].imb;
+		tf.imb_a = items[weapon_index].stats[A_ATT];
+	}
 
-  /* Set instants for equipment... these are imbuements that
-   * take effect at the start of combat.  Technically, there
-   * are only two imbue slots but there are five pieces of equipment
-   * that can be imbued, so some item types get priority over
-   * others... hence the need to run through each in this loop.
-   */
-  for (int a = 0; a < 5; a++) {
-    static const int z[5] = {EQP_SPECIAL, EQP_ARMOR, EQP_HELMET, EQP_SHIELD,
-                             EQP_HAND};
-    int current_equipment_slot = plr.eqp[z[a]];
-    if (items[current_equipment_slot].use == USE_IMBUED) {
-      for (int b = 0; b < 2; b++) {
-        if (tf.imb[b] == 0) {
-          tf.imb[b] = items[current_equipment_slot].imb;
-          b = 2;
-        }
-      }
-    }
-  }
+	/* Set instants for equipment... these are imbuements that
+	 * take effect at the start of combat.  Technically, there
+	 * are only two imbue slots but there are five pieces of equipment
+	 * that can be imbued, so some item types get priority over
+	 * others... hence the need to run through each in this loop.
+	 */
+	for (int a = 0; a < 5; a++) {
+		static const int z[5] = {
+			EQP_SPECIAL,
+			EQP_ARMOR,
+			EQP_HELMET,
+			EQP_SHIELD,
+			EQP_HAND
+		};
+		int current_equipment_slot = plr.eqp[z[a]];
+		if (items[current_equipment_slot].use == USE_IMBUED) {
+			for (int b = 0; b < 2; b++) {
+				if (tf.imb[b] == 0) {
+					tf.imb[b] = items[current_equipment_slot].imb;
+					b = 2;
+				}
+			}
+		}
+	}
 
-  /*
-   * Any weapon used by Ajathar gains the power of White if
-   * it has no other power to begin with (the "welem" property
-   * is 1-based: value of 0 means "no imbue".
-   */
-  if (who == AJATHAR && tf.welem == 0) {
-    tf.welem = R_WHITE + 1;
-  }
-  for (int j = 0; j < NUM_EQUIPMENT; j++) {
-    int a = plr.eqp[j];
-    if (j == 0) {
-      if (a == 0) {
-        tf.bonus = 50;
-      } else {
-        tf.bonus = items[a].bon;
-      }
-      if (items[a].icon == 1 || items[a].icon == 3 || items[a].icon == 21) {
-        tf.bstat = 1;
-      } else {
-        tf.bstat = 0;
-      }
-      /* Set current weapon type. When the hero wields a weapon
-       * in combat, it will look like this.
-       * The colour comes from s_item::kol
-       */
-      tf.current_weapon_type = items[a].icon;
-      if (tf.current_weapon_type == W_CHENDIGAL) {
-        tf.current_weapon_type = W_SWORD;
-      }
-    }
-    for (int b = 0; b < NUM_STATS; b++) {
-      if (b == A_SPI && who == TEMMIN) {
-        if (items[a].stats[A_SPI] > 0) {
-          tf.stats[A_SPI] += items[a].stats[A_SPI];
-        }
-      } else {
-        tf.stats[b] += items[a].stats[b];
-      }
-    }
-    for (int b = 0; b < R_TOTAL_RES; b++) {
-      tf.res[b] += items[a].res[b];
-    }
-  }
-  if (who == CORIN) {
-    tf.res[R_EARTH] += tf.lvl / 4;
-    tf.res[R_FIRE] += tf.lvl / 4;
-    tf.res[R_AIR] += tf.lvl / 4;
-    tf.res[R_WATER] += tf.lvl / 4;
-  }
-  if (plr.eqp[5] == I_AGRAN) {
-    int a = 0;
-    for (int j = 0; j < R_TOTAL_RES; j++) {
-      a += tf.res[j];
-    }
-    int b = ((a * 10) / 16 + 5) / 10;
-    for (int j = 0; j < R_TOTAL_RES; j++) {
-      tf.res[j] = b;
-    }
-  }
-  for (int j = 0; j < 8; j++) {
-    if (tf.res[j] < -10) {
-      tf.res[j] = -10;
-    }
-    if (tf.res[j] > 20) {
-      tf.res[j] = 20;
-    }
-  }
-  for (int j = 8; j < R_TOTAL_RES; j++) {
-    if (tf.res[j] < 0) {
-      tf.res[j] = 0;
-    }
-    if (tf.res[j] > 10) {
-      tf.res[j] = 10;
-    }
-  }
-  if (plr.eqp[5] == I_MANALOCKET) {
-    tf.mrp = plr.mrp / 2;
-  } else {
-    tf.mrp = plr.mrp;
-  }
-  tf.stats[A_HIT] += tf.stats[A_STR] / 5;
-  tf.stats[A_HIT] += tf.stats[A_AGI] / 5;
-  tf.stats[A_DEF] += tf.stats[A_VIT] / 8;
-  tf.stats[A_EVD] += tf.stats[A_AGI] / 5;
-  tf.stats[A_MAG] += (tf.stats[A_INT] + tf.stats[A_SAG]) / 20;
-  for (int j = 0; j < NUM_STATS; j++) {
-    if (tf.stats[j] < 1) {
-      tf.stats[j] = 1;
-    }
-  }
-  tf.crit = 1;
-  tf.aux = 0;
-  tf.unl = 0;
-  memcpy(pf, &tf, sizeof(tf));
-  return pf;
+	/*
+	 * Any weapon used by Ajathar gains the power of White if
+	 * it has no other power to begin with (the "welem" property
+	 * is 1-based: value of 0 means "no imbue".
+	 */
+	if (who == AJATHAR && tf.welem == 0) {
+		tf.welem = R_WHITE + 1;
+	}
+	for (int j = 0; j < NUM_EQUIPMENT; j++) {
+		int a = plr.eqp[j];
+		if (j == 0) {
+			if (a == 0) {
+				tf.bonus = 50;
+			}
+			else {
+				tf.bonus = items[a].bon;
+			}
+			if (items[a].icon == 1 || items[a].icon == 3 || items[a].icon == 21) {
+				tf.bstat = 1;
+			}
+			else {
+				tf.bstat = 0;
+			}
+			/* Set current weapon type. When the hero wields a weapon
+			 * in combat, it will look like this.
+			 * The colour comes from s_item::kol
+			 */
+			tf.current_weapon_type = items[a].icon;
+			if (tf.current_weapon_type == W_CHENDIGAL) {
+				tf.current_weapon_type = W_SWORD;
+			}
+		}
+		for (int b = 0; b < NUM_STATS; b++) {
+			if (b == A_SPI && who == TEMMIN) {
+				if (items[a].stats[A_SPI] > 0) {
+					tf.stats[A_SPI] += items[a].stats[A_SPI];
+				}
+			}
+			else {
+				tf.stats[b] += items[a].stats[b];
+			}
+		}
+		for (int b = 0; b < R_TOTAL_RES; b++) {
+			tf.res[b] += items[a].res[b];
+		}
+	}
+	if (who == CORIN) {
+		tf.res[R_EARTH] += tf.lvl / 4;
+		tf.res[R_FIRE] += tf.lvl / 4;
+		tf.res[R_AIR] += tf.lvl / 4;
+		tf.res[R_WATER] += tf.lvl / 4;
+	}
+	if (plr.eqp[5] == I_AGRAN) {
+		int a = 0;
+		for (int j = 0; j < R_TOTAL_RES; j++) {
+			a += tf.res[j];
+		}
+		int b = ((a * 10) / 16 + 5) / 10;
+		for (int j = 0; j < R_TOTAL_RES; j++) {
+			tf.res[j] = b;
+		}
+	}
+	for (int j = 0; j < 8; j++) {
+		if (tf.res[j] < -10) {
+			tf.res[j] = -10;
+		}
+		if (tf.res[j] > 20) {
+			tf.res[j] = 20;
+		}
+	}
+	for (int j = 8; j < R_TOTAL_RES; j++) {
+		if (tf.res[j] < 0) {
+			tf.res[j] = 0;
+		}
+		if (tf.res[j] > 10) {
+			tf.res[j] = 10;
+		}
+	}
+	if (plr.eqp[5] == I_MANALOCKET) {
+		tf.mrp = plr.mrp / 2;
+	}
+	else {
+		tf.mrp = plr.mrp;
+	}
+	tf.stats[A_HIT] += tf.stats[A_STR] / 5;
+	tf.stats[A_HIT] += tf.stats[A_AGI] / 5;
+	tf.stats[A_DEF] += tf.stats[A_VIT] / 8;
+	tf.stats[A_EVD] += tf.stats[A_AGI] / 5;
+	tf.stats[A_MAG] += (tf.stats[A_INT] + tf.stats[A_SAG]) / 20;
+	for (int j = 0; j < NUM_STATS; j++) {
+		if (tf.stats[j] < 1) {
+			tf.stats[j] = 1;
+		}
+	}
+	tf.crit = 1;
+	tf.aux = 0;
+	tf.unl = 0;
+	memcpy(pf, &tf, sizeof(tf));
+	return pf;
 }
 
 /*! \brief Do the Quest Info menu

@@ -35,6 +35,10 @@ maps/build/
 Debug/
 Release/
 
+# Auto-generated Visual Studio files
+KQ.VC.VC.opendb
+KQ.VC.db
+
 # Auto-generated files
 ABOUT-NLS
 aclocal.m4

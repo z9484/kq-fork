@@ -801,73 +801,76 @@ static void do_round(void) {
  * stone, and if the fighter is selected. Also displays 'Vision'
  * spell information.
  */
-void draw_fighter(size_t fighter_index, size_t dcur) {
-  static const int AUGMENT_STRONGEST = 20;
-  static const int AUGMENT_STRONG = 10;
-  static const int AUGMENT_NORMAL = 0;
+void draw_fighter(size_t fighter_index, size_t dcur)
+{
+	static const int AUGMENT_STRONGEST = 20;
+	static const int AUGMENT_STRONG = 10;
+	static const int AUGMENT_NORMAL = 0;
 
-  int xx;
-  int yy;
-  int ff;
-  s_fighter *fr = &fighter[fighter_index];
+	int xx;
+	int yy;
+	int ff;
+	s_fighter* fr = &fighter[fighter_index];
 
-  xx = fr->cx;
-  yy = fr->cy;
+	xx = fr->cx;
+	yy = fr->cy;
 
-  ff = (!fr->aframe) ? fr->facing : fr->aframe;
+	ff = (!fr->aframe) ? fr->facing : fr->aframe;
 
-  if (fr->sts[S_STONE] > 0) {
-    convert_cframes(fighter_index, 2, 12, 0);
-  }
+	if (fr->sts[S_STONE] > 0) {
+		convert_cframes(fighter_index, 2, 12, 0);
+	}
 
-  if (fr->sts[S_ETHER] > 0) {
-    draw_trans_sprite(double_buffer, cframes[fighter_index][ff], xx, yy);
-  } else {
-    if (fighter_index < PSIZE) {
-      // Your party
-      Raster *shad = new Raster(cframes[fighter_index][ff]->width * 2 / 3, cframes[fighter_index][ff]->height / 4);
+	if (fr->sts[S_ETHER] > 0) {
+		draw_trans_sprite(double_buffer, cframes[fighter_index][ff], xx, yy);
+	}
+	else {
+		if (fighter_index < PSIZE) {
+			// Your party
+			Raster *shad = new Raster(cframes[fighter_index][ff]->width * 2 / 3, cframes[fighter_index][ff]->height / 4);
 
-      clear_bitmap(shad);
-      ellipsefill(shad, shad->width / 2, shad->height / 2, shad->width / 2, shad->height / 2, makecol(128, 128, 128));
-      draw_trans_sprite(double_buffer, shad, xx + (shad->width / 3) - 2, yy + cframes[fighter_index][ff]->height - shad->height / 2);
-      delete shad;
-    } else {
-      // Enemy
-      Raster *shad = new Raster(cframes[fighter_index][ff]->width, cframes[fighter_index][ff]->height / 4);
+			clear_bitmap(shad);
+			ellipsefill(shad, shad->width / 2, shad->height / 2, shad->width / 2, shad->height / 2, makecol(128, 128, 128));
+			draw_trans_sprite(double_buffer, shad, xx + (shad->width / 3) - 2, yy + cframes[fighter_index][ff]->height - shad->height / 2);
+			delete shad;
+		}
+		else {
+			// Enemy
+			Raster *shad = new Raster(cframes[fighter_index][ff]->width, cframes[fighter_index][ff]->height / 4);
 
-      clear_bitmap(shad);
-      ellipsefill(shad, shad->width / 2, shad->height / 2, shad->width / 2, shad->height / 2, makecol(128, 128, 128));
-      draw_trans_sprite(double_buffer, shad, xx, yy + cframes[fighter_index][ff]->height - shad->height / 2);
-      delete (shad);
-    }
+			clear_bitmap(shad);
+			ellipsefill(shad, shad->width / 2, shad->height / 2, shad->width / 2, shad->height / 2, makecol(128, 128, 128));
+			draw_trans_sprite(double_buffer, shad, xx, yy + cframes[fighter_index][ff]->height - shad->height / 2);
+			delete (shad);
+		}
 
-    draw_sprite(double_buffer, cframes[fighter_index][ff], xx, yy);
-  }
+		draw_sprite(double_buffer, cframes[fighter_index][ff], xx, yy);
+	}
 
-  if (dcur == 1) {
-    draw_sprite(double_buffer, bptr, xx + (fr->cw / 2) - 8, yy - 8);
-  }
+	if (dcur == 1) {
+		draw_sprite(double_buffer, bptr, xx + (fr->cw / 2) - 8, yy - 8);
+	}
 
-  if ((vspell == 1) && (fighter_index >= PSIZE)) {
-    ff = fr->hp * 30 / fr->mhp;
-    if ((fr->hp > 0) && (ff < 1)) {
-      ff = 1;
-    }
+	if ((vspell == 1) && (fighter_index >= PSIZE)) {
+		ff = fr->hp * 30 / fr->mhp;
+		if ((fr->hp > 0) && (ff < 1)) {
+			ff = 1;
+		}
 
-    xx += fr->cw / 2;
-    rect(double_buffer, xx - 16, yy + fr->cl + 2, xx + 15, yy + fr->cl + 5, 0);
-    if (ff > AUGMENT_STRONGEST) {
-      rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 40);
-    }
+		xx += fr->cw / 2;
+		rect(double_buffer, xx - 16, yy + fr->cl + 2, xx + 15, yy + fr->cl + 5, 0);
+		if (ff > AUGMENT_STRONGEST) {
+			rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 40);
+		}
 
-    else if ((ff <= AUGMENT_STRONGEST) && (ff > AUGMENT_STRONG)) {
-      rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 104);
-    }
+		else if ((ff <= AUGMENT_STRONGEST) && (ff > AUGMENT_STRONG)) {
+			rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 104);
+		}
 
-    else if ((ff <= AUGMENT_STRONG) && (ff > AUGMENT_NORMAL)) {
-      rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 24);
-    }
-  }
+		else if ((ff <= AUGMENT_STRONG) && (ff > AUGMENT_NORMAL)) {
+			rectfill(double_buffer, xx - 15, yy + fr->cl + 3, xx - 15 + ff - 1, yy + fr->cl + 4, 24);
+		}
+	}
 }
 
 /*! \brief Enemies defeated the player
@@ -1056,151 +1059,154 @@ void fkill(size_t fighter_index) {
  * Distribute the booty!
  */
 static void heroes_win(void) {
-  int tgp = 0;
-  size_t fighter_index;
-  int b;
-  size_t pidx_index;
-  int z;
-  int nc = 0;
-  int txp = 0;
-  int found_item = 0;
-  int nr = 0;
-  int ent = 0;
-  s_fighter t1;
-  s_fighter t2;
+	int tgp = 0;
+	size_t fighter_index;
+	int b;
+	size_t pidx_index;
+	int z;
+	int nc = 0;
+	int txp = 0;
+	int found_item = 0;
+	int nr = 0;
+	int ent = 0;
+	s_fighter t1;
+	s_fighter t2;
 
-  Music.play_music("rend5.s3m", 0);
-  kq_wait(500);
-  revert_equipstats();
-  for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    fighter[fighter_index].aframe = 4;
-  }
+	Music.play_music("rend5.s3m", 0);
+	kq_wait(500);
+	revert_equipstats();
+	for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
+		fighter[fighter_index].aframe = 4;
+	}
 
-  battle_render(0, 0, 0);
-  blit2screen(0, 0);
-  kq_wait(250);
-  for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    if (fighter[fighter_index].sts[S_STONE] == 0 &&
-        fighter[fighter_index].sts[S_DEAD] == 0) {
-      nc++;
-    }
+	battle_render(0, 0, 0);
+	blit2screen(0, 0);
+	kq_wait(250);
+	for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
+		if (fighter[fighter_index].sts[S_STONE] == 0 &&
+			fighter[fighter_index].sts[S_DEAD] == 0) {
+			nc++;
+		}
 
-    ta[fighter_index] = 0;
-  }
+		ta[fighter_index] = 0;
+	}
 
-  for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-       fighter_index++) {
-    txp += fighter[fighter_index].xp;
-    tgp += fighter[fighter_index].gp;
-  }
+	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
+		fighter_index++) {
+		txp += fighter[fighter_index].xp;
+		tgp += fighter[fighter_index].gp;
+	}
 
-  /*  JB: nc should never be zero if we won, but whatever  */
-  if (nc > 0) {
-    txp /= nc;
-  }
+	/*  JB: nc should never be zero if we won, but whatever  */
+	if (nc > 0) {
+		txp /= nc;
+	}
 
-  gp += tgp;
-  if (tgp > 0) {
-    sprintf(strbuf, _("Gained %d xp and found %d gp."), txp, tgp);
-  } else {
-    sprintf(strbuf, _("Gained %d xp."), txp);
-  }
+	gp += tgp;
+	if (tgp > 0) {
+		sprintf(strbuf, _("Gained %d xp and found %d gp."), txp, tgp);
+	}
+	else {
+		sprintf(strbuf, _("Gained %d xp."), txp);
+	}
 
-  menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, BLUE);
-  print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, FNORMAL);
-  blit2screen(0, 0);
-  fullblit(double_buffer, back);
-  for (fighter_index = 0; fighter_index < num_enemies; fighter_index++) {
-    /* PH bug: (?) should found_item be reset to zero at the start of this loop?
-     * If you defeat 2 enemies, you should (possibly) get 2 items, right?
-     */
-    if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + PSIZE].dip) {
-      if (fighter[fighter_index + PSIZE].defeat_item_common > 0) {
-        found_item = fighter[fighter_index + PSIZE].defeat_item_common;
-      }
+	menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, BLUE);
+	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, FNORMAL);
+	blit2screen(0, 0);
+	fullblit(double_buffer, back);
+	for (fighter_index = 0; fighter_index < num_enemies; fighter_index++) {
+		/* PH bug: (?) should found_item be reset to zero at the start of this loop?
+		 * If you defeat 2 enemies, you should (possibly) get 2 items, right?
+		 */
+		if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + PSIZE].dip) {
+			if (fighter[fighter_index + PSIZE].defeat_item_common > 0) {
+				found_item = fighter[fighter_index + PSIZE].defeat_item_common;
+			}
 
-      if (fighter[fighter_index + PSIZE].defeat_item_rare > 0) {
-        if (kqrandom->random_range_exclusive(0, 100) < 5) {
-          found_item = fighter[fighter_index + PSIZE].defeat_item_rare;
-        }
-      }
+			if (fighter[fighter_index + PSIZE].defeat_item_rare > 0) {
+				if (kqrandom->random_range_exclusive(0, 100) < 5) {
+					found_item = fighter[fighter_index + PSIZE].defeat_item_rare;
+				}
+			}
 
-      if (found_item > 0) {
-        if (check_inventory(found_item, 1) != 0) {
-          sprintf(strbuf, _("%s found!"), items[found_item].name);
-          menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
-          draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
-          print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, FNORMAL);
-          nr++;
-        }
-      }
-    }
-  }
+			if (found_item > 0) {
+				if (check_inventory(found_item, 1) != 0) {
+					sprintf(strbuf, _("%s found!"), items[found_item].name);
+					menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
+					draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
+					print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, FNORMAL);
+					nr++;
+				}
+			}
+		}
+	}
 
-  if (nr > 0) {
-    blit2screen(0, 0);
-    Game.wait_enter();
-    fullblit(back, double_buffer);
-  }
+	if (nr > 0) {
+		blit2screen(0, 0);
+		Game.wait_enter();
+		fullblit(back, double_buffer);
+	}
 
-  nr = 0;
-  for (pidx_index = 0; pidx_index < numchrs; pidx_index++) {
-    if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
-        party[pidx[pidx_index]].sts[S_DEAD] == 0) {
-      b = pidx_index * 160;
-      player2fighter(pidx[pidx_index], &t1);
-      if (give_xp(pidx[pidx_index], txp, 0) == 1) {
-        menubox(double_buffer, b, 40, 18, 9, BLUE);
-        player2fighter(pidx[pidx_index], &t2);
-        print_font(double_buffer, b + 8, 48, _("Level up!"), FGOLD);
-        print_font(double_buffer, b + 8, 56, _("Max HP"), FNORMAL);
-        print_font(double_buffer, b + 8, 64, _("Max MP"), FNORMAL);
-        print_font(double_buffer, b + 8, 72, _("Strength"), FNORMAL);
-        print_font(double_buffer, b + 8, 80, _("Agility"), FNORMAL);
-        print_font(double_buffer, b + 8, 88, _("Vitality"), FNORMAL);
-        print_font(double_buffer, b + 8, 96, _("Intellect"), FNORMAL);
-        print_font(double_buffer, b + 8, 104, _("Sagacity"), FNORMAL);
-        sprintf(strbuf, "%3d>", t1.mhp);
-        print_font(double_buffer, b + 96, 56, strbuf, FNORMAL);
-        sprintf(strbuf, "%3d", t2.mhp);
-        print_font(double_buffer, b + 128, 56, strbuf, FGREEN);
-        sprintf(strbuf, "%3d>", t1.mmp);
-        print_font(double_buffer, b + 96, 64, strbuf, FNORMAL);
-        sprintf(strbuf, "%3d", t2.mmp);
-        print_font(double_buffer, b + 128, 64, strbuf, FGREEN);
+	nr = 0;
+	for (pidx_index = 0; pidx_index < numchrs; pidx_index++) {
+		if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
+			party[pidx[pidx_index]].sts[S_DEAD] == 0) {
+			b = pidx_index * 160;
+			player2fighter(pidx[pidx_index], &t1);
+			if (give_xp(pidx[pidx_index], txp, 0) == 1) {
+				menubox(double_buffer, b, 40, 18, 9, BLUE);
+				player2fighter(pidx[pidx_index], &t2);
+				print_font(double_buffer, b + 8, 48, _("Level up!"), FGOLD);
+				print_font(double_buffer, b + 8, 56, _("Max HP"), FNORMAL);
+				print_font(double_buffer, b + 8, 64, _("Max MP"), FNORMAL);
+				print_font(double_buffer, b + 8, 72, _("Strength"), FNORMAL);
+				print_font(double_buffer, b + 8, 80, _("Agility"), FNORMAL);
+				print_font(double_buffer, b + 8, 88, _("Vitality"), FNORMAL);
+				print_font(double_buffer, b + 8, 96, _("Intellect"), FNORMAL);
+				print_font(double_buffer, b + 8, 104, _("Sagacity"), FNORMAL);
+				sprintf(strbuf, "%3d>", t1.mhp);
+				print_font(double_buffer, b + 96, 56, strbuf, FNORMAL);
+				sprintf(strbuf, "%3d", t2.mhp);
+				print_font(double_buffer, b + 128, 56, strbuf, FGREEN);
+				sprintf(strbuf, "%3d>", t1.mmp);
+				print_font(double_buffer, b + 96, 64, strbuf, FNORMAL);
+				sprintf(strbuf, "%3d", t2.mmp);
+				print_font(double_buffer, b + 128, 64, strbuf, FGREEN);
 
-        for (z = 0; z < 5; z++) {
-          sprintf(strbuf, "%3d>", t1.stats[z]);
-          print_font(double_buffer, b + 96, z * 8 + 72, strbuf, FNORMAL);
-          sprintf(strbuf, "%3d", t2.stats[z]);
-          if (t2.stats[z] > t1.stats[z]) {
-            print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FGREEN);
-          } else {
-            print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FNORMAL);
-          }
-        }
+				for (z = 0; z < 5; z++) {
+					sprintf(strbuf, "%3d>", t1.stats[z]);
+					print_font(double_buffer, b + 96, z * 8 + 72, strbuf, FNORMAL);
+					sprintf(strbuf, "%3d", t2.stats[z]);
+					if (t2.stats[z] > t1.stats[z]) {
+						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FGREEN);
+					}
+					else {
+						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FNORMAL);
+					}
+				}
 
-        nr++;
-      } else {
-        menubox(double_buffer, b, 104, 18, 1, BLUE);
-      }
+				nr++;
+			}
+			else {
+				menubox(double_buffer, b, 104, 18, 1, BLUE);
+			}
 
-      sprintf(strbuf, _("Next level %7d"), party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);
-      print_font(double_buffer, b + 8, 112, strbuf, FGOLD);
-    }
-  }
+			sprintf(strbuf, _("Next level %7d"), party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);
+			print_font(double_buffer, b + 8, 112, strbuf, FGOLD);
+		}
+	}
 
-  blit2screen(0, 0);
-  for (pidx_index = 0; pidx_index < numchrs; pidx_index++) {
-    if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
-        party[pidx[pidx_index]].sts[S_DEAD] == 0) {
-      ent += learn_new_spells(pidx[pidx_index]);
-    }
-  }
+	blit2screen(0, 0);
+	for (pidx_index = 0; pidx_index < numchrs; pidx_index++) {
+		if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
+			party[pidx[pidx_index]].sts[S_DEAD] == 0) {
+			ent += learn_new_spells(pidx[pidx_index]);
+		}
+	}
 
-  if (ent == 0) {
-    Game.wait_enter();
-  }
+	if (ent == 0) {
+		Game.wait_enter();
+	}
 }
 
 /*! \brief Initiate fighter structs and initial vars
