@@ -814,7 +814,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "cy", f.fighterImageDatafileY);
 	printprop(out, "cw", f.fighterImageDatafileWidth);
 	printprop(out, "cl", f.fighterImageDatafileHeight);
-	printprop(out, "hp", f.hp);
+	printprop(out, "hp", f.fighterHealth);
 	printprop(out, "mhp", f.mhp);
 	printprop(out, "mp", f.mp);
 	printprop(out, "mmp", f.mmp);

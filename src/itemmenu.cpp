@@ -369,7 +369,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     if (fighter[fighter_index].sts[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].hp == fighter[fighter_index].mhp) {
+    if (fighter[fighter_index].fighterHealth == fighter[fighter_index].mhp) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     tmp = kqrandom->random_range_exclusive(0, items[ti].stats[A_ATT] / 2) + items[ti].stats[A_ATT];
@@ -456,7 +456,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     for (a = 0; a < 24; a++) {
       fighter[fighter_index].sts[a] = 0;
     }
-    fighter[fighter_index].hp = 1;
+    fighter[fighter_index].fighterHealth = 1;
     fighter[fighter_index].aframe = 0;
     if (in_combat == 1) {
       draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
@@ -466,7 +466,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     tmp = 0;
     for (fighter_index = attack_fighter_index;
          fighter_index < attack_fighter_index + san; fighter_index++) {
-      if (fighter[fighter_index].hp == fighter[fighter_index].mhp) {
+      if (fighter[fighter_index].fighterHealth == fighter[fighter_index].mhp) {
         tmp++;
       }
     }
@@ -600,7 +600,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     }
     i = kqrandom->random_range_exclusive(10, 21);
     party[pidx[fighter_index]].mhp += i;
-    fighter[fighter_index].hp += i;
+    fighter[fighter_index].fighterHealth += i;
   }
   if (ti == I_MPUP) {
     if (fighter[fighter_index].sts[S_DEAD] != 0) {
@@ -616,7 +616,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     }
     for (fighter_index = attack_fighter_index;
          fighter_index < attack_fighter_index + san; fighter_index++) {
-      fighter[fighter_index].hp = fighter[fighter_index].mhp;
+      fighter[fighter_index].fighterHealth = fighter[fighter_index].mhp;
       fighter[fighter_index].mp = fighter[fighter_index].mmp;
       for (b = 0; b < 8; b++) {
         fighter[fighter_index].sts[b] = 0;

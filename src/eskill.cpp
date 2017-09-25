@@ -280,7 +280,7 @@ void combat_skill(size_t fighter_index) {
     draw_spellsprite(0, 1, 48, 0);
     for (target_fighter_index = 0; target_fighter_index < numchrs;
          target_fighter_index++) {
-      b = fighter[target_fighter_index].hp / 3;
+      b = fighter[target_fighter_index].fighterHealth / 3;
       ta[target_fighter_index] = 0 - b;
     }
     display_amount(0, FONT_WHITE, 1);

@@ -37,7 +37,7 @@ typedef struct {
 	int fighterImageDatafileHeight;
 
 	/** Hit Points */
-	int hp;
+	int fighterHealth;
 
 	/** Max Hit Points */
 	int mhp;

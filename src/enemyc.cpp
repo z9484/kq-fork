@@ -122,7 +122,7 @@ static void enemy_attack(size_t target_fighter_index) {
   int b, c;
   size_t fighter_index;
 
-  if (fighter[target_fighter_index].hp <
+  if (fighter[target_fighter_index].fighterHealth <
           (fighter[target_fighter_index].mhp / 5) &&
       fighter[target_fighter_index].sts[S_CHARM] == 0) {
     if (kqrandom->random_range_exclusive(0, 4) == 0) {
@@ -212,7 +212,7 @@ void enemy_charmaction(size_t fighter_index) {
     return;
   }
   if (fighter[fighter_index].sts[S_DEAD] == 1 ||
-      fighter[fighter_index].hp <= 0) {
+      fighter[fighter_index].fighterHealth <= 0) {
     cact[fighter_index] = 0;
     return;
   }
@@ -251,7 +251,7 @@ void enemy_chooseaction(size_t fighter_index) {
     return;
   }
   if (fighter[fighter_index].sts[S_DEAD] == 1 ||
-      fighter[fighter_index].hp <= 0) {
+      fighter[fighter_index].fighterHealth <= 0) {
     cact[fighter_index] = 0;
     return;
   }
@@ -263,7 +263,7 @@ void enemy_chooseaction(size_t fighter_index) {
   }
   fighter[fighter_index].defend = 0;
   fighter[fighter_index].facing = 1;
-  if (fighter[fighter_index].hp < fighter[fighter_index].mhp * 2 / 3 &&
+  if (fighter[fighter_index].fighterHealth < fighter[fighter_index].mhp * 2 / 3 &&
       kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].sts[S_MUTE] == 0) {
     enemy_curecheck(fighter_index);
     if (cact[fighter_index] == 0) {
@@ -476,7 +476,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
         yes = enemy_stscheck(S_RESIST, PSIZE);
         break;
       case M_ABSORB:
-        if (fighter[attack_fighter_index].hp <
+        if (fighter[attack_fighter_index].fighterHealth <
             fighter[attack_fighter_index].mhp / 2) {
           yes = 1;
         }
@@ -533,7 +533,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
         aux = 0;
         for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
           if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-              fighter[fighter_index].hp >= fighter[fighter_index].mhp / 3) {
+              fighter[fighter_index].fighterHealth >= fighter[fighter_index].mhp / 3) {
             aux++;
           }
         if (aux > 0) {
@@ -541,7 +541,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
         }
         break;
       case M_DRAIN:
-        if (fighter[attack_fighter_index].hp <
+        if (fighter[attack_fighter_index].fighterHealth <
             fighter[attack_fighter_index].mhp) {
           yes = 1;
         }
@@ -768,7 +768,7 @@ static void load_enemies(void)
 			f->aip[p] = tmp;
 			f->atrack[p] = 0;
 		}
-		f->hp = f->mhp;
+		f->fighterHealth = f->mhp;
 		f->mp = f->mmp;
 		for (p = 0; p < 24; p++)
 		{
@@ -948,7 +948,7 @@ static int spell_setup(int whom, int z) {
       for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
            fighter_index++) {
         if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-            fighter[fighter_index].hp < fighter[fighter_index].mhp * 75 / 100) {
+            fighter[fighter_index].fighterHealth < fighter[fighter_index].mhp * 75 / 100) {
           aux++;
         }
       }

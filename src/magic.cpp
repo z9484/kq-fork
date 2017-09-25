@@ -67,12 +67,12 @@ static void spell_damage(size_t, int, size_t, size_t);
  * \param   amt Amount to adjust
  */
 void adjust_hp(size_t fighter_index, int amt) {
-  fighter[fighter_index].hp += amt;
-  if (fighter[fighter_index].hp > fighter[fighter_index].mhp) {
-    fighter[fighter_index].hp = fighter[fighter_index].mhp;
+  fighter[fighter_index].fighterHealth += amt;
+  if (fighter[fighter_index].fighterHealth > fighter[fighter_index].mhp) {
+    fighter[fighter_index].fighterHealth = fighter[fighter_index].mhp;
   }
-  if (fighter[fighter_index].hp < 0) {
-    fighter[fighter_index].hp = 0;
+  if (fighter[fighter_index].fighterHealth < 0) {
+    fighter[fighter_index].fighterHealth = 0;
   }
 }
 
@@ -306,14 +306,14 @@ static void beffect_one_enemy(size_t caster_fighter_index,
       r = r / 2;
     }
     if (fighter[target_fighter_index].unl > 0) {
-      if (fighter[caster_fighter_index].hp < abs(r)) {
-        r = 0 - fighter[caster_fighter_index].hp;
+      if (fighter[caster_fighter_index].fighterHealth < abs(r)) {
+        r = 0 - fighter[caster_fighter_index].fighterHealth;
       }
       ta[target_fighter_index] = 0 - r;
       ta[caster_fighter_index] = r;
     } else {
-      if (fighter[target_fighter_index].hp < abs(r)) {
-        r = 0 - fighter[target_fighter_index].hp;
+      if (fighter[target_fighter_index].fighterHealth < abs(r)) {
+        r = 0 - fighter[target_fighter_index].fighterHealth;
       }
       ta[target_fighter_index] = r;
       ta[caster_fighter_index] = 0 - r;
@@ -321,12 +321,12 @@ static void beffect_one_enemy(size_t caster_fighter_index,
     break;
   case M_DOOM:
     if (non_dmg_save(target_fighter_index, sp_hit) == 0) {
-      a = fighter[target_fighter_index].hp * 3 / 4;
+      a = fighter[target_fighter_index].fighterHealth * 3 / 4;
       if (a < 1) {
         a = 1;
       }
-      if (fighter[target_fighter_index].hp - a < 1) {
-        a = fighter[target_fighter_index].hp - 1;
+      if (fighter[target_fighter_index].fighterHealth - a < 1) {
+        a = fighter[target_fighter_index].fighterHealth - 1;
       }
       ta[target_fighter_index] = 0 - a;
     } else {
@@ -335,7 +335,7 @@ static void beffect_one_enemy(size_t caster_fighter_index,
     break;
   case M_DEATH:
     if (non_dmg_save(target_fighter_index, sp_hit) == 0) {
-      a = fighter[target_fighter_index].hp;
+      a = fighter[target_fighter_index].fighterHealth;
       ta[target_fighter_index] = 0 - a;
     } else {
       ta[target_fighter_index] = MISS;
@@ -618,7 +618,7 @@ int combat_spell(size_t caster_fighter_index, int is_item) {
        fighter_index < start_fighter_index + end_fighter_index;
        fighter_index++) {
     if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].hp <= 0) {
+        fighter[fighter_index].fighterHealth <= 0) {
       fkill(fighter_index);
       ta[fighter_index] = 1;
       b++;
@@ -840,7 +840,7 @@ static void geffect_all_allies(size_t caster_fighter_index,
         if (fighter_hp < 10) {
           fighter_hp = 10;
         }
-        fighter[fighter_index].hp += fighter_hp;
+        fighter[fighter_index].fighterHealth += fighter_hp;
         fighter[fighter_index].mhp += fighter_hp;
         fighter[fighter_index].sts[S_BLESS]++;
         ta[fighter_index] = NODISPLAY;
@@ -1008,7 +1008,7 @@ static void heal_one_ally(size_t caster_fighter_index,
       for (stat_index = 0; stat_index < 24; stat_index++) {
         fighter[target_fighter_index].sts[stat_index] = 0;
       }
-      fighter[target_fighter_index].hp = 1;
+      fighter[target_fighter_index].fighterHealth = 1;
       fighter[target_fighter_index].aframe = 0;
     } else {
       ta[target_fighter_index] = MISS;
@@ -1019,7 +1019,7 @@ static void heal_one_ally(size_t caster_fighter_index,
       for (stat_index = 0; stat_index < 24; stat_index++) {
         fighter[target_fighter_index].sts[stat_index] = 0;
       }
-      fighter[target_fighter_index].hp = fighter[target_fighter_index].mhp;
+      fighter[target_fighter_index].fighterHealth = fighter[target_fighter_index].mhp;
       fighter[target_fighter_index].aframe = 0;
     } else {
       ta[target_fighter_index] = MISS;
@@ -1250,7 +1250,7 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg,
   for (fighter_index = first_target; fighter_index < first_target + last_target;
        fighter_index++) {
     if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].hp <= 0) {
+        fighter[fighter_index].fighterHealth <= 0) {
       fkill(fighter_index);
       ta[fighter_index] = 1;
       b++;

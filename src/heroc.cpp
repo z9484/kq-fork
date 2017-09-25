@@ -95,7 +95,7 @@ void auto_herochooseact(int who) {
   if (cact[who] == 0) {
     return;
   }
-  if (fighter[who].sts[S_DEAD] != 0 || fighter[who].hp <= 0) {
+  if (fighter[who].sts[S_DEAD] != 0 || fighter[who].fighterHealth <= 0) {
     cact[who] = 0;
     return;
   }
@@ -310,7 +310,7 @@ static int combat_item(int ss, int t1, int tg) {
   }
   b = 0;
   for (a = st; a < st + tt; a++) {
-    if (fighter[a].sts[S_DEAD] == 0 && fighter[a].hp <= 0) {
+    if (fighter[a].sts[S_DEAD] == 0 && fighter[a].fighterHealth <= 0) {
       fkill(a);
       b++;
     } else {

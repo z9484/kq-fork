@@ -85,7 +85,7 @@ int auto_select_enemy(int whom, int csts) {
         number_enemies++;
       } else {
         if (csts == CURE_CHECK) {
-          if (fighter[i].hp < fighter[i].mhp * 75 / 100) {
+          if (fighter[i].fighterHealth < fighter[i].mhp * 75 / 100) {
             tmpd[number_enemies] = i;
             number_enemies++;
           }
@@ -153,7 +153,7 @@ int auto_select_hero(int whom, int csts) {
  * \returns 0 if fighter is dead or has HP<1 or MHP<1, otherwise 1
  */
 static int can_attack(int tgt) {
-  if (fighter[tgt].mhp < 1 || fighter[tgt].hp < 1 ||
+  if (fighter[tgt].mhp < 1 || fighter[tgt].fighterHealth < 1 ||
       fighter[tgt].sts[S_DEAD] != 0) {
     return 0;
   }

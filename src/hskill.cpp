@@ -67,7 +67,7 @@ int hero_skillcheck(size_t fighter_index) {
 
   switch (pidx_index) {
   case SENSAR:
-    if (fighter[fighter_index].hp <= fighter[fighter_index].mhp / 10) {
+    if (fighter[fighter_index].fighterHealth <= fighter[fighter_index].mhp / 10) {
       return 0;
     } else {
       return 1;
@@ -353,7 +353,7 @@ static void infusion(int c, int sn) {
     if (j < 10) {
       j = 10;
     }
-    fighter[c].hp += j;
+    fighter[c].fighterHealth += j;
     fighter[c].mhp += j;
     fighter[c].welem = 8;
     break;
@@ -364,7 +364,7 @@ static void infusion(int c, int sn) {
     if (j < 40) {
       j = 40;
     }
-    fighter[c].hp += j;
+    fighter[c].fighterHealth += j;
     fighter[c].mhp += j;
     fighter[c].welem = 8;
     break;
@@ -375,7 +375,7 @@ static void infusion(int c, int sn) {
     if (j < 80) {
       j = 80;
     }
-    fighter[c].hp += j;
+    fighter[c].fighterHealth += j;
     fighter[c].mhp += j;
     fighter[c].welem = 8;
     break;
@@ -403,7 +403,7 @@ void reveal(int tgt) {
   print_font(double_buffer, 92, 64, strbuf, FNORMAL);
   sprintf(strbuf, _("Level: %d"), fighter[tgt].fighterLevel);
   print_font(double_buffer, 92, 72, strbuf, FNORMAL);
-  sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].hp, fighter[tgt].mhp);
+  sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].fighterHealth, fighter[tgt].mhp);
   print_font(double_buffer, 92, 80, strbuf, FNORMAL);
   sprintf(strbuf, _("MP: %d/%d"), fighter[tgt].mp, fighter[tgt].mmp);
   print_font(double_buffer, 92, 88, strbuf, FNORMAL);
@@ -496,13 +496,13 @@ int skill_use(size_t attack_fighter_index) {
       }
     }
 
-    fighter[attack_fighter_index].hp -= (b * 2);
+    fighter[attack_fighter_index].fighterHealth -= (b * 2);
     ta[attack_fighter_index] = (b * 2);
     display_attack_string = 0;
     blit(temp.get(), backart, 0, 0, 0, 0, 320, 240);
     display_amount(attack_fighter_index, FONT_DECIDE, 0);
     if (fighter[attack_fighter_index].sts[S_DEAD] == 0 &&
-        fighter[attack_fighter_index].hp <= 0) {
+        fighter[attack_fighter_index].fighterHealth <= 0) {
       fkill(attack_fighter_index);
       death_animation(attack_fighter_index, 0);
     }
@@ -617,8 +617,8 @@ int skill_use(size_t attack_fighter_index) {
             }
           }
           if (kqrandom->random_range_exclusive(0, 100) < cts) {
-            if (b >= fighter[fighter_index].hp) {
-              b -= fighter[fighter_index].hp;
+            if (b >= fighter[fighter_index].fighterHealth) {
+              b -= fighter[fighter_index].fighterHealth;
               deffect[fighter_index] = 1;
               fkill(fighter_index);
             }
