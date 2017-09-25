@@ -286,14 +286,13 @@ void battle_render(signed int plyr, size_t hl, int sall) {
     if (current_fighter_index >= PSIZE) {
       current_fighter_index = plyr - 1;
       t = curx + (curw / 2);
-      t -= (strlen(fighter[current_fighter_index].fighterName) * 4);
+      t -= (fighter[current_fighter_index].fighterName.length() * 4);
       z = (fighter[current_fighter_index].cy < 32
                ? fighter[current_fighter_index].cy + fighter[current_fighter_index].cl
                : fighter[current_fighter_index].cy - 32);
 
-      menubox(double_buffer, t - 8, z, strlen(fighter[current_fighter_index].fighterName), 1, BLUE);
-      print_font(double_buffer, t, z + 8, fighter[current_fighter_index].fighterName,
-                 FNORMAL);
+      menubox(double_buffer, t - 8, z, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
+      print_font(double_buffer, t, z + 8, fighter[current_fighter_index].fighterName.c_str(), FNORMAL);
     }
   }
 
@@ -329,7 +328,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
       hline(double_buffer, b + 8, 231, b + sz + 8, a - 1);
     }
 
-    print_font(double_buffer, b + 8, 192, fighter[z].fighterName, (hl == z + 1) ? FGOLD : FNORMAL);
+    print_font(double_buffer, b + 8, 192, fighter[z].fighterName.c_str(), (hl == z + 1) ? FGOLD : FNORMAL);
 
     sprintf(strbuf, _("HP: %3d/%3d"), fighter[z].hp, fighter[z].mhp);
     /*  RB IDEA: If the character has less than 1/5 of his/her max    */

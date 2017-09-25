@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <allegro.h>
 
 class Raster;
@@ -11,7 +13,7 @@ class Raster;
  */
 typedef struct {
 	/** Name */
-	char fighterName[25];
+	std::string fighterName;
 
 	/** Experience Points */
 	int xp;

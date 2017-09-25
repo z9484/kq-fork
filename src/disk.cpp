@@ -803,9 +803,9 @@ static void printprop(tinyxml2::XMLPrinter &out, const char *name,
 static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 {
 	out.OpenElement("fighter");
-	out.PushAttribute("id", f.fighterName);
+	out.PushAttribute("id", f.fighterName.c_str());
 	out.OpenElement("properties");
-	printprop(out, "name", f.fighterName);
+	printprop(out, "name", f.fighterName.c_str());
 	printprop(out, "xp", f.xp);
 	printprop(out, "gp", f.gp);
 	printprop(out, "lvl", f.lvl);
