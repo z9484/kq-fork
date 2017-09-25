@@ -633,7 +633,7 @@ void hero_choose_action(size_t fighter_index) {
     return;
   }
   Game.unpress();
-  fighter[fighter_index].defend = 0;
+  fighter[fighter_index].fighterWillDefend = 0;
   fighter[fighter_index].fighterSpriteFacing = 0;
   if (pidx[fighter_index] != CORIN && pidx[fighter_index] != CASANDRA) {
     fighter[fighter_index].aux = 0;
@@ -740,7 +740,7 @@ void hero_choose_action(size_t fighter_index) {
     if (PlayerInput.balt) {
       Game.unpress();
       if (sptr == 0) {
-        fighter[fighter_index].defend = 1;
+        fighter[fighter_index].fighterWillDefend = 1;
         cact[fighter_index] = 0;
         stop = 1;
       }

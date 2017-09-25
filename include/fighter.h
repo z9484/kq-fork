@@ -81,7 +81,8 @@ typedef struct {
 	/** eSpellType */
 	uint8_t sts[NUM_SPELLTYPES];
 
-	uint8_t defend;
+	/** Fighter will defend (instead of attack or use an item) for this turn during battle. */
+	uint8_t fighterWillDefend;
 	uint8_t ai[8];
 	uint8_t aip[8];
 	uint8_t atrack[8];

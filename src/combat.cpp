@@ -137,7 +137,7 @@ eAttackResult attack_result(int ar, int dr) {
   }
 
   /*  JB: check to see if the defender is 'defending'  */
-  if (tempd.defend == 1) {
+  if (tempd.fighterWillDefend == 1) {
     defender_defense = (defender_defense * 3) / 2;
   }
 
@@ -1218,7 +1218,7 @@ static void init_fighters(void) {
     fighter[fighter_index].fighterMaxHealth = 0;
     fighter[fighter_index].aux = 0;
     /* .defend was not initialized; patch supplied by Sam H */
-    fighter[fighter_index].defend = 0;
+    fighter[fighter_index].fighterWillDefend = 0;
   }
 
   /* TT: These two are only called once in the game.

@@ -826,7 +826,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "facing", f.fighterSpriteFacing);
 	printprop(out, "aframe", f.fighterAttackSpriteFrame);
 	printprop(out, "crit", f.fighterCanCriticalHit);
-	printprop(out, "defend", f.defend);
+	printprop(out, "defend", f.fighterWillDefend);
 	printprop(out, "csmem", f.csmem);
 	printprop(out, "ctmem", f.ctmem);
 	printprop(out, "current-weapon-type", f.current_weapon_type);

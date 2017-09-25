@@ -692,7 +692,7 @@ int skill_use(size_t attack_fighter_index) {
 
   case TEMMIN:
     fighter[attack_fighter_index].aux = 1;
-    fighter[attack_fighter_index].defend = 1;
+    fighter[attack_fighter_index].fighterWillDefend = 1;
     break;
 
   case AYLA:

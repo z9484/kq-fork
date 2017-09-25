@@ -124,7 +124,7 @@ static void enemy_attack(size_t target_fighter_index) {
 
   if (fighter[target_fighter_index].fighterHealth < (fighter[target_fighter_index].fighterMaxHealth / 5) && fighter[target_fighter_index].sts[S_CHARM] == 0) {
     if (kqrandom->random_range_exclusive(0, 4) == 0) {
-      fighter[target_fighter_index].defend = 1;
+      fighter[target_fighter_index].fighterWillDefend = 1;
       cact[target_fighter_index] = 0;
       return;
     }
@@ -139,7 +139,7 @@ static void enemy_attack(size_t target_fighter_index) {
     }
   }
   if (b < 0) {
-    fighter[target_fighter_index].defend = 1;
+    fighter[target_fighter_index].fighterWillDefend = 1;
     cact[target_fighter_index] = 0;
     return;
   }
@@ -257,7 +257,7 @@ void enemy_chooseaction(size_t fighter_index) {
       fighter[fighter_index].atrack[a]--;
     }
   }
-  fighter[fighter_index].defend = 0;
+  fighter[fighter_index].fighterWillDefend = 0;
   fighter[fighter_index].fighterSpriteFacing = 1;
   if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].sts[S_MUTE] == 0) {
     enemy_curecheck(fighter_index);
