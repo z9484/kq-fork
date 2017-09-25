@@ -675,7 +675,7 @@ static void load_enemies(void)
 		f->fighterMaxMagic = tmp;
 		// Defeat Item Probability: chance of finding any items after defeat
 		fscanf(edat, "%d", &tmp);
-		f->dip = tmp;
+		f->fighterDefeatItemProbability = tmp;
 		// Defeat Item Common: item found commonly of the time
 		fscanf(edat, "%d", &tmp);
 		f->defeat_item_common = tmp;

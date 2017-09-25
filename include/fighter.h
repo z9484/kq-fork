@@ -49,7 +49,7 @@ typedef struct {
 	int fighterMaxMagic;
 
 	/** Defeat Item Probability: Probability in % that the enemy will yield an item when defeated. */
-	int dip;
+	int fighterDefeatItemProbability;
 
 	/** Defeat Item Common: If the enemy yields an item, you will get this item 95% of the time. */
 	int defeat_item_common;

@@ -1112,7 +1112,7 @@ static void heroes_win(void) {
 		/* PH bug: (?) should found_item be reset to zero at the start of this loop?
 		 * If you defeat 2 enemies, you should (possibly) get 2 items, right?
 		 */
-		if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + PSIZE].dip) {
+		if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + PSIZE].fighterDefeatItemProbability) {
 			if (fighter[fighter_index + PSIZE].defeat_item_common > 0) {
 				found_item = fighter[fighter_index + PSIZE].defeat_item_common;
 			}
