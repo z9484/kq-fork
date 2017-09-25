@@ -262,7 +262,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
         dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - (eff[magic_effect_index].xsize / 2);
         dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - (eff[magic_effect_index].ysize / 2);
         draw_fighter(fighter_index, 0);
-        if (shows == 1 && fighter[fighter_index].sts[S_SHIELD] > 0) {
+        if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] > 0) {
           // The shield sprite in MISC is 48x48 pixels, so center it over the
           // fighter.
           draw_trans_sprite(
@@ -384,7 +384,7 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
     for (fighter_index = start_fighter_index;
          fighter_index < start_fighter_index + num_fighters; fighter_index++) {
       if (is_active(fighter_index) == 1) {
-        if (shows == 1 && fighter[fighter_index].sts[S_RESIST] > 0) {
+        if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] > 0) {
           draw_trans_sprite(
               double_buffer, b_shell,
               fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
@@ -466,7 +466,7 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
           break;
         }
         draw_fighter(fighter_index, 0);
-        if (shows == 1 && fighter[fighter_index].sts[S_RESIST] > 0) {
+        if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] > 0) {
           draw_trans_sprite(
               double_buffer, b_shell,
               fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24, fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
@@ -519,5 +519,5 @@ void fight_animation(size_t target_fighter_index, size_t fighter_index,
  * \returns 1 if alive, 0 if dead
  */
 int is_active(int guy) {
-  return (fighter[guy].sts[S_DEAD] == deadeffect ? 1 : 0);
+  return (fighter[guy].fighterSpellEffectStats[S_DEAD] == deadeffect ? 1 : 0);
 }

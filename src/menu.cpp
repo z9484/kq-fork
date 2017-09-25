@@ -361,10 +361,10 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.fighterMagic = plr.mp;
 	tf.fighterMaxMagic = plr.mmp;
 	for (int j = 0; j < 8; j++) {
-		tf.sts[j] = plr.sts[j];
+		tf.fighterSpellEffectStats[j] = plr.sts[j];
 	}
-	for (int j = 8; j < NUM_SPELLTYPES; j++) {
-		tf.sts[j] = 0;
+	for (int j = 8; j < NUM_SPELL_TYPES; j++) {
+		tf.fighterSpellEffectStats[j] = 0;
 	}
 	for (int j = 0; j < NUM_ATTRIBUTES; j++) {
 		tf.fighterStats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
@@ -607,14 +607,14 @@ void revert_equipstats(void) {
     for (stats_index = 0; stats_index < 12; stats_index++) {
       party[pidx_index].sts[stats_index] = 0;
     }
-    party[pidx_index].sts[S_POISON] = fighter[fighter_index].sts[S_POISON];
-    party[pidx_index].sts[S_BLIND] = fighter[fighter_index].sts[S_BLIND];
-    party[pidx_index].sts[S_MUTE] = fighter[fighter_index].sts[S_MUTE];
-    party[pidx_index].sts[S_DEAD] = fighter[fighter_index].sts[S_DEAD];
+    party[pidx_index].sts[S_POISON] = fighter[fighter_index].fighterSpellEffectStats[S_POISON];
+    party[pidx_index].sts[S_BLIND] = fighter[fighter_index].fighterSpellEffectStats[S_BLIND];
+    party[pidx_index].sts[S_MUTE] = fighter[fighter_index].fighterSpellEffectStats[S_MUTE];
+    party[pidx_index].sts[S_DEAD] = fighter[fighter_index].fighterSpellEffectStats[S_DEAD];
     for (stats_index = 0; stats_index < 12; stats_index++) {
       if (stats_index != S_POISON && stats_index != S_BLIND &&
           stats_index != S_MUTE && stats_index != S_DEAD) {
-        fighter[fighter_index].sts[stats_index] = 0;
+        fighter[fighter_index].fighterSpellEffectStats[stats_index] = 0;
       }
     }
   }

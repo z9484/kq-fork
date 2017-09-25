@@ -79,7 +79,7 @@ int auto_select_enemy(int whom, int csts) {
   unsigned int i, number_enemies = 0;
   int tmpd[NUM_FIGHTERS];
   for (i = PSIZE; i < PSIZE + num_enemies; i++) {
-    if (fighter[i].sts[S_DEAD] == 0) {
+    if (fighter[i].fighterSpellEffectStats[S_DEAD] == 0) {
       if (csts == NO_STS_CHECK) {
         tmpd[number_enemies] = i;
         number_enemies++;
@@ -90,7 +90,7 @@ int auto_select_enemy(int whom, int csts) {
             number_enemies++;
           }
         } else {
-          if ((csts == S_BLESS && fighter[i].sts[csts] < 3) || (csts == S_STRENGTH && fighter[i].sts[csts] < 2) || (csts != S_BLESS && csts != S_STRENGTH && fighter[i].sts[csts] == 0)) {
+          if ((csts == S_BLESS && fighter[i].fighterSpellEffectStats[csts] < 3) || (csts == S_STRENGTH && fighter[i].fighterSpellEffectStats[csts] < 2) || (csts != S_BLESS && csts != S_STRENGTH && fighter[i].fighterSpellEffectStats[csts] == 0)) {
             tmpd[number_enemies] = i;
             number_enemies++;
           }
@@ -132,7 +132,7 @@ int auto_select_hero(int whom, int csts) {
   (void)whom;
 
   for (unsigned int a = 0; a < numchrs; a++) {
-    if ((csts == NO_STS_CHECK || fighter[a].sts[csts] == 0) && can_attack(a)) {
+    if ((csts == NO_STS_CHECK || fighter[a].fighterSpellEffectStats[csts] == 0) && can_attack(a)) {
       tmpd[cntr] = a;
       cntr++;
     }
@@ -150,7 +150,7 @@ int auto_select_hero(int whom, int csts) {
  * \returns 0 if fighter is dead or has HP<1 or MHP<1, otherwise 1
  */
 static int can_attack(int tgt) {
-  if (fighter[tgt].fighterMaxHealth < 1 || fighter[tgt].fighterHealth < 1 || fighter[tgt].sts[S_DEAD] != 0) {
+  if (fighter[tgt].fighterMaxHealth < 1 || fighter[tgt].fighterHealth < 1 || fighter[tgt].fighterSpellEffectStats[S_DEAD] != 0) {
     return 0;
   }
   return 1;
@@ -520,9 +520,9 @@ ePIDX select_hero(size_t target_fighter_index, eTarget multi_target,
   bool select_all = (multi_target == TGT_ALLY_ALL);
   for (unsigned int fighter_index = 0; fighter_index < numchrs;
        fighter_index++) {
-    if (can_select_dead || fighter[fighter_index].sts[S_DEAD] == 0) {
+    if (can_select_dead || fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
       tmpd[cntr] = fighter_index;
-      if (fighter[cntr].sts[S_DEAD]) {
+      if (fighter[cntr].fighterSpellEffectStats[S_DEAD]) {
         ptr = cntr; /* default: select a dead char if there is one */
       }
       cntr++;

@@ -75,11 +75,13 @@ typedef struct {
 	/** Battle sprite to display (standing, casting, attacking) */
 	uint8_t fighterAttackSpriteFrame;
 
-	/** Player frequently (or always) gets a "critical hit" buff (Sensar's "rage") */
+	/** Fighter frequently (or always) gets a "critical hit" buff (Sensar's "rage") */
 	uint8_t fighterCanCriticalHit;
 
-	/** eSpellType */
-	uint8_t sts[NUM_SPELLTYPES];
+	/** eSpellType: Values > 0 mean that the fighter is affected (for good or bad) with this amount of each effect.
+	 *  Some, like S_DEAD, are only being used as a boolean to determine whether a fighter has been killed.
+	 */
+	uint8_t fighterSpellEffectStats[NUM_SPELL_TYPES];
 
 	/** Fighter will defend (instead of attack or use an item) for this turn during battle. */
 	uint8_t fighterWillDefend;

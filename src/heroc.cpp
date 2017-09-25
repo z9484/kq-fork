@@ -95,7 +95,7 @@ void auto_herochooseact(int who) {
   if (cact[who] == 0) {
     return;
   }
-  if (fighter[who].sts[S_DEAD] != 0 || fighter[who].fighterHealth <= 0) {
+  if (fighter[who].fighterSpellEffectStats[S_DEAD] != 0 || fighter[who].fighterHealth <= 0) {
     cact[who] = 0;
     return;
   }
@@ -310,7 +310,7 @@ static int combat_item(int ss, int t1, int tg) {
   }
   b = 0;
   for (a = st; a < st + tt; a++) {
-    if (fighter[a].sts[S_DEAD] == 0 && fighter[a].fighterHealth <= 0) {
+    if (fighter[a].fighterSpellEffectStats[S_DEAD] == 0 && fighter[a].fighterHealth <= 0) {
       fkill(a);
       b++;
     } else {
@@ -579,7 +579,7 @@ static void draw_invokable(int dud) {
 static int hero_attack(int whom) {
   int tgt;
 
-  if (fighter[whom].sts[S_CHARM] == 0) {
+  if (fighter[whom].fighterSpellEffectStats[S_CHARM] == 0) {
     tgt = select_enemy(whom, TGT_ENEMY_ONE);
   } else {
     /* PH fixme: replaced 99 with NO_STS_CHECK */
@@ -650,7 +650,7 @@ void hero_choose_action(size_t fighter_index) {
       chi[my] = C_SKILL;
       my++;
     }
-    if (fighter[fighter_index].sts[S_MUTE] == 0 &&
+    if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0 &&
         available_spells(fighter_index) > 0) {
       strcpy(ca[my], _("Spell"));
       chi[my] = C_SPELL;
@@ -998,8 +998,8 @@ static int hero_invokeitem(size_t attacker_fighter_index, size_t item_index) {
     draw_spellsprite(0, 1, 27, 0);
     for (unsigned int fighter_index = 0; fighter_index < numchrs;
          fighter_index++) {
-      if (fighter[fighter_index].sts[S_DEAD] == 0) {
-        fighter[fighter_index].sts[S_POISON] = 0;
+      if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
+        fighter[fighter_index].fighterSpellEffectStats[S_POISON] = 0;
       }
     }
   }
@@ -1010,7 +1010,7 @@ static int hero_invokeitem(size_t attacker_fighter_index, size_t item_index) {
     ta[defender_fighter_index] = 0;
     for (unsigned fighter_index = 0; fighter_index < random_fighter_index;
          fighter_index++) {
-      if (fighter[defender_fighter_index].sts[S_DEAD] == 0) {
+      if (fighter[defender_fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
         draw_attacksprite(defender_fighter_index, 0, 4, 1);
         special_damage_oneall_enemies(attacker_fighter_index, 16, -1,
                                       defender_fighter_index, 0);
@@ -1039,7 +1039,7 @@ static void hero_run(void) {
     a = 74;
   }
   for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
       b++;
       bt += fighter[fighter_index].fighterStats[A_SPD];
     }
@@ -1051,7 +1051,7 @@ static void hero_run(void) {
   }
   for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
        fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
       c++;
       ct += fighter[fighter_index].fighterStats[A_SPD];
     }
@@ -1110,7 +1110,7 @@ static void hero_run(void) {
           fr++;
         }
 
-        if (fighter[fighter_index].sts[S_DEAD] == 0) {
+        if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
           draw_sprite(double_buffer, frames[pidx[fighter_index]][fr], fx, fy);
         }
       }

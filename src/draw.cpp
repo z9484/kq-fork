@@ -842,7 +842,7 @@ void draw_stsicon(Raster *where, int cc, int who, int inum, int icx, int icy) {
     if (cc == 0) {
       s = party[who].sts[j];
     } else {
-      s = fighter[who].sts[j];
+      s = fighter[who].fighterSpellEffectStats[j];
     }
     if (s != 0) {
       masked_blit(stspics, where, 0, j * 8 + 8, st * 8 + icx, icy, 8, 8);

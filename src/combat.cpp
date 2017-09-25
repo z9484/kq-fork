@@ -142,8 +142,8 @@ eAttackResult attack_result(int ar, int dr) {
   }
 
   /*  JB: if the attacker is empowered by trueshot  */
-  if (tempa.sts[S_TRUESHOT] > 0) {
-    fighter[ar].sts[S_TRUESHOT] = 0;
+  if (tempa.fighterSpellEffectStats[S_TRUESHOT] > 0) {
+    fighter[ar].fighterSpellEffectStats[S_TRUESHOT] = 0;
     defender_evade = 0;
   }
 
@@ -170,7 +170,7 @@ eAttackResult attack_result(int ar, int dr) {
   }
 
   /*  JB: If the defender is etherealized, set mult to 0  */
-  if (tempd.sts[S_ETHER] > 0) {
+  if (tempd.fighterSpellEffectStats[S_ETHER] > 0) {
     mult = 0;
   }
 
@@ -193,9 +193,8 @@ eAttackResult attack_result(int ar, int dr) {
       }
     }
 
-    /*  JB: if affected by a NAUSEA/MALISON spell, the defender  */
-    /*      takes more damage than normal                        */
-    if (tempd.sts[S_MALISON] > 0) {
+    /*  JB: If affected by a NAUSEA/MALISON spell, the defender takes more damage than normal  */
+    if (tempd.fighterSpellEffectStats[S_MALISON] > 0) {
       base *= (int)5 / 4;
     }
 
@@ -210,12 +209,12 @@ eAttackResult attack_result(int ar, int dr) {
     }
 
     if ((c >= R_POISON) && (c <= R_SLEEP)) {
-      if ((res_throw(dr, c) == 0) && (fighter[dr].sts[c - R_POISON] == 0)) {
+      if ((res_throw(dr, c) == 0) && (fighter[dr].fighterSpellEffectStats[c - R_POISON] == 0)) {
         if (non_dmg_save(dr, 50) == 0) {
           if ((c == R_POISON) || (c == R_PETRIFY) || (c == R_SILENCE)) {
-            tempd.sts[c - R_POISON] = 1;
+            tempd.fighterSpellEffectStats[c - R_POISON] = 1;
           } else {
-            tempd.sts[c - R_POISON] = kqrandom->random_range_exclusive(2, 5);
+            tempd.fighterSpellEffectStats[c - R_POISON] = kqrandom->random_range_exclusive(2, 5);
           }
         }
       }
@@ -300,7 +299,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
   for (z = 0; z < numchrs; z++) {
     b = z * x_offset;
 
-    if (fighter[z].sts[S_DEAD] == 0) {
+    if (fighter[z].fighterSpellEffectStats[S_DEAD] == 0) {
       draw_fighter(z, (sall == 1));
     } else {
       fighter[z].fighterAttackSpriteFrame = 3;
@@ -308,17 +307,17 @@ void battle_render(signed int plyr, size_t hl, int sall) {
     }
 
     menubox(double_buffer, b, 184, 11, 5, BLUE);
-    if (fighter[z].sts[S_DEAD] == 0) {
+    if (fighter[z].fighterSpellEffectStats[S_DEAD] == 0) {
       sz = bspeed[z] * 88 / ROUND_MAX;
       if (sz > 88) {
         sz = 88;
       }
 
       a = 116;
-      if (fighter[z].sts[S_TIME] == 1) {
+      if (fighter[z].fighterSpellEffectStats[S_TIME] == 1) {
         a = 83;
       }
-      else if (fighter[z].sts[S_TIME] == 2) {
+      else if (fighter[z].fighterSpellEffectStats[S_TIME] == 2) {
         a = 36;
       }
 
@@ -360,7 +359,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
 
   for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
        fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
       draw_fighter(fighter_index, (sall == 2));
     }
   }
@@ -386,10 +385,9 @@ static int check_end(void) {
   size_t fighter_index;
   int alive = 0;
 
-  /*  RB: count the number of heroes alive. If there is none, the   */
-  /*      enemies won the battle.                                   */
+  /*  RB: count the number of heroes alive. If there is none, the enemies won the battle.  */
   for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
       alive++;
     }
   }
@@ -399,11 +397,10 @@ static int check_end(void) {
     return 1;
   }
 
-  /*  RB: count the number of enemies alive. If there is none, the  */
-  /*      heroes won the battle.                                    */
+  /*  RB: count the number of enemies alive. If there is none, the heroes won the battle.  */
   alive = 0;
   for (fighter_index = 0; fighter_index < num_enemies; fighter_index++) {
-    if (fighter[fighter_index + PSIZE].sts[S_DEAD] == 0) {
+    if (fighter[fighter_index + PSIZE].fighterSpellEffectStats[S_DEAD] == 0) {
       alive++;
     }
   }
@@ -518,17 +515,17 @@ static void do_action(size_t fighter_index) {
     }
   }
 
-  spell_type_status = fighter[fighter_index].sts[S_MALISON];
+  spell_type_status = fighter[fighter_index].fighterSpellEffectStats[S_MALISON];
   if (spell_type_status > 0) {
     if (kqrandom->random_range_exclusive(0, 100) < spell_type_status * 5) {
       cact[fighter_index] = 0;
     }
   }
 
-  spell_type_status = fighter[fighter_index].sts[S_CHARM];
+  spell_type_status = fighter[fighter_index].fighterSpellEffectStats[S_CHARM];
   if (spell_type_status > 0) {
-    fighter[fighter_index].sts[S_CHARM]--;
-    spell_type_status = fighter[fighter_index].sts[S_CHARM];
+    fighter[fighter_index].fighterSpellEffectStats[S_CHARM]--;
+    spell_type_status = fighter[fighter_index].fighterSpellEffectStats[S_CHARM];
 
     if (fighter_index < PSIZE) {
       auto_herochooseact(fighter_index);
@@ -660,7 +657,7 @@ static void do_round(void) {
       for (fighter_index = 0; fighter_index < PSIZE + num_enemies;
            fighter_index++) {
         if ((fighter_index < numchrs) || (fighter_index >= PSIZE)) {
-          if (((fighter[fighter_index].sts[S_POISON] - 1) == rcount) && fighter[fighter_index].fighterHealth > 1) {
+          if (((fighter[fighter_index].fighterSpellEffectStats[S_POISON] - 1) == rcount) && fighter[fighter_index].fighterHealth > 1) {
             a = kqrandom->random_range_exclusive(0, fighter[fighter_index].fighterMaxHealth / 20) + 1;
 
             if (a < 2) {
@@ -676,10 +673,8 @@ static void do_round(void) {
             fighter[fighter_index].fighterHealth -= a;
           }
 
-          /*  RB: the character is regenerating? when needed, get a  */
-          /*      random value (never lower than 5), and increase    */
-          /*      the character's health by that amount.             */
-          if ((fighter[fighter_index].sts[S_REGEN] - 1) == rcount) {
+          /*  RB: the character is regenerating? when needed, get a random value (never lower than 5), and increase the character's health by that amount.  */
+          if ((fighter[fighter_index].fighterSpellEffectStats[S_REGEN] - 1) == rcount) {
             a = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].fighterMaxHealth / 10);
 
             if (a < 5) {
@@ -693,50 +688,50 @@ static void do_round(void) {
 
           /*  RB: the character has ether actived?  */
           cact[fighter_index] = 1;
-          if ((fighter[fighter_index].sts[S_ETHER] > 0) && (rcount == 0)) {
-            fighter[fighter_index].sts[S_ETHER]--;
+          if ((fighter[fighter_index].fighterSpellEffectStats[S_ETHER] > 0) && (rcount == 0)) {
+            fighter[fighter_index].fighterSpellEffectStats[S_ETHER]--;
           }
 
           /*  RB: the character is stopped?  */
-          if (fighter[fighter_index].sts[S_STOP] > 0) {
+          if (fighter[fighter_index].fighterSpellEffectStats[S_STOP] > 0) {
             if (pidx[fighter_index] == TEMMIN) {
               fighter[fighter_index].aux = 0;
             }
 
             if (rcount == 0) {
-              fighter[fighter_index].sts[S_STOP]--;
+              fighter[fighter_index].fighterSpellEffectStats[S_STOP]--;
             }
 
             cact[fighter_index] = 0;
           }
 
           /*  RB: the character is sleeping?  */
-          if (fighter[fighter_index].sts[S_SLEEP] > 0) {
+          if (fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] > 0) {
             if (pidx[fighter_index] == TEMMIN) {
               fighter[fighter_index].aux = 0;
             }
 
             if (rcount == 0) {
-              fighter[fighter_index].sts[S_SLEEP]--;
+              fighter[fighter_index].fighterSpellEffectStats[S_SLEEP]--;
             }
 
             cact[fighter_index] = 0;
           }
 
           /*  RB: the character is petrified?  */
-          if (fighter[fighter_index].sts[S_STONE] > 0) {
+          if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] > 0) {
             if (pidx[fighter_index] == TEMMIN) {
               fighter[fighter_index].aux = 0;
             }
 
             if (rcount == 0) {
-              fighter[fighter_index].sts[S_STONE]--;
+              fighter[fighter_index].fighterSpellEffectStats[S_STONE]--;
             }
 
             cact[fighter_index] = 0;
           }
 
-          if (fighter[fighter_index].sts[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0) {
+          if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0) {
             if (pidx[fighter_index] == TEMMIN) {
               fighter[fighter_index].aux = 0;
             }
@@ -746,10 +741,10 @@ static void do_round(void) {
           }
 
           if (cact[fighter_index] > 0) {
-            if (fighter[fighter_index].sts[S_TIME] == 0) {
+            if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 0) {
               bspeed[fighter_index] += nspeed[fighter_index];
             } else {
-              if (fighter[fighter_index].sts[S_TIME] == 1) {
+              if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 1) {
                 bspeed[fighter_index] += (nspeed[fighter_index] / 2 + 1);
               } else {
                 bspeed[fighter_index] += (nspeed[fighter_index] * 2);
@@ -814,11 +809,11 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 
 	ff = (!fr->fighterAttackSpriteFrame) ? fr->fighterSpriteFacing : fr->fighterAttackSpriteFrame;
 
-	if (fr->sts[S_STONE] > 0) {
+	if (fr->fighterSpellEffectStats[S_STONE] > 0) {
 		convert_cframes(fighter_index, 2, 12, 0);
 	}
 
-	if (fr->sts[S_ETHER] > 0) {
+	if (fr->fighterSpellEffectStats[S_ETHER] > 0) {
 		draw_trans_sprite(double_buffer, cframes[fighter_index][ff], xx, yy);
 	}
 	else {
@@ -930,7 +925,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
   tempd = status_adjust(defend_fighter_index);
   ares = attack_result(attack_fighter_index, defend_fighter_index);
   for (stats_index = 0; stats_index < 24; stats_index++) {
-    fighter[defend_fighter_index].sts[stats_index] = tempd.sts[stats_index];
+    fighter[defend_fighter_index].fighterSpellEffectStats[stats_index] = tempd.fighterSpellEffectStats[stats_index];
   }
 
   /*  RB TODO: rest(20) or vsync() before the blit?  */
@@ -985,7 +980,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
       cast_imbued_spell(attack_fighter_index, fighter[attack_fighter_index].imb_s, fighter[attack_fighter_index].imb_a, defend_fighter_index);
     }
 
-    if ((fighter[defend_fighter_index].fighterHealth <= 0) && (fighter[defend_fighter_index].sts[S_DEAD] == 0)) {
+    if ((fighter[defend_fighter_index].fighterHealth <= 0) && (fighter[defend_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)) {
       fkill(defend_fighter_index);
       death_animation(defend_fighter_index, 0);
     }
@@ -994,13 +989,13 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
       fighter[defend_fighter_index].fighterHealth = fighter[defend_fighter_index].fighterMaxHealth;
     }
 
-    if (fighter[defend_fighter_index].sts[S_SLEEP] > 0) {
-      fighter[defend_fighter_index].sts[S_SLEEP] = 0;
+    if (fighter[defend_fighter_index].fighterSpellEffectStats[S_SLEEP] > 0) {
+      fighter[defend_fighter_index].fighterSpellEffectStats[S_SLEEP] = 0;
     }
 
-    if ((fighter[defend_fighter_index].sts[S_CHARM] > 0) &&
+    if ((fighter[defend_fighter_index].fighterSpellEffectStats[S_CHARM] > 0) &&
         (attack_fighter_index == defend_fighter_index)) {
-      fighter[defend_fighter_index].sts[S_CHARM] = 0;
+      fighter[defend_fighter_index].fighterSpellEffectStats[S_CHARM] = 0;
     }
 
     return 1;
@@ -1019,23 +1014,19 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
  * \param   fighter_index The one who will die
  */
 void fkill(size_t fighter_index) {
-  size_t spell_index;
-
 #ifdef KQ_CHEATS
-  /* PH Combat cheat - when a hero dies s/he is mysteriously boosted back
-   * to full HP.
-   */
+  /* PH Combat cheat: when a hero dies s/he is mysteriously boosted back to full HP. */
   if (cheat && fighter_index < PSIZE) {
     fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
     return;
   }
 #endif
 
-  for (spell_index = 0; spell_index < 24; spell_index++) {
-    fighter[fighter_index].sts[spell_index] = 0;
+  for (size_t spell_index = 0; spell_index < NUM_SPELL_TYPES; spell_index++) {
+    fighter[fighter_index].fighterSpellEffectStats[spell_index] = 0;
   }
 
-  fighter[fighter_index].sts[S_DEAD] = 1;
+  fighter[fighter_index].fighterSpellEffectStats[S_DEAD] = 1;
   fighter[fighter_index].fighterHealth = 0;
   if (fighter_index < PSIZE) {
     fighter[fighter_index].fighterDefeatItemCommon = 0;
@@ -1077,8 +1068,8 @@ static void heroes_win(void) {
 	blit2screen(0, 0);
 	kq_wait(250);
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-		if (fighter[fighter_index].sts[S_STONE] == 0 &&
-			fighter[fighter_index].sts[S_DEAD] == 0) {
+		if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
+			fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
 			nc++;
 		}
 
@@ -1273,11 +1264,11 @@ void multi_fight(size_t attack_fighter_index) {
        fighter_index < start_fighter_index + end_fighter_index;
        fighter_index++) {
     tempd = status_adjust(fighter_index);
-    if ((fighter[fighter_index].sts[S_DEAD] == 0) && (fighter[fighter_index].fighterMaxHealth > 0)) {
+    if ((fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) && (fighter[fighter_index].fighterMaxHealth > 0)) {
       // ares[fighter_index] = attack_result(attack_fighter_index,
       // fighter_index);
-      for (spell_index = 0; spell_index < 24; spell_index++) {
-        fighter[fighter_index].sts[spell_index] = tempd.sts[spell_index];
+      for (spell_index = 0; spell_index < NUM_SPELL_TYPES; spell_index++) {
+        fighter[fighter_index].fighterSpellEffectStats[spell_index] = tempd.fighterSpellEffectStats[spell_index];
       }
     }
 
@@ -1287,7 +1278,7 @@ void multi_fight(size_t attack_fighter_index) {
       }
 
       fighter[fighter_index].fighterHealth += ta[fighter_index];
-      if ((fighter[fighter_index].fighterHealth <= 0) && (fighter[fighter_index].sts[S_DEAD] == 0)) {
+      if ((fighter[fighter_index].fighterHealth <= 0) && (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)) {
         fighter[fighter_index].fighterHealth = 0;
         killed_warrior[fighter_index] = 1;
       }
@@ -1298,14 +1289,13 @@ void multi_fight(size_t attack_fighter_index) {
       }
 
       /*  RB: if sleeping, a good hit wakes him/her up  */
-      if (fighter[fighter_index].sts[S_SLEEP] > 0) {
-        fighter[fighter_index].sts[S_SLEEP] = 0;
+      if (fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] > 0) {
+        fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] = 0;
       }
 
       /*  RB: if charmed, a good hit wakes him/her up  */
-      if (fighter[fighter_index].sts[S_CHARM] > 0 && ta[fighter_index] > 0 &&
-          attack_fighter_index == fighter_index) {
-        fighter[fighter_index].sts[S_CHARM] = 0;
+      if (fighter[fighter_index].fighterSpellEffectStats[S_CHARM] > 0 && ta[fighter_index] > 0 && attack_fighter_index == fighter_index) {
+        fighter[fighter_index].fighterSpellEffectStats[S_CHARM] = 0;
       }
     }
   }

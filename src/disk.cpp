@@ -184,11 +184,10 @@ static int load_spelltypes(s_player *s, XMLElement *node) {
   if (spelltypes) {
     auto values = parse_list(spelltypes->FirstChild()->Value());
     if (!values.empty()) {
-      if (values.size() == NUM_SPELLTYPES) {
+      if (values.size() == NUM_SPELL_TYPES) {
         copy(values.begin(), values.end(), s->sts);
       } else {
-        TRACE("Wrong number of spelltypes, expected %d and got %d",
-              NUM_SPELLTYPES, values.size());
+        TRACE("Wrong number of spelltypes, expected %d and got %d", NUM_SPELL_TYPES, values.size());
         Game.program_death("Error loading XML");
       }
     }
@@ -844,7 +843,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	out.PushText(make_list(std::begin(f.fighterResistance), std::end(f.fighterResistance)).c_str());
 	out.CloseElement(/*res*/);
 	out.OpenElement("sts");
-	out.PushText(make_list(std::begin(f.sts), std::end(f.sts)).c_str());
+	out.PushText(make_list(std::begin(f.fighterSpellEffectStats), std::end(f.fighterSpellEffectStats)).c_str());
 	out.CloseElement(/*sts*/);
 	out.OpenElement("ai");
 	out.PushText(make_list(std::begin(f.ai), std::end(f.ai)).c_str());

@@ -93,9 +93,8 @@ void combat_skill(size_t fighter_index) {
     break;
   case 5:
     affected_targets = 0;
-    for (target_fighter_index = 0; target_fighter_index < numchrs;
-         target_fighter_index++) {
-      if (fighter[target_fighter_index].sts[S_DEAD] == 0) {
+    for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+      if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
         affected_targets++;
       }
     }
@@ -133,10 +132,10 @@ void combat_skill(size_t fighter_index) {
     draw_spellsprite(0, 1, 46, 1);
     for (target_fighter_index = 0; target_fighter_index < numchrs;
          target_fighter_index++) {
-      if (fighter[target_fighter_index].sts[S_DEAD] == 0) {
+      if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
         if (res_throw(target_fighter_index, R_PETRIFY) == 0 &&
             non_dmg_save(target_fighter_index, 75) == 0) {
-          fighter[target_fighter_index].sts[S_STONE] = kqrandom->random_range_exclusive(2, 5);
+          fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] = kqrandom->random_range_exclusive(2, 5);
           ta[target_fighter_index] = NODISPLAY;
         } else {
           ta[target_fighter_index] = MISS;
@@ -165,12 +164,12 @@ void combat_skill(size_t fighter_index) {
          target_fighter_index++) {
       if (res_throw(target_fighter_index, R_TIME) == 0) {
         if (non_dmg_save(target_fighter_index, 75) == 0 &&
-            fighter[target_fighter_index].sts[S_STONE] == 0) {
-          if (fighter[target_fighter_index].sts[S_TIME] == 2) {
-            fighter[target_fighter_index].sts[S_TIME] = 0;
+            fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
+          if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 2) {
+            fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] = 0;
           } else {
-            if (fighter[target_fighter_index].sts[S_TIME] == 0) {
-              fighter[target_fighter_index].sts[S_TIME] = 1;
+            if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 0) {
+              fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] = 1;
               ta[target_fighter_index] = NODISPLAY;
             } else {
               ta[target_fighter_index] = MISS;
@@ -203,12 +202,9 @@ void combat_skill(size_t fighter_index) {
     affected_targets = 0;
     strcpy(attack_string, _("Tangle Root"));
     draw_spellsprite(0, 1, 24, 0);
-    for (target_fighter_index = 0; target_fighter_index < numchrs;
-         target_fighter_index++) {
-      if (res_throw(target_fighter_index, S_STOP) == 0 &&
-          non_dmg_save(target_fighter_index, 65) == 0 &&
-          fighter[target_fighter_index].sts[S_STONE] == 0) {
-        fighter[target_fighter_index].sts[S_STOP] = kqrandom->random_range_exclusive(2, 4);
+    for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+      if (res_throw(target_fighter_index, S_STOP) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
+        fighter[target_fighter_index].fighterSpellEffectStats[S_STOP] = kqrandom->random_range_exclusive(2, 4);
         ta[target_fighter_index] = NODISPLAY;
       } else {
         ta[target_fighter_index] = MISS;
@@ -245,7 +241,7 @@ void combat_skill(size_t fighter_index) {
     fight(fighter_index, tgt, 1);
     display_attack_string = 0;
     if (non_dmg_save(tgt, 80) == 0 && ta[tgt] != MISS) {
-      fighter[tgt].sts[S_STOP] = 2;
+      fighter[tgt].fighterSpellEffectStats[S_STOP] = 2;
     }
     fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 4;
     break;
@@ -253,13 +249,10 @@ void combat_skill(size_t fighter_index) {
     strcpy(attack_string, _("Howl"));
     draw_spellsprite(0, 1, 14, 0);
     affected_targets = 0;
-    for (target_fighter_index = 0; target_fighter_index < numchrs;
-         target_fighter_index++) {
-      if (fighter[fighter_index].sts[S_MUTE] == 0) {
-        if (res_throw(target_fighter_index, S_CHARM) == 0 &&
-            non_dmg_save(target_fighter_index, 65) == 0 &&
-            fighter[target_fighter_index].sts[S_STONE] == 0) {
-          fighter[target_fighter_index].sts[S_CHARM] = kqrandom->random_range_exclusive(2, 4);
+    for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+      if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
+        if (res_throw(target_fighter_index, S_CHARM) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
+          fighter[target_fighter_index].fighterSpellEffectStats[S_CHARM] = kqrandom->random_range_exclusive(2, 4);
           ta[target_fighter_index] = NODISPLAY;
         } else {
           ta[target_fighter_index] = MISS;

@@ -83,8 +83,8 @@ int hero_skillcheck(size_t fighter_index) {
     // See whether any enemies CAN be turned to stone.
     for (target_fighter_index = PSIZE;
          target_fighter_index < PSIZE + num_enemies; target_fighter_index++) {
-      if (fighter[target_fighter_index].sts[S_DEAD] == 0 &&
-          fighter[target_fighter_index].sts[S_STONE] == 0) {
+      if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 &&
+          fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
         can_be_affected++;
       }
     }
@@ -96,7 +96,7 @@ int hero_skillcheck(size_t fighter_index) {
     break;
 
   case CORIN:
-    if (fighter[fighter_index].sts[S_MUTE] > 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] > 0) {
       return 0;
     }
     if (fighter[fighter_index].aux == 0) {
@@ -112,13 +112,13 @@ int hero_skillcheck(size_t fighter_index) {
       return 0;
     }
   case AJATHAR:
-    if (fighter[fighter_index].sts[S_MUTE] > 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] > 0) {
       return 0;
     }
     for (target_fighter_index = PSIZE;
          target_fighter_index < PSIZE + num_enemies; target_fighter_index++) {
-      if (fighter[target_fighter_index].sts[S_DEAD] == 0 &&
-          fighter[target_fighter_index].sts[S_STONE] == 0 &&
+      if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 &&
+          fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
           fighter[target_fighter_index].unl > 0) {
         can_be_affected++;
       }
@@ -132,7 +132,7 @@ int hero_skillcheck(size_t fighter_index) {
     break;
 
   case CASANDRA:
-    if (fighter[fighter_index].sts[S_MUTE] > 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] > 0) {
       return 0;
     }
     if (fighter[fighter_index].aux == 0) {
@@ -156,7 +156,7 @@ int hero_skillcheck(size_t fighter_index) {
     }
     for (target_fighter_index = 0; target_fighter_index < numchrs;
          target_fighter_index++) {
-      if (fighter[target_fighter_index].sts[S_DEAD] == 0) {
+      if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
         can_be_affected++;
       }
     }
@@ -482,10 +482,10 @@ int skill_use(size_t attack_fighter_index) {
       tempa.fighterStats[A_HIT] += b;
     }
     fight(attack_fighter_index, enemy_index, 1);
-    if (fighter[enemy_index].sts[S_DEAD] == 1) {
+    if (fighter[enemy_index].fighterSpellEffectStats[S_DEAD] == 1) {
       for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
            fighter_index++) {
-        if (fighter[fighter_index].sts[S_DEAD] == 0) {
+        if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
           nn[next_target] = fighter_index;
           next_target++;
         }
@@ -501,7 +501,7 @@ int skill_use(size_t attack_fighter_index) {
     display_attack_string = 0;
     blit(temp.get(), backart, 0, 0, 0, 0, 320, 240);
     display_amount(attack_fighter_index, FONT_DECIDE, 0);
-    if (fighter[attack_fighter_index].sts[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0) {
+    if (fighter[attack_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0) {
       fkill(attack_fighter_index);
       death_animation(attack_fighter_index, 0);
     }
@@ -575,7 +575,7 @@ int skill_use(size_t attack_fighter_index) {
       return 0;
     }
     display_attack_string = 0;
-    fighter[attack_fighter_index].sts[S_INFUSE] =
+    fighter[attack_fighter_index].fighterSpellEffectStats[S_INFUSE] =
         magic[fighter[attack_fighter_index].csmem].elem;
     break;
 
@@ -600,7 +600,7 @@ int skill_use(size_t attack_fighter_index) {
       display_attack_string = 0;
       b = fighter[attack_fighter_index].fighterLevel * 15;
       for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++) {
-        if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
+        if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
           if (fighter[fighter_index].unl == 99 ||
               fighter[fighter_index].unl == 0) {
             cts = 0;
@@ -642,16 +642,16 @@ int skill_use(size_t attack_fighter_index) {
       draw_spellsprite(0, 1, 15, 1);
       display_attack_string = 0;
       for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-        if (fighter[fighter_index].sts[S_STONE] == 0 &&
-            fighter[fighter_index].sts[S_DEAD] == 0) {
+        if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
+            fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
           ta[fighter_index] = b;
           ta[fighter_index] = do_shell_check(fighter_index, ta[fighter_index]);
         }
       }
       display_amount(0, FONT_YELLOW, 1);
       for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-        if (fighter[fighter_index].sts[S_STONE] == 0 &&
-            fighter[fighter_index].sts[S_DEAD] == 0) {
+        if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
+            fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
           adjust_hp(fighter_index, ta[fighter_index]);
         }
       }

@@ -366,7 +366,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
   case I_MHERB:
   case I_SALVE:
   case I_PCURING:
-    if (fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     if (fighter[fighter_index].fighterHealth == fighter[fighter_index].fighterMaxHealth) {
@@ -384,7 +384,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     break;
   case I_OSEED:
   case I_EDROPS:
-    if (fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     if (fighter[fighter_index].fighterMagic == fighter[fighter_index].fighterMaxMagic) {
@@ -403,12 +403,11 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
   case I_NLEAF:
   case I_NPOULTICE:
   case I_KBREW:
-    if (fighter[fighter_index].sts[S_DEAD] != 0 ||
-        fighter[fighter_index].sts[S_STONE] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterSpellEffectStats[S_STONE] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].sts[items[ti].elem] != 0) {
-      fighter[fighter_index].sts[items[ti].elem] = 0;
+    if (fighter[fighter_index].fighterSpellEffectStats[items[ti].elem] != 0) {
+      fighter[fighter_index].fighterSpellEffectStats[items[ti].elem] = 0;
     } else {
       return ITEM_EFFECT_INEFFECTIVE;
     }
@@ -417,11 +416,11 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     }
     break;
   case I_WENSAI:
-    if (fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].sts[S_STONE] != 0) {
-      fighter[fighter_index].sts[S_STONE] = 0;
+    if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] != 0) {
+      fighter[fighter_index].fighterSpellEffectStats[S_STONE] = 0;
     } else {
       return ITEM_EFFECT_INEFFECTIVE;
     }
@@ -431,30 +430,30 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     break;
   case I_EDAENRA:
     tmp = 0;
-    for (i = 0; i < 7; i++) {
-      if (fighter[fighter_index].sts[i] != 0) {
+    for (i = 0; i <= S_SLEEP; i++) {
+      if (fighter[fighter_index].fighterSpellEffectStats[i] != 0) {
         tmp++;
       }
     }
-    if (tmp == 0 || fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (tmp == 0 || fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    for (i = 0; i < 12; i++) {
-      fighter[fighter_index].sts[i] = 0;
+    for (i = 0; i <= S_SHIELD; i++) {
+      fighter[fighter_index].fighterSpellEffectStats[i] = 0;
     }
     if (in_combat == 1) {
       draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
     }
     break;
   case I_LTONIC:
-    if (fighter[fighter_index].sts[S_DEAD] == 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    for (a = 0; a < 24; a++) {
-      fighter[fighter_index].sts[a] = 0;
+    for (a = 0; a < NUM_SPELL_TYPES; a++) {
+      fighter[fighter_index].fighterSpellEffectStats[a] = 0;
     }
     fighter[fighter_index].fighterHealth = 1;
     fighter[fighter_index].fighterAttackSpriteFrame = 0;
@@ -472,10 +471,8 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     if (tmp == san) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    for (fighter_index = attack_fighter_index;
-         fighter_index < attack_fighter_index + san; fighter_index++) {
-      if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-          fighter[fighter_index].sts[S_STONE] == 0) {
+    for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++) {
+      if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
         b = fighter[fighter_index].fighterLevel * items[ti].stats[A_ATT];
         tmp = kqrandom->random_range_exclusive(0, b) + b + 1;
         if (in_combat == 0) {
@@ -502,9 +499,8 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
       return ITEM_EFFECT_INEFFECTIVE;
     }
     tmp = items[ti].elem;
-    for (fighter_index = start_fighter_index;
-         fighter_index < start_fighter_index + sen; fighter_index++) {
-      if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
+    for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + sen; fighter_index++) {
+      if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
         b = fighter[fighter_index].fighterLevel * items[ti].stats[A_ATT];
         a = kqrandom->random_range_exclusive(0, b) + b + 20;
         if (a > 250) {
@@ -523,8 +519,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     if (in_combat == 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].sts[S_STONE] == 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
       ta[fighter_index] = items[ti].stats[A_ATT];
     }
     draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
@@ -534,8 +529,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     return ITEM_EFFECT_SUCCESS_SINGLE;
   }
   if (ti >= I_STRSEED && ti <= I_WISSEED) {
-    if (fighter[fighter_index].sts[S_DEAD] != 0 || in_combat == 1 ||
-        fighter_index >= PSIZE) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || in_combat == 1 || fighter_index >= PSIZE) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     z = items[ti].bst; // eAttribute
@@ -593,7 +587,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     return ITEM_EFFECT_SUCCESS_MULTIPLE;
   }
   if (ti == I_HPUP) {
-    if (fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     i = kqrandom->random_range_exclusive(10, 21);
@@ -601,7 +595,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     fighter[fighter_index].fighterHealth += i;
   }
   if (ti == I_MPUP) {
-    if (fighter[fighter_index].sts[S_DEAD] != 0) {
+    if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     i = kqrandom->random_range_exclusive(10, 21);
@@ -616,7 +610,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
       fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
       fighter[fighter_index].fighterMagic = fighter[fighter_index].fighterMaxMagic;
       for (b = 0; b < 8; b++) {
-        fighter[fighter_index].sts[b] = 0;
+        fighter[fighter_index].fighterSpellEffectStats[b] = 0;
       }
     }
   }
