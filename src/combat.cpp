@@ -812,7 +812,7 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	xx = fr->fighterImageDatafileX;
 	yy = fr->fighterImageDatafileY;
 
-	ff = (!fr->aframe) ? fr->facing : fr->aframe;
+	ff = (!fr->aframe) ? fr->fighterSpriteFacing : fr->aframe;
 
 	if (fr->sts[S_STONE] > 0) {
 		convert_cframes(fighter_index, 2, 12, 0);
@@ -1429,12 +1429,12 @@ static void snap_togrid(void) {
   }
 
   for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    fighter[fighter_index].facing = hf;
+    fighter[fighter_index].fighterSpriteFacing = hf;
   }
 
   for (fighter_index = PSIZE; fighter_index < (PSIZE + num_enemies);
        fighter_index++) {
-    fighter[fighter_index].facing = mf;
+    fighter[fighter_index].fighterSpriteFacing = mf;
   }
 
   hf = 170 - (numchrs * 24);

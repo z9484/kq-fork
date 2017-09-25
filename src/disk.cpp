@@ -823,7 +823,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "defeat-item-rare", f.fighterDefeatItemRare);
 	printprop(out, "steal-item-common", f.fighterStealItemCommon);
 	printprop(out, "steal-item-rare", f.fighterStealItemRare);
-	printprop(out, "facing", f.facing);
+	printprop(out, "facing", f.fighterSpriteFacing);
 	printprop(out, "aframe", f.aframe);
 	printprop(out, "crit", f.crit);
 	printprop(out, "defend", f.defend);
@@ -841,7 +841,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	out.PushText(make_list(std::begin(f.fighterStats), std::end(f.fighterStats)).c_str());
 	out.CloseElement(/*stats*/);
 	out.OpenElement("res");
-	out.PushText(make_list(std::begin(f.res), std::end(f.res)).c_str());
+	out.PushText(make_list(std::begin(f.fighterResistance), std::end(f.fighterResistance)).c_str());
 	out.CloseElement(/*res*/);
 	out.OpenElement("sts");
 	out.PushText(make_list(std::begin(f.sts), std::end(f.sts)).c_str());

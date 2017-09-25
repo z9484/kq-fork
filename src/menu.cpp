@@ -370,7 +370,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 		tf.fighterStats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
 	}
 	for (int j = 0; j < R_TOTAL_RES; j++) {
-		tf.res[j] = plr.res[j];
+		tf.fighterResistance[j] = plr.res[j];
 	}
 
 	/* set weapon elemental power and imbuements for easy use in combat */
@@ -449,39 +449,39 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 			}
 		}
 		for (int b = 0; b < R_TOTAL_RES; b++) {
-			tf.res[b] += items[a].res[b];
+			tf.fighterResistance[b] += items[a].res[b];
 		}
 	}
 	if (who == CORIN) {
-		tf.res[R_EARTH] += tf.fighterLevel / 4;
-		tf.res[R_FIRE] += tf.fighterLevel / 4;
-		tf.res[R_AIR] += tf.fighterLevel / 4;
-		tf.res[R_WATER] += tf.fighterLevel / 4;
+		tf.fighterResistance[R_EARTH] += tf.fighterLevel / 4;
+		tf.fighterResistance[R_FIRE] += tf.fighterLevel / 4;
+		tf.fighterResistance[R_AIR] += tf.fighterLevel / 4;
+		tf.fighterResistance[R_WATER] += tf.fighterLevel / 4;
 	}
 	if (plr.eqp[5] == I_AGRAN) {
 		int a = 0;
 		for (int j = 0; j < R_TOTAL_RES; j++) {
-			a += tf.res[j];
+			a += tf.fighterResistance[j];
 		}
 		int b = ((a * 10) / 16 + 5) / 10;
 		for (int j = 0; j < R_TOTAL_RES; j++) {
-			tf.res[j] = b;
+			tf.fighterResistance[j] = b;
 		}
 	}
 	for (int j = 0; j < 8; j++) {
-		if (tf.res[j] < -10) {
-			tf.res[j] = -10;
+		if (tf.fighterResistance[j] < -10) {
+			tf.fighterResistance[j] = -10;
 		}
-		if (tf.res[j] > 20) {
-			tf.res[j] = 20;
+		if (tf.fighterResistance[j] > 20) {
+			tf.fighterResistance[j] = 20;
 		}
 	}
 	for (int j = 8; j < R_TOTAL_RES; j++) {
-		if (tf.res[j] < 0) {
-			tf.res[j] = 0;
+		if (tf.fighterResistance[j] < 0) {
+			tf.fighterResistance[j] = 0;
 		}
-		if (tf.res[j] > 10) {
-			tf.res[j] = 10;
+		if (tf.fighterResistance[j] > 10) {
+			tf.fighterResistance[j] = 10;
 		}
 	}
 	if (plr.eqp[5] == I_MANALOCKET) {
@@ -773,16 +773,16 @@ static void status_screen(size_t fighter_index) {
     for (res_index = 0; res_index < R_TOTAL_RES; res_index++) {
       rectfill(double_buffer, 240 + xofs, res_index * 8 + 25 + yofs, 310 + xofs,
                res_index * 8 + 31 + yofs, 3);
-      if (fighter[fighter_index].res[res_index] < 0) {
+      if (fighter[fighter_index].fighterResistance[res_index] < 0) {
         bc = 18; // bright red, meaning WEAK defense
-        rect_fill_amount = abs(fighter[fighter_index].res[res_index]);
-      } else if (fighter[fighter_index].res[res_index] >= 0 &&
-                 fighter[fighter_index].res[res_index] <= 10) {
+        rect_fill_amount = abs(fighter[fighter_index].fighterResistance[res_index]);
+      } else if (fighter[fighter_index].fighterResistance[res_index] >= 0 &&
+                 fighter[fighter_index].fighterResistance[res_index] <= 10) {
         bc = 34; // bright green, meaning so-so defense
-        rect_fill_amount = fighter[fighter_index].res[res_index];
-      } else if (fighter[fighter_index].res[res_index] > 10) {
+        rect_fill_amount = fighter[fighter_index].fighterResistance[res_index];
+      } else if (fighter[fighter_index].fighterResistance[res_index] > 10) {
         bc = 50; // bright blue, meaning STRONG defense
-        rect_fill_amount = fighter[fighter_index].res[res_index] - 10;
+        rect_fill_amount = fighter[fighter_index].fighterResistance[res_index] - 10;
       }
 
       if (rect_fill_amount > 0) {

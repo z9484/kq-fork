@@ -77,7 +77,7 @@ static void calc_equippreview(uint32_t aa, uint32_t p2, int ii) {
     tstats[z] = fighter[aa].fighterStats[z];
   }
   for (z = 0; z < R_TOTAL_RES; z++) {
-    tres[z] = fighter[aa].res[z];
+    tres[z] = fighter[aa].fighterResistance[z];
   }
   party[pidx[aa]].eqp[p2] = c;
   update_equipstats();
@@ -367,7 +367,7 @@ static void draw_equippreview(int ch, int ptr, int pp) {
     c1 = 0;
     c2 = 0;
     for (z = 0; z < R_TOTAL_RES; z++) {
-      c1 += fighter[ch].res[z];
+      c1 += fighter[ch].fighterResistance[z];
       c2 += tres[z];
     }
     if (c1 < c2)

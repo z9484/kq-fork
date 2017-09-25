@@ -67,10 +67,10 @@ typedef struct {
 	int fighterStats[NUM_STATS];
 
 	/** eResistance: See R_* constants */
-	char res[NUM_RES];
+	char fighterResistance[NUM_RES];
 
 	/** Direction character's sprite faces */
-	uint8_t facing;
+	uint8_t fighterSpriteFacing;
 
 	/** Battle sprite to display (standing, casting, attacking) */
 	uint8_t aframe;

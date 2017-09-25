@@ -1088,7 +1088,7 @@ int res_adjust(size_t target_fighter_index, size_t rune_index, int amt)
 	}
 	ad = amt;
 	tf = status_adjust(target_fighter_index);
-	current_res = tf.res[rune_index];
+	current_res = tf.fighterResistance[rune_index];
 	if (current_res < 0) {
 		b = 10 + abs(current_res);
 		ad = ad * b / 10;
@@ -1120,13 +1120,13 @@ int res_throw(int tgt, int rs)
 		return 0;
 	}
 	tf = status_adjust(tgt);
-	if (tf.res[rs] < 1) {
+	if (tf.fighterResistance[rs] < 1) {
 		return 0;
 	}
-	if (tf.res[rs] >= 10) {
+	if (tf.fighterResistance[rs] >= 10) {
 		return 1;
 	}
-	if (kqrandom->random_range_exclusive(0, 10) < tf.res[rs]) {
+	if (kqrandom->random_range_exclusive(0, 10) < tf.fighterResistance[rs]) {
 		return 1;
 	}
 	return 0;

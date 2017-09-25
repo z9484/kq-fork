@@ -258,7 +258,7 @@ void enemy_chooseaction(size_t fighter_index) {
     }
   }
   fighter[fighter_index].defend = 0;
-  fighter[fighter_index].facing = 1;
+  fighter[fighter_index].fighterSpriteFacing = 1;
   if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].sts[S_MUTE] == 0) {
     enemy_curecheck(fighter_index);
     if (cact[fighter_index] == 0) {
@@ -747,7 +747,7 @@ static void load_enemies(void)
 		for (p = 0; p < R_TOTAL_RES; p++)
 		{
 			fscanf(edat, "%d", &tmp);
-			f->res[p] = tmp;
+			f->fighterResistance[p] = tmp;
 		}
 		for (p = 0; p < 8; p++)
 		{

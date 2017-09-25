@@ -194,14 +194,14 @@ static void infusion(int c, int sn) {
 
   /* Increase resistance to Earthquake attacks */
   case M_TREMOR:
-    fighter[c].res[R_EARTH] += 5;
+    fighter[c].fighterResistance[R_EARTH] += 5;
     fighter[c].fighterStats[A_DEF] += 15;
     fighter[c].fighterStats[A_MAG] += 10;
     fighter[c].welem = 0;
     break;
 
   case M_EARTHQUAKE:
-    fighter[c].res[R_EARTH] += 10;
+    fighter[c].fighterResistance[R_EARTH] += 10;
     fighter[c].fighterStats[A_DEF] += 30;
     fighter[c].fighterStats[A_MAG] += 20;
     fighter[c].welem = 0;
@@ -210,15 +210,15 @@ static void infusion(int c, int sn) {
   /* Increase resistance to Dark attacks */
   /* Decrease resistance to Light attacks */
   case M_GLOOM:
-    fighter[c].res[R_BLACK] += 8;
-    fighter[c].res[R_WHITE] -= 4;
+    fighter[c].fighterResistance[R_BLACK] += 8;
+    fighter[c].fighterResistance[R_WHITE] -= 4;
     fighter[c].fighterStats[A_AUR] += 20;
     fighter[c].welem = 1;
     break;
 
   case M_NEGATIS:
-    fighter[c].res[R_BLACK] += 16;
-    fighter[c].res[R_WHITE] -= 8;
+    fighter[c].fighterResistance[R_BLACK] += 16;
+    fighter[c].fighterResistance[R_WHITE] -= 8;
     fighter[c].fighterStats[A_AUR] += 40;
     fighter[c].welem = 1;
     break;
@@ -226,27 +226,27 @@ static void infusion(int c, int sn) {
   /* Increase resistance to Fire attacks */
   /* Decrease resistance to Water & Ice attacks */
   case M_SCORCH:
-    fighter[c].res[R_FIRE] += 4;
-    fighter[c].res[R_WATER]--;
-    fighter[c].res[R_ICE]--;
+    fighter[c].fighterResistance[R_FIRE] += 4;
+    fighter[c].fighterResistance[R_WATER]--;
+    fighter[c].fighterResistance[R_ICE]--;
     fighter[c].fighterStats[A_ATT] += 10;
     fighter[c].fighterStats[A_HIT] += 10;
     fighter[c].welem = 2;
     break;
 
   case M_FIREBLAST:
-    fighter[c].res[R_FIRE] += 8;
-    fighter[c].res[R_WATER] -= 2;
-    fighter[c].res[R_ICE] -= 2;
+    fighter[c].fighterResistance[R_FIRE] += 8;
+    fighter[c].fighterResistance[R_WATER] -= 2;
+    fighter[c].fighterResistance[R_ICE] -= 2;
     fighter[c].fighterStats[A_ATT] += 20;
     fighter[c].fighterStats[A_HIT] += 20;
     fighter[c].welem = 2;
     break;
 
   case M_FLAMEWALL:
-    fighter[c].res[R_FIRE] += 12;
-    fighter[c].res[R_WATER] -= 4;
-    fighter[c].res[R_ICE] -= 4;
+    fighter[c].fighterResistance[R_FIRE] += 12;
+    fighter[c].fighterResistance[R_WATER] -= 4;
+    fighter[c].fighterResistance[R_ICE] -= 4;
     fighter[c].fighterStats[A_ATT] += 40;
     fighter[c].fighterStats[A_HIT] += 40;
     fighter[c].welem = 2;
@@ -254,33 +254,33 @@ static void infusion(int c, int sn) {
 
   /* Increase resistance to Thunder attacks */
   case M_SHOCK:
-    fighter[c].res[R_THUNDER] += 3;
+    fighter[c].fighterResistance[R_THUNDER] += 3;
     fighter[c].fighterStats[A_EVD] += 10;
     fighter[c].welem = 3;
     break;
 
   case M_LIGHTNING:
-    fighter[c].res[R_THUNDER] += 6;
+    fighter[c].fighterResistance[R_THUNDER] += 6;
     fighter[c].fighterStats[A_EVD] += 25;
     fighter[c].welem = 3;
     break;
 
   case M_THUNDERSTORM:
-    fighter[c].res[R_THUNDER] += 12;
+    fighter[c].fighterResistance[R_THUNDER] += 12;
     fighter[c].fighterStats[A_EVD] += 50;
     fighter[c].welem = 3;
     break;
 
   /* Increase resistance to Air attacks */
   case M_WHIRLWIND:
-    fighter[c].res[R_AIR] += 5;
+    fighter[c].fighterResistance[R_AIR] += 5;
     fighter[c].fighterStats[A_EVD] += 15;
     fighter[c].fighterStats[A_SPD] += 10;
     fighter[c].welem = 4;
     break;
 
   case M_TORNADO:
-    fighter[c].res[R_AIR] += 10;
+    fighter[c].fighterResistance[R_AIR] += 10;
     fighter[c].fighterStats[A_EVD] += 30;
     fighter[c].fighterStats[A_SPD] += 20;
     fighter[c].welem = 4;
@@ -289,15 +289,15 @@ static void infusion(int c, int sn) {
   /* Increase resistance to Light attacks */
   /* Decrease resistance to Dark attacks */
   case M_FADE:
-    fighter[c].res[R_WHITE] += 5;
-    fighter[c].res[R_BLACK] -= 2;
+    fighter[c].fighterResistance[R_WHITE] += 5;
+    fighter[c].fighterResistance[R_BLACK] -= 2;
     fighter[c].fighterStats[A_SPI] += 10;
     fighter[c].welem = 5;
     break;
 
   case M_LUMINE:
-    fighter[c].res[R_WHITE] += 10;
-    fighter[c].res[R_BLACK] -= 5;
+    fighter[c].fighterResistance[R_WHITE] += 10;
+    fighter[c].fighterResistance[R_BLACK] -= 5;
     fighter[c].fighterStats[A_SPI] += 25;
     fighter[c].welem = 5;
     break;
@@ -305,24 +305,24 @@ static void infusion(int c, int sn) {
   /* Increase resistance to Water attacks */
   /* Decrease resistance to Thunder attacks */
   case M_FLOOD:
-    fighter[c].res[R_WATER] += 5;
-    fighter[c].res[R_THUNDER] -= 5;
+    fighter[c].fighterResistance[R_WATER] += 5;
+    fighter[c].fighterResistance[R_THUNDER] -= 5;
     for (j = 9; j < R_TOTAL_RES; j++) {
-      fighter[c].res[j] += 3;
-      if (fighter[c].res[j] > 10) {
-        fighter[c].res[j] = 10;
+      fighter[c].fighterResistance[j] += 3;
+      if (fighter[c].fighterResistance[j] > 10) {
+        fighter[c].fighterResistance[j] = 10;
       }
     }
     fighter[c].welem = 6;
     break;
 
   case M_TSUNAMI:
-    fighter[c].res[R_WATER] += 10;
-    fighter[c].res[R_THUNDER] -= 10;
+    fighter[c].fighterResistance[R_WATER] += 10;
+    fighter[c].fighterResistance[R_THUNDER] -= 10;
     for (j = 9; j < R_TOTAL_RES; j++) {
-      fighter[c].res[j] += 6;
-      if (fighter[c].res[j] > 10) {
-        fighter[c].res[j] = 10;
+      fighter[c].fighterResistance[j] += 6;
+      if (fighter[c].fighterResistance[j] > 10) {
+        fighter[c].fighterResistance[j] = 10;
       }
     }
     fighter[c].welem = 6;
@@ -331,24 +331,24 @@ static void infusion(int c, int sn) {
   /* Increase resistance to Ice & Water attacks */
   /* Decrease resistance to Fire attacks */
   case M_FROST:
-    fighter[c].res[R_ICE] += 7;
-    fighter[c].res[R_WATER] += 4;
-    fighter[c].res[R_FIRE] -= 5;
+    fighter[c].fighterResistance[R_ICE] += 7;
+    fighter[c].fighterResistance[R_WATER] += 4;
+    fighter[c].fighterResistance[R_FIRE] -= 5;
     fighter[c].fighterStats[A_DEF] += 10;
     fighter[c].welem = 7;
     break;
 
   case M_BLIZZARD:
-    fighter[c].res[R_ICE] += 14;
-    fighter[c].res[R_WATER] += 8;
-    fighter[c].res[R_FIRE] -= 10;
+    fighter[c].fighterResistance[R_ICE] += 14;
+    fighter[c].fighterResistance[R_WATER] += 8;
+    fighter[c].fighterResistance[R_FIRE] -= 10;
     fighter[c].fighterStats[A_DEF] += 25;
     fighter[c].welem = 7;
     break;
 
   /* Increase resistance to Poison attacks */
   case M_VENOM:
-    fighter[c].res[R_POISON] += 4;
+    fighter[c].fighterResistance[R_POISON] += 4;
     j = fighter[c].fighterMaxHealth / 10;
     if (j < 10) {
       j = 10;
@@ -359,7 +359,7 @@ static void infusion(int c, int sn) {
     break;
 
   case M_VIRUS:
-    fighter[c].res[R_POISON] += 8;
+    fighter[c].fighterResistance[R_POISON] += 8;
     j = fighter[c].fighterMaxHealth * 25 / 100;
     if (j < 40) {
       j = 40;
@@ -370,7 +370,7 @@ static void infusion(int c, int sn) {
     break;
 
   case M_PLAGUE:
-    fighter[c].res[R_POISON] += 12;
+    fighter[c].fighterResistance[R_POISON] += 12;
     j = fighter[c].fighterMaxHealth * 4 / 10;
     if (j < 80) {
       j = 80;
@@ -382,11 +382,11 @@ static void infusion(int c, int sn) {
   }
 
   for (j = 0; j < 9; j++) {
-    if (fighter[c].res[j] < -10) {
-      fighter[c].res[j] = -10;
+    if (fighter[c].fighterResistance[j] < -10) {
+      fighter[c].fighterResistance[j] = -10;
     }
-    if (fighter[c].res[j] > 20) {
-      fighter[c].res[j] = 20;
+    if (fighter[c].fighterResistance[j] > 20) {
+      fighter[c].fighterResistance[j] = 20;
     }
   }
 }
@@ -420,7 +420,7 @@ void reveal(int tgt) {
     draw_y = c * 8 + 97;
     rectfill(double_buffer, draw_x, draw_y, draw_x + 70, draw_y + 6, 3);
 
-    resistance = fighter[tgt].res[c];
+    resistance = fighter[tgt].fighterResistance[c];
     if (resistance < 0) {
       // 18: bright red, meaning WEAK defense
       g = 18;
@@ -705,7 +705,7 @@ int skill_use(size_t attack_fighter_index) {
     ty = fighter[attack_fighter_index].fighterImageDatafileY;
     fighter[attack_fighter_index].fighterImageDatafileX = fighter[enemy_index].fighterImageDatafileX - 16;
     fighter[attack_fighter_index].fighterImageDatafileY = fighter[enemy_index].fighterImageDatafileY + fighter[enemy_index].fighterImageDatafileHeight - 40;
-    fighter[attack_fighter_index].facing = 1;
+    fighter[attack_fighter_index].fighterSpriteFacing = 1;
     strcpy(attack_string, _("Steal"));
     display_attack_string = 1;
     battle_render(0, attack_fighter_index + 1, 0);
@@ -777,7 +777,7 @@ int skill_use(size_t attack_fighter_index) {
     fighter[attack_fighter_index].fighterImageDatafileX = tx;
     fighter[attack_fighter_index].fighterImageDatafileY = ty;
     display_attack_string = 0;
-    fighter[attack_fighter_index].facing = 0;
+    fighter[attack_fighter_index].fighterSpriteFacing = 0;
     battle_render(attack_fighter_index, attack_fighter_index, 0);
     blit2screen(0, 0);
     break;

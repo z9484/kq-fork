@@ -99,7 +99,7 @@ void auto_herochooseact(int who) {
     cact[who] = 0;
     return;
   }
-  fighter[who].facing = 0;
+  fighter[who].fighterSpriteFacing = 0;
   eact = kqrandom->random_range_exclusive(0, 4);
   if (eact == 0) {
     cact[who] = 0;
@@ -634,7 +634,7 @@ void hero_choose_action(size_t fighter_index) {
   }
   Game.unpress();
   fighter[fighter_index].defend = 0;
-  fighter[fighter_index].facing = 0;
+  fighter[fighter_index].fighterSpriteFacing = 0;
   if (pidx[fighter_index] != CORIN && pidx[fighter_index] != CASANDRA) {
     fighter[fighter_index].aux = 0;
   }
