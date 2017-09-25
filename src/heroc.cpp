@@ -1070,7 +1070,7 @@ static void hero_run(void) {
   }
   if (kqrandom->random_range_exclusive(0, 100) < a) {
     if (kqrandom->random_range_exclusive(0, 100) < (100 - a)) {
-      g = b * fighter[PSIZE].lvl * c;
+      g = b * fighter[PSIZE].fighterLevel * c;
       if (gp < g) {
         g = gp;
       }

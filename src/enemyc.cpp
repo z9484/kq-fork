@@ -674,7 +674,7 @@ static void load_enemies(void)
 		f->fighterMoney = tmp;
 		// Level
 		fscanf(edat, "%d", &tmp);
-		f->lvl = tmp;
+		f->fighterLevel = tmp;
 		// Max HP
 		fscanf(edat, "%d", &tmp);
 		f->mhp = tmp;

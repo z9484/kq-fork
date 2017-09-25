@@ -809,7 +809,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "name", f.fighterName.c_str());
 	printprop(out, "xp", f.fighterExperience);
 	printprop(out, "gp", f.fighterMoney);
-	printprop(out, "lvl", f.lvl);
+	printprop(out, "lvl", f.fighterLevel);
 	printprop(out, "cx", f.cx);
 	printprop(out, "cy", f.cy);
 	printprop(out, "cw", f.cw);

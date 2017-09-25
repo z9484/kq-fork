@@ -355,7 +355,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.imb[1] = 0;
 	tf.fighterName = plr.name;
 	tf.fighterExperience = plr.xp;
-	tf.lvl = plr.lvl;
+	tf.fighterLevel = plr.lvl;
 	tf.hp = plr.hp;
 	tf.mhp = plr.mhp;
 	tf.mp = plr.mp;
@@ -453,10 +453,10 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 		}
 	}
 	if (who == CORIN) {
-		tf.res[R_EARTH] += tf.lvl / 4;
-		tf.res[R_FIRE] += tf.lvl / 4;
-		tf.res[R_AIR] += tf.lvl / 4;
-		tf.res[R_WATER] += tf.lvl / 4;
+		tf.res[R_EARTH] += tf.fighterLevel / 4;
+		tf.res[R_FIRE] += tf.fighterLevel / 4;
+		tf.res[R_AIR] += tf.fighterLevel / 4;
+		tf.res[R_WATER] += tf.fighterLevel / 4;
 	}
 	if (plr.eqp[5] == I_AGRAN) {
 		int a = 0;

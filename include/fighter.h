@@ -22,7 +22,7 @@ typedef struct {
 	int fighterMoney;
 
 	/** Level */
-	int lvl;
+	int fighterLevel;
 
 	/** x-coord of image in datafile */
 	int cx;

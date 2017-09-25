@@ -477,7 +477,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
          fighter_index < attack_fighter_index + san; fighter_index++) {
       if (fighter[fighter_index].sts[S_DEAD] == 0 &&
           fighter[fighter_index].sts[S_STONE] == 0) {
-        b = fighter[fighter_index].lvl * items[ti].stats[A_ATT];
+        b = fighter[fighter_index].fighterLevel * items[ti].stats[A_ATT];
         tmp = kqrandom->random_range_exclusive(0, b) + b + 1;
         if (in_combat == 0) {
           adjust_hp(fighter_index, tmp);
@@ -507,7 +507,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
          fighter_index < start_fighter_index + sen; fighter_index++) {
       if (fighter[fighter_index].sts[S_DEAD] == 0 &&
           fighter[fighter_index].mhp > 0) {
-        b = fighter[fighter_index].lvl * items[ti].stats[A_ATT];
+        b = fighter[fighter_index].fighterLevel * items[ti].stats[A_ATT];
         a = kqrandom->random_range_exclusive(0, b) + b + 20;
         if (a > 250) {
           a = 250;

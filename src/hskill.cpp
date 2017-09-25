@@ -401,7 +401,7 @@ void reveal(int tgt) {
   menubox(double_buffer, 84, 56, 17, 13, BLUE);
   sprintf(strbuf, _("Name: %s"), fighter[tgt].fighterName.c_str());
   print_font(double_buffer, 92, 64, strbuf, FNORMAL);
-  sprintf(strbuf, _("Level: %d"), fighter[tgt].lvl);
+  sprintf(strbuf, _("Level: %d"), fighter[tgt].fighterLevel);
   print_font(double_buffer, 92, 72, strbuf, FNORMAL);
   sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].hp, fighter[tgt].mhp);
   print_font(double_buffer, 92, 80, strbuf, FNORMAL);
@@ -601,7 +601,7 @@ int skill_use(size_t attack_fighter_index) {
       }
       revert_cframes(PSIZE, 1);
       display_attack_string = 0;
-      b = fighter[attack_fighter_index].lvl * 15;
+      b = fighter[attack_fighter_index].fighterLevel * 15;
       for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
            fighter_index++) {
         if (fighter[fighter_index].sts[S_DEAD] == 0 &&
@@ -610,7 +610,7 @@ int skill_use(size_t attack_fighter_index) {
               fighter[fighter_index].unl == 0) {
             cts = 0;
           } else {
-            a = (fighter[attack_fighter_index].lvl + 5) -
+            a = (fighter[attack_fighter_index].fighterLevel + 5) -
                 fighter[fighter_index].unl;
             if (a > 0) {
               cts = a * 8;
@@ -633,7 +633,7 @@ int skill_use(size_t attack_fighter_index) {
       battle_render(attack_fighter_index, attack_fighter_index, 0);
     } else {
       a = kqrandom->random_range_exclusive(0, 100);
-      c = fighter[attack_fighter_index].lvl / 10 + 1;
+      c = fighter[attack_fighter_index].fighterLevel / 10 + 1;
       if (a < 25) {
         b = kqrandom->random_range_exclusive(0, 5 * c) + 1;
       } else {
