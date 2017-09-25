@@ -512,7 +512,7 @@ int skill_use(size_t attack_fighter_index) {
     strcpy(attack_string, _("Sweep"));
     display_attack_string = 1;
     tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
-    fighter[attack_fighter_index].aframe = 6;
+    fighter[attack_fighter_index].fighterAttackSpriteFrame = 6;
     curx = -1;
     cury = -1;
     battle_render(0, 0, 0);

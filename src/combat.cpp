@@ -303,7 +303,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
     if (fighter[z].sts[S_DEAD] == 0) {
       draw_fighter(z, (sall == 1));
     } else {
-      fighter[z].aframe = 3;
+      fighter[z].fighterAttackSpriteFrame = 3;
       draw_fighter(z, 0);
     }
 
@@ -812,7 +812,7 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	xx = fr->fighterImageDatafileX;
 	yy = fr->fighterImageDatafileY;
 
-	ff = (!fr->aframe) ? fr->fighterSpriteFacing : fr->aframe;
+	ff = (!fr->fighterAttackSpriteFrame) ? fr->fighterSpriteFacing : fr->fighterAttackSpriteFrame;
 
 	if (fr->sts[S_STONE] > 0) {
 		convert_cframes(fighter_index, 2, 12, 0);
@@ -956,14 +956,14 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
   }
 
   if (attack_fighter_index < PSIZE) {
-    fighter[attack_fighter_index].aframe = 7;
+    fighter[attack_fighter_index].fighterAttackSpriteFrame = 7;
   } else {
     fighter[attack_fighter_index].fighterImageDatafileY += 10;
   }
 
   fight_animation(defend_fighter_index, attack_fighter_index, 0);
   if (attack_fighter_index < PSIZE) {
-    fighter[attack_fighter_index].aframe = 0;
+    fighter[attack_fighter_index].fighterAttackSpriteFrame = 0;
   } else {
     fighter[attack_fighter_index].fighterImageDatafileY -= 10;
   }
@@ -1070,7 +1070,7 @@ static void heroes_win(void) {
 	kq_wait(500);
 	revert_equipstats();
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-		fighter[fighter_index].aframe = 4;
+		fighter[fighter_index].fighterAttackSpriteFrame = 4;
 	}
 
 	battle_render(0, 0, 0);
@@ -1311,14 +1311,14 @@ void multi_fight(size_t attack_fighter_index) {
   }
 
   if (attack_fighter_index < PSIZE) {
-    fighter[attack_fighter_index].aframe = 7;
+    fighter[attack_fighter_index].fighterAttackSpriteFrame = 7;
   } else {
     fighter[attack_fighter_index].fighterImageDatafileY += 10;
   }
 
   fight_animation(start_fighter_index, attack_fighter_index, 1);
   if (attack_fighter_index < PSIZE) {
-    fighter[attack_fighter_index].aframe = 0;
+    fighter[attack_fighter_index].fighterAttackSpriteFrame = 0;
   } else {
     fighter[attack_fighter_index].fighterImageDatafileY -= 10;
   }

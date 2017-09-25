@@ -593,7 +593,7 @@ static int hero_attack(int whom) {
   if (tgt == -1) {
     return 0;
   }
-  fighter[whom].aframe = 6;
+  fighter[whom].fighterAttackSpriteFrame = 6;
   curx = -1;
   cury = -1;
   battle_render(0, 0, 0);
@@ -897,7 +897,7 @@ void hero_init(void) {
 
     fighter[fighter_index].fighterImageDatafileWidth = 32;
     fighter[fighter_index].fighterImageDatafileHeight = 32;
-    fighter[fighter_index].aframe = 0;
+    fighter[fighter_index].fighterAttackSpriteFrame = 0;
   }
 }
 

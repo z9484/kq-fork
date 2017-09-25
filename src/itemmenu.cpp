@@ -457,7 +457,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
       fighter[fighter_index].sts[a] = 0;
     }
     fighter[fighter_index].fighterHealth = 1;
-    fighter[fighter_index].aframe = 0;
+    fighter[fighter_index].fighterAttackSpriteFrame = 0;
     if (in_combat == 1) {
       draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
     }

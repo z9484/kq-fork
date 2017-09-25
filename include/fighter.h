@@ -73,7 +73,7 @@ typedef struct {
 	uint8_t fighterSpriteFacing;
 
 	/** Battle sprite to display (standing, casting, attacking) */
-	uint8_t aframe;
+	uint8_t fighterAttackSpriteFrame;
 
 	uint8_t crit;
 

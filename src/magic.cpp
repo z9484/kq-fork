@@ -1005,7 +1005,7 @@ static void heal_one_ally(size_t caster_fighter_index,
         fighter[target_fighter_index].sts[stat_index] = 0;
       }
       fighter[target_fighter_index].fighterHealth = 1;
-      fighter[target_fighter_index].aframe = 0;
+      fighter[target_fighter_index].fighterAttackSpriteFrame = 0;
     } else {
       ta[target_fighter_index] = MISS;
     }
@@ -1016,7 +1016,7 @@ static void heal_one_ally(size_t caster_fighter_index,
         fighter[target_fighter_index].sts[stat_index] = 0;
       }
       fighter[target_fighter_index].fighterHealth = fighter[target_fighter_index].fighterMaxHealth;
-      fighter[target_fighter_index].aframe = 0;
+      fighter[target_fighter_index].fighterAttackSpriteFrame = 0;
     } else {
       ta[target_fighter_index] = MISS;
     }

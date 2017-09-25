@@ -239,7 +239,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
   if (target_fighter_index < PSIZE) {
     for (fighter_index = start_fighter_index;
          fighter_index < start_fighter_index + num_fighters; fighter_index++) {
-      fighter[fighter_index].aframe = 5;
+      fighter[fighter_index].fighterAttackSpriteFrame = 5;
     }
   }
   curx = -1;
@@ -282,7 +282,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
   if (target_fighter_index < PSIZE) {
     for (fighter_index = start_fighter_index;
          fighter_index < start_fighter_index + num_fighters; fighter_index++) {
-      fighter[fighter_index].aframe = 0;
+      fighter[fighter_index].fighterAttackSpriteFrame = 0;
     }
   }
 }
@@ -316,7 +316,7 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color) {
   }
   curx = -1;
   cury = -1;
-  fighter[caster_fighter_index].aframe = 2;
+  fighter[caster_fighter_index].fighterAttackSpriteFrame = 2;
   display_attack_string = 1;
   battle_render(0, 0, 0);
   display_attack_string = 0;
@@ -336,7 +336,7 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color) {
     kq_wait(120);
     fullblit(back, double_buffer);
   }
-  fighter[caster_fighter_index].aframe = 0;
+  fighter[caster_fighter_index].fighterAttackSpriteFrame = 0;
 }
 
 /*! \brief Draw a large sprite

@@ -824,7 +824,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "steal-item-common", f.fighterStealItemCommon);
 	printprop(out, "steal-item-rare", f.fighterStealItemRare);
 	printprop(out, "facing", f.fighterSpriteFacing);
-	printprop(out, "aframe", f.aframe);
+	printprop(out, "aframe", f.fighterAttackSpriteFrame);
 	printprop(out, "crit", f.crit);
 	printprop(out, "defend", f.defend);
 	printprop(out, "csmem", f.csmem);
