@@ -1038,7 +1038,7 @@ void fkill(size_t fighter_index) {
   fighter[fighter_index].sts[S_DEAD] = 1;
   fighter[fighter_index].fighterHealth = 0;
   if (fighter_index < PSIZE) {
-    fighter[fighter_index].defeat_item_common = 0;
+    fighter[fighter_index].fighterDefeatItemCommon = 0;
   }
 
   deffect[fighter_index] = 1;
@@ -1113,13 +1113,13 @@ static void heroes_win(void) {
 		 * If you defeat 2 enemies, you should (possibly) get 2 items, right?
 		 */
 		if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + PSIZE].fighterDefeatItemProbability) {
-			if (fighter[fighter_index + PSIZE].defeat_item_common > 0) {
-				found_item = fighter[fighter_index + PSIZE].defeat_item_common;
+			if (fighter[fighter_index + PSIZE].fighterDefeatItemCommon > 0) {
+				found_item = fighter[fighter_index + PSIZE].fighterDefeatItemCommon;
 			}
 
-			if (fighter[fighter_index + PSIZE].defeat_item_rare > 0) {
+			if (fighter[fighter_index + PSIZE].fighterDefeatItemRare > 0) {
 				if (kqrandom->random_range_exclusive(0, 100) < 5) {
-					found_item = fighter[fighter_index + PSIZE].defeat_item_rare;
+					found_item = fighter[fighter_index + PSIZE].fighterDefeatItemRare;
 				}
 			}
 

@@ -52,16 +52,16 @@ typedef struct {
 	int fighterDefeatItemProbability;
 
 	/** Defeat Item Common: If the enemy yields an item, you will get this item 95% of the time. */
-	int defeat_item_common;
+	int fighterDefeatItemCommon;
 
 	/** Defeat Item Rare: If the enemy yields an item, you will get this item 5% of the time. */
-	int defeat_item_rare;
+	int fighterDefeatItemRare;
 
 	/** Steal Item Common: If Ayla steals something, she will get this item 95% of the time. */
-	int steal_item_common;
+	int fighterStealItemCommon;
 
 	/** Steal Item Rare: If Ayla steals something, she will get this item 5% of the time. */
-	int steal_item_rare;
+	int fighterStealItemRare;
 
 	/** See A_* constants in kq.h */
 	int stats[NUM_STATS];

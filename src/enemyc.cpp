@@ -678,16 +678,16 @@ static void load_enemies(void)
 		f->fighterDefeatItemProbability = tmp;
 		// Defeat Item Common: item found commonly of the time
 		fscanf(edat, "%d", &tmp);
-		f->defeat_item_common = tmp;
+		f->fighterDefeatItemCommon = tmp;
 		// Defeat Item Rare: item found rarely
 		fscanf(edat, "%d", &tmp);
-		f->defeat_item_rare = tmp;
+		f->fighterDefeatItemRare = tmp;
 		// Steal Item Common: item found commonly from stealing
 		fscanf(edat, "%d", &tmp);
-		f->steal_item_common = tmp;
+		f->fighterStealItemCommon = tmp;
 		// Steal Item Rare: item found rarely when stealing
 		fscanf(edat, "%d", &tmp);
-		f->steal_item_rare = tmp;
+		f->fighterStealItemRare = tmp;
 		// Enemy's strength (agility & vitality set to zero)
 		fscanf(edat, "%d", &tmp);
 		f->stats[A_STR] = tmp;

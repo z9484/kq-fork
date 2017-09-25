@@ -718,14 +718,14 @@ int skill_use(size_t attack_fighter_index) {
     found_item = 0;
 #ifdef DEBUGMODE
     if (debugging > 2) {
-      if (fighter[enemy_index].steal_item_rare > 0) {
+      if (fighter[enemy_index].fighterStealItemRare > 0) {
         /* This steals a rare item from monster, if there is one */
-        found_item = fighter[enemy_index].steal_item_rare;
-        fighter[enemy_index].steal_item_rare = 0;
-      } else if (fighter[enemy_index].steal_item_common > 0) {
+        found_item = fighter[enemy_index].fighterStealItemRare;
+        fighter[enemy_index].fighterStealItemRare = 0;
+      } else if (fighter[enemy_index].fighterStealItemCommon > 0) {
         /* This steals a common item from a monster, if there is one */
-        found_item = fighter[enemy_index].steal_item_common;
-        fighter[enemy_index].steal_item_common = 0;
+        found_item = fighter[enemy_index].fighterStealItemCommon;
+        fighter[enemy_index].fighterStealItemCommon = 0;
       }
       if (found_item > 0) {
         if (check_inventory(found_item, 1) != 0) {
@@ -733,8 +733,8 @@ int skill_use(size_t attack_fighter_index) {
           message(strbuf, items[found_item].icon, 0, 0, 0);
         }
       } else {
-        if (fighter[enemy_index].steal_item_common == 0 &&
-            fighter[enemy_index].steal_item_rare == 0) {
+        if (fighter[enemy_index].fighterStealItemCommon == 0 &&
+            fighter[enemy_index].fighterStealItemRare == 0) {
           message(_("Nothing to steal!"), 255, 0, 0, 0);
         } else {
           message(_("Couldn't steal!"), 255, 0, 0, 0);
@@ -747,15 +747,15 @@ int skill_use(size_t attack_fighter_index) {
       cts = 95;
     }
     if (kqrandom->random_range_exclusive(0, 100) < cts) {
-      if (fighter[enemy_index].steal_item_rare > 0 && (kqrandom->random_range_exclusive(0, 100) < 5)) {
+      if (fighter[enemy_index].fighterStealItemRare > 0 && (kqrandom->random_range_exclusive(0, 100) < 5)) {
         /* This steals a rare item from monster, if there is one */
-        found_item = fighter[enemy_index].steal_item_rare;
-        fighter[enemy_index].steal_item_rare = 0;
-      } else if (fighter[enemy_index].steal_item_common > 0 &&
+        found_item = fighter[enemy_index].fighterStealItemRare;
+        fighter[enemy_index].fighterStealItemRare = 0;
+      } else if (fighter[enemy_index].fighterStealItemCommon > 0 &&
                  (kqrandom->random_range_exclusive(0, 100) < 95)) {
         /* This steals a common item from a monster, if there is one */
-        found_item = fighter[enemy_index].steal_item_common;
-        fighter[enemy_index].steal_item_common = 0;
+        found_item = fighter[enemy_index].fighterStealItemCommon;
+        fighter[enemy_index].fighterStealItemCommon = 0;
       }
       if (found_item > 0) {
         if (check_inventory(found_item, 1) != 0) {
@@ -763,8 +763,8 @@ int skill_use(size_t attack_fighter_index) {
           message(strbuf, items[found_item].icon, 0, 0, 0);
         }
       } else {
-        if (fighter[enemy_index].steal_item_common == 0 &&
-            fighter[enemy_index].steal_item_rare == 0) {
+        if (fighter[enemy_index].fighterStealItemCommon == 0 &&
+            fighter[enemy_index].fighterStealItemRare == 0) {
           message(_("Nothing to steal!"), 255, 0, 0, 0);
         } else {
           message(_("Couldn't steal!"), 255, 0, 0, 0);

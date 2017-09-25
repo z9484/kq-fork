@@ -819,10 +819,10 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "mp", f.fighterMagic);
 	printprop(out, "mmp", f.fighterMaxMagic);
 	printprop(out, "dip", f.fighterDefeatItemProbability);
-	printprop(out, "defeat-item-common", f.defeat_item_common);
-	printprop(out, "defeat-item-rare", f.defeat_item_rare);
-	printprop(out, "steal-item-common", f.steal_item_common);
-	printprop(out, "steal-item-rare", f.steal_item_rare);
+	printprop(out, "defeat-item-common", f.fighterDefeatItemCommon);
+	printprop(out, "defeat-item-rare", f.fighterDefeatItemRare);
+	printprop(out, "steal-item-common", f.fighterStealItemCommon);
+	printprop(out, "steal-item-rare", f.fighterStealItemRare);
 	printprop(out, "facing", f.facing);
 	printprop(out, "aframe", f.aframe);
 	printprop(out, "crit", f.crit);
