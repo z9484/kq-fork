@@ -671,7 +671,7 @@ static void load_enemies(void)
 		f->fighterExperience = tmp;
 		// Gold received
 		fscanf(edat, "%d", &tmp);
-		f->gp = tmp;
+		f->fighterMoney = tmp;
 		// Level
 		fscanf(edat, "%d", &tmp);
 		f->lvl = tmp;

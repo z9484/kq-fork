@@ -19,7 +19,7 @@ typedef struct {
 	int fighterExperience;
 
 	/** Gold Points */
-	int gp;
+	int fighterMoney;
 
 	/** Level */
 	int lvl;
