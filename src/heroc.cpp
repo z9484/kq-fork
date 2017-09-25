@@ -134,12 +134,12 @@ int available_spells(int who) {
       if (magic[b].use == USE_ANY_INF || magic[b].use == USE_COMBAT_INF) {
         if (l == CORIN && fighter[who].aux == 2) {
           e = mp_needed(who, b);
-          if (fighter[who].mp >= e && magic[b].elem < 9) {
+          if (fighter[who].fighterMagic >= e && magic[b].elem < 9) {
             numsp++;
           }
         } else {
           e = mp_needed(who, b);
-          if (fighter[who].mp >= e) {
+          if (fighter[who].fighterMagic >= e) {
             numsp++;
           }
         }
@@ -195,12 +195,12 @@ static int combat_castable(int spell_caster, int spell_number) {
   if (magic[b].use == USE_ANY_INF || magic[b].use == USE_COMBAT_INF) {
     if (pidx[spell_caster] == CORIN && fighter[c].aux == 2) {
       c = mp_needed(spell_caster, b);
-      if (fighter[spell_caster].mp >= c && magic[b].elem < R_BLIND) {
+      if (fighter[spell_caster].fighterMagic >= c && magic[b].elem < R_BLIND) {
         return 1;
       }
     } else {
       c = mp_needed(spell_caster, b);
-      if (fighter[spell_caster].mp >= c) {
+      if (fighter[spell_caster].fighterMagic >= c) {
         return 1;
       }
     }

@@ -348,12 +348,12 @@ void battle_render(signed int plyr, size_t hl, int sall) {
     sz = (fighter[z].fighterHealth > 0) ? fighter[z].fighterHealth * 88 / fighter[z].fighterMaxHealth : 88;
 
     hline(double_buffer, b + 8, 216, b + 8 + sz, 12);
-    sprintf(strbuf, _("MP: %3d/%3d"), fighter[z].mp, fighter[z].mmp);
+    sprintf(strbuf, _("MP: %3d/%3d"), fighter[z].fighterMagic, fighter[z].mmp);
 
     /*  RB IDEA: Same suggestion as with health, just above.  */
-    print_font(double_buffer, b + 8, 218, strbuf, (fighter[z].mp < (fighter[z].mmp / 5)) ? FRED : FNORMAL);
+    print_font(double_buffer, b + 8, 218, strbuf, (fighter[z].fighterMagic < (fighter[z].mmp / 5)) ? FRED : FNORMAL);
     hline(double_buffer, b + 8, 226, b + 95, 21);
-    sz = (fighter[z].mp > 0) ? fighter[z].mp * 88 / fighter[z].mmp : 88;
+    sz = (fighter[z].fighterMagic > 0) ? fighter[z].fighterMagic * 88 / fighter[z].mmp : 88;
     hline(double_buffer, b + 8, 226, b + 8 + sz, 12);
     draw_stsicon(double_buffer, 1, z, 17, b + 8, 200);
   }

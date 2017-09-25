@@ -358,7 +358,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.fighterLevel = plr.lvl;
 	tf.fighterHealth = plr.hp;
 	tf.fighterMaxHealth = plr.mhp;
-	tf.mp = plr.mp;
+	tf.fighterMagic = plr.mp;
 	tf.mmp = plr.mmp;
 	for (int j = 0; j < 8; j++) {
 		tf.sts[j] = plr.sts[j];
@@ -600,7 +600,7 @@ void revert_equipstats(void) {
     if (party[pidx_index].hp > party[pidx_index].mhp) {
       party[pidx_index].hp = party[pidx_index].mhp;
     }
-    party[pidx_index].mp = fighter[fighter_index].mp;
+    party[pidx_index].mp = fighter[fighter_index].fighterMagic;
     if (party[pidx_index].mp > party[pidx_index].mmp) {
       party[pidx_index].mp = party[pidx_index].mmp;
     }

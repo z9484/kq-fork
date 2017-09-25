@@ -287,7 +287,7 @@ void combat_skill(size_t fighter_index) {
       adjust_hp(target_fighter_index, ta[target_fighter_index]);
     }
     for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
-      b = fighter[target_fighter_index].mp / 3;
+      b = fighter[target_fighter_index].fighterMagic / 3;
       ta[target_fighter_index] = 0 - b;
     }
     display_amount(0, FONT_RED, 1);

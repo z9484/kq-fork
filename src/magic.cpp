@@ -84,12 +84,12 @@ void adjust_hp(size_t fighter_index, int amt) {
  * \param   amt Amount to adjust
  */
 void adjust_mp(size_t fighter_index, int amt) {
-  fighter[fighter_index].mp += amt;
-  if (fighter[fighter_index].mp > fighter[fighter_index].mmp) {
-    fighter[fighter_index].mp = fighter[fighter_index].mmp;
+  fighter[fighter_index].fighterMagic += amt;
+  if (fighter[fighter_index].fighterMagic > fighter[fighter_index].mmp) {
+    fighter[fighter_index].fighterMagic = fighter[fighter_index].mmp;
   }
-  if (fighter[fighter_index].mp < 0) {
-    fighter[fighter_index].mp = 0;
+  if (fighter[fighter_index].fighterMagic < 0) {
+    fighter[fighter_index].fighterMagic = 0;
   }
 }
 
@@ -293,8 +293,8 @@ static void beffect_one_enemy(size_t caster_fighter_index,
     if (non_dmg_save(target_fighter_index, sp_hit) == 1) {
       r = r / 2;
     }
-    if (fighter[target_fighter_index].mp < abs(r)) {
-      r = 0 - fighter[target_fighter_index].mp;
+    if (fighter[target_fighter_index].fighterMagic < abs(r)) {
+      r = 0 - fighter[target_fighter_index].fighterMagic;
     }
     ta[target_fighter_index] = r;
     ta[caster_fighter_index] = 0 - r;
@@ -405,7 +405,7 @@ int cast_spell(size_t caster_fighter_index, int is_item) {
     if (c < 1) {
       c = 1;
     }
-    fighter[caster_fighter_index].mp -= c;
+    fighter[caster_fighter_index].fighterMagic -= c;
     /*
         check for spell failure - only applies to spells that
         don't have a hit% or do damage

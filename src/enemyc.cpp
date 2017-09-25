@@ -188,7 +188,7 @@ static int enemy_cancast(size_t target_fighter_index, size_t sp) {
   if (z == 0) {
     return 0;
   }
-  if (fighter[target_fighter_index].mp < mp_needed(target_fighter_index, sp)) {
+  if (fighter[target_fighter_index].fighterMagic < mp_needed(target_fighter_index, sp)) {
     return 0;
   }
   return 1;
@@ -761,7 +761,7 @@ static void load_enemies(void)
 			f->atrack[p] = 0;
 		}
 		f->fighterHealth = f->fighterMaxHealth;
-		f->mp = f->mmp;
+		f->fighterMagic = f->mmp;
 		for (p = 0; p < 24; p++)
 		{
 			f->sts[p] = 0;
