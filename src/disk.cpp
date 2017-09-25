@@ -810,8 +810,8 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "xp", f.fighterExperience);
 	printprop(out, "gp", f.fighterMoney);
 	printprop(out, "lvl", f.fighterLevel);
-	printprop(out, "cx", f.cx);
-	printprop(out, "cy", f.cy);
+	printprop(out, "cx", f.fighterImageDatafileX);
+	printprop(out, "cy", f.fighterImageDatafileY);
 	printprop(out, "cw", f.cw);
 	printprop(out, "cl", f.cl);
 	printprop(out, "hp", f.hp);

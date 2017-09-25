@@ -1103,8 +1103,8 @@ static void hero_run(void) {
       menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, BLUE);
       print_font(double_buffer, 160 - g, 40, strbuf, FNORMAL);
       for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-        fx = fighter[fighter_index].cx;
-        fy = fighter[fighter_index].cy;
+        fx = fighter[fighter_index].fighterImageDatafileX;
+        fy = fighter[fighter_index].fighterImageDatafileY;
         fr = 0;
         if (a > 10) {
           fr++;

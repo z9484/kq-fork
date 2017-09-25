@@ -271,8 +271,8 @@ void battle_render(signed int plyr, size_t hl, int sall) {
   if (plyr > 0) {
     current_fighter_index = plyr - 1;
     curw = fighter[current_fighter_index].cw;
-    curx = fighter[current_fighter_index].cx;
-    cury = fighter[current_fighter_index].cy;
+    curx = fighter[current_fighter_index].fighterImageDatafileX;
+    cury = fighter[current_fighter_index].fighterImageDatafileY;
   } else {
     curx = -1;
     cury = -1;
@@ -287,9 +287,9 @@ void battle_render(signed int plyr, size_t hl, int sall) {
       current_fighter_index = plyr - 1;
       t = curx + (curw / 2);
       t -= (fighter[current_fighter_index].fighterName.length() * 4);
-      z = (fighter[current_fighter_index].cy < 32
-               ? fighter[current_fighter_index].cy + fighter[current_fighter_index].cl
-               : fighter[current_fighter_index].cy - 32);
+      z = (fighter[current_fighter_index].fighterImageDatafileY < 32
+		  ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].cl
+		  : fighter[current_fighter_index].fighterImageDatafileY - 32);
 
       menubox(double_buffer, t - 8, z, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
       print_font(double_buffer, t, z + 8, fighter[current_fighter_index].fighterName.c_str(), FNORMAL);
@@ -811,8 +811,8 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	int ff;
 	s_fighter* fr = &fighter[fighter_index];
 
-	xx = fr->cx;
-	yy = fr->cy;
+	xx = fr->fighterImageDatafileX;
+	yy = fr->fighterImageDatafileY;
 
 	ff = (!fr->aframe) ? fr->facing : fr->aframe;
 
@@ -951,28 +951,28 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
       (fighter[defend_fighter_index].aux == 2)) {
     fighter[defend_fighter_index].aux = 1;
     a = 1 - defend_fighter_index;
-    tx = fighter[defend_fighter_index].cx;
-    ty = fighter[defend_fighter_index].cy;
-    fighter[defend_fighter_index].cx = fighter[a].cx;
-    fighter[defend_fighter_index].cy = fighter[a].cy - 16;
+    tx = fighter[defend_fighter_index].fighterImageDatafileX;
+    ty = fighter[defend_fighter_index].fighterImageDatafileY;
+    fighter[defend_fighter_index].fighterImageDatafileX = fighter[a].fighterImageDatafileX;
+    fighter[defend_fighter_index].fighterImageDatafileY = fighter[a].fighterImageDatafileY - 16;
   }
 
   if (attack_fighter_index < PSIZE) {
     fighter[attack_fighter_index].aframe = 7;
   } else {
-    fighter[attack_fighter_index].cy += 10;
+    fighter[attack_fighter_index].fighterImageDatafileY += 10;
   }
 
   fight_animation(defend_fighter_index, attack_fighter_index, 0);
   if (attack_fighter_index < PSIZE) {
     fighter[attack_fighter_index].aframe = 0;
   } else {
-    fighter[attack_fighter_index].cy -= 10;
+    fighter[attack_fighter_index].fighterImageDatafileY -= 10;
   }
 
   if ((tx != -1) && (ty != -1)) {
-    fighter[defend_fighter_index].cx = tx;
-    fighter[defend_fighter_index].cy = ty;
+    fighter[defend_fighter_index].fighterImageDatafileX = tx;
+    fighter[defend_fighter_index].fighterImageDatafileY = ty;
   }
 
   if (ta[defend_fighter_index] != MISS) {
@@ -1320,14 +1320,14 @@ void multi_fight(size_t attack_fighter_index) {
   if (attack_fighter_index < PSIZE) {
     fighter[attack_fighter_index].aframe = 7;
   } else {
-    fighter[attack_fighter_index].cy += 10;
+    fighter[attack_fighter_index].fighterImageDatafileY += 10;
   }
 
   fight_animation(start_fighter_index, attack_fighter_index, 1);
   if (attack_fighter_index < PSIZE) {
     fighter[attack_fighter_index].aframe = 0;
   } else {
-    fighter[attack_fighter_index].cy -= 10;
+    fighter[attack_fighter_index].fighterImageDatafileY -= 10;
   }
 
   display_amount(start_fighter_index, FONT_DECIDE, 1);
@@ -1446,20 +1446,20 @@ static void snap_togrid(void) {
 
   hf = 170 - (numchrs * 24);
   for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    fighter[fighter_index].cx = fighter_index * 48 + hf;
-    fighter[fighter_index].cy = 128;
+    fighter[fighter_index].fighterImageDatafileX = fighter_index * 48 + hf;
+    fighter[fighter_index].fighterImageDatafileY = 128;
   }
 
   a = fighter[PSIZE].cw + 16;
   mf = 170 - (num_enemies * a / 2);
   for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
        fighter_index++) {
-    fighter[fighter_index].cx = (fighter_index - PSIZE) * a + mf;
+    fighter[fighter_index].fighterImageDatafileX = (fighter_index - PSIZE) * a + mf;
 
     if (fighter[fighter_index].cl < 104) {
-      fighter[fighter_index].cy = 104 - fighter[fighter_index].cl;
+      fighter[fighter_index].fighterImageDatafileY = 104 - fighter[fighter_index].cl;
     } else {
-      fighter[fighter_index].cy = 8;
+      fighter[fighter_index].fighterImageDatafileY = 8;
     }
   }
 }

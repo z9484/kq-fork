@@ -542,10 +542,8 @@ int skill_use(size_t attack_fighter_index) {
       fullblit(double_buffer, back);
       for (p = 0; p < 2; p++) {
         for (a = 0; a < 16; a++) {
-          tx = fighter[attack_fighter_index].cx +
-               (fighter[attack_fighter_index].cw / 2);
-          ty = fighter[attack_fighter_index].cy +
-               (fighter[attack_fighter_index].cl / 2);
+          tx = fighter[attack_fighter_index].fighterImageDatafileX + (fighter[attack_fighter_index].cw / 2);
+          ty = fighter[attack_fighter_index].fighterImageDatafileY + (fighter[attack_fighter_index].cl / 2);
           if (p == 0) {
             circlefill(
                 double_buffer, tx, ty, a,
@@ -707,11 +705,10 @@ int skill_use(size_t attack_fighter_index) {
       return 0;
     }
     enemy_index = (uint32_t)tgt;
-    tx = fighter[attack_fighter_index].cx;
-    ty = fighter[attack_fighter_index].cy;
-    fighter[attack_fighter_index].cx = fighter[enemy_index].cx - 16;
-    fighter[attack_fighter_index].cy =
-        fighter[enemy_index].cy + fighter[enemy_index].cl - 40;
+	tx = fighter[attack_fighter_index].fighterImageDatafileX;
+    ty = fighter[attack_fighter_index].fighterImageDatafileY;
+    fighter[attack_fighter_index].fighterImageDatafileX = fighter[enemy_index].fighterImageDatafileX - 16;
+    fighter[attack_fighter_index].fighterImageDatafileY = fighter[enemy_index].fighterImageDatafileY + fighter[enemy_index].cl - 40;
     fighter[attack_fighter_index].facing = 1;
     strcpy(attack_string, _("Steal"));
     display_attack_string = 1;
@@ -781,8 +778,8 @@ int skill_use(size_t attack_fighter_index) {
       message(_("Couldn't steal!"), 255, 0, 0, 0);
     }
 #endif
-    fighter[attack_fighter_index].cx = tx;
-    fighter[attack_fighter_index].cy = ty;
+    fighter[attack_fighter_index].fighterImageDatafileX = tx;
+    fighter[attack_fighter_index].fighterImageDatafileY = ty;
     display_attack_string = 0;
     fighter[attack_fighter_index].facing = 0;
     battle_render(attack_fighter_index, attack_fighter_index, 0);

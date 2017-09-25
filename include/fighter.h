@@ -25,10 +25,10 @@ typedef struct {
 	int fighterLevel;
 
 	/** x-coord of image in datafile */
-	int cx;
+	int fighterImageDatafileX;
 
 	/** y-coord of image in datafile */
-	int cy;
+	int fighterImageDatafileY;
 
 	/** width in datafile */
 	int cw;
