@@ -354,7 +354,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.imb[0] = 0;
 	tf.imb[1] = 0;
 	tf.fighterName = plr.name;
-	tf.xp = plr.xp;
+	tf.fighterExperience = plr.xp;
 	tf.lvl = plr.lvl;
 	tf.hp = plr.hp;
 	tf.mhp = plr.mhp;

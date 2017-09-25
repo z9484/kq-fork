@@ -16,7 +16,7 @@ typedef struct {
 	std::string fighterName;
 
 	/** Experience Points */
-	int xp;
+	int fighterExperience;
 
 	/** Gold Points */
 	int gp;

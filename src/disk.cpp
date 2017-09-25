@@ -264,6 +264,7 @@ static int load_attributes(s_player *s, XMLElement *node) {
   }
   return 0;
 }
+
 static int load_core_properties(s_player *s, XMLElement *node) {
   XMLElement *properties = node->FirstChildElement("properties");
   if (properties) {
@@ -806,7 +807,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	out.PushAttribute("id", f.fighterName.c_str());
 	out.OpenElement("properties");
 	printprop(out, "name", f.fighterName.c_str());
-	printprop(out, "xp", f.xp);
+	printprop(out, "xp", f.fighterExperience);
 	printprop(out, "gp", f.gp);
 	printprop(out, "lvl", f.lvl);
 	printprop(out, "cx", f.cx);

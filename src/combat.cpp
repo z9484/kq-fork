@@ -1092,7 +1092,7 @@ static void heroes_win(void) {
 
 	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
 		fighter_index++) {
-		txp += fighter[fighter_index].xp;
+		txp += fighter[fighter_index].fighterExperience;
 		tgp += fighter[fighter_index].gp;
 	}
 
