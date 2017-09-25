@@ -690,18 +690,18 @@ static void load_enemies(void)
 		f->fighterStealItemRare = tmp;
 		// Enemy's strength (agility & vitality set to zero)
 		fscanf(edat, "%d", &tmp);
-		f->stats[A_STR] = tmp;
-		f->stats[A_AGI] = 0;
-		f->stats[A_VIT] = 0;
+		f->fighterStats[A_STR] = tmp;
+		f->fighterStats[A_AGI] = 0;
+		f->fighterStats[A_VIT] = 0;
 		// Intelligence & Sagacity (both the same)
 		fscanf(edat, "%d", &tmp);
-		f->stats[A_INT] = tmp;
-		f->stats[A_SAG] = tmp;
+		f->fighterStats[A_INT] = tmp;
+		f->fighterStats[A_SAG] = tmp;
 		// Defense against: Speed, Spirit, Attack, Hit, Defense, Evade, Magic (in that order)
 		for (p = 5; p < 13; p++)
 		{
 			fscanf(edat, "%d", &tmp);
-			f->stats[p] = tmp;
+			f->fighterStats[p] = tmp;
 		}
 		// Bonus
 		fscanf(edat, "%d", &tmp);

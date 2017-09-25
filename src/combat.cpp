@@ -118,11 +118,11 @@ eAttackResult attack_result(int ar, int dr) {
   int defender_defense;
   int defender_evade;
 
-  attacker_attack = tempa.stats[A_ATT];
-  attacker_hit = tempa.stats[A_HIT];
+  attacker_attack = tempa.fighterStats[A_ATT];
+  attacker_hit = tempa.fighterStats[A_HIT];
   attacker_weapon_element = tempa.welem;
-  defender_defense = tempd.stats[A_DEF];
-  defender_evade = tempd.stats[A_EVD];
+  defender_defense = tempd.fighterStats[A_DEF];
+  defender_evade = tempd.fighterStats[A_EVD];
 
   /*  JB: check to see if the attacker is in critical status...  */
   /*      increases chance for a critical hit                    */
@@ -147,7 +147,7 @@ eAttackResult attack_result(int ar, int dr) {
     defender_evade = 0;
   }
 
-  attacker_attack += (tempa.stats[tempa.bstat] * tempa.bonus / 100);
+  attacker_attack += (tempa.fighterStats[tempa.bstat] * tempa.bonus / 100);
   if (attacker_attack < DMG_RND_MIN * 5) {
     base = kqrandom->random_range_exclusive(0, DMG_RND_MIN);
   } else {
@@ -1168,10 +1168,10 @@ static void heroes_win(void) {
 				print_font(double_buffer, b + 128, 64, strbuf, FGREEN);
 
 				for (z = 0; z < 5; z++) {
-					sprintf(strbuf, "%3d>", t1.stats[z]);
+					sprintf(strbuf, "%3d>", t1.fighterStats[z]);
 					print_font(double_buffer, b + 96, z * 8 + 72, strbuf, FNORMAL);
-					sprintf(strbuf, "%3d", t2.stats[z]);
-					if (t2.stats[z] > t1.stats[z]) {
+					sprintf(strbuf, "%3d", t2.fighterStats[z]);
+					if (t2.fighterStats[z] > t1.fighterStats[z]) {
 						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FGREEN);
 					}
 					else {
@@ -1228,7 +1228,7 @@ static void init_fighters(void) {
   enemy_init();
   for (fighter_index = 0; fighter_index < (PSIZE + num_enemies);
        fighter_index++) {
-    nspeed[fighter_index] = (fighter[fighter_index].stats[A_SPD] + 50) / 5;
+    nspeed[fighter_index] = (fighter[fighter_index].fighterStats[A_SPD] + 50) / 5;
   }
 }
 

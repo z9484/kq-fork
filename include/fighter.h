@@ -64,7 +64,7 @@ typedef struct {
 	int fighterStealItemRare;
 
 	/** See A_* constants in kq.h */
-	int stats[NUM_STATS];
+	int fighterStats[NUM_STATS];
 
 	/** eResistance: See R_* constants */
 	char res[NUM_RES];

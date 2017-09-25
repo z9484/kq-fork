@@ -69,7 +69,7 @@ void combat_skill(size_t fighter_index) {
   case 2:
     strcpy(attack_string, _("Double Slash"));
     display_attack_string = 1;
-    tempa.stats[A_ATT] = tempa.stats[A_ATT] * 15 / 10;
+    tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 15 / 10;
     fight(fighter_index, tgt, 1);
     display_attack_string = 0;
     fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
@@ -104,7 +104,7 @@ void combat_skill(size_t fighter_index) {
     }
     strcpy(attack_string, _("Sweep"));
     display_attack_string = 1;
-    tempa.stats[A_ATT] = tempa.stats[A_ATT] * 75 / 100;
+    tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
     multi_fight(fighter_index);
     display_attack_string = 0;
     fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
@@ -120,8 +120,8 @@ void combat_skill(size_t fighter_index) {
   case 7:
     strcpy(attack_string, _("Dragon Bite"));
     display_attack_string = 1;
-    tempa.stats[A_ATT] = tempa.stats[A_ATT] * 15 / 10;
-    tempa.stats[A_HIT] = tempa.stats[A_HIT] * 9 / 10;
+    tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 15 / 10;
+    tempa.fighterStats[A_HIT] = tempa.fighterStats[A_HIT] * 9 / 10;
     tempa.welem = 0;
     fight(fighter_index, tgt, 1);
     display_attack_string = 0;
@@ -223,8 +223,8 @@ void combat_skill(size_t fighter_index) {
   case 12:
     strcpy(attack_string, _("Petrifying Bite"));
     display_attack_string = 1;
-    tempa.stats[A_ATT] = tempa.stats[A_ATT];
-    tempa.stats[A_HIT] = tempa.stats[A_HIT] * 8 / 10;
+    tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT];
+    tempa.fighterStats[A_HIT] = tempa.fighterStats[A_HIT] * 8 / 10;
     tempa.welem = R_PETRIFY + 1;
     fight(fighter_index, tgt, 1);
     display_attack_string = 0;
@@ -241,7 +241,7 @@ void combat_skill(size_t fighter_index) {
   case 14:
     strcpy(attack_string, _("Stunning Strike"));
     display_attack_string = 1;
-    tempa.stats[A_ATT] = tempa.stats[A_ATT] * 8 / 10;
+    tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 8 / 10;
     fight(fighter_index, tgt, 1);
     display_attack_string = 0;
     if (non_dmg_save(tgt, 80) == 0 && ta[tgt] != MISS) {

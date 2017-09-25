@@ -1041,7 +1041,7 @@ static void hero_run(void) {
   for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
     if (fighter[fighter_index].sts[S_DEAD] == 0) {
       b++;
-      bt += fighter[fighter_index].stats[A_SPD];
+      bt += fighter[fighter_index].fighterStats[A_SPD];
     }
   }
   if (b == 0) {
@@ -1053,7 +1053,7 @@ static void hero_run(void) {
        fighter_index++) {
     if (fighter[fighter_index].sts[S_DEAD] == 0) {
       c++;
-      ct += fighter[fighter_index].stats[A_SPD];
+      ct += fighter[fighter_index].fighterStats[A_SPD];
     }
   }
   if (c == 0) {

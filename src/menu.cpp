@@ -244,11 +244,11 @@ static void level_up(int pr)
 	z = ((a / 3) + (xpi * (a / 20 + 1) - 1)) * (((a - 2) / 2) * (a - 1));
 	z += (bxp * (a / 20 + 1) * (a - 1));
 	party[pr].next += (int)z;
-	a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] + (tmpf.stats[A_VIT] / 5);
+	a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] + (tmpf.fighterStats[A_VIT] / 5);
 	party[pr].hp += a;
 	party[pr].mhp += a;
 	b = (kqrandom->random_range_exclusive(0, lup[3] / 2)) + lup[3];
-	b += (tmpf.stats[A_INT] + tmpf.stats[A_SAG]) / 25;
+	b += (tmpf.fighterStats[A_INT] + tmpf.fighterStats[A_SAG]) / 25;
 	party[pr].mp += b;
 	party[pr].mmp += b;
 }
@@ -367,7 +367,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 		tf.sts[j] = 0;
 	}
 	for (int j = 0; j < NUM_ATTRIBUTES; j++) {
-		tf.stats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
+		tf.fighterStats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
 	}
 	for (int j = 0; j < R_TOTAL_RES; j++) {
 		tf.res[j] = plr.res[j];
@@ -441,11 +441,11 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 		for (int b = 0; b < NUM_STATS; b++) {
 			if (b == A_SPI && who == TEMMIN) {
 				if (items[a].stats[A_SPI] > 0) {
-					tf.stats[A_SPI] += items[a].stats[A_SPI];
+					tf.fighterStats[A_SPI] += items[a].stats[A_SPI];
 				}
 			}
 			else {
-				tf.stats[b] += items[a].stats[b];
+				tf.fighterStats[b] += items[a].stats[b];
 			}
 		}
 		for (int b = 0; b < R_TOTAL_RES; b++) {
@@ -490,14 +490,14 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	else {
 		tf.mrp = plr.mrp;
 	}
-	tf.stats[A_HIT] += tf.stats[A_STR] / 5;
-	tf.stats[A_HIT] += tf.stats[A_AGI] / 5;
-	tf.stats[A_DEF] += tf.stats[A_VIT] / 8;
-	tf.stats[A_EVD] += tf.stats[A_AGI] / 5;
-	tf.stats[A_MAG] += (tf.stats[A_INT] + tf.stats[A_SAG]) / 20;
+	tf.fighterStats[A_HIT] += tf.fighterStats[A_STR] / 5;
+	tf.fighterStats[A_HIT] += tf.fighterStats[A_AGI] / 5;
+	tf.fighterStats[A_DEF] += tf.fighterStats[A_VIT] / 8;
+	tf.fighterStats[A_EVD] += tf.fighterStats[A_AGI] / 5;
+	tf.fighterStats[A_MAG] += (tf.fighterStats[A_INT] + tf.fighterStats[A_SAG]) / 20;
 	for (int j = 0; j < NUM_STATS; j++) {
-		if (tf.stats[j] < 1) {
-			tf.stats[j] = 1;
+		if (tf.fighterStats[j] < 1) {
+			tf.fighterStats[j] = 1;
 		}
 	}
 	tf.crit = 1;
@@ -748,9 +748,8 @@ static void status_screen(size_t fighter_index) {
         stats_y += 8;
       }
       print_font(double_buffer, 96 + xofs, stats_y + yofs, "$", FGOLD);
-      sprintf(strbuf, "%d", fighter[fighter_index].stats[stats_index]);
-      print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs,
-                 stats_y + yofs, strbuf, FNORMAL);
+      sprintf(strbuf, "%d", fighter[fighter_index].fighterStats[stats_index]);
+      print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, stats_y + yofs, strbuf, FNORMAL);
     }
 
     menubox(double_buffer, 160 + xofs, 16 + yofs, 18, 16, BLUE);

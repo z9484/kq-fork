@@ -74,7 +74,7 @@ static void calc_equippreview(uint32_t aa, uint32_t p2, int ii) {
   party[pidx[aa]].eqp[p2] = ii;
   update_equipstats();
   for (z = 0; z < 13; z++) {
-    tstats[z] = fighter[aa].stats[z];
+    tstats[z] = fighter[aa].fighterStats[z];
   }
   for (z = 0; z < R_TOTAL_RES; z++) {
     tres[z] = fighter[aa].res[z];
@@ -343,7 +343,7 @@ static void draw_equippreview(int ch, int ptr, int pp) {
   print_font(double_buffer, 196 + xofs, 188 + yofs, _("Evd:"), FNORMAL);
   print_font(double_buffer, 196 + xofs, 196 + yofs, _("Mdf:"), FNORMAL);
   for (z = 0; z < 13; z++) {
-    c1 = fighter[ch].stats[z];
+    c1 = fighter[ch].fighterStats[z];
     c2 = tstats[z];
     sprintf(strbuf, "%d", c1);
     print_font(double_buffer, 252 - (strlen(strbuf) * 8) + xofs,

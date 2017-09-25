@@ -838,7 +838,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	printprop(out, "mrp", f.mrp);
 	out.CloseElement(/*properties*/);
 	out.OpenElement("stats");
-	out.PushText(make_list(std::begin(f.stats), std::end(f.stats)).c_str());
+	out.PushText(make_list(std::begin(f.fighterStats), std::end(f.fighterStats)).c_str());
 	out.CloseElement(/*stats*/);
 	out.OpenElement("res");
 	out.PushText(make_list(std::begin(f.res), std::end(f.res)).c_str());
