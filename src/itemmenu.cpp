@@ -387,7 +387,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     if (fighter[fighter_index].sts[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].fighterMagic == fighter[fighter_index].mmp) {
+    if (fighter[fighter_index].fighterMagic == fighter[fighter_index].fighterMaxMagic) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     tmp = kqrandom->random_range_exclusive(0, items[ti].stats[A_ATT] / 2) + items[ti].stats[A_ATT];
@@ -614,7 +614,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     }
     for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++) {
       fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
-      fighter[fighter_index].fighterMagic = fighter[fighter_index].mmp;
+      fighter[fighter_index].fighterMagic = fighter[fighter_index].fighterMaxMagic;
       for (b = 0; b < 8; b++) {
         fighter[fighter_index].sts[b] = 0;
       }

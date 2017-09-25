@@ -672,7 +672,7 @@ static void load_enemies(void)
 		f->fighterMaxHealth = tmp;
 		// Max MP
 		fscanf(edat, "%d", &tmp);
-		f->mmp = tmp;
+		f->fighterMaxMagic = tmp;
 		// Defeat Item Probability: chance of finding any items after defeat
 		fscanf(edat, "%d", &tmp);
 		f->dip = tmp;
@@ -761,7 +761,7 @@ static void load_enemies(void)
 			f->atrack[p] = 0;
 		}
 		f->fighterHealth = f->fighterMaxHealth;
-		f->fighterMagic = f->mmp;
+		f->fighterMagic = f->fighterMaxMagic;
 		for (p = 0; p < 24; p++)
 		{
 			f->sts[p] = 0;

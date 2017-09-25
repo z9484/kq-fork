@@ -46,7 +46,7 @@ typedef struct {
 	int fighterMagic;
 
 	/** Max Magic Points */
-	int mmp;
+	int fighterMaxMagic;
 
 	/** Defeat Item Probability: Probability in % that the enemy will yield an item when defeated. */
 	int dip;

@@ -359,7 +359,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.fighterHealth = plr.hp;
 	tf.fighterMaxHealth = plr.mhp;
 	tf.fighterMagic = plr.mp;
-	tf.mmp = plr.mmp;
+	tf.fighterMaxMagic = plr.mmp;
 	for (int j = 0; j < 8; j++) {
 		tf.sts[j] = plr.sts[j];
 	}

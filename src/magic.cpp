@@ -85,8 +85,8 @@ void adjust_hp(size_t fighter_index, int amt) {
  */
 void adjust_mp(size_t fighter_index, int amt) {
   fighter[fighter_index].fighterMagic += amt;
-  if (fighter[fighter_index].fighterMagic > fighter[fighter_index].mmp) {
-    fighter[fighter_index].fighterMagic = fighter[fighter_index].mmp;
+  if (fighter[fighter_index].fighterMagic > fighter[fighter_index].fighterMaxMagic) {
+    fighter[fighter_index].fighterMagic = fighter[fighter_index].fighterMaxMagic;
   }
   if (fighter[fighter_index].fighterMagic < 0) {
     fighter[fighter_index].fighterMagic = 0;

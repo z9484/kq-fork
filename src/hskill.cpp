@@ -405,7 +405,7 @@ void reveal(int tgt) {
   print_font(double_buffer, 92, 72, strbuf, FNORMAL);
   sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].fighterHealth, fighter[tgt].fighterMaxHealth);
   print_font(double_buffer, 92, 80, strbuf, FNORMAL);
-  sprintf(strbuf, _("MP: %d/%d"), fighter[tgt].fighterMagic, fighter[tgt].mmp);
+  sprintf(strbuf, _("MP: %d/%d"), fighter[tgt].fighterMagic, fighter[tgt].fighterMaxMagic);
   print_font(double_buffer, 92, 88, strbuf, FNORMAL);
   print_font(double_buffer, 92, 96, _("Earth"), FNORMAL);
   print_font(double_buffer, 92, 104, _("Black"), FNORMAL);
