@@ -40,7 +40,7 @@ typedef struct {
 	int fighterHealth;
 
 	/** Max Hit Points */
-	int mhp;
+	int fighterMaxHealth;
 
 	/** Magic Points */
 	int mp;

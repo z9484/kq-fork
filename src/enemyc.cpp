@@ -122,9 +122,7 @@ static void enemy_attack(size_t target_fighter_index) {
   int b, c;
   size_t fighter_index;
 
-  if (fighter[target_fighter_index].fighterHealth <
-          (fighter[target_fighter_index].mhp / 5) &&
-      fighter[target_fighter_index].sts[S_CHARM] == 0) {
+  if (fighter[target_fighter_index].fighterHealth < (fighter[target_fighter_index].fighterMaxHealth / 5) && fighter[target_fighter_index].sts[S_CHARM] == 0) {
     if (kqrandom->random_range_exclusive(0, 4) == 0) {
       fighter[target_fighter_index].defend = 1;
       cact[target_fighter_index] = 0;
@@ -211,8 +209,7 @@ void enemy_charmaction(size_t fighter_index) {
   if (cact[fighter_index] == 0) {
     return;
   }
-  if (fighter[fighter_index].sts[S_DEAD] == 1 ||
-      fighter[fighter_index].fighterHealth <= 0) {
+  if (fighter[fighter_index].sts[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0) {
     cact[fighter_index] = 0;
     return;
   }
@@ -250,8 +247,7 @@ void enemy_chooseaction(size_t fighter_index) {
   if (cact[fighter_index] == 0) {
     return;
   }
-  if (fighter[fighter_index].sts[S_DEAD] == 1 ||
-      fighter[fighter_index].fighterHealth <= 0) {
+  if (fighter[fighter_index].sts[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0) {
     cact[fighter_index] = 0;
     return;
   }
@@ -263,8 +259,7 @@ void enemy_chooseaction(size_t fighter_index) {
   }
   fighter[fighter_index].defend = 0;
   fighter[fighter_index].facing = 1;
-  if (fighter[fighter_index].fighterHealth < fighter[fighter_index].mhp * 2 / 3 &&
-      kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].sts[S_MUTE] == 0) {
+  if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].sts[S_MUTE] == 0) {
     enemy_curecheck(fighter_index);
     if (cact[fighter_index] == 0) {
       return;
@@ -476,8 +471,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
         yes = enemy_stscheck(S_RESIST, PSIZE);
         break;
       case M_ABSORB:
-        if (fighter[attack_fighter_index].fighterHealth <
-            fighter[attack_fighter_index].mhp / 2) {
+        if (fighter[attack_fighter_index].fighterHealth < fighter[attack_fighter_index].fighterMaxHealth / 2) {
           yes = 1;
         }
         break;
@@ -532,8 +526,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
       case M_DOOM:
         aux = 0;
         for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
-          if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-              fighter[fighter_index].fighterHealth >= fighter[fighter_index].mhp / 3) {
+          if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterHealth >= fighter[fighter_index].fighterMaxHealth / 3) {
             aux++;
           }
         if (aux > 0) {
@@ -541,8 +534,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
         }
         break;
       case M_DRAIN:
-        if (fighter[attack_fighter_index].fighterHealth <
-            fighter[attack_fighter_index].mhp) {
+        if (fighter[attack_fighter_index].fighterHealth < fighter[attack_fighter_index].fighterMaxHealth) {
           yes = 1;
         }
         break;
@@ -677,7 +669,7 @@ static void load_enemies(void)
 		f->fighterLevel = tmp;
 		// Max HP
 		fscanf(edat, "%d", &tmp);
-		f->mhp = tmp;
+		f->fighterMaxHealth = tmp;
 		// Max MP
 		fscanf(edat, "%d", &tmp);
 		f->mmp = tmp;
@@ -768,7 +760,7 @@ static void load_enemies(void)
 			f->aip[p] = tmp;
 			f->atrack[p] = 0;
 		}
-		f->fighterHealth = f->mhp;
+		f->fighterHealth = f->fighterMaxHealth;
 		f->mp = f->mmp;
 		for (p = 0; p < 24; p++)
 		{
@@ -945,10 +937,8 @@ static int spell_setup(int whom, int z) {
   case TGT_ALLY_ONEALL:
     if (z == M_CURE1 || z == M_CURE2 || z == M_CURE3 || z == M_CURE4) {
       aux = 0;
-      for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-           fighter_index++) {
-        if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-            fighter[fighter_index].fighterHealth < fighter[fighter_index].mhp * 75 / 100) {
+      for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++) {
+        if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 75 / 100) {
           aux++;
         }
       }

@@ -68,8 +68,8 @@ static void spell_damage(size_t, int, size_t, size_t);
  */
 void adjust_hp(size_t fighter_index, int amt) {
   fighter[fighter_index].fighterHealth += amt;
-  if (fighter[fighter_index].fighterHealth > fighter[fighter_index].mhp) {
-    fighter[fighter_index].fighterHealth = fighter[fighter_index].mhp;
+  if (fighter[fighter_index].fighterHealth > fighter[fighter_index].fighterMaxHealth) {
+    fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
   }
   if (fighter[fighter_index].fighterHealth < 0) {
     fighter[fighter_index].fighterHealth = 0;
@@ -614,11 +614,8 @@ int combat_spell(size_t caster_fighter_index, int is_item) {
     }
   }
   b = 0;
-  for (fighter_index = start_fighter_index;
-       fighter_index < start_fighter_index + end_fighter_index;
-       fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].fighterHealth <= 0) {
+  for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++) {
+    if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterHealth <= 0) {
       fkill(fighter_index);
       ta[fighter_index] = 1;
       b++;
@@ -836,12 +833,12 @@ static void geffect_all_allies(size_t caster_fighter_index,
          fighter_index < start_fighter_index + end_fighter_index;
          fighter_index++) {
       if (fighter[fighter_index].sts[S_BLESS] < 3) {
-        fighter_hp = fighter[fighter_index].mhp / 10;
+        fighter_hp = fighter[fighter_index].fighterMaxHealth / 10;
         if (fighter_hp < 10) {
           fighter_hp = 10;
         }
         fighter[fighter_index].fighterHealth += fighter_hp;
-        fighter[fighter_index].mhp += fighter_hp;
+        fighter[fighter_index].fighterMaxHealth += fighter_hp;
         fighter[fighter_index].sts[S_BLESS]++;
         ta[fighter_index] = NODISPLAY;
       } else {
@@ -1019,7 +1016,7 @@ static void heal_one_ally(size_t caster_fighter_index,
       for (stat_index = 0; stat_index < 24; stat_index++) {
         fighter[target_fighter_index].sts[stat_index] = 0;
       }
-      fighter[target_fighter_index].fighterHealth = fighter[target_fighter_index].mhp;
+      fighter[target_fighter_index].fighterHealth = fighter[target_fighter_index].fighterMaxHealth;
       fighter[target_fighter_index].aframe = 0;
     } else {
       ta[target_fighter_index] = MISS;
@@ -1211,8 +1208,7 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg,
 
   for (fighter_index = first_target; fighter_index < first_target + last_target;
        fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].mhp > 0) {
+    if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
       tempd = status_adjust(fighter_index);
       b = do_shell_check(fighter_index, average_damage);
       b -= tempd.stats[A_MAG];
@@ -1247,10 +1243,8 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg,
     }
   }
   b = 0;
-  for (fighter_index = first_target; fighter_index < first_target + last_target;
-       fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].fighterHealth <= 0) {
+  for (fighter_index = first_target; fighter_index < first_target + last_target; fighter_index++) {
+    if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterHealth <= 0) {
       fkill(fighter_index);
       ta[fighter_index] = 1;
       b++;
@@ -1372,8 +1366,7 @@ static void spell_damage(size_t caster_fighter_index, int spell_number,
   for (fighter_index = start_fighter_index;
        fighter_index < start_fighter_index + end_fighter_index;
        fighter_index++) {
-    if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-        fighter[fighter_index].mhp > 0) {
+    if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
       tempd = status_adjust(fighter_index);
       b = do_shell_check(fighter_index, ad);
       b -= tempd.stats[A_MAG];

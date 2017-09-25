@@ -126,12 +126,12 @@ eAttackResult attack_result(int ar, int dr) {
 
   /*  JB: check to see if the attacker is in critical status...  */
   /*      increases chance for a critical hit                    */
-  if (tempa.mhp > 250) {
+  if (tempa.fighterMaxHealth > 250) {
     if (tempa.fighterHealth <= 50) {
       attacker_critical_status = 1;
     }
   } else {
-    if (tempa.fighterHealth <= (tempa.mhp / 5)) {
+    if (tempa.fighterHealth <= (tempa.fighterMaxHealth / 5)) {
       attacker_critical_status = 1;
     }
   }
@@ -330,7 +330,7 @@ void battle_render(signed int plyr, size_t hl, int sall) {
 
     print_font(double_buffer, b + 8, 192, fighter[z].fighterName.c_str(), (hl == z + 1) ? FGOLD : FNORMAL);
 
-    sprintf(strbuf, _("HP: %3d/%3d"), fighter[z].fighterHealth, fighter[z].mhp);
+    sprintf(strbuf, _("HP: %3d/%3d"), fighter[z].fighterHealth, fighter[z].fighterMaxHealth);
     /*  RB IDEA: If the character has less than 1/5 of his/her max    */
     /*           health points, it shows the amount with red (the     */
     /*           character is in danger). I suggest setting that '5'  */
@@ -342,10 +342,10 @@ void battle_render(signed int plyr, size_t hl, int sall) {
     /*           to warn the player, it's much more eye-pleasing than */
     /*           just a solid color (and not too hard to implement).  */
 
-    print_font(double_buffer, b + 8, 208, strbuf, (fighter[z].fighterHealth < (fighter[z].mhp / 5)) ? FRED : FNORMAL);
+    print_font(double_buffer, b + 8, 208, strbuf, (fighter[z].fighterHealth < (fighter[z].fighterMaxHealth / 5)) ? FRED : FNORMAL);
 
     hline(double_buffer, b + 8, 216, b + 95, 21);
-    sz = (fighter[z].fighterHealth > 0) ? fighter[z].fighterHealth * 88 / fighter[z].mhp : 88;
+    sz = (fighter[z].fighterHealth > 0) ? fighter[z].fighterHealth * 88 / fighter[z].fighterMaxHealth : 88;
 
     hline(double_buffer, b + 8, 216, b + 8 + sz, 12);
     sprintf(strbuf, _("MP: %3d/%3d"), fighter[z].mp, fighter[z].mmp);
@@ -660,9 +660,8 @@ static void do_round(void) {
       for (fighter_index = 0; fighter_index < PSIZE + num_enemies;
            fighter_index++) {
         if ((fighter_index < numchrs) || (fighter_index >= PSIZE)) {
-          if (((fighter[fighter_index].sts[S_POISON] - 1) == rcount) &&
-              fighter[fighter_index].fighterHealth > 1) {
-            a = kqrandom->random_range_exclusive(0, fighter[fighter_index].mhp / 20) + 1;
+          if (((fighter[fighter_index].sts[S_POISON] - 1) == rcount) && fighter[fighter_index].fighterHealth > 1) {
+            a = kqrandom->random_range_exclusive(0, fighter[fighter_index].fighterMaxHealth / 20) + 1;
 
             if (a < 2) {
               a = 2;
@@ -681,7 +680,7 @@ static void do_round(void) {
           /*      random value (never lower than 5), and increase    */
           /*      the character's health by that amount.             */
           if ((fighter[fighter_index].sts[S_REGEN] - 1) == rcount) {
-            a = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].mhp / 10);
+            a = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].fighterMaxHealth / 10);
 
             if (a < 5) {
               a = 5;
@@ -737,8 +736,7 @@ static void do_round(void) {
             cact[fighter_index] = 0;
           }
 
-          if (fighter[fighter_index].sts[S_DEAD] != 0 ||
-              fighter[fighter_index].mhp <= 0) {
+          if (fighter[fighter_index].sts[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0) {
             if (pidx[fighter_index] == TEMMIN) {
               fighter[fighter_index].aux = 0;
             }
@@ -851,7 +849,7 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	}
 
 	if ((vspell == 1) && (fighter_index >= PSIZE)) {
-		ff = fr->fighterHealth * 30 / fr->mhp;
+		ff = fr->fighterHealth * 30 / fr->fighterMaxHealth;
 		if ((fr->fighterHealth > 0) && (ff < 1)) {
 			ff = 1;
 		}
@@ -984,19 +982,16 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk) {
   if (ta[defend_fighter_index] != MISS) {
     fighter[defend_fighter_index].fighterHealth += ta[defend_fighter_index];
     if ((fighter[attack_fighter_index].imb_s > 0) && (kqrandom->random_range_exclusive(0, 5) == 0)) {
-      cast_imbued_spell(
-          attack_fighter_index, fighter[attack_fighter_index].imb_s,
-          fighter[attack_fighter_index].imb_a, defend_fighter_index);
+      cast_imbued_spell(attack_fighter_index, fighter[attack_fighter_index].imb_s, fighter[attack_fighter_index].imb_a, defend_fighter_index);
     }
 
-    if ((fighter[defend_fighter_index].fighterHealth <= 0) &&
-        (fighter[defend_fighter_index].sts[S_DEAD] == 0)) {
+    if ((fighter[defend_fighter_index].fighterHealth <= 0) && (fighter[defend_fighter_index].sts[S_DEAD] == 0)) {
       fkill(defend_fighter_index);
       death_animation(defend_fighter_index, 0);
     }
 
-    if (fighter[defend_fighter_index].fighterHealth > fighter[defend_fighter_index].mhp) {
-      fighter[defend_fighter_index].fighterHealth = fighter[defend_fighter_index].mhp;
+    if (fighter[defend_fighter_index].fighterHealth > fighter[defend_fighter_index].fighterMaxHealth) {
+      fighter[defend_fighter_index].fighterHealth = fighter[defend_fighter_index].fighterMaxHealth;
     }
 
     if (fighter[defend_fighter_index].sts[S_SLEEP] > 0) {
@@ -1031,7 +1026,7 @@ void fkill(size_t fighter_index) {
    * to full HP.
    */
   if (cheat && fighter_index < PSIZE) {
-    fighter[fighter_index].fighterHealth = fighter[fighter_index].mhp;
+    fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
     return;
   }
 #endif
@@ -1163,9 +1158,9 @@ static void heroes_win(void) {
 				print_font(double_buffer, b + 8, 88, _("Vitality"), FNORMAL);
 				print_font(double_buffer, b + 8, 96, _("Intellect"), FNORMAL);
 				print_font(double_buffer, b + 8, 104, _("Sagacity"), FNORMAL);
-				sprintf(strbuf, "%3d>", t1.mhp);
+				sprintf(strbuf, "%3d>", t1.fighterMaxHealth);
 				print_font(double_buffer, b + 96, 56, strbuf, FNORMAL);
-				sprintf(strbuf, "%3d", t2.mhp);
+				sprintf(strbuf, "%3d", t2.fighterMaxHealth);
 				print_font(double_buffer, b + 128, 56, strbuf, FGREEN);
 				sprintf(strbuf, "%3d>", t1.mmp);
 				print_font(double_buffer, b + 96, 64, strbuf, FNORMAL);
@@ -1220,7 +1215,7 @@ static void init_fighters(void) {
 
   for (fighter_index = 0; fighter_index < NUM_FIGHTERS; fighter_index++) {
     deffect[fighter_index] = 0;
-    fighter[fighter_index].mhp = 0;
+    fighter[fighter_index].fighterMaxHealth = 0;
     fighter[fighter_index].aux = 0;
     /* .defend was not initialized; patch supplied by Sam H */
     fighter[fighter_index].defend = 0;
@@ -1278,8 +1273,7 @@ void multi_fight(size_t attack_fighter_index) {
        fighter_index < start_fighter_index + end_fighter_index;
        fighter_index++) {
     tempd = status_adjust(fighter_index);
-    if ((fighter[fighter_index].sts[S_DEAD] == 0) &&
-        (fighter[fighter_index].mhp > 0)) {
+    if ((fighter[fighter_index].sts[S_DEAD] == 0) && (fighter[fighter_index].fighterMaxHealth > 0)) {
       // ares[fighter_index] = attack_result(attack_fighter_index,
       // fighter_index);
       for (spell_index = 0; spell_index < 24; spell_index++) {
@@ -1293,15 +1287,14 @@ void multi_fight(size_t attack_fighter_index) {
       }
 
       fighter[fighter_index].fighterHealth += ta[fighter_index];
-      if ((fighter[fighter_index].fighterHealth <= 0) &&
-          (fighter[fighter_index].sts[S_DEAD] == 0)) {
+      if ((fighter[fighter_index].fighterHealth <= 0) && (fighter[fighter_index].sts[S_DEAD] == 0)) {
         fighter[fighter_index].fighterHealth = 0;
         killed_warrior[fighter_index] = 1;
       }
 
-      /*  RB: check we always have less health points than the maximun  */
-      if (fighter[fighter_index].fighterHealth > fighter[fighter_index].mhp) {
-        fighter[fighter_index].fighterHealth = fighter[fighter_index].mhp;
+      /*  RB: check we always have less health points than the maximum  */
+      if (fighter[fighter_index].fighterHealth > fighter[fighter_index].fighterMaxHealth) {
+        fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
       }
 
       /*  RB: if sleeping, a good hit wakes him/her up  */

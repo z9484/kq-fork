@@ -357,7 +357,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.fighterExperience = plr.xp;
 	tf.fighterLevel = plr.lvl;
 	tf.fighterHealth = plr.hp;
-	tf.mhp = plr.mhp;
+	tf.fighterMaxHealth = plr.mhp;
 	tf.mp = plr.mp;
 	tf.mmp = plr.mmp;
 	for (int j = 0; j < 8; j++) {

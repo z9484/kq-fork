@@ -369,7 +369,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     if (fighter[fighter_index].sts[S_DEAD] != 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    if (fighter[fighter_index].fighterHealth == fighter[fighter_index].mhp) {
+    if (fighter[fighter_index].fighterHealth == fighter[fighter_index].fighterMaxHealth) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
     tmp = kqrandom->random_range_exclusive(0, items[ti].stats[A_ATT] / 2) + items[ti].stats[A_ATT];
@@ -464,9 +464,8 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     break;
   case I_RRUNE:
     tmp = 0;
-    for (fighter_index = attack_fighter_index;
-         fighter_index < attack_fighter_index + san; fighter_index++) {
-      if (fighter[fighter_index].fighterHealth == fighter[fighter_index].mhp) {
+    for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++) {
+      if (fighter[fighter_index].fighterHealth == fighter[fighter_index].fighterMaxHealth) {
         tmp++;
       }
     }
@@ -505,8 +504,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     tmp = items[ti].elem;
     for (fighter_index = start_fighter_index;
          fighter_index < start_fighter_index + sen; fighter_index++) {
-      if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-          fighter[fighter_index].mhp > 0) {
+      if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
         b = fighter[fighter_index].fighterLevel * items[ti].stats[A_ATT];
         a = kqrandom->random_range_exclusive(0, b) + b + 20;
         if (a > 250) {
@@ -614,9 +612,8 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
     if (use_sstone == 0) {
       return ITEM_EFFECT_INEFFECTIVE;
     }
-    for (fighter_index = attack_fighter_index;
-         fighter_index < attack_fighter_index + san; fighter_index++) {
-      fighter[fighter_index].fighterHealth = fighter[fighter_index].mhp;
+    for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++) {
+      fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
       fighter[fighter_index].mp = fighter[fighter_index].mmp;
       for (b = 0; b < 8; b++) {
         fighter[fighter_index].sts[b] = 0;

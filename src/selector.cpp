@@ -85,15 +85,12 @@ int auto_select_enemy(int whom, int csts) {
         number_enemies++;
       } else {
         if (csts == CURE_CHECK) {
-          if (fighter[i].fighterHealth < fighter[i].mhp * 75 / 100) {
+          if (fighter[i].fighterHealth < fighter[i].fighterMaxHealth * 75 / 100) {
             tmpd[number_enemies] = i;
             number_enemies++;
           }
         } else {
-          if ((csts == S_BLESS && fighter[i].sts[csts] < 3) ||
-              (csts == S_STRENGTH && fighter[i].sts[csts] < 2) ||
-              (csts != S_BLESS && csts != S_STRENGTH &&
-               fighter[i].sts[csts] == 0)) {
+          if ((csts == S_BLESS && fighter[i].sts[csts] < 3) || (csts == S_STRENGTH && fighter[i].sts[csts] < 2) || (csts != S_BLESS && csts != S_STRENGTH && fighter[i].sts[csts] == 0)) {
             tmpd[number_enemies] = i;
             number_enemies++;
           }
@@ -153,8 +150,7 @@ int auto_select_hero(int whom, int csts) {
  * \returns 0 if fighter is dead or has HP<1 or MHP<1, otherwise 1
  */
 static int can_attack(int tgt) {
-  if (fighter[tgt].mhp < 1 || fighter[tgt].fighterHealth < 1 ||
-      fighter[tgt].sts[S_DEAD] != 0) {
+  if (fighter[tgt].fighterMaxHealth < 1 || fighter[tgt].fighterHealth < 1 || fighter[tgt].sts[S_DEAD] != 0) {
     return 0;
   }
   return 1;
@@ -165,7 +161,7 @@ static int can_attack(int tgt) {
  * Choose whether a party member will join, leave, or joins and lead the
  * current party.
  *
- * \param   omask - Where the current selection curser is
+ * \param   omask - Where the current selection cursor is
  * \returns player's selection
  */
 static eMiniMenu mini_menu(int omask) {

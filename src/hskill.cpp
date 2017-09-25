@@ -67,7 +67,7 @@ int hero_skillcheck(size_t fighter_index) {
 
   switch (pidx_index) {
   case SENSAR:
-    if (fighter[fighter_index].fighterHealth <= fighter[fighter_index].mhp / 10) {
+    if (fighter[fighter_index].fighterHealth <= fighter[fighter_index].fighterMaxHealth / 10) {
       return 0;
     } else {
       return 1;
@@ -349,34 +349,34 @@ static void infusion(int c, int sn) {
   /* Increase resistance to Poison attacks */
   case M_VENOM:
     fighter[c].res[R_POISON] += 4;
-    j = fighter[c].mhp / 10;
+    j = fighter[c].fighterMaxHealth / 10;
     if (j < 10) {
       j = 10;
     }
     fighter[c].fighterHealth += j;
-    fighter[c].mhp += j;
+    fighter[c].fighterMaxHealth += j;
     fighter[c].welem = 8;
     break;
 
   case M_VIRUS:
     fighter[c].res[R_POISON] += 8;
-    j = fighter[c].mhp * 25 / 100;
+    j = fighter[c].fighterMaxHealth * 25 / 100;
     if (j < 40) {
       j = 40;
     }
     fighter[c].fighterHealth += j;
-    fighter[c].mhp += j;
+    fighter[c].fighterMaxHealth += j;
     fighter[c].welem = 8;
     break;
 
   case M_PLAGUE:
     fighter[c].res[R_POISON] += 12;
-    j = fighter[c].mhp * 4 / 10;
+    j = fighter[c].fighterMaxHealth * 4 / 10;
     if (j < 80) {
       j = 80;
     }
     fighter[c].fighterHealth += j;
-    fighter[c].mhp += j;
+    fighter[c].fighterMaxHealth += j;
     fighter[c].welem = 8;
     break;
   }
@@ -403,7 +403,7 @@ void reveal(int tgt) {
   print_font(double_buffer, 92, 64, strbuf, FNORMAL);
   sprintf(strbuf, _("Level: %d"), fighter[tgt].fighterLevel);
   print_font(double_buffer, 92, 72, strbuf, FNORMAL);
-  sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].fighterHealth, fighter[tgt].mhp);
+  sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].fighterHealth, fighter[tgt].fighterMaxHealth);
   print_font(double_buffer, 92, 80, strbuf, FNORMAL);
   sprintf(strbuf, _("MP: %d/%d"), fighter[tgt].mp, fighter[tgt].mmp);
   print_font(double_buffer, 92, 88, strbuf, FNORMAL);
@@ -472,7 +472,7 @@ int skill_use(size_t attack_fighter_index) {
     temp = std::unique_ptr<Raster>(new Raster(320, 240));
     blit(backart, temp.get(), 0, 0, 0, 0, 320, 240);
     color_scale(temp.get(), backart, 16, 31);
-    b = fighter[attack_fighter_index].mhp / 20;
+    b = fighter[attack_fighter_index].fighterMaxHealth / 20;
     strcpy(attack_string, _("Rage"));
     display_attack_string = 1;
     tempa.stats[A_ATT] = fighter[attack_fighter_index].stats[A_ATT];
@@ -501,8 +501,7 @@ int skill_use(size_t attack_fighter_index) {
     display_attack_string = 0;
     blit(temp.get(), backart, 0, 0, 0, 0, 320, 240);
     display_amount(attack_fighter_index, FONT_DECIDE, 0);
-    if (fighter[attack_fighter_index].sts[S_DEAD] == 0 &&
-        fighter[attack_fighter_index].fighterHealth <= 0) {
+    if (fighter[attack_fighter_index].sts[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0) {
       fkill(attack_fighter_index);
       death_animation(attack_fighter_index, 0);
     }
@@ -600,16 +599,13 @@ int skill_use(size_t attack_fighter_index) {
       revert_cframes(PSIZE, 1);
       display_attack_string = 0;
       b = fighter[attack_fighter_index].fighterLevel * 15;
-      for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-           fighter_index++) {
-        if (fighter[fighter_index].sts[S_DEAD] == 0 &&
-            fighter[fighter_index].mhp > 0) {
+      for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++) {
+        if (fighter[fighter_index].sts[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
           if (fighter[fighter_index].unl == 99 ||
               fighter[fighter_index].unl == 0) {
             cts = 0;
           } else {
-            a = (fighter[attack_fighter_index].fighterLevel + 5) -
-                fighter[fighter_index].unl;
+            a = (fighter[attack_fighter_index].fighterLevel + 5) - fighter[fighter_index].unl;
             if (a > 0) {
               cts = a * 8;
             } else {
