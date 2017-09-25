@@ -52,12 +52,12 @@ int cf[NUM_FIGHTERS];
 static void enemy_attack(size_t);
 static int enemy_cancast(size_t, size_t);
 static void enemy_curecheck(int);
-static void enemy_skillcheck(int, int);
+static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber);
 static void enemy_spellcheck(size_t, size_t);
 static int enemy_stscheck(int, int);
 static void load_enemies(void);
 static s_fighter* make_enemy(int who, s_fighter* en);
-static int skill_setup(int, int);
+static int skill_setup(size_t fighterIndex, size_t skillNumber);
 static int spell_setup(int, int);
 void unload_enemies(void);
 
@@ -173,7 +173,7 @@ static void enemy_attack(size_t target_fighter_index) {
  */
 static int enemy_cancast(size_t target_fighter_index, size_t sp) {
   size_t a;
-  uint32_t z = 0;
+  uint32_t enemyCombatSkillCount = 0;
 
   /* Enemy is mute; cannot cast the spell */
   if (fighter[target_fighter_index].fighterSpellEffectStats[S_MUTE] != 0) {
@@ -181,11 +181,11 @@ static int enemy_cancast(size_t target_fighter_index, size_t sp) {
   }
 
   for (a = 0; a < 8; a++) {
-    if (fighter[target_fighter_index].ai[a] == sp) {
-      z++;
+    if (fighter[target_fighter_index].fighterCombatSkill[a] == sp) {
+      enemyCombatSkillCount++;
     }
   }
-  if (z == 0) {
+  if (enemyCombatSkillCount == 0) {
     return 0;
   }
   if (fighter[target_fighter_index].fighterMagic < mp_needed(target_fighter_index, sp)) {
@@ -269,8 +269,7 @@ void enemy_chooseaction(size_t fighter_index) {
   ap = kqrandom->random_range_exclusive(0, 100);
   for (a = 0; a < 8; a++) {
     if (ap < fighter[fighter_index].aip[a]) {
-      if (fighter[fighter_index].ai[a] >= 100 &&
-          fighter[fighter_index].ai[a] <= 253) {
+      if (fighter[fighter_index].fighterCombatSkill[a] >= 100 && fighter[fighter_index].fighterCombatSkill[a] < 254) {
         enemy_skillcheck(fighter_index, a);
         if (cact[fighter_index] == 0) {
           return;
@@ -278,7 +277,7 @@ void enemy_chooseaction(size_t fighter_index) {
           ap = fighter[fighter_index].aip[a] + 1;
         }
       }
-      if (fighter[fighter_index].ai[a] >= 1 && fighter[fighter_index].ai[a] <= 99 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
+      if (fighter[fighter_index].fighterCombatSkill[a] > 0 && fighter[fighter_index].fighterCombatSkill[a] < 100 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
         enemy_spellcheck(fighter_index, a);
         if (cact[fighter_index] == 0) {
           return;
@@ -369,28 +368,27 @@ void enemy_init(void)
  * \param   w Enemy index
  * \param   ws Enemy skill index
  */
-static void enemy_skillcheck(int w, int ws) {
-  int sk;
+static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber) {
+	if (fighterIndex >= NUM_FIGHTERS || skillNumber >= 8)
+	{
+		return;
+	}
+	uint8_t fighterCombatSkill = fighter[fighterIndex].fighterCombatSkill[skillNumber];
 
-  sk = fighter[w].ai[ws] - 100;
-
-  if (sk >= 1 && sk <= 153) {
-    if (sk == 5) {
-      if (numchrs == 1) {
-        fighter[w].atrack[ws] = 1;
-      }
-      if (numchrs == 2 && (fighter[0].fighterSpellEffectStats[S_DEAD] > 0 || fighter[1].fighterSpellEffectStats[S_DEAD] > 0)) {
-        fighter[w].atrack[ws] = 1;
-      }
-    }
-    if (fighter[w].atrack[ws] > 0) {
-      return;
-    }
-    if (skill_setup(w, ws) == 1) {
-      combat_skill(w);
-      cact[w] = 0;
-    }
-  }
+	if (fighterCombatSkill > 100 && fighterCombatSkill < 254) {
+		if (fighterCombatSkill == 105/*Sweep*/) {
+			if (numchrs == 1) {
+				fighter[fighterIndex].atrack[skillNumber] = 1;
+			}
+			if (numchrs == 2 && (fighter[0].fighterSpellEffectStats[S_DEAD] > 0 || fighter[1].fighterSpellEffectStats[S_DEAD] > 0)) {
+				fighter[fighterIndex].atrack[skillNumber] = 1;
+			}
+		}
+		if (fighter[fighterIndex].atrack[skillNumber] == 0 && skill_setup(fighterIndex, skillNumber) == 1) {
+			combat_skill(fighterIndex);
+			cact[fighterIndex] = 0;
+		}
+	}
 }
 
 /*! \brief Check selected spell
@@ -401,15 +399,15 @@ static void enemy_skillcheck(int w, int ws) {
  * \param   attack_fighter_index Caster
  * \param   defend_fighter_index Target
  */
-static void enemy_spellcheck(size_t attack_fighter_index,
-                             size_t defend_fighter_index) {
-  int cs = 0, aux, yes = 0;
+static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_index) {
+  int fighterCombatSkill = 0, aux, yes = 0;
   size_t fighter_index;
 
-  if (fighter[attack_fighter_index].ai[defend_fighter_index] >= 1 && fighter[attack_fighter_index].ai[defend_fighter_index] <= 99) {
-    cs = fighter[attack_fighter_index].ai[defend_fighter_index];
-    if (cs > 0 && enemy_cancast(attack_fighter_index, cs) == 1) {
-      switch (cs) {
+  uint8_t ai = fighter[attack_fighter_index].fighterCombatSkill[defend_fighter_index];
+  if (ai > 0 && ai < 100) {
+    fighterCombatSkill = ai;
+    if (fighterCombatSkill > 0 && enemy_cancast(attack_fighter_index, fighterCombatSkill) == 1) {
+      switch (fighterCombatSkill) {
       case M_SHIELD:
       case M_SHIELDALL:
         yes = enemy_stscheck(S_SHIELD, PSIZE);
@@ -472,7 +470,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
       case M_STONE:
       case M_SILENCE:
       case M_SLEEP:
-        yes = enemy_stscheck(magic[cs].elem - 8, 0);
+        yes = enemy_stscheck(magic[fighterCombatSkill].elem - 8, 0);
         break;
       case M_NAUSEA:
       case M_MALISON:
@@ -532,7 +530,7 @@ static void enemy_spellcheck(size_t attack_fighter_index,
   if (yes == 0) {
     return;
   }
-  if (spell_setup(attack_fighter_index, cs) == 1) {
+  if (spell_setup(attack_fighter_index, fighterCombatSkill) == 1) {
     combat_spell(attack_fighter_index, 0);
     cact[attack_fighter_index] = 0;
   }
@@ -734,7 +732,7 @@ static void load_enemies(void)
 		for (p = 0; p < 8; p++)
 		{
 			fscanf(edat, "%d", &tmp);
-			f->ai[p] = tmp;
+			f->fighterCombatSkill[p] = tmp;
 		}
 		for (p = 0; p < 8; p++)
 		{
@@ -848,26 +846,37 @@ int select_encounter(int en, int etid) {
  *
  * This is just for aiding in skill setup... choosing skill targets.
  *
- * \param   whom Caster
- * \param   sn Which skill
+ * \param   fighterIndex Caster
+ * \param   skillNumber Which skill
  * \returns 1 for success, 0 otherwise
  */
-static int skill_setup(int whom, int sn) {
-  int sk = fighter[whom].ai[sn] - 100;
+static int skill_setup(size_t fighterIndex, size_t skillNumber) {
+	if (fighterIndex >= NUM_FIGHTERS || skillNumber >= 8)
+	{
+		return 0;
+	}
+	int fighterCombatSkill = fighter[fighterIndex].fighterCombatSkill[skillNumber];
 
-  fighter[whom].csmem = sn;
-  if (sk == 1 || sk == 2 || sk == 3 || sk == 6 || sk == 7 || sk == 12 ||
-      sk == 14) {
-    fighter[whom].ctmem = auto_select_hero(whom, NO_STS_CHECK);
-    if (fighter[whom].ctmem == -1) {
-      return 0;
-    }
-    return 1;
-  } else {
-    fighter[whom].ctmem = SEL_ALL_ENEMIES;
-    return 1;
-  }
-  return 0;
+	fighter[fighterIndex].csmem = skillNumber;
+	if (fighterCombatSkill == 101/*"Venomous Bite"*/ ||
+		fighterCombatSkill == 102/*"Double Slash"*/ ||
+		fighterCombatSkill == 103/*"Chill Touch"*/ ||
+		fighterCombatSkill == 106/*"ParaClaw"*/ ||
+		fighterCombatSkill == 107/*"Dragon Bite"*/ ||
+		fighterCombatSkill == 112/*"Petrifying Bite"*/ ||
+		fighterCombatSkill == 114/*"Stunning Strike"*/)
+	{
+		fighter[fighterIndex].ctmem = auto_select_hero(fighterIndex, NO_STS_CHECK);
+		if (fighter[fighterIndex].ctmem == -1) {
+			return 0;
+		}
+		return 1;
+	}
+	else {
+		fighter[fighterIndex].ctmem = SEL_ALL_ENEMIES;
+		return 1;
+	}
+	return 0;
 }
 
 /*! \brief Helper for casting

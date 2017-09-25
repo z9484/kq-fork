@@ -846,14 +846,14 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const s_fighter& f)
 	out.PushText(make_list(std::begin(f.fighterSpellEffectStats), std::end(f.fighterSpellEffectStats)).c_str());
 	out.CloseElement(/*sts*/);
 	out.OpenElement("ai");
-	out.PushText(make_list(std::begin(f.ai), std::end(f.ai)).c_str());
-	out.CloseElement();
+	out.PushText(make_list(std::begin(f.fighterCombatSkill), std::end(f.fighterCombatSkill)).c_str());
+	out.CloseElement(/*ai*/);
 	out.OpenElement("aip");
 	out.PushText(make_list(std::begin(f.aip), std::end(f.aip)).c_str());
-	out.CloseElement();
+	out.CloseElement(/*aip*/);
 	out.OpenElement("atrack");
 	out.PushText(make_list(std::begin(f.atrack), std::end(f.atrack)).c_str());
-	out.CloseElement();
+	out.CloseElement(/*atrack*/);
 	out.OpenElement("imb");
 	vector<int> imb{ f.imb_s, f.imb_a, f.imb[0], f.imb[1] };
 	out.PushText(make_list(imb.begin(), imb.end()).c_str());

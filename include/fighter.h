@@ -85,7 +85,29 @@ typedef struct {
 
 	/** Fighter will defend (instead of attack or use an item) for this turn during battle. */
 	uint8_t fighterWillDefend;
-	uint8_t ai[8];
+
+	/** Combat skills: 1..99 seem to be player-owned; 100..253 appear to be enemy. 0, 254, 255: not specified.
+	 * 1..60 are found under the EMagic enum.
+	 * 101: "Venomous Bite"
+	 * 102: "Double Slash"
+	 * 103: "Chill Touch"
+	 * 104: "Flash Flood"
+	 * 105: "Sweep"
+	 * 106: "ParaClaw"
+	 * 107: "Dragon Bite"
+	 * 108: "Stone Gas"
+	 * 109: "Zemmel Rod"
+	 * 110: "Poison Gas"
+	 * 111: "Tangle Root"
+	 * 112: "Petrifying Bite"
+	 * 113: "Maul of the Titans"
+	 * 114: "Stunning Strike"
+	 * 115: "Howl"
+	 * 116: "Rasp"
+	 * 117: "Shadow Blast"
+	 * fighter[fighter_index].csmem is often used as the 0..7 index. This seems dangerous...
+	 */
+	uint8_t fighterCombatSkill[8];
 	uint8_t aip[8];
 	uint8_t atrack[8];
 
