@@ -567,7 +567,7 @@ int skill_use(size_t attack_fighter_index) {
         c = 1;
       }
       fighter[attack_fighter_index].fighterMagic -= c;
-      cact[attack_fighter_index] = 0;
+      IsEtherEffectActive[attack_fighter_index] = 0;
       fighter[attack_fighter_index].aux = 1;
     } else {
       fighter[attack_fighter_index].aux = 0;
@@ -671,7 +671,7 @@ int skill_use(size_t attack_fighter_index) {
     fighter[attack_fighter_index].mrp =
         fighter[attack_fighter_index].mrp * 15 / 10;
     if (combat_spell_menu(attack_fighter_index) == 1) {
-      cact[attack_fighter_index] = 0;
+      IsEtherEffectActive[attack_fighter_index] = 0;
       fighter[attack_fighter_index].aux = 1;
       fighter[attack_fighter_index].fighterStats[A_AUR] =
           fighter[attack_fighter_index].atrack[0];

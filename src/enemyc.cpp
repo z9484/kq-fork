@@ -125,7 +125,7 @@ static void enemy_attack(size_t target_fighter_index) {
   if (fighter[target_fighter_index].fighterHealth < (fighter[target_fighter_index].fighterMaxHealth / 5) && fighter[target_fighter_index].fighterSpellEffectStats[S_CHARM] == 0) {
     if (kqrandom->random_range_exclusive(0, 4) == 0) {
       fighter[target_fighter_index].fighterWillDefend = 1;
-      cact[target_fighter_index] = 0;
+      IsEtherEffectActive[target_fighter_index] = 0;
       return;
     }
   }
@@ -140,7 +140,7 @@ static void enemy_attack(size_t target_fighter_index) {
   }
   if (b < 0) {
     fighter[target_fighter_index].fighterWillDefend = 1;
-    cact[target_fighter_index] = 0;
+    IsEtherEffectActive[target_fighter_index] = 0;
     return;
   }
   if ((uint32_t)b < PSIZE && numchrs > 1) {
@@ -158,7 +158,7 @@ static void enemy_attack(size_t target_fighter_index) {
     }
   }
   fight(target_fighter_index, b, 0);
-  cact[target_fighter_index] = 0;
+  IsEtherEffectActive[target_fighter_index] = 0;
 }
 
 /*! \brief Check if enemy can cast this spell
@@ -206,11 +206,11 @@ static int enemy_cancast(size_t target_fighter_index, size_t sp) {
 void enemy_charmaction(size_t fighter_index) {
   int a;
 
-  if (cact[fighter_index] == 0) {
+  if (IsEtherEffectActive[fighter_index] == 0) {
     return;
   }
   if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0) {
-    cact[fighter_index] = 0;
+    IsEtherEffectActive[fighter_index] = 0;
     return;
   }
   for (a = 0; a < 5; a++) {
@@ -220,7 +220,7 @@ void enemy_charmaction(size_t fighter_index) {
   }
   a = kqrandom->random_range_exclusive(0, 4);
   if (a == 0) {
-    cact[fighter_index] = 0;
+    IsEtherEffectActive[fighter_index] = 0;
     return;
   }
   if (a == 1) {
@@ -244,11 +244,11 @@ void enemy_chooseaction(size_t fighter_index) {
   int ap;
   size_t a;
 
-  if (cact[fighter_index] == 0) {
+  if (IsEtherEffectActive[fighter_index] == 0) {
     return;
   }
   if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0) {
-    cact[fighter_index] = 0;
+    IsEtherEffectActive[fighter_index] = 0;
     return;
   }
 
@@ -261,7 +261,7 @@ void enemy_chooseaction(size_t fighter_index) {
   fighter[fighter_index].fighterSpriteFacing = 1;
   if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
     enemy_curecheck(fighter_index);
-    if (cact[fighter_index] == 0) {
+    if (IsEtherEffectActive[fighter_index] == 0) {
       return;
     }
   }
@@ -271,7 +271,7 @@ void enemy_chooseaction(size_t fighter_index) {
     if (ap < fighter[fighter_index].aip[a]) {
       if (fighter[fighter_index].fighterCombatSkill[a] >= 100 && fighter[fighter_index].fighterCombatSkill[a] < 254) {
         enemy_skillcheck(fighter_index, a);
-        if (cact[fighter_index] == 0) {
+        if (IsEtherEffectActive[fighter_index] == 0) {
           return;
         } else {
           ap = fighter[fighter_index].aip[a] + 1;
@@ -279,7 +279,7 @@ void enemy_chooseaction(size_t fighter_index) {
       }
       if (fighter[fighter_index].fighterCombatSkill[a] > 0 && fighter[fighter_index].fighterCombatSkill[a] < 100 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
         enemy_spellcheck(fighter_index, a);
-        if (cact[fighter_index] == 0) {
+        if (IsEtherEffectActive[fighter_index] == 0) {
           return;
         } else {
           ap = fighter[fighter_index].aip[a] + 1;
@@ -288,7 +288,7 @@ void enemy_chooseaction(size_t fighter_index) {
     }
   }
   enemy_attack(fighter_index);
-  cact[fighter_index] = 0;
+  IsEtherEffectActive[fighter_index] = 0;
 }
 
 /*! \brief Use cure spell
@@ -320,7 +320,7 @@ static void enemy_curecheck(int w) {
     fighter[w].csmem = a;
     fighter[w].ctmem = w;
     combat_spell(w, 0);
-    cact[w] = 0;
+    IsEtherEffectActive[w] = 0;
   }
 }
 
@@ -386,7 +386,7 @@ static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber) {
 		}
 		if (fighter[fighterIndex].atrack[skillNumber] == 0 && skill_setup(fighterIndex, skillNumber) == 1) {
 			combat_skill(fighterIndex);
-			cact[fighterIndex] = 0;
+			IsEtherEffectActive[fighterIndex] = 0;
 		}
 	}
 }
@@ -532,7 +532,7 @@ static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_
   }
   if (spell_setup(attack_fighter_index, fighterCombatSkill) == 1) {
     combat_spell(attack_fighter_index, 0);
-    cact[attack_fighter_index] = 0;
+    IsEtherEffectActive[attack_fighter_index] = 0;
   }
 }
 

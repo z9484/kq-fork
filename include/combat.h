@@ -51,7 +51,7 @@ void fkill(size_t);
 
 /*!  global combat related variables  */
 extern uint32_t combatend;
-extern int cact[NUM_FIGHTERS];
+extern int IsEtherEffectActive[NUM_FIGHTERS];
 extern int curx;
 extern int cury;
 extern uint32_t num_enemies;
