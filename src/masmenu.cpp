@@ -107,7 +107,7 @@ static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
       draw_icon(double_buffer, magic[spell_index].icon, 96 + xofs,
                 current_spell * 8 + 100 + yofs);
       print_font(double_buffer, 104 + xofs, current_spell * 8 + 100 + yofs,
-                 magic[spell_index].name, text_color);
+                 magic[spell_index].spellName, text_color);
       sprintf(strbuf, "%d", mp_needed(caster_fighter_index, spell_index));
       print_font(double_buffer, 232 - (strlen(strbuf) * 8) + xofs,
                  current_spell * 8 + 100 + yofs, strbuf, text_color);
@@ -257,7 +257,7 @@ static void camp_spell_targeting(size_t caster_fighter_index,
     if (spell_number != M_WARP && spell_number != M_REPULSE) {
       tg =
           select_any_player((eTarget)magic[spell_number].tgt,
-                            magic[spell_number].icon, magic[spell_number].name);
+                            magic[spell_number].icon, magic[spell_number].spellName);
       if (tg == PIDX_UNDEFINED) {
         return;
       }
@@ -326,7 +326,7 @@ int learn_new_spells(int who) {
       }
       if (p < 60) {
         if (in_combat == 1) {
-          sprintf(strbuf, _("%s learned %s"), party[who].playerName, magic[a].name);
+          sprintf(strbuf, _("%s learned %s"), party[who].playerName, magic[a].spellName);
           fullblit(back, double_buffer);
           menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152,
                   strlen(strbuf) + 1, 1, BLUE);

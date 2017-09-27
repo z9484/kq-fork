@@ -77,7 +77,7 @@ typedef struct {
 
 /*! \brief A spell */
 typedef struct {
-  char name[14]; /*!< Name of the spell being used */
+  char spellName[14]; /*!< Name of the spell being used */
   uint8_t icon;  /*!< Picture used in the spell list (which type of spell) */
   char desc[26]; /*!< Description of what the spell is intended to do */
   uint8_t stat;

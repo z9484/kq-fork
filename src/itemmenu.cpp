@@ -581,7 +581,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
         spell_index = NUM_SPELLS - 1;
       }
     }
-    sprintf(strbuf, _("%s learned!"), magic[tmp].name);
+    sprintf(strbuf, _("%s learned!"), magic[tmp].spellName);
     play_effect(SND_TWINKLE, 128);
     message(strbuf, magic[tmp].icon, 0, xofs, yofs);
     return ITEM_EFFECT_SUCCESS_MULTIPLE;

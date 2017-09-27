@@ -525,7 +525,7 @@ int combat_spell(size_t caster_fighter_index, int is_item) {
       }
     }
   }
-  strcpy(attack_string, magic[spell_number].name);
+  strcpy(attack_string, magic[spell_number].spellName);
   if (is_item == 0) {
     draw_castersprite(caster_fighter_index, eff[magic[spell_number].eff].kolor);
   }
@@ -1266,7 +1266,7 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg,
 static void special_spells(size_t caster_fighter_index, size_t spell_number) {
   if (caster_fighter_index >= PSIZE) {
     sprintf(strbuf, _("Enemy %d tried to cast %s?!"), (int)caster_fighter_index,
-            magic[spell_number].name);
+            magic[spell_number].spellName);
     Game.klog(strbuf);
   }
   switch (spell_number) {

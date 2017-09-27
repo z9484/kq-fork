@@ -256,9 +256,9 @@ static void combat_draw_spell_menu(int c, int ptr, int pg) {
     if (z > 0) {
       draw_icon(double_buffer, magic[z].icon, 96, j * 8 + 32);
       if (combat_castable(c, pg * NUM_SPELLS_PER_PAGE + j) == 1) {
-        print_font(double_buffer, 104, j * 8 + 32, magic[z].name, FNORMAL);
+        print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, FNORMAL);
       } else {
-        print_font(double_buffer, 104, j * 8 + 32, magic[z].name, FDARK);
+        print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, FDARK);
       }
       b = mp_needed(c, z);
       sprintf(strbuf, "%d", b);
