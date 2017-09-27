@@ -256,7 +256,7 @@ static void draw_equipmenu(int c, int sel) {
   for (k = 0; k < NUM_EQUIPMENT; k++) {
     j = party[l].eqp[k];
     draw_icon(double_buffer, items[j].icon, 84 + xofs, k * 8 + 36 + yofs);
-    print_font(double_buffer, 92 + xofs, k * 8 + 36 + yofs, items[j].name,
+    print_font(double_buffer, 92 + xofs, k * 8 + 36 + yofs, items[j].itemName,
                FNORMAL);
   }
 }
@@ -291,7 +291,7 @@ static void draw_equippable(uint32_t c, uint32_t slot, uint32_t pptr) {
     // z == number of items
     z = g_inv[t_inv[pptr + k]].quantity;
     draw_icon(double_buffer, items[j].icon, 28 + xofs, k * 8 + 100 + yofs);
-    print_font(double_buffer, 36 + xofs, k * 8 + 100 + yofs, items[j].name,
+    print_font(double_buffer, 36 + xofs, k * 8 + 100 + yofs, items[j].itemName,
                FNORMAL);
     if (z > 1) {
       sprintf(strbuf, "^%d", z);

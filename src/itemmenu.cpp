@@ -200,7 +200,7 @@ static void camp_item_targetting(int pp) {
   while (1) {
     update_equipstats();
     ePIDX tg = select_any_player((eTarget)items[t1].tgt, items[t1].icon,
-                                 items[t1].name);
+                                 items[t1].itemName);
     if (tg != PIDX_UNDEFINED) {
       eItemEffectResult z = item_effects(0, tg, t1);
       if (z == ITEM_EFFECT_INEFFECTIVE) {
@@ -319,7 +319,7 @@ static void draw_itemmenu(int ptr, int pg, int sl) {
       palette_color = FDARK;
     }
     print_font(double_buffer, 96 + xofs, k * 8 + 68 + yofs,
-               items[item_index].name, palette_color);
+               items[item_index].itemName, palette_color);
     if (item_quantity > 1) {
       sprintf(strbuf, "^%u", (uint32_t)item_quantity);
       print_font(double_buffer, 224 + xofs, k * 8 + 68 + yofs, strbuf,

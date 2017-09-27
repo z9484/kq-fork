@@ -1116,7 +1116,7 @@ static void heroes_win(void) {
 
 			if (found_item > 0) {
 				if (check_inventory(found_item, 1) != 0) {
-					sprintf(strbuf, _("%s found!"), items[found_item].name);
+					sprintf(strbuf, _("%s found!"), items[found_item].itemName);
 					menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
 					draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
 					print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, FNORMAL);

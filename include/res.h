@@ -41,12 +41,11 @@
 
 /*! \brief An item */
 typedef struct {
-  char name[17]; /*!< Name of the item */
+  char itemName[17]; /*!< Name of the item */
   uint8_t icon;  /*!< Small icon */
   uint8_t kol;   /*!< Colour to draw?? See hero_init() */
   char desc[40]; /*!< One line description */
-  uint8_t
-      tgt; /*!< Targetting type for combat items. See TGT_* constants in kq.h */
+  uint8_t tgt;   /*!< Targetting type for combat items. See TGT_* constants in kq.h */
   uint8_t type; /*!< Relates to which slot (hand, etc.) this item goes into */
   uint8_t use;  /*!< Usage mode  (see USE_* constants in kq.h) */
   uint8_t ilvl; /*!< What level this item is */
@@ -62,16 +61,13 @@ typedef struct {
    * See item_effects()
    */
   uint8_t bst;
-  uint8_t elem; /*!< For runes, what element will it affect (see rs parameter of
-                   res_adjust() ) */
-  uint8_t imb;  /*!< imbued - What spell is cast when you "use" this item in
-                   combat */
+  uint8_t elem; /*!< For runes, what element will it affect (see rs parameter of res_adjust() ) */
+  uint8_t imb;  /*!< imbued - What spell is cast when you "use" this item in combat */
   uint8_t eff;  /*!< Effect ?? */
   int bon;      /*!< Bonus ?? */
   int price;    /*!< Default price of this item, in gp */
   uint8_t eq[8]; /*!< Who can equip this item. See heroc.h */
-  int stats[13]; /*!< Stat bonuses for equipping this item See A_ constants in
-                    kq.h */
+  int stats[13]; /*!< Stat bonuses for equipping this item See A_ constants in kq.h */
   char res[16];  /*!< Resistances. See R_ constants in kq.h */
 } s_item;
 

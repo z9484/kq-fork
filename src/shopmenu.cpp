@@ -167,7 +167,7 @@ static void buy_menu(void) {
       int cost = max * items[item_index].price;
       eFontColor font_color = cost <= gp ? FNORMAL : FDARK;
       print_font(double_buffer, 56 + xofs, shop_item_index * 8 + 32 + yofs,
-                 items[item_index].name, font_color);
+                 items[item_index].itemName, font_color);
       if (max > 1) {
         sprintf(strbuf, "(%u)", max);
         print_font(double_buffer, 256 + xofs, shop_item_index * 8 + 32 + yofs,
@@ -527,7 +527,7 @@ static void sell_howmany(int item_no, size_t inv_page) {
     print_font(double_buffer, 124 + xofs, 176 + yofs, _("How many?"), FNORMAL);
     menubox(double_buffer, 32 + xofs, item_no * 8 + 24 + yofs, 30, 1, DARKBLUE);
     draw_icon(double_buffer, items[l].icon, 48 + xofs, item_no * 8 + 32 + yofs);
-    print_font(double_buffer, 56 + xofs, item_no * 8 + 32 + yofs, items[l].name,
+    print_font(double_buffer, 56 + xofs, item_no * 8 + 32 + yofs, items[l].itemName,
                FNORMAL);
     sprintf(strbuf, _("%d of %d"), my, max_items);
     print_font(double_buffer, 280 - (strlen(strbuf) * 8) + xofs,
@@ -643,7 +643,7 @@ static void sell_menu(void) {
       draw_icon(double_buffer, items[inventory_item_index].icon, 48 + xofs,
                 p * 8 + 32 + yofs);
       print_font(double_buffer, 56 + xofs, p * 8 + 32 + yofs,
-                 items[inventory_item_index].name, k);
+                 items[inventory_item_index].itemName, k);
       // Check if quantity of this item > 1
       if (g_inv[inv_page * NUM_ITEMS_PER_PAGE + p].quantity > 1) {
         // The '^' in this is an 'x' in allfonts.pcx

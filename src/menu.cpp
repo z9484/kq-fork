@@ -793,7 +793,7 @@ static void status_screen(size_t fighter_index) {
     menubox(double_buffer, 160 + xofs, 160 + yofs, 18, 6, BLUE);
     for (equipment_index = 0; equipment_index < NUM_EQUIPMENT; equipment_index++) {
       draw_icon(double_buffer, items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs, equipment_index * 8 + 168 + yofs);
-      print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].name, FNORMAL);
+      print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].itemName, FNORMAL);
     }
     blit2screen(xofs, yofs);
     PlayerInput.readcontrols();

@@ -1534,11 +1534,11 @@ static int KQ_chest(lua_State *L)
 	{
 		if (amt == 1)
 		{
-			sprintf(strbuf, _("%s procured!"), items[ino].name);
+			sprintf(strbuf, _("%s procured!"), items[ino].itemName);
 		}
 		else
 		{
-			sprintf(strbuf, _("%s ^%d procured!"), items[ino].name, (int)amt);
+			sprintf(strbuf, _("%s ^%d procured!"), items[ino].itemName, (int)amt);
 		}
 		play_effect(SND_UNEQUIP, 128);
 		message(strbuf, items[ino].icon, 0, xofs, yofs);
@@ -1550,11 +1550,11 @@ static int KQ_chest(lua_State *L)
 	}
 	if (amt == 1)
 	{
-		sprintf(strbuf, _("%s not taken!"), items[ino].name);
+		sprintf(strbuf, _("%s not taken!"), items[ino].itemName);
 	}
 	else
 	{
-		sprintf(strbuf, _("%s ^%d not taken!"), items[ino].name, (int)amt);
+		sprintf(strbuf, _("%s ^%d not taken!"), items[ino].itemName, (int)amt);
 	}
 	message(strbuf, items[ino].icon, 0, xofs, yofs);
 	return 0;

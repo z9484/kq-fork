@@ -729,7 +729,7 @@ int skill_use(size_t attack_fighter_index) {
       }
       if (found_item > 0) {
         if (check_inventory(found_item, 1) != 0) {
-          sprintf(strbuf, _("%s taken!"), items[found_item].name);
+          sprintf(strbuf, _("%s taken!"), items[found_item].itemName);
           message(strbuf, items[found_item].icon, 0, 0, 0);
         }
       } else {
@@ -759,7 +759,7 @@ int skill_use(size_t attack_fighter_index) {
       }
       if (found_item > 0) {
         if (check_inventory(found_item, 1) != 0) {
-          sprintf(strbuf, _("%s taken!"), items[found_item].name);
+          sprintf(strbuf, _("%s taken!"), items[found_item].itemName);
           message(strbuf, items[found_item].icon, 0, 0, 0);
         }
       } else {
