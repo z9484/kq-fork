@@ -117,7 +117,7 @@ typedef struct {
 
 /*! \brief Player */
 typedef struct {
-  char name[9]; /*!< Entity name */
+  char playerName[9]; /*!< Entity name */
   int xp;       /*!< Entity experience */
   int next;     /*!< Experience needed for level-up */
   int lvl;      /*!< Entity's level */

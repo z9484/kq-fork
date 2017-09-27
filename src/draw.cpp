@@ -913,10 +913,10 @@ static void draw_porttextbox(int bstyle, int chr) {
   linexofs = a * 12;
 
   menubox(double_buffer, 19, 172 - linexofs, 4, 4, BLUE);
-  menubox(double_buffer, 66, 196 - linexofs, strlen(party[chr].name), 1, BLUE);
+  menubox(double_buffer, 66, 196 - linexofs, strlen(party[chr].playerName), 1, BLUE);
 
   draw_sprite(double_buffer, players[chr].portrait, 24, 177 - linexofs);
-  print_font(double_buffer, 74, 204 - linexofs, party[chr].name, FNORMAL);
+  print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName, FNORMAL);
 }
 
 /*! \brief Draw the map
@@ -1168,7 +1168,7 @@ const char *parse_string(const char *the_string) {
   bp = strbuf;
   for (ap = the_string; *ap; ++ap) {
     if (*ap == '$') {
-      for (name = party[pidx[ap[1] - '0']].name; *name; ++name) {
+      for (name = party[pidx[ap[1] - '0']].playerName; *name; ++name) {
         if (bp < strbuf + sizeof(strbuf)) {
           *bp++ = *name;
         }

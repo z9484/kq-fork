@@ -246,8 +246,7 @@ static void draw_equipmenu(int c, int sel) {
   menubox(double_buffer, 12 + xofs, 28 + yofs, 25, 6, BLUE);
   menubox(double_buffer, 228 + xofs, 28 + yofs, 8, 6, BLUE);
   draw_sprite(double_buffer, players[l].portrait, 248 + xofs, 36 + yofs);
-  print_font(double_buffer, 268 - (strlen(party[l].name) * 4) + xofs, 76 + yofs,
-             party[l].name, FNORMAL);
+  print_font(double_buffer, 268 - (strlen(party[l].playerName) * 4) + xofs, 76 + yofs, party[l].playerName, FNORMAL);
   print_font(double_buffer, 28 + xofs, 36 + yofs, _("Hand1:"), FGOLD);
   print_font(double_buffer, 28 + xofs, 44 + yofs, _("Hand2:"), FGOLD);
   print_font(double_buffer, 28 + xofs, 52 + yofs, _("Head:"), FGOLD);

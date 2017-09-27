@@ -326,7 +326,7 @@ int learn_new_spells(int who) {
       }
       if (p < 60) {
         if (in_combat == 1) {
-          sprintf(strbuf, _("%s learned %s"), party[who].name, magic[a].name);
+          sprintf(strbuf, _("%s learned %s"), party[who].playerName, magic[a].name);
           fullblit(back, double_buffer);
           menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152,
                   strlen(strbuf) + 1, 1, BLUE);

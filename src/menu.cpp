@@ -148,7 +148,7 @@ void draw_mainmenu(int swho) {
 void draw_playerstat(Raster *where, int player_index_in_party, int dx, int dy) {
   int j;
   players[player_index_in_party].portrait->maskedBlitTo(where, dx, dy);
-  print_font(where, dx + 48, dy, party[player_index_in_party].name, FNORMAL);
+  print_font(where, dx + 48, dy, party[player_index_in_party].playerName, FNORMAL);
   draw_stsicon(where, 0, player_index_in_party, 8, dx + 48, dy + 8);
   print_font(where, dx + 48, dy + 16, _("LV"), FGOLD);
   sprintf(strbuf, "%d", party[player_index_in_party].lvl);
@@ -353,7 +353,7 @@ s_fighter* player2fighter(int who, s_fighter* pf)
 	tf.imb_a = 0;
 	tf.imb[0] = 0;
 	tf.imb[1] = 0;
-	tf.fighterName = plr.name;
+	tf.fighterName = plr.playerName;
 	tf.fighterExperience = plr.xp;
 	tf.fighterLevel = plr.lvl;
 	tf.fighterHealth = plr.hp;

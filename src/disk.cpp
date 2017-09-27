@@ -270,7 +270,7 @@ static int load_core_properties(s_player *s, XMLElement *node) {
     for (auto property : children(properties, "property")) {
       if (property->Attribute("name", "name")) {
         const char *name = property->Attribute("value");
-        strncpy(s->name, name, sizeof(s->name) - 1);
+        strncpy(s->playerName, name, sizeof(s->playerName) - 1);
       } else if (property->Attribute("name", "xp")) {
         s->xp = property->IntAttribute("value");
       } else if (property->Attribute("name", "next")) {
@@ -421,7 +421,7 @@ static int save_player(const s_player *s, XMLElement *node) {
   XMLElement *properties = doc->NewElement("properties");
   hero->InsertFirstChild(properties);
   // Core properties
-  addprop(properties, "name", s->name);
+  addprop(properties, "name", s->playerName);
   addprop(properties, "hp", s->hp);
   addprop(properties, "xp", s->xp);
   addprop(properties, "next", s->next);
