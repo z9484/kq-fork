@@ -1479,7 +1479,7 @@ void KGame::reset_world(void)
 	/* Initialize shops */
 	for (i = 0; i < NUMSHOPS; i++)
 	{
-		shops[i].name[0] = 0;
+		shops[i].shopName[0] = 0;
 		for (j = 0; j < SHOPITEMS; j++)
 		{
 			shops[i].items[j] = 0;

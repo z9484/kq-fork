@@ -3828,7 +3828,7 @@ static int KQ_shop_create(lua_State *L)
 
 	index = (int)lua_tonumber(L, 2);
 
-	strncpy(shops[index].name, name, 40);
+	strncpy(shops[index].shopName, name, 40);
 	num_shops = ((index + 1) > num_shops ? index + 1 : num_shops);
 	return 0;
 }

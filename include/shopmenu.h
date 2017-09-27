@@ -30,7 +30,7 @@ void inn(const char *, uint32_t, int);
 int shop(int);
 
 typedef struct {
-  char name[40];                     /* Name of this shop */
+  char shopName[40];                     /* Name of this shop */
   uint16_t items[SHOPITEMS];         /* A list of items in this shop */
   uint16_t items_current[SHOPITEMS]; /* Quantity of this type of item */
   uint16_t items_max[SHOPITEMS];     /* Maximum quantity of this type of item */

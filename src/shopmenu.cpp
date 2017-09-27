@@ -741,7 +741,7 @@ int shop(int shop_num) {
   bool stop = false;
   s_shop &shop = shops[shop_num];
   shop_no = shop_num;
-  shop_name = shop.name;
+  shop_name = shop.shopName;
 
   /* If enough time has passed, fully replenish this shop's stock of an item */
   int replenish_time = (khr * 60) + kmin - shop.time;
