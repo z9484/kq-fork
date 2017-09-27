@@ -158,7 +158,7 @@ typedef struct {
  * Contains a list of the special items in the player's party (Opal Armor et al)
  */
 typedef struct {
-  char name[38];
+  char specialItemName[38];
   char description[40];
   short icon;
 } s_special_item;

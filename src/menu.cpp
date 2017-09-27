@@ -653,14 +653,11 @@ void spec_items(void) {
     print_font(double_buffer, 108 + xofs, 20 + yofs, _("Special Items"), FGOLD);
     menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 19, BLUE);
     for (a = 0; a < num_items; a++) {
-      draw_icon(double_buffer, special_items[list_item_which[a]].icon,
-                88 + xofs, a * 8 + 44 + yofs);
-      print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs,
-                 special_items[list_item_which[a]].name, FNORMAL);
+      draw_icon(double_buffer, special_items[list_item_which[a]].icon, 88 + xofs, a * 8 + 44 + yofs);
+      print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs, special_items[list_item_which[a]].specialItemName, FNORMAL);
       if (list_item_quantity[a] > 1) {
         sprintf(strbuf, "^%d", list_item_quantity[a]);
-        print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf,
-                   FNORMAL);
+        print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf, FNORMAL);
       }
     }
     menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
@@ -794,13 +791,9 @@ static void status_screen(size_t fighter_index) {
       }
     }
     menubox(double_buffer, 160 + xofs, 160 + yofs, 18, 6, BLUE);
-    for (equipment_index = 0; equipment_index < NUM_EQUIPMENT;
-         equipment_index++) {
-      draw_icon(double_buffer,
-                items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs,
-                equipment_index * 8 + 168 + yofs);
-      print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs,
-                 items[party[pidx_index].eqp[equipment_index]].name, FNORMAL);
+    for (equipment_index = 0; equipment_index < NUM_EQUIPMENT; equipment_index++) {
+      draw_icon(double_buffer, items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs, equipment_index * 8 + 168 + yofs);
+      print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].name, FNORMAL);
     }
     blit2screen(xofs, yofs);
     PlayerInput.readcontrols();

@@ -1470,7 +1470,7 @@ void KGame::reset_world(void)
 	/* Initialize special_items array */
 	for (i = 0; i < MAX_SPECIAL_ITEMS; i++)
 	{
-		special_items[i].name[0] = 0;
+		special_items[i].specialItemName[0] = 0;
 		special_items[i].description[0] = 0;
 		special_items[i].icon = 0;
 		player_special_items[i] = 0;
