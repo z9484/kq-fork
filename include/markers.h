@@ -45,7 +45,7 @@ using std::vector;
  */
 struct KMarker {
   // The name of the current marker
-  string name;
+  string markerName;
 
   // The X position the marker refers to
   int32_t x;

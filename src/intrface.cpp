@@ -950,7 +950,7 @@ static void init_markers(lua_State *L)
 		auto marker = g_map.markers.GetMarker(i);
 		if (marker != nullptr)
 		{
-			lua_pushstring(L, marker->name.c_str());
+			lua_pushstring(L, marker->markerName.c_str());
 			lua_newtable(L);
 			lua_pushstring(L, "x");
 			lua_pushnumber(L, marker->x);
@@ -3253,7 +3253,7 @@ static int KQ_set_marker(lua_State *L)
 	{
 		/* Need to add a new marker */
 		auto new_marker = make_shared<KMarker>();
-		new_marker->name = marker_name;
+		new_marker->markerName = marker_name;
 		new_marker->x = x_coord;
 		new_marker->y = y_coord;
 		g_map.markers.Add(new_marker);

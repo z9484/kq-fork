@@ -68,7 +68,7 @@ shared_ptr<KMarker> KMarkers::GetMarker(size_t index) {
 
 shared_ptr<KMarker> KMarkers::GetMarker(string marker_name) {
   for (auto it = m_markers.begin(); it != m_markers.end(); it++) {
-    if ((*it)->name == marker_name) {
+    if ((*it)->markerName == marker_name) {
       return *it;
     }
   }
