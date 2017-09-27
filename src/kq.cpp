@@ -804,7 +804,7 @@ void KGame::data_dump(void)
 		for (a = 0; a < SIZE_PROGRESS; a++)
 		{
 			fprintf(ff, "%d: %s = %d\n", progresses[a].num_progress,
-				progresses[a].name, progress[a]);
+				progresses[a].progressName, progress[a]);
 		}
 		fprintf(ff, "\n");
 		for (a = 0; a < NUMSHOPS; a++)

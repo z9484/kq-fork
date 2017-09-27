@@ -112,7 +112,7 @@ typedef struct {
  */
 typedef struct {
   uint32_t num_progress; /*!< Number of current progress */
-  char name[18];         /*!< Name of current progress */
+  char progressName[18];         /*!< Name of current progress */
 } s_progress;
 
 /*! \brief Player */
