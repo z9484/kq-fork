@@ -4,6 +4,8 @@
 
 #include <allegro.h>
 
+#include "enums.h"
+
 class Raster;
 
 /** Fighter
@@ -11,7 +13,11 @@ class Raster;
  * s_player is transformed into a s_fighter during combat.
  * See enemy_init() for more information on the fields.
  */
-typedef struct {
+class KFighter
+{
+public:
+	KFighter();
+
 	/** Name */
 	std::string fighterName;
 
@@ -134,4 +140,7 @@ typedef struct {
 	int imb_a;
 	int imb[2];
 	Raster *img;
-} s_fighter;
+};
+
+extern KFighter fighter[NUM_FIGHTERS];
+extern KFighter tempa, tempd;

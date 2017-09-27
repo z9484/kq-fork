@@ -200,12 +200,6 @@ s_player party[MAXCHRS];
  */
 s_heroinfo players[MAXCHRS];
 
-/*! Characters when they are in combat */
-s_fighter fighter[NUM_FIGHTERS];
-
-/*! Temp store for adjusted stats */
-s_fighter tempa, tempd;
-
 /*! Name of current shop */
 string shop_name;
 
