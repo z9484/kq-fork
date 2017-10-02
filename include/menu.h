@@ -33,7 +33,7 @@ void revert_equipstats(void);
 void spec_items(void);
 void update_equipstats(void);
 
-s_fighter* player2fighter(int who, s_fighter* pf);
+bool player2fighter(size_t partyIndex, KFighter& pf);
 
 /* These are hints/reminders about the game - e.g:
  * - Something you have been told by an important character

@@ -802,7 +802,7 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	int xx;
 	int yy;
 	int ff;
-	s_fighter* fr = &fighter[fighter_index];
+	KFighter* fr = &fighter[fighter_index];
 
 	xx = fr->fighterImageDatafileX;
 	yy = fr->fighterImageDatafileY;
@@ -1054,8 +1054,8 @@ static void heroes_win(void) {
 	int found_item = 0;
 	int nr = 0;
 	int ent = 0;
-	s_fighter t1;
-	s_fighter t2;
+	KFighter t1;
+	KFighter t2;
 
 	Music.play_music("rend5.s3m", 0);
 	kq_wait(500);
@@ -1137,10 +1137,10 @@ static void heroes_win(void) {
 		if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
 			party[pidx[pidx_index]].sts[S_DEAD] == 0) {
 			b = pidx_index * 160;
-			player2fighter(pidx[pidx_index], &t1);
+			player2fighter(pidx[pidx_index], t1);
 			if (give_xp(pidx[pidx_index], txp, 0) == 1) {
 				menubox(double_buffer, b, 40, 18, 9, BLUE);
-				player2fighter(pidx[pidx_index], &t2);
+				player2fighter(pidx[pidx_index], t2);
 				print_font(double_buffer, b + 8, 48, _("Level up!"), FGOLD);
 				print_font(double_buffer, b + 8, 56, _("Max HP"), FNORMAL);
 				print_font(double_buffer, b + 8, 64, _("Max MP"), FNORMAL);

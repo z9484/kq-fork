@@ -48,18 +48,25 @@
 /*! Index related to enemies in an encounter */
 int cf[NUM_FIGHTERS];
 
+namespace KqFork
+{
+namespace EnemyC
+{
+
 /*  internal prototypes  */
-static void enemy_attack(size_t);
-static int enemy_cancast(size_t, size_t);
-static void enemy_curecheck(int);
-static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber);
-static void enemy_spellcheck(size_t, size_t);
-static int enemy_stscheck(int, int);
-static void load_enemies(void);
-static s_fighter* make_enemy(int who, s_fighter* en);
-static int skill_setup(size_t fighterIndex, size_t skillNumber);
-static int spell_setup(int, int);
-void unload_enemies(void);
+void enemy_attack(size_t);
+int enemy_cancast(size_t, size_t);
+void enemy_curecheck(int);
+void enemy_skillcheck(size_t fighterIndex, size_t skillNumber);
+void enemy_spellcheck(size_t, size_t);
+int enemy_stscheck(int, int);
+void load_enemies(void);
+KFighter* make_enemy(size_t enemyFighterIndex, KFighter* en);
+int skill_setup(size_t fighterIndex, size_t skillNumber);
+int spell_setup(int, int);
+
+} // namespace EnemyC
+} // namespace KqFork
 
 /*! \page monster The Format of allstat.mon
  *
@@ -104,9 +111,13 @@ void unload_enemies(void);
  */
 
 /*! \brief Array of enemy 'fighters'  */
-static s_fighter** enemy_fighters = NULL;
-static int enemies_n = 0;
-static int enemies_cap = 0;
+namespace KqFork
+{
+namespace EnemyC
+{
+std::vector<KFighter*> enemy_fighters;
+} // namespace EnemyC
+} // namespace KqFork
 
 /*! \brief Melee attack
  *
@@ -118,7 +129,7 @@ static int enemies_cap = 0;
  *
  * \param   target_fighter_index Target
  */
-static void enemy_attack(size_t target_fighter_index) {
+void KqFork::EnemyC::enemy_attack(size_t target_fighter_index) {
   int b, c;
   size_t fighter_index;
 
@@ -171,7 +182,7 @@ static void enemy_attack(size_t target_fighter_index) {
  * \param   sp Spell to cast
  * \returns 1 if spell can be cast, 0 otherwise
  */
-static int enemy_cancast(size_t target_fighter_index, size_t sp) {
+int KqFork::EnemyC::enemy_cancast(size_t target_fighter_index, size_t sp) {
   size_t a;
   uint32_t enemyCombatSkillCount = 0;
 
@@ -225,11 +236,11 @@ void enemy_charmaction(size_t fighter_index) {
   }
   if (a == 1) {
     fighter[fighter_index].ctmem = 0;
-    enemy_attack(fighter_index);
+	KqFork::EnemyC::enemy_attack(fighter_index);
     return;
   }
   fighter[fighter_index].ctmem = 1;
-  enemy_attack(fighter_index);
+  KqFork::EnemyC::enemy_attack(fighter_index);
 }
 
 /*! \brief Choose action for enemy
@@ -260,7 +271,7 @@ void enemy_chooseaction(size_t fighter_index) {
   fighter[fighter_index].fighterWillDefend = 0;
   fighter[fighter_index].fighterSpriteFacing = 1;
   if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
-    enemy_curecheck(fighter_index);
+	  KqFork::EnemyC::enemy_curecheck(fighter_index);
     if (IsEtherEffectActive[fighter_index] == 0) {
       return;
     }
@@ -270,7 +281,7 @@ void enemy_chooseaction(size_t fighter_index) {
   for (a = 0; a < 8; a++) {
     if (ap < fighter[fighter_index].aip[a]) {
       if (fighter[fighter_index].fighterCombatSkill[a] >= 100 && fighter[fighter_index].fighterCombatSkill[a] < 254) {
-        enemy_skillcheck(fighter_index, a);
+		  KqFork::EnemyC::enemy_skillcheck(fighter_index, a);
         if (IsEtherEffectActive[fighter_index] == 0) {
           return;
         } else {
@@ -278,7 +289,7 @@ void enemy_chooseaction(size_t fighter_index) {
         }
       }
       if (fighter[fighter_index].fighterCombatSkill[a] > 0 && fighter[fighter_index].fighterCombatSkill[a] < 100 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
-        enemy_spellcheck(fighter_index, a);
+		  KqFork::EnemyC::enemy_spellcheck(fighter_index, a);
         if (IsEtherEffectActive[fighter_index] == 0) {
           return;
         } else {
@@ -287,7 +298,7 @@ void enemy_chooseaction(size_t fighter_index) {
       }
     }
   }
-  enemy_attack(fighter_index);
+  KqFork::EnemyC::enemy_attack(fighter_index);
   IsEtherEffectActive[fighter_index] = 0;
 }
 
@@ -297,23 +308,23 @@ void enemy_chooseaction(size_t fighter_index) {
  *
  * \param   w Caster
  */
-static void enemy_curecheck(int w) {
+void KqFork::EnemyC::enemy_curecheck(int w) {
   int a;
 
   a = -1;
-  if (enemy_cancast(w, M_DRAIN) == 1) {
+  if (KqFork::EnemyC::enemy_cancast(w, M_DRAIN) == 1) {
     a = M_DRAIN;
   }
-  if (enemy_cancast(w, M_CURE1) == 1) {
+  if (KqFork::EnemyC::enemy_cancast(w, M_CURE1) == 1) {
     a = M_CURE1;
   }
-  if (enemy_cancast(w, M_CURE2) == 1) {
+  if (KqFork::EnemyC::enemy_cancast(w, M_CURE2) == 1) {
     a = M_CURE2;
   }
-  if (enemy_cancast(w, M_CURE3) == 1) {
+  if (KqFork::EnemyC::enemy_cancast(w, M_CURE3) == 1) {
     a = M_CURE3;
   }
-  if (enemy_cancast(w, M_CURE4) == 1) {
+  if (KqFork::EnemyC::enemy_cancast(w, M_CURE4) == 1) {
     a = M_CURE4;
   }
   if (a != -1) {
@@ -337,15 +348,25 @@ static void enemy_curecheck(int w) {
 void enemy_init(void)
 {
 	size_t fighter_index, frame_index;
-	s_fighter* f;
 
-	if (enemy_fighters == NULL)
+	if (KqFork::EnemyC::enemy_fighters.size() == 0)
 	{
-		load_enemies();
+		KqFork::EnemyC::load_enemies();
 	}
 	for (fighter_index = 0; fighter_index < num_enemies; ++fighter_index)
 	{
-		f = make_enemy(cf[fighter_index], &fighter[fighter_index + PSIZE]);
+		size_t enemyFighterIndex = cf[fighter_index];
+		KFighter* f = nullptr;
+		if (enemyFighterIndex < KqFork::EnemyC::enemy_fighters.size() && KqFork::EnemyC::enemy_fighters.size() > 0)
+		{
+			f = KqFork::EnemyC::enemy_fighters[enemyFighterIndex];
+			fighter[fighter_index + PSIZE] = *f;
+		}
+		if (f == nullptr)
+		{
+			return;
+		}
+
 		for (frame_index = 0; frame_index < MAXCFRAMES; ++frame_index)
 		{
 			/* If, in a previous combat, we made a bitmap, destroy it now */
@@ -368,7 +389,7 @@ void enemy_init(void)
  * \param   w Enemy index
  * \param   ws Enemy skill index
  */
-static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber) {
+void KqFork::EnemyC::enemy_skillcheck(size_t fighterIndex, size_t skillNumber) {
 	if (fighterIndex >= NUM_FIGHTERS || skillNumber >= 8)
 	{
 		return;
@@ -384,7 +405,7 @@ static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber) {
 				fighter[fighterIndex].atrack[skillNumber] = 1;
 			}
 		}
-		if (fighter[fighterIndex].atrack[skillNumber] == 0 && skill_setup(fighterIndex, skillNumber) == 1) {
+		if (fighter[fighterIndex].atrack[skillNumber] == 0 && KqFork::EnemyC::skill_setup(fighterIndex, skillNumber) == 1) {
 			combat_skill(fighterIndex);
 			IsEtherEffectActive[fighterIndex] = 0;
 		}
@@ -399,18 +420,18 @@ static void enemy_skillcheck(size_t fighterIndex, size_t skillNumber) {
  * \param   attack_fighter_index Caster
  * \param   defend_fighter_index Target
  */
-static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_index) {
+void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_index) {
   int fighterCombatSkill = 0, aux, yes = 0;
   size_t fighter_index;
 
   uint8_t ai = fighter[attack_fighter_index].fighterCombatSkill[defend_fighter_index];
   if (ai > 0 && ai < 100) {
     fighterCombatSkill = ai;
-    if (fighterCombatSkill > 0 && enemy_cancast(attack_fighter_index, fighterCombatSkill) == 1) {
+    if (fighterCombatSkill > 0 && KqFork::EnemyC::enemy_cancast(attack_fighter_index, fighterCombatSkill) == 1) {
       switch (fighterCombatSkill) {
       case M_SHIELD:
       case M_SHIELDALL:
-        yes = enemy_stscheck(S_SHIELD, PSIZE);
+        yes = KqFork::EnemyC::enemy_stscheck(S_SHIELD, PSIZE);
         break;
       case M_HOLYMIGHT:
         aux = 0;
@@ -435,13 +456,13 @@ static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_
         }
         break;
       case M_TRUEAIM:
-        yes = enemy_stscheck(S_TRUESHOT, PSIZE);
+        yes = KqFork::EnemyC::enemy_stscheck(S_TRUESHOT, PSIZE);
         break;
       case M_REGENERATE:
-        yes = enemy_stscheck(S_REGEN, PSIZE);
+        yes = KqFork::EnemyC::enemy_stscheck(S_REGEN, PSIZE);
         break;
       case M_THROUGH:
-        yes = enemy_stscheck(S_ETHER, PSIZE);
+        yes = KqFork::EnemyC::enemy_stscheck(S_ETHER, PSIZE);
         break;
       case M_HASTEN:
       case M_QUICKEN:
@@ -456,7 +477,7 @@ static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_
         break;
       case M_SHELL:
       case M_WALL:
-        yes = enemy_stscheck(S_RESIST, PSIZE);
+        yes = KqFork::EnemyC::enemy_stscheck(S_RESIST, PSIZE);
         break;
       case M_ABSORB:
         if (fighter[attack_fighter_index].fighterHealth < fighter[attack_fighter_index].fighterMaxHealth / 2) {
@@ -470,11 +491,11 @@ static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_
       case M_STONE:
       case M_SILENCE:
       case M_SLEEP:
-        yes = enemy_stscheck(magic[fighterCombatSkill].elem - 8, 0);
+        yes = KqFork::EnemyC::enemy_stscheck(magic[fighterCombatSkill].elem - 8, 0);
         break;
       case M_NAUSEA:
       case M_MALISON:
-        yes = enemy_stscheck(S_MALISON, 0);
+        yes = KqFork::EnemyC::enemy_stscheck(S_MALISON, 0);
         break;
       case M_SLOW:
         aux = 0;
@@ -530,7 +551,7 @@ static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_
   if (yes == 0) {
     return;
   }
-  if (spell_setup(attack_fighter_index, fighterCombatSkill) == 1) {
+  if (KqFork::EnemyC::spell_setup(attack_fighter_index, fighterCombatSkill) == 1) {
     combat_spell(attack_fighter_index, 0);
     IsEtherEffectActive[attack_fighter_index] = 0;
   }
@@ -544,7 +565,7 @@ static void enemy_spellcheck(size_t attack_fighter_index, size_t defend_fighter_
  * \param   ws Which stat to consider
  * \param   s Starting target for multiple targets
  */
-static int enemy_stscheck(int ws, int s) {
+int KqFork::EnemyC::enemy_stscheck(int ws, int s) {
   uint32_t fighter_affected = 0;
   size_t fighter_index;
 
@@ -570,14 +591,14 @@ static int enemy_stscheck(int ws, int s) {
   return 0;
 }
 
-static void dump_en() {
-	extern int save_fighters(const char* filename, s_fighter* fighters, int count);
-	std::unique_ptr<s_fighter[]> tmp(new s_fighter[enemies_n]);
-	for (int i = 0; i < enemies_n; ++i) {
-		tmp[i] = *enemy_fighters[i];
-	}
-	save_fighters("save-f.xml", tmp.get(), enemies_n);
-}
+//static void dump_en() {
+//	extern int save_fighters(const char* filename, KFighter* fighters, int count);
+//	std::unique_ptr<KFighter[]> tmp(new KFighter[KqFork::EnemyC::enemies_n]);
+//	for (int i = 0; i < KqFork::EnemyC::enemies_n; ++i) {
+//		tmp[i] = KqFork::EnemyC::enemy_fighters[i];
+//	}
+//	save_fighters("save-f.xml", tmp.get(), KqFork::EnemyC::enemies_n);
+//}
 
 /*! \brief Load all enemies from disk
  *
@@ -585,13 +606,12 @@ static void dump_en() {
  * \author PH
  * \date 2003????
  */
-static void load_enemies(void)
+void KqFork::EnemyC::load_enemies(void)
 {
-	int i, tmp, lx, ly, p;
-	FILE* edat;
-	s_fighter* f;
+	int tmp, lx, ly, p;
+	FILE* edat = nullptr;
 
-	if (enemy_fighters != NULL)
+	if (enemy_fighters.size() != 0)
 	{
 		/* Already done the loading */
 		return;
@@ -608,20 +628,19 @@ static void load_enemies(void)
 	{
 		Game.program_death(_("Could not load 1st enemy datafile!"));
 	}
-	enemies_n = 0;
-	enemies_cap = 128;
-	enemy_fighters = (s_fighter**)malloc(sizeof(s_fighter*) * enemies_cap);
+	
+	for (KFighter* enemy_fighter : enemy_fighters)
+	{
+		delete enemy_fighter;
+	}
+	enemy_fighters.clear();
 
 	// Loop through for every monster in allstat.mon
 	while (fscanf(edat, "%s", strbuf) != EOF)
 	{
-		if (enemies_n >= enemies_cap)
-		{
-			enemies_cap *= 2;
-			enemy_fighters = (s_fighter**)realloc(enemy_fighters, sizeof(s_fighter*) * enemies_cap);
-		}
-		f = enemy_fighters[enemies_n++] = (s_fighter*)malloc(sizeof(s_fighter));
-		memset(f, 0, sizeof(s_fighter));
+		KFighter* f = new KFighter;
+		enemy_fighters.push_back(f);
+
 		// Enemy name
 		f->fighterName = strbuf;
 		// Index number (ignored; automatically generated)
@@ -719,9 +738,9 @@ static void load_enemies(void)
 	{
 		Game.program_death(_("Could not load 2nd enemy datafile!"));
 	}
-	for (i = 0; i < enemies_n; i++)
+	for (size_t i = 0; i < enemy_fighters.size(); i++)
 	{
-		f = enemy_fighters[i];
+		KFighter* f = enemy_fighters[i];
 		fscanf(edat, "%s", strbuf);
 		fscanf(edat, "%d", &tmp);
 		for (p = 0; p < R_TOTAL_RES; p++)
@@ -750,31 +769,32 @@ static void load_enemies(void)
 		f->mrp = 100;
 	}
 	fclose(edat);
-	dump_en();
+	//dump_en();
 }
 
 /*! \brief Prepare an enemy for battle
  *
- * Fills out a supplied s_fighter structure with the default,
+ * Fills out a supplied KFighter structure with the default,
  * starting values for an enemy.
  * \author PH
  * \date 2003????
  * \param   who The numeric id of the enemy to make
- * \param   en Pointer to an s_fighter structure to initialize
+ * \param   en Pointer to a KFighter object to initialize
  * \returns the value of en, for convenience, or NULL if an error occurred.
  * \sa make_enemy_by_name()
  */
-static s_fighter* make_enemy(int who, s_fighter* en)
+KFighter* KqFork::EnemyC::make_enemy(size_t enemyFighterIndex, KFighter* en)
 {
-	if (enemy_fighters && who >= 0 && who < enemies_n)
+	KFighter* fighterPtr = nullptr;
+	if (KqFork::EnemyC::enemy_fighters.size() > 0 && enemyFighterIndex < KqFork::EnemyC::enemy_fighters.size())
 	{
-		memcpy(en, enemy_fighters[who], sizeof(s_fighter));
+		*en = *KqFork::EnemyC::enemy_fighters[enemyFighterIndex];
 		return en;
 	}
 	else
 	{
 		/* PH probably should call program_death() here? */
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -850,7 +870,7 @@ int select_encounter(int en, int etid) {
  * \param   skillNumber Which skill
  * \returns 1 for success, 0 otherwise
  */
-static int skill_setup(size_t fighterIndex, size_t skillNumber) {
+int KqFork::EnemyC::skill_setup(size_t fighterIndex, size_t skillNumber) {
 	if (fighterIndex >= NUM_FIGHTERS || skillNumber >= 8)
 	{
 		return 0;
@@ -888,7 +908,7 @@ static int skill_setup(size_t fighterIndex, size_t skillNumber) {
  * \param   z Which spell will be cast
  * \returns 0 if spell ineffective, 1 otherwise
  */
-static int spell_setup(int whom, int z) {
+int KqFork::EnemyC::spell_setup(int whom, int z) {
   int zst = NO_STS_CHECK, aux;
   size_t fighter_index;
 
@@ -964,24 +984,5 @@ static int spell_setup(int whom, int z) {
     return 0;
   } else {
     return 1;
-  }
-}
-
-/*! \brief Unload the data loaded by load_enemies()
- *
- * JB would have said 'duh' here! Not much explanation required.
- * \author PH
- * \date 2003????
- */
-void unload_enemies(void) {
-  int i;
-
-  if (enemy_fighters != NULL) {
-    for (i = 0; i < enemies_n; ++i) {
-      delete (enemy_fighters[i]->img);
-      free(enemy_fighters[i]);
-    }
-    free(enemy_fighters);
-    enemy_fighters = NULL;
   }
 }

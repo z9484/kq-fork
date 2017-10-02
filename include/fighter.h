@@ -10,7 +10,7 @@ class Raster;
 
 /** Fighter
  *
- * s_player is transformed into a s_fighter during combat.
+ * s_player is transformed into a KFighter during combat.
  * See enemy_init() for more information on the fields.
  */
 class KFighter

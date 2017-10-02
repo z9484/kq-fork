@@ -798,11 +798,9 @@ void hero_choose_action(size_t fighter_index) {
  * - Victory
  * - Arms forward
  *
- * Then an array to the right where each character is wielding
- * some different luminous green weapons.
- * These colours are replaced by the 'true' weapon colours as
- * determined by s_item::kol .
- * The shape is chosen by s_fighter::current_weapon_type
+ * Then an array to the right where each character is wielding some different luminous green weapons.
+ * These colors are replaced by the 'true' weapon colous as determined by s_item::kol.
+ * The shape is chosen by KFighter::current_weapon_type
  */
 void hero_init(void) {
   update_equipstats();

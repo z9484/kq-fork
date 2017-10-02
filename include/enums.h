@@ -159,10 +159,10 @@ enum eCombatSkill {
 };
 
 /*! \name Runes/Resistances */
-/* These are what your strengths and weaknesses to certain elements and
- * elemental attacks. This can be a negative value (lots of damage), 0
- * (neutral), or a positive value (very little damage).
- * See s_fighter.res[] as well as s_spell.elem.
+/* These are what your strengths and weaknesses to certain elements and elemental attacks.
+ * This can be a negative value (lots of damage), 0 (neutral), or a positive value (very
+ * little damage).
+ * See KFighter.res[] as well as s_spell.elem.
  */
 enum eResistance {
   R_EARTH = 0,

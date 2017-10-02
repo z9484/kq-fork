@@ -148,7 +148,8 @@ void draw_mainmenu(int swho) {
 void draw_playerstat(Raster *where, int player_index_in_party, int dx, int dy) {
   int j;
   players[player_index_in_party].portrait->maskedBlitTo(where, dx, dy);
-  print_font(where, dx + 48, dy, party[player_index_in_party].playerName, FNORMAL);
+  print_font(where, dx + 48, dy, party[player_index_in_party].playerName,
+             FNORMAL);
   draw_stsicon(where, 0, player_index_in_party, 8, dx + 48, dy + 8);
   print_font(where, dx + 48, dy + 16, _("LV"), FGOLD);
   sprintf(strbuf, "%d", party[player_index_in_party].lvl);
@@ -228,29 +229,29 @@ static void ilist_clear(ILIST *l) {
  *
  * \param   pr - Person leveling up
  */
-static void level_up(int pr)
-{
-	int a, b = 0;
-	float z;
-	int bxp, xpi;
-	s_fighter tmpf;
-	unsigned short *lup = party[pr].lup;
+static void level_up(int pr) {
+  int a, b = 0;
+  float z;
+  int bxp, xpi;
+  KFighter tmpf;
+  unsigned short *lup = party[pr].lup;
 
-	player2fighter(pr, &tmpf);
-	xpi = lup[0];
-	bxp = lup[1];
-	party[pr].lvl++;
-	a = party[pr].lvl + 1;
-	z = ((a / 3) + (xpi * (a / 20 + 1) - 1)) * (((a - 2) / 2) * (a - 1));
-	z += (bxp * (a / 20 + 1) * (a - 1));
-	party[pr].next += (int)z;
-	a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] + (tmpf.fighterStats[A_VIT] / 5);
-	party[pr].hp += a;
-	party[pr].mhp += a;
-	b = (kqrandom->random_range_exclusive(0, lup[3] / 2)) + lup[3];
-	b += (tmpf.fighterStats[A_INT] + tmpf.fighterStats[A_SAG]) / 25;
-	party[pr].mp += b;
-	party[pr].mmp += b;
+  player2fighter(pr, tmpf);
+  xpi = lup[0];
+  bxp = lup[1];
+  party[pr].lvl++;
+  a = party[pr].lvl + 1;
+  z = ((a / 3) + (xpi * (a / 20 + 1) - 1)) * (((a - 2) / 2) * (a - 1));
+  z += (bxp * (a / 20 + 1) * (a - 1));
+  party[pr].next += (int)z;
+  a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] +
+      (tmpf.fighterStats[A_VIT] / 5);
+  party[pr].hp += a;
+  party[pr].mhp += a;
+  b = (kqrandom->random_range_exclusive(0, lup[3] / 2)) + lup[3];
+  b += (tmpf.fighterStats[A_INT] + tmpf.fighterStats[A_SAG]) / 25;
+  party[pr].mp += b;
+  party[pr].mmp += b;
 }
 
 /*! \brief Main menu
@@ -341,170 +342,178 @@ void menu(void) {
  * PH modified 20030308 I didn't like the way this returned a structure by
  * value.
  *
- * \param   who - Index of player to convert
- * \returns tf (fighter structure)
+ * \param [in]  partyIndex - Index of player to convert
+ * \param [out] outFighter - Converted fighter if return is true. Unchanged if
+ * false.
  */
-s_fighter* player2fighter(int who, s_fighter* pf)
-{
-	s_fighter tf;
-	s_player& plr = party[who];
+bool player2fighter(size_t partyIndex, KFighter &outFighter) {
+  if (partyIndex >= MAXCHRS) {
+    return false;
+  }
+  s_player &playerInParty = party[partyIndex];
 
-	tf.imb_s = 0;
-	tf.imb_a = 0;
-	tf.imb[0] = 0;
-	tf.imb[1] = 0;
-	tf.fighterName = plr.playerName;
-	tf.fighterExperience = plr.xp;
-	tf.fighterLevel = plr.lvl;
-	tf.fighterHealth = plr.hp;
-	tf.fighterMaxHealth = plr.mhp;
-	tf.fighterMagic = plr.mp;
-	tf.fighterMaxMagic = plr.mmp;
-	for (int j = 0; j < 8; j++) {
-		tf.fighterSpellEffectStats[j] = plr.sts[j];
-	}
-	for (int j = 8; j < NUM_SPELL_TYPES; j++) {
-		tf.fighterSpellEffectStats[j] = 0;
-	}
-	for (int j = 0; j < NUM_ATTRIBUTES; j++) {
-		tf.fighterStats[j] = ((plr.lvl - 1) * plr.lup[j + 4] + plr.stats[j]) / 100;
-	}
-	for (int j = 0; j < R_TOTAL_RES; j++) {
-		tf.fighterResistance[j] = plr.res[j];
-	}
+  KFighter fighterFromPlayer;
+  fighterFromPlayer.imb_s = 0;
+  fighterFromPlayer.imb_a = 0;
+  fighterFromPlayer.imb[0] = 0;
+  fighterFromPlayer.imb[1] = 0;
+  fighterFromPlayer.fighterName = playerInParty.playerName;
+  fighterFromPlayer.fighterExperience = playerInParty.xp;
+  fighterFromPlayer.fighterLevel = playerInParty.lvl;
+  fighterFromPlayer.fighterHealth = playerInParty.hp;
+  fighterFromPlayer.fighterMaxHealth = playerInParty.mhp;
+  fighterFromPlayer.fighterMagic = playerInParty.mp;
+  fighterFromPlayer.fighterMaxMagic = playerInParty.mmp;
+  for (int j = 0; j < 8; j++) {
+    fighterFromPlayer.fighterSpellEffectStats[j] = playerInParty.sts[j];
+  }
+  for (int j = 8; j < NUM_SPELL_TYPES; j++) {
+    fighterFromPlayer.fighterSpellEffectStats[j] = 0;
+  }
+  for (int j = 0; j < NUM_ATTRIBUTES; j++) {
+    fighterFromPlayer.fighterStats[j] =
+        ((playerInParty.lvl - 1) * playerInParty.lup[j + 4] +
+         playerInParty.stats[j]) /
+        100;
+  }
+  for (int j = 0; j < R_TOTAL_RES; j++) {
+    fighterFromPlayer.fighterResistance[j] = playerInParty.res[j];
+  }
 
-	/* set weapon elemental power and imbuements for easy use in combat */
-	int weapon_index = plr.eqp[EQP_WEAPON];
-	tf.welem = items[weapon_index].elem;
-	if (items[weapon_index].use == USE_ATTACK) {
-		tf.imb_s = items[weapon_index].imb;
-		tf.imb_a = items[weapon_index].stats[A_ATT];
-	}
+  /* set weapon elemental power and imbuements for easy use in combat */
+  int weapon_index = playerInParty.eqp[EQP_WEAPON];
+  fighterFromPlayer.welem = items[weapon_index].elem;
+  if (items[weapon_index].use == USE_ATTACK) {
+    fighterFromPlayer.imb_s = items[weapon_index].imb;
+    fighterFromPlayer.imb_a = items[weapon_index].stats[A_ATT];
+  }
 
-	/* Set instants for equipment... these are imbuements that
-	 * take effect at the start of combat.  Technically, there
-	 * are only two imbue slots but there are five pieces of equipment
-	 * that can be imbued, so some item types get priority over
-	 * others... hence the need to run through each in this loop.
-	 */
-	for (int a = 0; a < 5; a++) {
-		static const int z[5] = {
-			EQP_SPECIAL,
-			EQP_ARMOR,
-			EQP_HELMET,
-			EQP_SHIELD,
-			EQP_HAND
-		};
-		int current_equipment_slot = plr.eqp[z[a]];
-		if (items[current_equipment_slot].use == USE_IMBUED) {
-			for (int b = 0; b < 2; b++) {
-				if (tf.imb[b] == 0) {
-					tf.imb[b] = items[current_equipment_slot].imb;
-					b = 2;
-				}
-			}
-		}
-	}
+  /* Set instants for equipment... these are imbuements that
+   * take effect at the start of combat.  Technically, there
+   * are only two imbue slots but there are five pieces of equipment
+   * that can be imbued, so some item types get priority over
+   * others... hence the need to run through each in this loop.
+   */
+  for (int a = 0; a < 5; a++) {
+    static const int z[5] = {EQP_SPECIAL, EQP_ARMOR, EQP_HELMET, EQP_SHIELD,
+                             EQP_HAND};
+    int current_equipment_slot = playerInParty.eqp[z[a]];
+    if (items[current_equipment_slot].use == USE_IMBUED) {
+      for (int b = 0; b < 2; b++) {
+        if (fighterFromPlayer.imb[b] == 0) {
+          fighterFromPlayer.imb[b] = items[current_equipment_slot].imb;
+          b = 2;
+        }
+      }
+    }
+  }
 
-	/*
-	 * Any weapon used by Ajathar gains the power of White if
-	 * it has no other power to begin with (the "welem" property
-	 * is 1-based: value of 0 means "no imbue".
-	 */
-	if (who == AJATHAR && tf.welem == 0) {
-		tf.welem = R_WHITE + 1;
-	}
-	for (int j = 0; j < NUM_EQUIPMENT; j++) {
-		int a = plr.eqp[j];
-		if (j == 0) {
-			if (a == 0) {
-				tf.bonus = 50;
-			}
-			else {
-				tf.bonus = items[a].bon;
-			}
-			if (items[a].icon == 1 || items[a].icon == 3 || items[a].icon == 21) {
-				tf.bstat = 1;
-			}
-			else {
-				tf.bstat = 0;
-			}
-			/* Set current weapon type. When the hero wields a weapon
-			 * in combat, it will look like this.
-			 * The colour comes from s_item::kol
-			 */
-			tf.current_weapon_type = items[a].icon;
-			if (tf.current_weapon_type == W_CHENDIGAL) {
-				tf.current_weapon_type = W_SWORD;
-			}
-		}
-		for (int b = 0; b < NUM_STATS; b++) {
-			if (b == A_SPI && who == TEMMIN) {
-				if (items[a].stats[A_SPI] > 0) {
-					tf.fighterStats[A_SPI] += items[a].stats[A_SPI];
-				}
-			}
-			else {
-				tf.fighterStats[b] += items[a].stats[b];
-			}
-		}
-		for (int b = 0; b < R_TOTAL_RES; b++) {
-			tf.fighterResistance[b] += items[a].res[b];
-		}
-	}
-	if (who == CORIN) {
-		tf.fighterResistance[R_EARTH] += tf.fighterLevel / 4;
-		tf.fighterResistance[R_FIRE] += tf.fighterLevel / 4;
-		tf.fighterResistance[R_AIR] += tf.fighterLevel / 4;
-		tf.fighterResistance[R_WATER] += tf.fighterLevel / 4;
-	}
-	if (plr.eqp[5] == I_AGRAN) {
-		int a = 0;
-		for (int j = 0; j < R_TOTAL_RES; j++) {
-			a += tf.fighterResistance[j];
-		}
-		int b = ((a * 10) / 16 + 5) / 10;
-		for (int j = 0; j < R_TOTAL_RES; j++) {
-			tf.fighterResistance[j] = b;
-		}
-	}
-	for (int j = 0; j < 8; j++) {
-		if (tf.fighterResistance[j] < -10) {
-			tf.fighterResistance[j] = -10;
-		}
-		if (tf.fighterResistance[j] > 20) {
-			tf.fighterResistance[j] = 20;
-		}
-	}
-	for (int j = 8; j < R_TOTAL_RES; j++) {
-		if (tf.fighterResistance[j] < 0) {
-			tf.fighterResistance[j] = 0;
-		}
-		if (tf.fighterResistance[j] > 10) {
-			tf.fighterResistance[j] = 10;
-		}
-	}
-	if (plr.eqp[5] == I_MANALOCKET) {
-		tf.mrp = plr.mrp / 2;
-	}
-	else {
-		tf.mrp = plr.mrp;
-	}
-	tf.fighterStats[A_HIT] += tf.fighterStats[A_STR] / 5;
-	tf.fighterStats[A_HIT] += tf.fighterStats[A_AGI] / 5;
-	tf.fighterStats[A_DEF] += tf.fighterStats[A_VIT] / 8;
-	tf.fighterStats[A_EVD] += tf.fighterStats[A_AGI] / 5;
-	tf.fighterStats[A_MAG] += (tf.fighterStats[A_INT] + tf.fighterStats[A_SAG]) / 20;
-	for (int j = 0; j < NUM_STATS; j++) {
-		if (tf.fighterStats[j] < 1) {
-			tf.fighterStats[j] = 1;
-		}
-	}
-	tf.fighterCanCriticalHit = 1;
-	tf.aux = 0;
-	tf.unl = 0;
-	memcpy(pf, &tf, sizeof(tf));
-	return pf;
+  /*
+   * Any weapon used by Ajathar gains the power of White if
+   * it has no other power to begin with (the "welem" property
+   * is 1-based: value of 0 means "no imbue".
+   */
+  if (partyIndex == AJATHAR && fighterFromPlayer.welem == 0) {
+    fighterFromPlayer.welem = R_WHITE + 1;
+  }
+  for (int j = 0; j < NUM_EQUIPMENT; j++) {
+    int a = playerInParty.eqp[j];
+    if (j == 0) {
+      if (a == 0) {
+        fighterFromPlayer.bonus = 50;
+      } else {
+        fighterFromPlayer.bonus = items[a].bon;
+      }
+      if (items[a].icon == 1 || items[a].icon == 3 || items[a].icon == 21) {
+        fighterFromPlayer.bstat = 1;
+      } else {
+        fighterFromPlayer.bstat = 0;
+      }
+      /* Set current weapon type. When the hero wields a weapon
+       * in combat, it will look like this.
+       * The colour comes from s_item::kol
+       */
+      fighterFromPlayer.current_weapon_type = items[a].icon;
+      if (fighterFromPlayer.current_weapon_type == W_CHENDIGAL) {
+        fighterFromPlayer.current_weapon_type = W_SWORD;
+      }
+    }
+    for (int b = 0; b < NUM_STATS; b++) {
+      if (b == A_SPI && partyIndex == TEMMIN) {
+        if (items[a].stats[A_SPI] > 0) {
+          fighterFromPlayer.fighterStats[A_SPI] += items[a].stats[A_SPI];
+        }
+      } else {
+        fighterFromPlayer.fighterStats[b] += items[a].stats[b];
+      }
+    }
+    for (int b = 0; b < R_TOTAL_RES; b++) {
+      fighterFromPlayer.fighterResistance[b] += items[a].res[b];
+    }
+  }
+  if (partyIndex == CORIN) {
+    fighterFromPlayer.fighterResistance[R_EARTH] +=
+        fighterFromPlayer.fighterLevel / 4;
+    fighterFromPlayer.fighterResistance[R_FIRE] +=
+        fighterFromPlayer.fighterLevel / 4;
+    fighterFromPlayer.fighterResistance[R_AIR] +=
+        fighterFromPlayer.fighterLevel / 4;
+    fighterFromPlayer.fighterResistance[R_WATER] +=
+        fighterFromPlayer.fighterLevel / 4;
+  }
+  if (playerInParty.eqp[5] == I_AGRAN) {
+    int a = 0;
+    for (int j = 0; j < R_TOTAL_RES; j++) {
+      a += fighterFromPlayer.fighterResistance[j];
+    }
+    int b = ((a * 10) / 16 + 5) / 10;
+    for (int j = 0; j < R_TOTAL_RES; j++) {
+      fighterFromPlayer.fighterResistance[j] = b;
+    }
+  }
+  for (int j = 0; j < 8; j++) {
+    if (fighterFromPlayer.fighterResistance[j] < -10) {
+      fighterFromPlayer.fighterResistance[j] = -10;
+    }
+    if (fighterFromPlayer.fighterResistance[j] > 20) {
+      fighterFromPlayer.fighterResistance[j] = 20;
+    }
+  }
+  for (int j = 8; j < R_TOTAL_RES; j++) {
+    if (fighterFromPlayer.fighterResistance[j] < 0) {
+      fighterFromPlayer.fighterResistance[j] = 0;
+    }
+    if (fighterFromPlayer.fighterResistance[j] > 10) {
+      fighterFromPlayer.fighterResistance[j] = 10;
+    }
+  }
+  if (playerInParty.eqp[5] == I_MANALOCKET) {
+    fighterFromPlayer.mrp = playerInParty.mrp / 2;
+  } else {
+    fighterFromPlayer.mrp = playerInParty.mrp;
+  }
+  fighterFromPlayer.fighterStats[A_HIT] +=
+      fighterFromPlayer.fighterStats[A_STR] / 5;
+  fighterFromPlayer.fighterStats[A_HIT] +=
+      fighterFromPlayer.fighterStats[A_AGI] / 5;
+  fighterFromPlayer.fighterStats[A_DEF] +=
+      fighterFromPlayer.fighterStats[A_VIT] / 8;
+  fighterFromPlayer.fighterStats[A_EVD] +=
+      fighterFromPlayer.fighterStats[A_AGI] / 5;
+  fighterFromPlayer.fighterStats[A_MAG] +=
+      (fighterFromPlayer.fighterStats[A_INT] +
+       fighterFromPlayer.fighterStats[A_SAG]) /
+      20;
+  for (int j = 0; j < NUM_STATS; j++) {
+    if (fighterFromPlayer.fighterStats[j] < 1) {
+      fighterFromPlayer.fighterStats[j] = 1;
+    }
+  }
+  fighterFromPlayer.fighterCanCriticalHit = 1;
+  fighterFromPlayer.aux = 0;
+  fighterFromPlayer.unl = 0;
+  outFighter = fighterFromPlayer;
+  return true;
 }
 
 /*! \brief Do the Quest Info menu
@@ -607,10 +616,14 @@ void revert_equipstats(void) {
     for (stats_index = 0; stats_index < 12; stats_index++) {
       party[pidx_index].sts[stats_index] = 0;
     }
-    party[pidx_index].sts[S_POISON] = fighter[fighter_index].fighterSpellEffectStats[S_POISON];
-    party[pidx_index].sts[S_BLIND] = fighter[fighter_index].fighterSpellEffectStats[S_BLIND];
-    party[pidx_index].sts[S_MUTE] = fighter[fighter_index].fighterSpellEffectStats[S_MUTE];
-    party[pidx_index].sts[S_DEAD] = fighter[fighter_index].fighterSpellEffectStats[S_DEAD];
+    party[pidx_index].sts[S_POISON] =
+        fighter[fighter_index].fighterSpellEffectStats[S_POISON];
+    party[pidx_index].sts[S_BLIND] =
+        fighter[fighter_index].fighterSpellEffectStats[S_BLIND];
+    party[pidx_index].sts[S_MUTE] =
+        fighter[fighter_index].fighterSpellEffectStats[S_MUTE];
+    party[pidx_index].sts[S_DEAD] =
+        fighter[fighter_index].fighterSpellEffectStats[S_DEAD];
     for (stats_index = 0; stats_index < 12; stats_index++) {
       if (stats_index != S_POISON && stats_index != S_BLIND &&
           stats_index != S_MUTE && stats_index != S_DEAD) {
@@ -653,11 +666,14 @@ void spec_items(void) {
     print_font(double_buffer, 108 + xofs, 20 + yofs, _("Special Items"), FGOLD);
     menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 19, BLUE);
     for (a = 0; a < num_items; a++) {
-      draw_icon(double_buffer, special_items[list_item_which[a]].icon, 88 + xofs, a * 8 + 44 + yofs);
-      print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs, special_items[list_item_which[a]].specialItemName, FNORMAL);
+      draw_icon(double_buffer, special_items[list_item_which[a]].icon,
+                88 + xofs, a * 8 + 44 + yofs);
+      print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs,
+                 special_items[list_item_which[a]].specialItemName, FNORMAL);
       if (list_item_quantity[a] > 1) {
         sprintf(strbuf, "^%d", list_item_quantity[a]);
-        print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf, FNORMAL);
+        print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf,
+                   FNORMAL);
       }
     }
     menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
@@ -746,7 +762,8 @@ static void status_screen(size_t fighter_index) {
       }
       print_font(double_buffer, 96 + xofs, stats_y + yofs, "$", FGOLD);
       sprintf(strbuf, "%d", fighter[fighter_index].fighterStats[stats_index]);
-      print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, stats_y + yofs, strbuf, FNORMAL);
+      print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs,
+                 stats_y + yofs, strbuf, FNORMAL);
     }
 
     menubox(double_buffer, 160 + xofs, 16 + yofs, 18, 16, BLUE);
@@ -772,14 +789,16 @@ static void status_screen(size_t fighter_index) {
                res_index * 8 + 31 + yofs, 3);
       if (fighter[fighter_index].fighterResistance[res_index] < 0) {
         bc = 18; // bright red, meaning WEAK defense
-        rect_fill_amount = abs(fighter[fighter_index].fighterResistance[res_index]);
+        rect_fill_amount =
+            abs(fighter[fighter_index].fighterResistance[res_index]);
       } else if (fighter[fighter_index].fighterResistance[res_index] >= 0 &&
                  fighter[fighter_index].fighterResistance[res_index] <= 10) {
         bc = 34; // bright green, meaning so-so defense
         rect_fill_amount = fighter[fighter_index].fighterResistance[res_index];
       } else if (fighter[fighter_index].fighterResistance[res_index] > 10) {
         bc = 50; // bright blue, meaning STRONG defense
-        rect_fill_amount = fighter[fighter_index].fighterResistance[res_index] - 10;
+        rect_fill_amount =
+            fighter[fighter_index].fighterResistance[res_index] - 10;
       }
 
       if (rect_fill_amount > 0) {
@@ -791,9 +810,14 @@ static void status_screen(size_t fighter_index) {
       }
     }
     menubox(double_buffer, 160 + xofs, 160 + yofs, 18, 6, BLUE);
-    for (equipment_index = 0; equipment_index < NUM_EQUIPMENT; equipment_index++) {
-      draw_icon(double_buffer, items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs, equipment_index * 8 + 168 + yofs);
-      print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].itemName, FNORMAL);
+    for (equipment_index = 0; equipment_index < NUM_EQUIPMENT;
+         equipment_index++) {
+      draw_icon(double_buffer,
+                items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs,
+                equipment_index * 8 + 168 + yofs);
+      print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs,
+                 items[party[pidx_index].eqp[equipment_index]].itemName,
+                 FNORMAL);
     }
     blit2screen(xofs, yofs);
     PlayerInput.readcontrols();
@@ -827,6 +851,6 @@ void update_equipstats(void) {
   size_t fighter_index;
 
   for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
-    player2fighter(pidx[fighter_index], &fighter[fighter_index]);
+    player2fighter(pidx[fighter_index], fighter[fighter_index]);
   }
 }
