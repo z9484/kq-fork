@@ -44,56 +44,57 @@ using std::string;
 
 class Raster;
 
-class KGame {
+class KGame
+{
 public:
-  KGame();
+	KGame();
 
-  void change_map(const string &, int, int, int, int);
-  void change_mapm(const string &, const string &, int, int);
-  void calc_viewport(int);
-  void zone_check(void);
-  void warp(int, int, int);
-  void do_check_animation(void);
-  void activate(void);
-  void unpress(void);
-  void wait_enter(void);
-  void klog(const char *);
-  void init_players(void);
-  void kwait(int);
-  NORETURN void program_death(const char *);
-  size_t in_party(ePIDX);
-  void wait_for_entity(size_t, size_t);
-  char *get_timer_event(void);
-  int add_timer_event(const char *, int);
-  void reset_timer_events(void);
-  void reset_world(void);
+	void change_map(const string &, int, int, int, int);
+	void change_mapm(const string &, const string &, int, int);
+	void calc_viewport(int);
+	void zone_check(void);
+	void warp(int, int, int);
+	void do_check_animation(void);
+	void activate(void);
+	void unpress(void);
+	void wait_enter(void);
+	void klog(const char *);
+	void init_players(void);
+	void kwait(int);
+	NORETURN void program_death(const char *);
+	size_t in_party(ePIDX);
+	void wait_for_entity(size_t, size_t);
+	char *get_timer_event(void);
+	int add_timer_event(const char *, int);
+	void reset_timer_events(void);
+	void reset_world(void);
 
-  /*! Yield processor to other tasks */
-  void kq_yield(void);
+	/*! Yield processor to other tasks */
+	void kq_yield(void);
 
-  Raster *alloc_bmp(int bitmap_width, int bitmap_height, const char *bitmap_name);
+	Raster *alloc_bmp(int bitmap_width, int bitmap_height, const char *bitmap_name);
 
-  void startup(void);
-  void deallocate_stuff(void);
+	void startup(void);
+	void deallocate_stuff(void);
 
-  void allocate_stuff(void);
-  void load_heroes(void);
-  void prepare_map(int, int, int, int);
-  void data_dump(void);
+	void allocate_stuff(void);
+	void load_heroes(void);
+	void prepare_map(int, int, int, int);
+	void data_dump(void);
 
-  string GetCurmap() { return m_curmap; }
-  void SetCurmap(string curmap) { m_curmap = curmap; }
+	string GetCurmap() { return m_curmap; }
+	void SetCurmap(string curmap) { m_curmap = curmap; }
 
-  bool IsOverworldMap() { return m_curmap == WORLD_MAP; }
+	bool IsOverworldMap() { return m_curmap == WORLD_MAP; }
 
 public:
-  const string WORLD_MAP;
-  /*! The number of frames per second */
-  const int32_t KQ_TICKS;
+	const string WORLD_MAP;
+	/*! The number of frames per second */
+	const int32_t KQ_TICKS;
 
 protected:
-  /*! Name of the current map */
-  string m_curmap;
+	/*! Name of the current map */
+	string m_curmap;
 };
 
 extern int vx, vy, mx, my, steps, lastm[PSIZE];

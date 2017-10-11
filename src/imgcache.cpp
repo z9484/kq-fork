@@ -11,17 +11,18 @@ using std::string;
 
 typedef std::unique_ptr<Raster> BITMAP_PTR;
 
-class image_cache {
+class image_cache
+{
 public:
-  Raster *get(const string &name);
-  void clear();
+	Raster *get(const string &name);
+	void clear();
 
 private:
-  std::map<string, BITMAP_PTR> cache;
+	std::map<string, BITMAP_PTR> cache;
 };
-// At the moment there is one global cache;
-// in the future multiple caches could be created
-// and destroyed.
+
+// At the moment there is one global cache; in the future multiple caches could be
+// created and destroyed.
 static image_cache global;
 
 static int palindex(uint8_t *ptr) {

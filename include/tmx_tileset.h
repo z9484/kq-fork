@@ -1,14 +1,17 @@
 #pragma once
 
-class KTmxTileset {
+class KTmxTileset
+{
 public:
-  KTmxTileset() : imagedata(nullptr) {}
+	KTmxTileset()
+		: imagedata(nullptr)
+	{}
 
-  uint32_t firstgid;
-  string name;
-  string sourceimage;
-  Raster *imagedata;
-  vector<KTmxAnimation> animations;
-  int width;
-  int height;
+	uint32_t firstgid;
+	string name;
+	string sourceimage;
+	Raster *imagedata;
+	vector<KTmxAnimation> animations;
+	int width;
+	int height;
 };
