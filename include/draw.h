@@ -1,24 +1,3 @@
-/*! \page License
-   KQ is Copyright (C) 2002 by Josh Bolduc
-
-   This file is part of KQ... a freeware RPG.
-
-   KQ is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 2, or (at your
-   option) any later version.
-
-   KQ is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with KQ; see the file COPYING.  If not, write to
-   the Free Software Foundation,
-       675 Mass Ave, Cambridge, MA 02139, USA.
-*/
-
 #pragma once
 
 #include <stdint.h>
@@ -37,48 +16,52 @@ class Raster;
 #define DBLUE 3
 #define DRED 6
 
-enum eFontColor {
-  FNORMAL = 0,
-  FRED = 1,
-  FYELLOW = 2,
-  FGREEN = 3,
-  FDARK = 4,
-  FGOLD = 5,
-  FBIG = 6,
+enum eFontColor
+{
+	FNORMAL = 0,
+	FRED = 1,
+	FYELLOW = 2,
+	FGREEN = 3,
+	FDARK = 4,
+	FGOLD = 5,
+	FBIG = 6,
 
-  NUM_FONT_COLORS // always last
+	NUM_FONT_COLORS // always last
 };
 
-enum eFont {
-  FONT_WHITE = 0,
-  FONT_RED,
-  FONT_YELLOW,
-  FONT_GREEN,
-  FONT_PURPLE,
-  FONT_DECIDE,
-  NUM_FONTS // always last
+enum eFont
+{
+	FONT_WHITE = 0,
+	FONT_RED,
+	FONT_YELLOW,
+	FONT_GREEN,
+	FONT_PURPLE,
+	FONT_DECIDE,
+	NUM_FONTS // always last
 };
 
-enum eBubbleStyle {
-  B_TEXT = 0,
-  B_THOUGHT = 1,
-  B_MESSAGE = 2,
+enum eBubbleStyle
+{
+	B_TEXT = 0,
+	B_THOUGHT = 1,
+	B_MESSAGE = 2,
 
-  NUM_BUBBLE_STYLES // always last
+	NUM_BUBBLE_STYLES // always last
 };
 
 /* These should correspond with the stems found in MISC.
  * Bubbles are either solid (for speech) or wavy (for thoughts).
  */
-enum eBubbleStemStyle {
-  STEM_UNDEFINED = -1,
+enum eBubbleStemStyle
+{
+	STEM_UNDEFINED = -1,
 
-  STEM_BOTTOM_RIGHT = 0,
-  STEM_BOTTOM_LEFT = 1,
-  STEM_TOP_RIGHT = 2,
-  STEM_TOP_LEFT = 3,
+	STEM_BOTTOM_RIGHT = 0,
+	STEM_BOTTOM_LEFT = 1,
+	STEM_TOP_RIGHT = 2,
+	STEM_TOP_LEFT = 3,
 
-  NUM_BUBBLE_STEMS // always last
+	NUM_BUBBLE_STEMS // always last
 };
 
 /*  draw global functions  */
