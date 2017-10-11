@@ -1586,7 +1586,7 @@ static void special_spells(size_t caster_fighter_index, size_t spell_number)
 			drawmap();
 			blit2screen(xofs, yofs);
 			do_transition(TRANS_FADE_IN, 2);
-			combatend = 2;
+			combatend = ESCAPED_COMBAT;
 		}
 		else
 		{

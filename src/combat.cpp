@@ -36,7 +36,7 @@
 
 /*! \name global variables  */
 
-uint32_t combatend;
+ECombatEnd combatend;
 int IsEtherEffectActive[NUM_FIGHTERS];
 int curx;
 int cury;
@@ -608,7 +608,7 @@ static void do_action(size_t fighter_index)
 	IsEtherEffectActive[fighter_index] = 0;
 	if (check_end() == 1)
 	{
-		combatend = 1;
+		combatend = EVERYONE_DEFEATED;
 	}
 }
 
@@ -691,7 +691,7 @@ static int do_combat(char* bg, char* mus, int is_rnd)
 	curx = 0;
 	cury = 0;
 	vspell = 0;
-	combatend = 0;
+	combatend = STILL_IN_COMBAT;
 
 	/*  RB: execute combat  */
 	do_round();
@@ -723,7 +723,7 @@ static void do_round(void)
 	size_t fighter_index;
 
 	timer_count = 0;
-	while (!combatend)
+	while (combatend == STILL_IN_COMBAT)
 	{
 		if (timer_count >= 10)
 		{
@@ -880,7 +880,7 @@ static void do_round(void)
 					bspeed[fighter_index] = 0;
 				}
 
-				if (combatend)
+				if (combatend != STILL_IN_COMBAT)
 				{
 					return;
 				}

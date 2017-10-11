@@ -1328,5 +1328,5 @@ static void hero_run(void)
 		}
 	}
 	revert_equipstats();
-	combatend = 2;
+	combatend = ESCAPED_COMBAT;
 }

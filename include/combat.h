@@ -29,7 +29,13 @@ void multi_fight(size_t);
 void fkill(size_t);
 
 /*!  global combat related variables  */
-extern uint32_t combatend;
+enum ECombatEnd
+{
+	STILL_IN_COMBAT = 0,
+	EVERYONE_DEFEATED = 1,
+	ESCAPED_COMBAT = 2,
+};
+extern ECombatEnd combatend;
 extern int IsEtherEffectActive[NUM_FIGHTERS];
 extern int curx;
 extern int cury;
