@@ -691,8 +691,8 @@ static int hero_attack(int whom)
 		return 0;
 	}
 	fighter[whom].fighterAttackSpriteFrame = 6;
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	battle_render(0, 0, 0);
 	blit2screen(0, 0);
 	kq_wait(150);

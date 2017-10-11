@@ -58,8 +58,8 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 		start_fighter_index = target_fighter_index;
 		num_targets = 1;
 	}
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	play_effect(24, 128);
 	battle_render(0, 0, 0);
 	fullblit(double_buffer, back);
@@ -147,8 +147,8 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 		start_fighter_index = target_fighter_index;
 		num_fighters = 1;
 	}
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	battle_render(0, 0, 0);
 	fullblit(double_buffer, back);
 
@@ -264,8 +264,8 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
 			fighter[fighter_index].fighterAttackSpriteFrame = 5;
 		}
 	}
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	battle_render(0, 0, 0);
 	fullblit(double_buffer, back);
 	if (multiple_target == 0)
@@ -354,8 +354,8 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color)
 			}
 		}
 	}
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	fighter[caster_fighter_index].fighterAttackSpriteFrame = 2;
 	display_attack_string = true;
 	battle_render(0, 0, 0);
@@ -415,8 +415,8 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
 		start_fighter_index = PSIZE;
 		num_fighters = num_enemies;
 	}
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	display_attack_string = true;
 	battle_render(0, 0, 0);
 	display_attack_string = false;
@@ -501,8 +501,8 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
 		start_fighter_index = target_fighter_index;
 		num_fighers = 1;
 	}
-	curx = -1;
-	cury = -1;
+	fighterImageDatafileX = -1;
+	fighterImageDatafileY = -1;
 	display_attack_string = true;
 	battle_render(0, 0, 0);
 	display_attack_string = false;

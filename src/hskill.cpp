@@ -559,8 +559,8 @@ int skill_use(size_t attack_fighter_index)
 		display_attack_string = true;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 6;
-		curx = -1;
-		cury = -1;
+		fighterImageDatafileX = -1;
+		fighterImageDatafileY = -1;
 		battle_render(0, 0, 0);
 		blit2screen(0, 0);
 		kq_wait(150);
@@ -577,8 +577,8 @@ int skill_use(size_t attack_fighter_index)
 			draw_castersprite(
 			    attack_fighter_index,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
-			curx = -1;
-			cury = -1;
+			fighterImageDatafileX = -1;
+			fighterImageDatafileY = -1;
 			play_effect(22, 128);
 			convert_cframes(
 			    attack_fighter_index,
@@ -691,8 +691,8 @@ int skill_use(size_t attack_fighter_index)
 				}
 			}
 			death_animation(PSIZE, 1);
-			curx = -1;
-			cury = -1;
+			fighterImageDatafileX = -1;
+			fighterImageDatafileY = -1;
 			battle_render(attack_fighter_index, attack_fighter_index, 0);
 		}
 		else

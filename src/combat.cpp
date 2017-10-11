@@ -38,8 +38,8 @@
 
 ECombatEnd combatend;
 bool bIsEtherEffectActive[NUM_FIGHTERS];
-int curx;
-int cury;
+int fighterImageDatafileX;
+int fighterImageDatafileY;
 uint32_t num_enemies;
 int ta[NUM_FIGHTERS];
 int deffect[NUM_FIGHTERS];
@@ -282,25 +282,25 @@ void battle_render(signed int plyr, size_t hl, int sall)
 	{
 		current_fighter_index = plyr - 1;
 		curw = fighter[current_fighter_index].fighterImageDatafileWidth;
-		curx = fighter[current_fighter_index].fighterImageDatafileX;
-		cury = fighter[current_fighter_index].fighterImageDatafileY;
+		fighterImageDatafileX = fighter[current_fighter_index].fighterImageDatafileX;
+		fighterImageDatafileY = fighter[current_fighter_index].fighterImageDatafileY;
 	}
 	else
 	{
-		curx = -1;
-		cury = -1;
+		fighterImageDatafileX = -1;
+		fighterImageDatafileY = -1;
 	}
 
 	clear_bitmap(double_buffer);
 	blit(backart, double_buffer, 0, 0, 0, 0, KQ_SCREEN_W, KQ_SCREEN_H);
 
-	if ((sall == 0) && (curx > -1) && (cury > -1))
+	if ((sall == 0) && (fighterImageDatafileX > -1) && (fighterImageDatafileY > -1))
 	{
-		draw_sprite(double_buffer, bptr, curx + (curw / 2) - 8, cury - 8);
+		draw_sprite(double_buffer, bptr, fighterImageDatafileX + (curw / 2) - 8, fighterImageDatafileY - 8);
 		if (current_fighter_index >= PSIZE)
 		{
 			current_fighter_index = plyr - 1;
-			t = curx + (curw / 2);
+			t = fighterImageDatafileX + (curw / 2);
 			t -= (fighter[current_fighter_index].fighterName.length() * 4);
 			z = (fighter[current_fighter_index].fighterImageDatafileY < 32
 			     ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].fighterImageDatafileHeight
@@ -688,8 +688,8 @@ static int do_combat(char* bg, char* mus, int is_rnd)
 
 	snap_togrid();
 	roll_initiative();
-	curx = 0;
-	cury = 0;
+	fighterImageDatafileX = 0;
+	fighterImageDatafileY = 0;
 	vspell = 0;
 	combatend = STILL_IN_COMBAT;
 

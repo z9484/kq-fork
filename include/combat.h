@@ -37,8 +37,8 @@ enum ECombatEnd
 };
 extern ECombatEnd combatend;
 extern bool bIsEtherEffectActive[NUM_FIGHTERS];
-extern int curx;
-extern int cury;
+extern int fighterImageDatafileX;
+extern int fighterImageDatafileY;
 extern uint32_t num_enemies;
 extern int ta[NUM_FIGHTERS];
 extern int deffect[NUM_FIGHTERS];
