@@ -45,14 +45,16 @@ bool player2fighter(size_t partyIndex, KFighter& pf);
  * \author PH
  * \date 20050429
  */
-typedef struct info_item {
-  char *key;  /*!< The identifying title */
-  char *text; /*!< The actual info */
-} IITEM;
+struct info_item
+{
+	char *key;  /*!< The identifying title */
+	char *text; /*!< The actual info */
+};
 
 /* Dynamic array for the hints/reminders */
-typedef struct info_list {
-  IITEM *root;  /*!< The array of active info items */
-  int count;    /*!< The number of items currently in the array */
-  int capacity; /*!< The total capacity of the array */
-} ILIST;
+struct info_list
+{
+	info_item *root;  /*!< The array of active info items */
+	int count;    /*!< The number of items currently in the array */
+	int capacity; /*!< The total capacity of the array */
+};
