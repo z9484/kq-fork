@@ -146,7 +146,7 @@ const string kqres(eDirectories dir, string file)
 {
 	HINSTANCE SHFolder;
 	SHGETFOLDERPATH SHGetFolderPath;
-	char* home;
+	char* home = nullptr;
 
 	if (!init_path)
 	{

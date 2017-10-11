@@ -494,7 +494,7 @@ KTmxTileset KTiledMap::load_tmx_tileset(XMLElement const* el)
 {
 	KTmxTileset tileset;
 	tileset.firstgid = el->IntAttribute("firstgid");
-	XMLElement const* tsx;
+	XMLElement const* tsx = nullptr;
 	XMLDocument sourcedoc;
 	auto source = el->Attribute("source");
 	if (source)
@@ -717,24 +717,24 @@ const KTmxTileset& tmx_map::find_tileset(const string& name) const
 }
 
 /*! \brief BASE64 scanner.
- * This iterates through some BASE64 characters, returning
- * each 6-bit segment in turn.
+ * This iterates through some BASE64 characters, returning each 6-bit segment in turn.
  * If it gets an '=' character it returns PAD.
  * It ignores whitespace.
- * Any other characters return ERROR and set the
- * error bit.
- * When it reaches the end of the string it returns
- * PAD forever
+ * Any other characters return ERROR and set the error bit.
+ * When it reaches the end of the string it returns PAD forever
  */
 struct b64
 {
-	b64(const char* _ptr) : ptr(_ptr), errbit(false)
+	b64(const char* _ptr)
+		: ptr(_ptr)
+		, errbit(false)
 	{
 		while (isspace(*ptr))
 		{
 			++ptr;
 		}
 	}
+
 	uint8_t operator()()
 	{
 		if (ptr)
@@ -764,28 +764,34 @@ struct b64
 			return PAD;
 		}
 	}
+
 	bool error() const
 	{
 		return errbit;
 	}
+
 	void seterror()
 	{
 		errbit = true;
 	}
+
 	operator bool() const
 	{
 		return ptr != nullptr;
 	}
+
 	static const char* validchars;
 	static const uint8_t PAD = 0x40;
 	static const uint8_t ERROR = 0xff;
 	const char* ptr;
 	bool errbit;
 };
+
 const char* b64::validchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                               "abcdefghijklmnopqrstuvwxyz"
                               "0123456789"
                               "+/=";
+
 /// Return true if a byte is a valid 6-bit block.
 static bool valid(uint8_t v)
 {

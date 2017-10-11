@@ -36,4 +36,4 @@ void KQRandom::kq_set_random_state(const std::string &new_state)
 // implementations of default.
 static std::minstd_rand engine;
 
-KQRandom* kqrandom;
+KQRandom* kqrandom = nullptr;

@@ -46,7 +46,7 @@ int deffect[NUM_FIGHTERS];
 int rcount;
 uint8_t vspell;
 uint8_t ms;
-Raster* backart;
+Raster* backart = nullptr;
 
 /* Internal variables */
 static int curw;

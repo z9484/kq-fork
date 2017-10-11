@@ -272,7 +272,7 @@ static eMiniMenu mini_menu(int omask)
  */
 static void party_add(ePIDX id, int lead)
 {
-	KQEntity* t;
+	KQEntity* t = nullptr;
 
 	if (numchrs < MAXCHRS)
 	{

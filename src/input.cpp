@@ -24,7 +24,7 @@ KPlayerInput::~KPlayerInput()
 */
 void KPlayerInput::readcontrols()
 {
-	JOYSTICK_INFO* stk;
+	JOYSTICK_INFO* stk = nullptr;
 
 	Music.poll_music();
 

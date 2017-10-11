@@ -441,14 +441,14 @@ static const struct luaL_Reg lrs[] =
 };
 
 /*! \brief Maps a text field name to an identifier */
-static struct s_field
+struct s_field
 {
 	const char* name;
 	int id;
-} // no semi-colon!!
+};
 
 // *INDENT-OFF*
-fields[] = {
+static s_field fields[] = {
 	{ "name", 0 },    // Name of entity
 	{ "xp", 1 },      // Entity experience
 	{ "next", 2 },    // Experience left for next level-up
@@ -485,7 +485,7 @@ fields[] = {
 
 static int g_keys[8];
 static int tmx, tmy, tmvx, tmvy;
-static lua_State* theL;
+static lua_State* theL = nullptr;
 
 /* These variables handle the map->map transition. */
 static char tmap_name[16];
@@ -908,11 +908,10 @@ static shared_ptr<KMarker> KQ_find_marker(string name, int required)
  */
 static int get_field(const char* n)
 {
-	struct s_field* ans;
-	struct s_field st;
+	s_field st;
 
 	st.name = n;
-	ans = (struct s_field*)bsearch(&st, fields, sizeof(fields) / sizeof(*fields), sizeof(struct s_field), fieldcmp);
+	s_field* ans = (struct s_field*)bsearch(&st, fields, sizeof(fields) / sizeof(*fields), sizeof(struct s_field), fieldcmp);
 	return (ans ? ans->id : -1);
 }
 
@@ -1207,8 +1206,8 @@ static int KQ_char_getter(lua_State* L)
 {
 	signed int prop;
 	int top;
-	s_player* pl;
-	KQEntity* ent;
+	s_player* pl = nullptr;
+	KQEntity* ent = nullptr;
 
 	prop = get_field(lua_tostring(L, 2));
 	if (prop == -1)
@@ -1334,8 +1333,8 @@ static int KQ_char_getter(lua_State* L)
 static int KQ_char_setter(lua_State* L)
 {
 	int prop;
-	s_player* pl;
-	KQEntity* ent;
+	s_player* pl = nullptr;
+	KQEntity* ent = nullptr;
 
 	prop = get_field(lua_tostring(L, 2));
 	if (prop == -1)
@@ -4196,7 +4195,7 @@ static int KQ_party_setter(lua_State* L)
 		}
 		else if (lua_istable(L, 3))
 		{
-			s_player* tt;
+			s_player* tt = nullptr;
 
 			lua_pushstring(L, LUA_PLR_KEY);
 			lua_rawget(L, -2);
@@ -4358,7 +4357,7 @@ static int real_entity_num(lua_State* L, int pos)
 	}
 	if (lua_istable(L, pos))
 	{
-		KQEntity* ent;
+		KQEntity* ent = nullptr;
 
 		lua_pushstring(L, LUA_ENT_KEY);
 		lua_rawget(L, pos);

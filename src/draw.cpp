@@ -362,8 +362,8 @@ static void draw_char(int xw, int yw)
 	int x, y;
 	signed int horiz, vert;
 	unsigned int here, there;
-	Raster** sprite_base;
-	Raster* spr = NULL;
+	Raster** sprite_base = nullptr;
+	Raster* spr = nullptr;
 	size_t follower_fighter_index;
 	size_t fighter_index;
 	size_t fighter_frame, fighter_frame_add;
@@ -976,7 +976,7 @@ void draw_stsicon(Raster* where, int cc, int who, int inum, int icx, int icy)
 static void draw_textbox(int bstyle)
 {
 	int wid, hgt, a;
-	Raster* stem;
+	Raster* stem = nullptr;
 
 	wid = gbbw * 8 + 16;
 	hgt = gbbh * 12 + 16;
@@ -1234,7 +1234,7 @@ void menubox(Raster* where, int x, int y, int w, int h, int c)
 void message(const char* m, int icn, int delay, int x_m, int y_m)
 {
 	char msg[1024];
-	const char* s;
+	const char* s = nullptr;
 	int i, num_lines, max_len, len;
 
 	/* Do the $0 replacement stuff */
@@ -1313,8 +1313,9 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 const char* parse_string(const char* the_string)
 {
 	static char strbuf[1024];
-	const char* ap;
-	char* bp, *name;
+	const char* ap = nullptr;
+	char* bp = nullptr;
+	char* name = nullptr;
 
 	name = NULL;
 	memset(strbuf, 0, sizeof(strbuf));

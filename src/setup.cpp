@@ -778,7 +778,7 @@ static void parse_allegro_setup(void)
  */
 static void parse_jb_setup(void)
 {
-	FILE* s;
+	FILE* s = nullptr;
 	int dab = 0;
 
 	/* Default key assignments */
@@ -943,7 +943,7 @@ void play_effect(int efc, int panning)
 	static const int bx[8] = {-1, 0, 1, 0, -1, 0, 1, 0};
 	static const int by[8] = {-1, 0, 1, 0, 1, 0, -1, 0};
 	static const int sc[] = {1, 2, 3, 5, 3, 3, 3, 2, 1};
-	SAMPLE* samp;
+	SAMPLE* samp = nullptr;
 	PALETTE whiteout, old;
 
 	/* Patch provided by mattrope: */

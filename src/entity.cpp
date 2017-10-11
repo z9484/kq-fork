@@ -755,10 +755,7 @@ static void player_move(void)
  */
 void process_entities(void)
 {
-	t_entity i;
-	const char* t_evt;
-
-	for (i = 0; i < MAX_ENTITIES; i++)
+	for (t_entity i = 0; i < MAX_ENTITIES; i++)
 	{
 		if (g_ent[i].active == 1)
 		{
@@ -767,7 +764,7 @@ void process_entities(void)
 	}
 
 	/* Do timers */
-	t_evt = Game.get_timer_event();
+	char* t_evt = Game.get_timer_event();
 	if (t_evt)
 	{
 		do_timefunc(t_evt);

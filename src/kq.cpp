@@ -76,7 +76,7 @@ Raster* double_buffer, *fx_buffer, *map_icons[MAX_TILES], *back, *tc, *tc2,
         *missbmp, *noway, *upptr, *dnptr, *shadow[MAX_SHADOWS], *kfonts;
 
 #ifdef DEBUGMODE
-Raster* obj_mesh;
+Raster* obj_mesh = nullptr;
 #endif
 
 /*! Layers in the map */
@@ -88,9 +88,6 @@ uint8_t* z_seg = NULL, *s_seg = NULL, *o_seg = NULL;
 /*! keeps track of tasks completed and treasure chests opened */
 uint8_t progress[SIZE_PROGRESS];
 uint8_t treasure[SIZE_TREASURE];
-
-/*! keeps track of when shops were last visited */
-uint16_t shop_time[NUMSHOPS];
 
 /*! keeps track of non-combat spell statuses (currently only repulse) */
 uint8_t save_spells[SIZE_SAVE_SPELL];
@@ -750,39 +747,34 @@ void KGame::do_check_animation(void)
  */
 void KGame::data_dump(void)
 {
-	FILE* ff;
-	int a;
-
-	if (debugging > 0)
+	if (debugging == 0)
 	{
-		ff = fopen("treasure.log", "w");
-		if (!ff)
-		{
-			program_death(_("Could not open treasure.log!"));
-		}
-		for (a = 0; a < SIZE_TREASURE; a++)
-		{
-			fprintf(ff, "%d = %d\n", a, treasure[a]);
-		}
-		fclose(ff);
-
-		ff = fopen("progress.log", "w");
-		if (!ff)
-		{
-			program_death(_("Could not open progress.log!"));
-		}
-		for (a = 0; a < SIZE_PROGRESS; a++)
-		{
-			fprintf(ff, "%d: %s = %d\n", progresses[a].num_progress,
-			        progresses[a].progressName, progress[a]);
-		}
-		fprintf(ff, "\n");
-		for (a = 0; a < NUMSHOPS; a++)
-		{
-			fprintf(ff, "shop-%d = %d\n", a, shop_time[a]);
-		}
-		fclose(ff);
+		return;
 	}
+
+	FILE* ff = fopen("treasure.log", "w");
+	if (!ff)
+	{
+		program_death(_("Could not open treasure.log!"));
+		return;
+	}
+	for (size_t a = 0; a < SIZE_TREASURE; a++)
+	{
+		fprintf(ff, "%d = %d\n", (int)a, treasure[a]);
+	}
+	fclose(ff);
+
+	ff = fopen("progress.log", "w");
+	if (!ff)
+	{
+		program_death(_("Could not open progress.log!"));
+		return;
+	}
+	for (size_t a = 0; a < SIZE_PROGRESS; a++)
+	{
+		fprintf(ff, "%d: %s = %d\n", progresses[a].num_progress, progresses[a].progressName, progress[a]);
+	}
+	fclose(ff);
 }
 #endif
 
@@ -939,7 +931,7 @@ char* KGame::get_timer_event(void)
 	int now = ksec;
 	int i;
 	int next = INT_MAX;
-	struct timer_event* t;
+	timer_event* t = nullptr;
 
 	if (now < next_event_time)
 	{
@@ -1240,7 +1232,7 @@ END_OF_FUNCTION(my_counter)
  */
 void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 {
-	Raster* pcxb;
+	Raster* pcxb = nullptr;
 	unsigned int i;
 	size_t mapsize;
 	unsigned int o;
