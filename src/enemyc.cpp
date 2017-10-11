@@ -118,7 +118,7 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 		if (kqrandom->random_range_exclusive(0, 4) == 0)
 		{
 			fighter[target_fighter_index].fighterWillDefend = 1;
-			IsEtherEffectActive[target_fighter_index] = 0;
+			bIsEtherEffectActive[target_fighter_index] = false;
 			return;
 		}
 	}
@@ -140,7 +140,7 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 	if (b < 0)
 	{
 		fighter[target_fighter_index].fighterWillDefend = 1;
-		IsEtherEffectActive[target_fighter_index] = 0;
+		bIsEtherEffectActive[target_fighter_index] = false;
 		return;
 	}
 	if ((uint32_t)b < PSIZE && numchrs > 1)
@@ -163,7 +163,7 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 		}
 	}
 	fight(target_fighter_index, b, 0);
-	IsEtherEffectActive[target_fighter_index] = 0;
+	bIsEtherEffectActive[target_fighter_index] = false;
 }
 
 /*! \brief Check if enemy can cast this spell
@@ -218,13 +218,13 @@ void enemy_charmaction(size_t fighter_index)
 {
 	int a;
 
-	if (IsEtherEffectActive[fighter_index] == 0)
+	if (!bIsEtherEffectActive[fighter_index])
 	{
 		return;
 	}
 	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0)
 	{
-		IsEtherEffectActive[fighter_index] = 0;
+		bIsEtherEffectActive[fighter_index] = false;
 		return;
 	}
 	for (a = 0; a < 5; a++)
@@ -237,7 +237,7 @@ void enemy_charmaction(size_t fighter_index)
 	a = kqrandom->random_range_exclusive(0, 4);
 	if (a == 0)
 	{
-		IsEtherEffectActive[fighter_index] = 0;
+		bIsEtherEffectActive[fighter_index] = false;
 		return;
 	}
 	if (a == 1)
@@ -263,13 +263,13 @@ void enemy_chooseaction(size_t fighter_index)
 	int ap;
 	size_t a;
 
-	if (IsEtherEffectActive[fighter_index] == 0)
+	if (!bIsEtherEffectActive[fighter_index])
 	{
 		return;
 	}
 	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0)
 	{
-		IsEtherEffectActive[fighter_index] = 0;
+		bIsEtherEffectActive[fighter_index] = false;
 		return;
 	}
 
@@ -285,7 +285,7 @@ void enemy_chooseaction(size_t fighter_index)
 	if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0)
 	{
 		KqFork::EnemyC::enemy_curecheck(fighter_index);
-		if (IsEtherEffectActive[fighter_index] == 0)
+		if (!bIsEtherEffectActive[fighter_index])
 		{
 			return;
 		}
@@ -299,7 +299,7 @@ void enemy_chooseaction(size_t fighter_index)
 			if (fighter[fighter_index].fighterCombatSkill[a] >= 100 && fighter[fighter_index].fighterCombatSkill[a] < 254)
 			{
 				KqFork::EnemyC::enemy_skillcheck(fighter_index, a);
-				if (IsEtherEffectActive[fighter_index] == 0)
+				if (!bIsEtherEffectActive[fighter_index])
 				{
 					return;
 				}
@@ -311,7 +311,7 @@ void enemy_chooseaction(size_t fighter_index)
 			if (fighter[fighter_index].fighterCombatSkill[a] > 0 && fighter[fighter_index].fighterCombatSkill[a] < 100 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0)
 			{
 				KqFork::EnemyC::enemy_spellcheck(fighter_index, a);
-				if (IsEtherEffectActive[fighter_index] == 0)
+				if (!bIsEtherEffectActive[fighter_index])
 				{
 					return;
 				}
@@ -323,7 +323,7 @@ void enemy_chooseaction(size_t fighter_index)
 		}
 	}
 	KqFork::EnemyC::enemy_attack(fighter_index);
-	IsEtherEffectActive[fighter_index] = 0;
+	bIsEtherEffectActive[fighter_index] = false;
 }
 
 /*! \brief Use cure spell
@@ -362,7 +362,7 @@ void KqFork::EnemyC::enemy_curecheck(int w)
 		fighter[w].csmem = a;
 		fighter[w].ctmem = w;
 		combat_spell(w, 0);
-		IsEtherEffectActive[w] = 0;
+		bIsEtherEffectActive[w] = false;
 	}
 }
 
@@ -444,7 +444,7 @@ void KqFork::EnemyC::enemy_skillcheck(size_t fighterIndex, size_t skillNumber)
 		if (fighter[fighterIndex].atrack[skillNumber] == 0 && KqFork::EnemyC::skill_setup(fighterIndex, skillNumber) == 1)
 		{
 			combat_skill(fighterIndex);
-			IsEtherEffectActive[fighterIndex] = 0;
+			bIsEtherEffectActive[fighterIndex] = false;
 		}
 	}
 }
@@ -614,7 +614,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 	if (KqFork::EnemyC::spell_setup(attack_fighter_index, fighterCombatSkill) == 1)
 	{
 		combat_spell(attack_fighter_index, 0);
-		IsEtherEffectActive[attack_fighter_index] = 0;
+		bIsEtherEffectActive[attack_fighter_index] = false;
 	}
 }
 

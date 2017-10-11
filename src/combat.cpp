@@ -37,7 +37,7 @@
 /*! \name global variables  */
 
 ECombatEnd combatend;
-int IsEtherEffectActive[NUM_FIGHTERS];
+bool bIsEtherEffectActive[NUM_FIGHTERS];
 int curx;
 int cury;
 uint32_t num_enemies;
@@ -569,7 +569,7 @@ static void do_action(size_t fighter_index)
 	{
 		if (kqrandom->random_range_exclusive(0, 100) < spell_type_status * 5)
 		{
-			IsEtherEffectActive[fighter_index] = 0;
+			bIsEtherEffectActive[fighter_index] = false;
 		}
 	}
 
@@ -589,7 +589,7 @@ static void do_action(size_t fighter_index)
 		}
 	}
 
-	if (IsEtherEffectActive[fighter_index] != 0)
+	if (bIsEtherEffectActive[fighter_index])
 	{
 		revert_cframes(fighter_index, 0);
 		if (fighter_index < PSIZE)
@@ -605,7 +605,7 @@ static void do_action(size_t fighter_index)
 		}
 	}
 
-	IsEtherEffectActive[fighter_index] = 0;
+	bIsEtherEffectActive[fighter_index] = false;
 	if (check_end() == 1)
 	{
 		combatend = EVERYONE_DEFEATED;
@@ -773,8 +773,8 @@ static void do_round(void)
 						adjust_hp(fighter_index, a);
 					}
 
-					/*  RB: the character has ether actived?  */
-					IsEtherEffectActive[fighter_index] = 1;
+					/*  RB: the character has ether active?  */
+					bIsEtherEffectActive[fighter_index] = true;
 					if ((fighter[fighter_index].fighterSpellEffectStats[S_ETHER] > 0) && (rcount == 0))
 					{
 						fighter[fighter_index].fighterSpellEffectStats[S_ETHER]--;
@@ -793,7 +793,7 @@ static void do_round(void)
 							fighter[fighter_index].fighterSpellEffectStats[S_STOP]--;
 						}
 
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 					}
 
 					/*  RB: the character is sleeping?  */
@@ -809,7 +809,7 @@ static void do_round(void)
 							fighter[fighter_index].fighterSpellEffectStats[S_SLEEP]--;
 						}
 
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 					}
 
 					/*  RB: the character is petrified?  */
@@ -825,7 +825,7 @@ static void do_round(void)
 							fighter[fighter_index].fighterSpellEffectStats[S_STONE]--;
 						}
 
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 					}
 
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0)
@@ -836,10 +836,10 @@ static void do_round(void)
 						}
 
 						bspeed[fighter_index] = 0;
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 					}
 
-					if (IsEtherEffectActive[fighter_index] > 0)
+					if (bIsEtherEffectActive[fighter_index])
 					{
 						if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 0)
 						{
@@ -860,7 +860,7 @@ static void do_round(void)
 				}
 				else
 				{
-					IsEtherEffectActive[fighter_index] = 0;
+					bIsEtherEffectActive[fighter_index] = false;
 				}
 			}
 
@@ -871,12 +871,12 @@ static void do_round(void)
 			for (fighter_index = 0; fighter_index < (PSIZE + num_enemies);
 			        fighter_index++)
 			{
-				if ((bspeed[fighter_index] >= ROUND_MAX) && (IsEtherEffectActive[fighter_index] > 0))
+				if ((bspeed[fighter_index] >= ROUND_MAX) && (bIsEtherEffectActive[fighter_index]))
 				{
 					do_action(fighter_index);
 					fighter[fighter_index].ctmem = 0;
 					fighter[fighter_index].csmem = 0;
-					IsEtherEffectActive[fighter_index] = 1;
+					bIsEtherEffectActive[fighter_index] = true;
 					bspeed[fighter_index] = 0;
 				}
 
@@ -1181,7 +1181,7 @@ void fkill(size_t fighter_index)
 	}
 
 	deffect[fighter_index] = 1;
-	IsEtherEffectActive[fighter_index] = 0;
+	bIsEtherEffectActive[fighter_index] = false;
 }
 
 /*! \brief Player defeated the enemies
@@ -1549,7 +1549,7 @@ static void roll_initiative(void)
 	{
 		fighter[fighter_index].csmem = 0;
 		fighter[fighter_index].ctmem = 0;
-		IsEtherEffectActive[fighter_index] = 1;
+		bIsEtherEffectActive[fighter_index] = true;
 		j = ROUND_MAX * 66 / 100;
 		if (j < 1)
 		{

@@ -72,32 +72,32 @@ void auto_herochooseact(int who)
 {
 	int eact;
 
-	if (IsEtherEffectActive[who] == 0)
+	if (!bIsEtherEffectActive[who])
 	{
 		return;
 	}
 	if (fighter[who].fighterSpellEffectStats[S_DEAD] != 0 || fighter[who].fighterHealth <= 0)
 	{
-		IsEtherEffectActive[who] = 0;
+		bIsEtherEffectActive[who] = false;
 		return;
 	}
 	fighter[who].fighterSpriteFacing = 0;
 	eact = kqrandom->random_range_exclusive(0, 4);
 	if (eact == 0)
 	{
-		IsEtherEffectActive[who] = 0;
+		bIsEtherEffectActive[who] = false;
 		return;
 	}
 	if (eact == 1)
 	{
 		fighter[who].ctmem = 0;
 		hero_attack(who);
-		IsEtherEffectActive[who] = 0;
+		bIsEtherEffectActive[who] = false;
 		return;
 	}
 	fighter[who].ctmem = auto_select_hero(who, 0);
 	hero_attack(who);
-	IsEtherEffectActive[who] = 0;
+	bIsEtherEffectActive[who] = false;
 }
 
 /*! \brief Count available spells
@@ -727,7 +727,7 @@ void hero_choose_action(size_t fighter_index)
 	strcpy(sk_names[6], _("Steal"));
 	strcpy(sk_names[7], _("Sense"));
 
-	if (IsEtherEffectActive[fighter_index] == 0)
+	if (!bIsEtherEffectActive[fighter_index])
 	{
 		return;
 	}
@@ -871,13 +871,13 @@ void hero_choose_action(size_t fighter_index)
 			if (sptr == 0)
 			{
 				fighter[fighter_index].fighterWillDefend = 1;
-				IsEtherEffectActive[fighter_index] = 0;
+				bIsEtherEffectActive[fighter_index] = false;
 				stop = 1;
 			}
 			if (sptr == 2)
 			{
 				hero_run();
-				IsEtherEffectActive[fighter_index] = 0;
+				bIsEtherEffectActive[fighter_index] = false;
 				stop = 1;
 			}
 			if (sptr == 1)
@@ -887,35 +887,35 @@ void hero_choose_action(size_t fighter_index)
 				case C_ATTACK:
 					if (hero_attack(fighter_index) == 1)
 					{
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_ITEM:
 					if (combat_item_menu(fighter_index) == 1)
 					{
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_INVOKE:
 					if (hero_invoke(fighter_index) == 1)
 					{
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_SPELL:
 					if (combat_spell_menu(fighter_index) == 1)
 					{
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_SKILL:
 					if (skill_use(fighter_index) == 1)
 					{
-						IsEtherEffectActive[fighter_index] = 0;
+						bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;

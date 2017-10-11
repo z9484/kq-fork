@@ -36,7 +36,7 @@ enum ECombatEnd
 	ESCAPED_COMBAT = 2,
 };
 extern ECombatEnd combatend;
-extern int IsEtherEffectActive[NUM_FIGHTERS];
+extern bool bIsEtherEffectActive[NUM_FIGHTERS];
 extern int curx;
 extern int cury;
 extern uint32_t num_enemies;
