@@ -1,27 +1,27 @@
-/*! \page License
-   KQ is Copyright (C) 2002 by Josh Bolduc
-
-   This file is part of KQ... a freeware RPG.
-
-   KQ is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 2, or (at your
-   option) any later version.
-
-   KQ is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with KQ; see the file COPYING.  If not, write to
-   the Free Software Foundation,
-       675 Mass Ave, Cambridge, MA 02139, USA.
-*/
+/** \page License
+ * KQ is Copyright (C) 2002 by Josh Bolduc
+ *
+ * This file is part of KQ... a freeware RPG.
+ *
+ * KQ is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2, or (at your
+ * option) any later version.
+ *
+ * KQ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with KQ; see the file COPYING.  If not, write to
+ * the Free Software Foundation,
+ *     675 Mass Ave, Cambridge, MA 02139, USA.
+ */
 
 #pragma once
 
-/*! \file
+/** \file
  * \brief Structures common to mapedit and the game (s_map and s_entity)
  * \author PH
  * \date 20030805
@@ -49,59 +49,117 @@ enum eHeroBitFlags {
 	BITS_CASANDRA | BITS_TEMMIN | BITS_AYLA | BITS_NOSLOM
 };
 
-/*! \brief Entity
+/** \brief Entity
  *
- * Contains info on an entities appearance, position and behaviour */
+ * Contains info on an entities appearance, position and behavior.
+ */
 struct KQEntity
 {
-	uint8_t chrx;     //!< Entity's identity (what s/he looks like)
-	uint16_t x;       //!< x-coord on map
-	uint16_t y;       //!< y-coord on map
-	uint16_t tilex;   //!< x-coord tile that entity is standing on
-	uint16_t tiley;   //!< y-coord tile that entity is standing on
-	uint8_t eid;      //!< Entity type (fighter, enemy, normal)
-	uint8_t active;   //!< "Alive" or not
-	uint8_t facing;   //!< Direction
-	uint8_t moving;   //!< In the middle of a move
-	uint8_t movcnt;   //!< How far along the move entity is
-	uint8_t framectr; //!< Counter for determining animation frame
-	uint8_t movemode; //!< Stand, wander, script or chasing
-	uint8_t obsmode;  //!< Determine if affected by obstacles or not
-	uint8_t delay;    //!< Movement delay (between steps)
-	uint8_t delayctr; //!< Counter for movement delay
-	uint8_t speed;    //!< How hyperactive the entity is
+	// Entity's identity (what s/he looks like)
+	uint8_t chrx;
+
+	// x-coord on map
+	uint16_t x;
+
+	// y-coord on map
+	uint16_t y;
+
+	// x-coord tile that entity is standing on
+	uint16_t tilex;
+
+	// y-coord tile that entity is standing on
+	uint16_t tiley;
+
+	// Entity type (fighter, enemy, normal)
+	uint8_t eid;
+
+	// "Alive" or not
+	uint8_t active;
+
+	// Direction
+	uint8_t facing;
+
+	// In the middle of a move
+	uint8_t moving;
+
+	// How far along the move entity is
+	uint8_t movcnt;
+
+	// Counter for determining animation frame
+	uint8_t framectr;
+
+	// Stand, wander, script or chasing
+	uint8_t movemode;
+
+	// Determine if affected by obstacles or not
+	uint8_t obsmode;
+
+	// Movement delay (between steps)
+	uint8_t delay;
+
+	// Counter for movement delay
+	uint8_t delayctr;
+
+	// How hyperactive the entity is
+	uint8_t speed;
+
 	uint8_t scount;
-	uint8_t cmd;  //!< Scripted commands (eCommands in entity.h)
-	uint8_t sidx; //!< Index within script parser
+
+	// Scripted commands (eCommands in entity.h)
+	uint8_t cmd;
+
+	// Index within script parser
+	uint8_t sidx;
+
 	uint8_t extra;
-	uint8_t chasing;   //!< Entity is following another
-	signed int cmdnum; //!< Number of times we need to repeat 'cmd'
+
+	// Entity is following another
+	uint8_t chasing;
+
+	// Number of times we need to repeat 'cmd'
+	signed int cmdnum;
+
 	uint8_t atype;
-	uint8_t snapback;  //!< Snaps back to direction previously facing
-	uint8_t facehero;  //!< Look at player when talked to
-	uint8_t transl;    //!< Entity is see-through or not
-	char script[60];   //!< Movement/action script (pacing, etc.)
-	uint16_t target_x; //!< Scripted x-coord the ent is moving to
-	uint16_t target_y; //!< Scripted y-coord the ent is moving to
+
+	// Snaps back to direction previously facing
+	uint8_t snapback;
+
+	// Look at player when talked to
+	uint8_t facehero;
+
+	// Entity is see-through or not
+	uint8_t transl;
+
+	// Movement/action script (pacing, etc.)
+	char script[60];
+
+	// Scripted x-coord the ent is moving to
+	uint16_t target_x;
+
+	// Scripted y-coord the ent is moving to
+	uint16_t target_y;
 };
 
-/*! \brief Animation specifier
+/** \brief Animation specifier
  *
  * Marks a block of tiles that are interchanged to give
  * an animation effect. Used in check_animation()
  */
 struct s_anim
 {
-	uint16_t start; /*!< First tile in sequence  */
-	uint16_t end;   /*!< Last tile in sequence */
-	uint16_t delay; /*!< Frames to wait between tile changes */
+	// First tile in sequence 
+	uint16_t start;
+
+	// Last tile in sequence
+	uint16_t end;
+
+	// Frames to wait between tile changes
+	uint16_t delay;
 };
 
-/*! \brief Tileset definition
+/** \brief Tileset definition
  *
- * This encapulates a tile set: graphics and animation.
- * \author PH
- * \date 20031222
+ * Encapsulates a tileset's graphics and animations.
  */
 struct s_tileset
 {
@@ -109,40 +167,68 @@ struct s_tileset
 	s_anim tanim[MAX_ANIM];
 };
 
-/*! \brief Progress Dump
+/** \brief Progress Dump
  *
  * Contains the names of all the P_* progress constants
  */
 struct s_progress
 {
-	uint32_t num_progress; /*!< Number of current progress */
-	char progressName[18];         /*!< Name of current progress */
+	// Number of current progress
+	uint32_t num_progress;
+
+	// Name of current progress
+	char progressName[18];
 };
 
-/*! \brief Player */
+/** \brief Player */
 struct s_player
 {
-	char playerName[9]; /*!< Entity name */
-	int xp;       /*!< Entity experience */
-	int next;     /*!< Experience needed for level-up */
-	int lvl;      /*!< Entity's level */
-	int mrp;      /*!< Magic use rate (0-100) */
-	int hp;       /*!< Hit points */
-	int mhp;      /*!< Maximum hit points */
-	int mp;       /*!< Magic points */
-	int mmp;      /*!< Maximum magic points */
+	// Entity name
+	char playerName[9];
+
+	// Entity experience
+	int xp;
+
+	// Experience needed for level-up
+	int next;
+
+	// Entity's level
+	int lvl;
+
+	// Magic use rate (0-100)
+	int mrp;
+
+	// Hit points
+	int hp;
+
+	// Maximum hit points
+	int mhp;
+
+	// Magic points
+	int mp;
+
+	// Maximum magic points
+	int mmp;
+
 	int stats[NUM_STATS];
-	char res[NUM_RES];           /*!< eResistance: See R_* constants */
-	uint8_t sts[NUM_SPELL_TYPES]; /*!< eSpellType */
-	uint8_t eqp[NUM_EQUIPMENT];  /*!< eEquipment: Weapons, armor, etc. equipped */
-	uint8_t spells[NUM_SPELLS];  /*!< Known spells */
-								 /*! \brief Level up information
-								 * * Item 0, 1 - used to calculate the XP you need for the next level
-								 * * Item 2 - Boost to your HP/MHP
-								 * * Item 3 - Boost to your MP/MMP
-								 * * Items 4..16 - Actually used by player2fighter to adjust your base stats to
-								 * the level you're on.
-								 */
+	// eResistance: See R_* constants
+	char res[NUM_RES];
+
+	// eSpellType
+	uint8_t sts[NUM_SPELL_TYPES];
+
+	// eEquipment: Weapons, armor, etc. equipped
+	uint8_t eqp[NUM_EQUIPMENT];
+
+	// Known spells
+	uint8_t spells[NUM_SPELLS];
+
+	/** Level-up information
+	 * Item 0, 1 - used to calculate the XP you need for the next level
+	 * Item 2 - Boost to your HP/MHP
+	 * Item 3 - Boost to your MP/MMP
+	 * Items 4..16 - Actually used by player2fighter to adjust your base stats to the level you're on.
+	 */
 	unsigned short lup[NUM_LUP];
 };
 
@@ -153,13 +239,17 @@ struct s_player
  */
 struct s_heroinfo
 {
-	// s_player plr;                /*!< all other statistics */
-	Raster *portrait;            /*!< The hero's portrait for the stats screen */
-	Raster *frames[MAXFRAMES];   /*!< Frames for movement */
-	Raster *cframes[MAXCFRAMES]; /*!< Frames for combat */
+	// The hero's portrait for the stats screen
+	Raster *portrait;
+
+	// Frames for movement
+	Raster *frames[MAXFRAMES];
+
+	// Frames for combat
+	Raster *cframes[MAXCFRAMES];
 };
 
-/*! \brief Special Items
+/** \brief Special Items
  *
  * Contains a list of the special items in the player's party (Opal Armor et al)
  */
@@ -170,7 +260,7 @@ struct s_special_item
 	short icon;
 };
 
-/*! \brief Inventory
+/** \brief Inventory
 * An item ID and the quantity of that thing in the inventory.
 */
 struct s_inventory
@@ -179,7 +269,7 @@ struct s_inventory
 	unsigned short quantity;
 };
 
-/*! \brief Save Game Stats
+/** \brief Save Game Stats
  * The information that's shown when picking a slot to save/load.
  */
 struct s_sgstats {
