@@ -34,7 +34,8 @@
 #include "res.h"
 class Raster;
 
-enum eHeroBitFlags {
+enum eHeroBitFlags
+{
 	BITS_NO_HERO = 0,
 	BITS_SENSAR = 1 << 0,
 	BITS_SARINA = 1 << 1,
@@ -46,7 +47,7 @@ enum eHeroBitFlags {
 	BITS_NOSLOM = 1 << 7,
 
 	BITS_ALL_HERO = BITS_SENSAR | BITS_SARINA | BITS_CORIN | BITS_AJATHAR |
-	BITS_CASANDRA | BITS_TEMMIN | BITS_AYLA | BITS_NOSLOM
+	                BITS_CASANDRA | BITS_TEMMIN | BITS_AYLA | BITS_NOSLOM
 };
 
 /** \brief Entity
@@ -147,7 +148,7 @@ struct KQEntity
  */
 struct s_anim
 {
-	// First tile in sequence 
+	// First tile in sequence
 	uint16_t start;
 
 	// Last tile in sequence
@@ -240,13 +241,13 @@ struct s_player
 struct s_heroinfo
 {
 	// The hero's portrait for the stats screen
-	Raster *portrait;
+	Raster* portrait;
 
 	// Frames for movement
-	Raster *frames[MAXFRAMES];
+	Raster* frames[MAXFRAMES];
 
 	// Frames for combat
-	Raster *cframes[MAXCFRAMES];
+	Raster* cframes[MAXCFRAMES];
 };
 
 /** \brief Special Items
@@ -277,7 +278,8 @@ struct s_sgstats
 	int num_characters;
 	int gold;
 	int time;
-	struct {
+	struct
+	{
 		int id;
 		int level;
 		int hp;

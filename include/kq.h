@@ -49,8 +49,8 @@ class KGame
 public:
 	KGame();
 
-	void change_map(const string &, int, int, int, int);
-	void change_mapm(const string &, const string &, int, int);
+	void change_map(const string&, int, int, int, int);
+	void change_mapm(const string&, const string&, int, int);
 	void calc_viewport(int);
 	void zone_check(void);
 	void warp(int, int, int);
@@ -58,21 +58,21 @@ public:
 	void activate(void);
 	void unpress(void);
 	void wait_enter(void);
-	void klog(const char *);
+	void klog(const char*);
 	void init_players(void);
 	void kwait(int);
-	NORETURN void program_death(const char *);
+	NORETURN void program_death(const char*);
 	size_t in_party(ePIDX);
 	void wait_for_entity(size_t, size_t);
-	char *get_timer_event(void);
-	int add_timer_event(const char *, int);
+	char* get_timer_event(void);
+	int add_timer_event(const char*, int);
 	void reset_timer_events(void);
 	void reset_world(void);
 
 	/*! Yield processor to other tasks */
 	void kq_yield(void);
 
-	Raster *alloc_bmp(int bitmap_width, int bitmap_height, const char *bitmap_name);
+	Raster* alloc_bmp(int bitmap_width, int bitmap_height, const char* bitmap_name);
 
 	void startup(void);
 	void deallocate_stuff(void);
@@ -99,21 +99,21 @@ protected:
 
 extern int vx, vy, mx, my, steps, lastm[PSIZE];
 
-extern Raster *double_buffer, *fx_buffer;
-extern Raster *map_icons[MAX_TILES];
+extern Raster* double_buffer, *fx_buffer;
+extern Raster* map_icons[MAX_TILES];
 
-extern Raster *back, *tc, *tc2, *bub[8], *b_shield, *b_shell, *b_repulse, *b_mp;
-extern Raster *cframes[NUM_FIGHTERS][MAXCFRAMES], *tcframes[NUM_FIGHTERS][MAXCFRAMES], *frames[MAXCHRS][MAXFRAMES];
-extern Raster *eframes[MAXE][MAXEFRAMES], *pgb[9], *sfonts[5], *bord[8];
-extern Raster *menuptr, *mptr, *sptr, *stspics, *sicons, *bptr, *missbmp, *noway, *upptr, *dnptr;
-extern Raster *shadow[MAX_SHADOWS];
-extern unsigned short *map_seg;
-extern unsigned short *b_seg, *f_seg;
-extern unsigned char *z_seg, *s_seg, *o_seg;
+extern Raster* back, *tc, *tc2, *bub[8], *b_shield, *b_shell, *b_repulse, *b_mp;
+extern Raster* cframes[NUM_FIGHTERS][MAXCFRAMES], *tcframes[NUM_FIGHTERS][MAXCFRAMES], *frames[MAXCHRS][MAXFRAMES];
+extern Raster* eframes[MAXE][MAXEFRAMES], *pgb[9], *sfonts[5], *bord[8];
+extern Raster* menuptr, *mptr, *sptr, *stspics, *sicons, *bptr, *missbmp, *noway, *upptr, *dnptr;
+extern Raster* shadow[MAX_SHADOWS];
+extern unsigned short* map_seg;
+extern unsigned short* b_seg, *f_seg;
+extern unsigned char* z_seg, *s_seg, *o_seg;
 extern unsigned char progress[SIZE_PROGRESS];
 extern unsigned char treasure[SIZE_TREASURE];
 extern unsigned char save_spells[SIZE_SAVE_SPELL];
-extern Raster *kfonts;
+extern Raster* kfonts;
 extern s_map g_map;
 extern KQEntity g_ent[MAX_ENTITIES];
 extern s_anim tanim[MAX_TILESETS][MAX_ANIM];
@@ -126,7 +126,7 @@ extern uint8_t autoparty, alldead, is_sound, deadeffect, vfollow, use_sstone, so
 extern const uint8_t kq_version;
 extern uint8_t hold_fade, cansave, skip_intro, wait_retrace, windowed, stretch_view, cpu_usage;
 extern uint16_t tilex[MAX_TILES], adelay[MAX_ANIM];
-extern char *strbuf, *savedir;
+extern char* strbuf, *savedir;
 extern s_player party[MAXCHRS];
 extern s_heroinfo players[MAXCHRS];
 extern bool display_attack_string;
@@ -149,11 +149,11 @@ extern int every_hit_999;
 extern int no_monsters;
 
 #ifdef DEBUGMODE
-extern Raster *obj_mesh;
+extern Raster* obj_mesh;
 #endif
 
 extern KGame Game;
 
 #ifndef TRACE
-extern void TRACE(const char *message, ...);
+extern void TRACE(const char* message, ...);
 #endif

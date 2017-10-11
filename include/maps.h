@@ -47,9 +47,9 @@ struct s_map
 	string map_desc;    /*!< Map name (shown when map first appears) */
 	KMarkers markers;   /*!< Marker array */
 	KBounds bounds;     /*!< Bound array and bound size */
-	Raster *map_tiles;
-	Raster *misc_tiles;
-	Raster *entity_tiles;
+	Raster* map_tiles;
+	Raster* misc_tiles;
+	Raster* entity_tiles;
 };
 
 extern s_map g_map;

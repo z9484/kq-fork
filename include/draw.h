@@ -67,24 +67,24 @@ enum eBubbleStemStyle
 /*  draw global functions  */
 
 void blit2screen(int, int);
-void color_scale(Raster *, Raster *, int, int);
+void color_scale(Raster*, Raster*, int, int);
 void convert_cframes(size_t, int, int, int);
 void revert_cframes(size_t, int);
-void draw_icon(Raster *, int, int, int);
-void draw_stsicon(Raster *, int, int, int, int, int);
+void draw_icon(Raster*, int, int, int);
+void draw_stsicon(Raster*, int, int, int, int, int);
 int is_forestsquare(int, int);
 void drawmap(void);
-void menubox(Raster *where, int x, int y, int w, int h, int c);
-void print_font(Raster *, int, int, const char *, eFontColor);
-void print_num(Raster *where, int sx, int sy, const string msg, eFont font_index);
-void text_ex(int, int, const char *);
-void porttext_ex(int, int, const char *);
-int prompt(int, int, int, const char *, const char *, const char *, const char *);
-int prompt_ex(int, const char *, const char *[], int);
-void message(const char *, int, int, int, int);
+void menubox(Raster* where, int x, int y, int w, int h, int c);
+void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_index);
+void print_num(Raster* where, int sx, int sy, const string msg, eFont font_index);
+void text_ex(int, int, const char*);
+void porttext_ex(int, int, const char*);
+int prompt(int, int, int, const char*, const char*, const char*, const char*);
+int prompt_ex(int, const char*, const char* [], int);
+void message(const char*, int, int, int, int);
 void set_view(int, int, int, int, int);
 
-Raster *copy_bitmap(Raster *, Raster *);
+Raster* copy_bitmap(Raster* target, Raster* source);
 
 /*  global variables  */
 extern uint8_t BLUE;

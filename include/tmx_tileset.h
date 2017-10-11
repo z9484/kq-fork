@@ -10,7 +10,7 @@ public:
 	uint32_t firstgid;
 	string name;
 	string sourceimage;
-	Raster *imagedata;
+	Raster* imagedata;
 	vector<KTmxAnimation> animations;
 	int width;
 	int height;

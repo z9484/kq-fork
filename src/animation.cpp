@@ -1,9 +1,9 @@
 #include "animation.h"
 #include "anim_sequence.h"
 
-void KAnimation::check_animation(int millis, uint16_t *tilex)
+void KAnimation::check_animation(int millis, uint16_t* tilex)
 {
-	for (auto &a : animations)
+	for (auto& a : animations)
 	{
 		a.nexttime -= millis;
 		while (a.nexttime < 0)
@@ -15,7 +15,7 @@ void KAnimation::check_animation(int millis, uint16_t *tilex)
 	}
 }
 
-void KAnimation::add_animation(const KTmxAnimation &base)
+void KAnimation::add_animation(const KTmxAnimation& base)
 {
 	animations.push_back(KAnimSequence(base));
 }

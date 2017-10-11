@@ -104,26 +104,26 @@ public:
 	vector<KQEntity> entities;
 	vector<tmx_layer> layers;
 	void set_current();
-	const KTmxTileset &find_tileset(const string &) const;
+	const KTmxTileset& find_tileset(const string&) const;
 };
 
 class KTiledMap
 {
 public:
-	void load_tmx(const string &);
+	void load_tmx(const string&);
 
 private:
-	tmx_map load_tmx_map(XMLElement const *root);
-	XMLElement const *find_tmx_element(XMLElement const *, const char *, const char *);
-	KBounds load_tmx_bounds(XMLElement const *);
-	KMarkers load_tmx_markers(XMLElement const *);
-	vector<KZone> load_tmx_zones(XMLElement const *);
-	tmx_layer load_tmx_layer(XMLElement const *el);
-	vector<KQEntity> load_tmx_entities(XMLElement const *);
-	KTmxTileset load_tmx_tileset(XMLElement const *);
-	XMLElement const *find_objectgroup(XMLElement const *root, const char *name);
-	vector<uint8_t> b64decode(const char *);
-	vector<uint8_t> uncompress(const vector<uint8_t> &data);
+	tmx_map load_tmx_map(XMLElement const* root);
+	XMLElement const* find_tmx_element(XMLElement const*, const char*, const char*);
+	KBounds load_tmx_bounds(XMLElement const*);
+	KMarkers load_tmx_markers(XMLElement const*);
+	vector<KZone> load_tmx_zones(XMLElement const*);
+	tmx_layer load_tmx_layer(XMLElement const* el);
+	vector<KQEntity> load_tmx_entities(XMLElement const*);
+	KTmxTileset load_tmx_tileset(XMLElement const*);
+	XMLElement const* find_objectgroup(XMLElement const* root, const char* name);
+	vector<uint8_t> b64decode(const char*);
+	vector<uint8_t> uncompress(const vector<uint8_t>& data);
 };
 
 extern KTiledMap TiledMap;

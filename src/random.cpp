@@ -1,6 +1,5 @@
 #include "random.h"
 
-
 KQRandom::KQRandom()
 {
 	time_t t0 = time(nullptr);

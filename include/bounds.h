@@ -65,7 +65,7 @@ public:
 	}
 
 	uint32_t IsBound(const uint16_t left, const uint16_t top,
-		const uint16_t right, const uint16_t bottom) const;
+	                 const uint16_t right, const uint16_t bottom) const;
 
 protected:
 	vector<shared_ptr<KBound>> m_bounds;

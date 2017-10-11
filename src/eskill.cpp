@@ -41,7 +41,8 @@ void combat_skill(size_t fighter_index)
 	tempa = status_adjust(fighter_index);
 	battle_render(0, 0, 0);
 	blit2screen(0, 0);
-	switch (fighterCombatSkill) {
+	switch (fighterCombatSkill)
+	{
 	case 101:
 		strcpy(attack_string, _("Venomous Bite"));
 		display_attack_string = 1;
@@ -77,12 +78,15 @@ void combat_skill(size_t fighter_index)
 		break;
 	case 105:
 		affected_targets = 0;
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
-			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
+			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+			{
 				affected_targets++;
 			}
 		}
-		if (affected_targets > 1) {
+		if (affected_targets > 1)
+		{
 			fighter[fighter_index].ctmem = 1000;
 		}
 		strcpy(attack_string, _("Sweep"));
@@ -115,20 +119,25 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Stone Gas"));
 		draw_spellsprite(0, 1, 46, 1);
 		for (target_fighter_index = 0; target_fighter_index < numchrs;
-			target_fighter_index++) {
-			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
+		        target_fighter_index++)
+		{
+			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+			{
 				if (res_throw(target_fighter_index, R_PETRIFY) == 0 &&
-					non_dmg_save(target_fighter_index, 75) == 0) {
+				        non_dmg_save(target_fighter_index, 75) == 0)
+				{
 					fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] = kqrandom->random_range_exclusive(2, 5);
 					ta[target_fighter_index] = NODISPLAY;
 				}
-				else {
+				else
+				{
 					ta[target_fighter_index] = MISS;
 					affected_targets++;
 				}
 			}
 		}
-		if (affected_targets > 0) {
+		if (affected_targets > 0)
+		{
 			display_amount(0, FONT_WHITE, 1);
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
@@ -136,45 +145,56 @@ void combat_skill(size_t fighter_index)
 	case 109:
 		affected_targets = 0;
 		strcpy(attack_string, _("Zemmel Rod"));
-		if (kqrandom->random_range_exclusive(0, 4) < 2) {
+		if (kqrandom->random_range_exclusive(0, 4) < 2)
+		{
 			draw_spellsprite(0, 1, 11, 1);
 			/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
 			special_damage_oneall_enemies(fighter_index, 25, R_THUNDER,
-				SEL_ALL_ENEMIES, 1);
+			                              SEL_ALL_ENEMIES, 1);
 			fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 			return;
 		}
 		draw_spellsprite(0, 1, 40, 0);
 		for (target_fighter_index = 0; target_fighter_index < numchrs;
-			target_fighter_index++) {
-			if (res_throw(target_fighter_index, R_TIME) == 0) {
+		        target_fighter_index++)
+		{
+			if (res_throw(target_fighter_index, R_TIME) == 0)
+			{
 				if (non_dmg_save(target_fighter_index, 75) == 0 &&
-					fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
-					if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 2) {
+				        fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
+				{
+					if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 2)
+					{
 						fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] = 0;
 					}
-					else {
-						if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 0) {
+					else
+					{
+						if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 0)
+						{
 							fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] = 1;
 							ta[target_fighter_index] = NODISPLAY;
 						}
-						else {
+						else
+						{
 							ta[target_fighter_index] = MISS;
 							affected_targets++;
 						}
 					}
 				}
-				else {
+				else
+				{
 					ta[target_fighter_index] = MISS;
 					affected_targets++;
 				}
 			}
-			else {
+			else
+			{
 				ta[target_fighter_index] = MISS;
 				affected_targets++;
 			}
 		}
-		if (affected_targets > 0) {
+		if (affected_targets > 0)
+		{
 			display_amount(0, FONT_WHITE, 1);
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
@@ -184,24 +204,28 @@ void combat_skill(size_t fighter_index)
 		draw_spellsprite(0, 1, 47, 1);
 		/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
 		special_damage_oneall_enemies(fighter_index, 40, R_POISON, SEL_ALL_ENEMIES,
-			1);
+		                              1);
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 111:
 		affected_targets = 0;
 		strcpy(attack_string, _("Tangle Root"));
 		draw_spellsprite(0, 1, 24, 0);
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
-			if (res_throw(target_fighter_index, S_STOP) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
+			if (res_throw(target_fighter_index, S_STOP) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
+			{
 				fighter[target_fighter_index].fighterSpellEffectStats[S_STOP] = kqrandom->random_range_exclusive(2, 4);
 				ta[target_fighter_index] = NODISPLAY;
 			}
-			else {
+			else
+			{
 				ta[target_fighter_index] = MISS;
 				affected_targets++;
 			}
 		}
-		if (affected_targets > 0) {
+		if (affected_targets > 0)
+		{
 			display_amount(0, FONT_WHITE, 1);
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
@@ -221,7 +245,7 @@ void combat_skill(size_t fighter_index)
 		draw_hugesprite(0, 80, 110, 29, 1);
 		/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
 		special_damage_oneall_enemies(fighter_index, 60, R_EARTH, SEL_ALL_ENEMIES,
-			1);
+		                              1);
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 114:
@@ -230,7 +254,8 @@ void combat_skill(size_t fighter_index)
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 8 / 10;
 		fight(fighter_index, tgt, 1);
 		display_attack_string = false;
-		if (non_dmg_save(tgt, 80) == 0 && ta[tgt] != MISS) {
+		if (non_dmg_save(tgt, 80) == 0 && ta[tgt] != MISS)
+		{
 			fighter[tgt].fighterSpellEffectStats[S_STOP] = 2;
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 4;
@@ -239,23 +264,29 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Howl"));
 		draw_spellsprite(0, 1, 14, 0);
 		affected_targets = 0;
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
-			if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0) {
-				if (res_throw(target_fighter_index, S_CHARM) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
+			if (fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0)
+			{
+				if (res_throw(target_fighter_index, S_CHARM) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
+				{
 					fighter[target_fighter_index].fighterSpellEffectStats[S_CHARM] = kqrandom->random_range_exclusive(2, 4);
 					ta[target_fighter_index] = NODISPLAY;
 				}
-				else {
+				else
+				{
 					ta[target_fighter_index] = MISS;
 					affected_targets++;
 				}
 			}
-			else {
+			else
+			{
 				ta[target_fighter_index] = MISS;
 				affected_targets++;
 			}
 		}
-		if (affected_targets > 0) {
+		if (affected_targets > 0)
+		{
 			display_amount(0, FONT_WHITE, 1);
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
@@ -263,20 +294,24 @@ void combat_skill(size_t fighter_index)
 	case 116:
 		strcpy(attack_string, _("Rasp"));
 		draw_spellsprite(0, 1, 48, 0);
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
 			b = fighter[target_fighter_index].fighterHealth / 3;
 			ta[target_fighter_index] = 0 - b;
 		}
 		display_amount(0, FONT_WHITE, 1);
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
 			adjust_hp(target_fighter_index, ta[target_fighter_index]);
 		}
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
 			b = fighter[target_fighter_index].fighterMagic / 3;
 			ta[target_fighter_index] = 0 - b;
 		}
 		display_amount(0, FONT_RED, 1);
-		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++) {
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
+		{
 			adjust_mp(target_fighter_index, ta[target_fighter_index]);
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
@@ -285,7 +320,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Shadow Blast"));
 		draw_spellsprite(0, 1, 49, 1);
 		special_damage_oneall_enemies(fighter_index, 75, R_BLACK, SEL_ALL_ENEMIES,
-			1);
+		                              1);
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 	default:
 		break;

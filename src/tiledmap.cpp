@@ -29,7 +29,7 @@ KTiledMap TiledMap;
 using stdext::make_checked_array_iterator;
 #else
 template <typename T>
-T *make_checked_array_iterator(T *ptr, size_t size, size_t offset = 0)
+T* make_checked_array_iterator(T* ptr, size_t size, size_t offset = 0)
 {
 	(void)size;
 	return ptr + offset;
@@ -50,18 +50,18 @@ struct tmx_tileset
 	uint32_t firstgid;
 	string name;
 	string sourceimage;
-	Raster *imagedata;
+	Raster* imagedata;
 	vector<KTmxAnimation> animations;
 	int width;
 	int height;
 };
 
 // Ranged-for support
-uint32_t *begin(tmx_layer &l)
+uint32_t* begin(tmx_layer& l)
 {
 	return l.data.get();
 }
-uint32_t *end(tmx_layer &l)
+uint32_t* end(tmx_layer& l)
 {
 	return l.data.get() + l.size;
 }
@@ -70,7 +70,7 @@ uint32_t *end(tmx_layer &l)
  * Make it the current map for the game
  * \param name the filename
  */
-void KTiledMap::load_tmx(const string &name)
+void KTiledMap::load_tmx(const string& name)
 {
 	XMLDocument tmx;
 	string path = name + string(".tmx");
@@ -78,7 +78,7 @@ void KTiledMap::load_tmx(const string &name)
 	if (tmx.Error())
 	{
 		TRACE("Error loading %s\n%s\n%s\n", name.c_str(), tmx.GetErrorStr1(),
-			tmx.GetErrorStr2());
+		      tmx.GetErrorStr2());
 		Game.program_death("Could not load map file ");
 	}
 	Game.reset_timer_events();
@@ -94,12 +94,12 @@ void KTiledMap::load_tmx(const string &name)
 
 // Convert pointer-to-char to string,
 // converting NULL to the empty string.
-static string strconv(const char *ptr)
+static string strconv(const char* ptr)
 {
 	return string(ptr ? ptr : "");
 }
 
-tmx_map KTiledMap::load_tmx_map(XMLElement const *root)
+tmx_map KTiledMap::load_tmx_map(XMLElement const* root)
 {
 	tmx_map smap;
 	auto properties = root->FirstChildElement("properties");
@@ -177,7 +177,7 @@ tmx_map KTiledMap::load_tmx_map(XMLElement const *root)
 	{
 		smap.tilesets.push_back(load_tmx_tileset(xtileset));
 		// Make a note of the tileset with gid=1 for later
-		const KTmxTileset &tileset = smap.tilesets.back();
+		const KTmxTileset& tileset = smap.tilesets.back();
 		if (tileset.firstgid == 1)
 		{
 			smap.primary_tileset_name = tileset.name;
@@ -205,7 +205,7 @@ tmx_map KTiledMap::load_tmx_map(XMLElement const *root)
  * \param el the object group
  * \returns a collection of objects
  */
-KBounds KTiledMap::load_tmx_bounds(XMLElement const *el)
+KBounds KTiledMap::load_tmx_bounds(XMLElement const* el)
 {
 	KBounds bounds;
 	if (el)
@@ -218,9 +218,9 @@ KBounds KTiledMap::load_tmx_bounds(XMLElement const *el)
 				new_bound->left = i->IntAttribute("x") / TILE_W;
 				new_bound->top = i->IntAttribute("y") / TILE_H;
 				new_bound->right =
-					i->IntAttribute("width") / TILE_W + new_bound->left - 1;
+				    i->IntAttribute("width") / TILE_W + new_bound->left - 1;
 				new_bound->bottom =
-					i->IntAttribute("height") / TILE_H + new_bound->top - 1;
+				    i->IntAttribute("height") / TILE_H + new_bound->top - 1;
 				new_bound->btile = 0;
 				auto props = i->FirstChildElement("properties");
 				if (props)
@@ -246,9 +246,9 @@ KBounds KTiledMap::load_tmx_bounds(XMLElement const *el)
  * \param name the value of the 'name' attribute
  * \returns the found element or NULL
  */
-XMLElement const *KTiledMap::find_tmx_element(XMLElement const *root,
-	const char *type,
-	const char *name)
+XMLElement const* KTiledMap::find_tmx_element(XMLElement const* root,
+        const char* type,
+        const char* name)
 {
 	for (auto i = root->FirstChildElement(type); i; i = i->NextSiblingElement(type))
 	{
@@ -266,7 +266,7 @@ XMLElement const *KTiledMap::find_tmx_element(XMLElement const *root,
  * \param el the object group
  * \returns a collection of objects
  */
-KMarkers KTiledMap::load_tmx_markers(XMLElement const *el)
+KMarkers KTiledMap::load_tmx_markers(XMLElement const* el)
 {
 	KMarkers markers;
 	if (el)
@@ -291,7 +291,7 @@ KMarkers KTiledMap::load_tmx_markers(XMLElement const *el)
  * \param el the layer element
  * \returns the raw data
  */
-tmx_layer KTiledMap::load_tmx_layer(XMLElement const *el)
+tmx_layer KTiledMap::load_tmx_layer(XMLElement const* el)
 {
 
 	auto h = el->IntAttribute("height");
@@ -301,10 +301,10 @@ tmx_layer KTiledMap::load_tmx_layer(XMLElement const *el)
 	auto data = el->FirstChildElement("data");
 	if (data->Attribute("encoding", "csv"))
 	{
-		const char *raw = data->GetText();
-		for (auto &tile : layer)
+		const char* raw = data->GetText();
+		for (auto& tile : layer)
 		{
-			const char *next = strchr(raw, ',');
+			const char* next = strchr(raw, ',');
 			tile = static_cast<uint32_t>(strtol(raw, nullptr, 10));
 			if (next)
 			{
@@ -327,7 +327,7 @@ tmx_layer KTiledMap::load_tmx_layer(XMLElement const *el)
 				Game.program_death("Layer size mismatch");
 			}
 			auto iter = begin(raw);
-			for (auto &tile : layer)
+			for (auto& tile : layer)
 			{
 				uint32_t v = *iter++;
 				v |= (*iter++) << 8;
@@ -351,7 +351,7 @@ tmx_layer KTiledMap::load_tmx_layer(XMLElement const *el)
  * \param el the <objectgroup> element containing the zones
  * \returns a vector of zones
  */
-vector<KZone> KTiledMap::load_tmx_zones(XMLElement const *el)
+vector<KZone> KTiledMap::load_tmx_zones(XMLElement const* el)
 {
 	vector<KZone> zones;
 	if (el)
@@ -377,7 +377,7 @@ vector<KZone> KTiledMap::load_tmx_zones(XMLElement const *el)
  * \param el the objectgroup element containing the entities
  * \returns a vector of entities
  */
-vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const *el)
+vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const* el)
 {
 	vector<KQEntity> entities;
 	for (auto i = el->FirstChildElement("object"); i; i = i->NextSiblingElement("object"))
@@ -490,11 +490,11 @@ vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const *el)
  * \param el the <tileset> element
  * \returns the tileset
  */
-KTmxTileset KTiledMap::load_tmx_tileset(XMLElement const *el)
+KTmxTileset KTiledMap::load_tmx_tileset(XMLElement const* el)
 {
 	KTmxTileset tileset;
 	tileset.firstgid = el->IntAttribute("firstgid");
-	XMLElement const *tsx;
+	XMLElement const* tsx;
 	XMLDocument sourcedoc;
 	auto source = el->Attribute("source");
 	if (source)
@@ -504,7 +504,7 @@ KTmxTileset KTiledMap::load_tmx_tileset(XMLElement const *el)
 		if (sourcedoc.Error())
 		{
 			TRACE("Error loading %s\n%s\n%s\n", source, sourcedoc.GetErrorStr1(),
-				sourcedoc.GetErrorStr2());
+			      sourcedoc.GetErrorStr2());
 			Game.program_death("Couldn't load external tileset");
 		}
 		tsx = sourcedoc.RootElement();
@@ -521,7 +521,7 @@ KTmxTileset KTiledMap::load_tmx_tileset(XMLElement const *el)
 		tileset.name = name;
 	}
 	// Get the image
-	XMLElement const *image = tsx->FirstChildElement("image");
+	XMLElement const* image = tsx->FirstChildElement("image");
 	tileset.sourceimage = image->Attribute("source");
 	tileset.width = image->IntAttribute("width");
 	tileset.height = image->IntAttribute("height");
@@ -548,16 +548,16 @@ KTmxTileset KTiledMap::load_tmx_tileset(XMLElement const *el)
 	return tileset;
 }
 
-XMLElement const *KTiledMap::find_objectgroup(XMLElement const *root,
-	const char *name)
+XMLElement const* KTiledMap::find_objectgroup(XMLElement const* root,
+        const char* name)
 {
 	return find_tmx_element(root, "objectgroup", name);
 }
 
 tmx_map::tmx_map()
 	: map_no(0), zero_zone(false), map_mode(0), can_save(false), tileset(0),
-	use_sstone(false), can_warp(false), xsize(0), ysize(0), pmult(1), pdiv(1),
-	stx(0), sty(0), warpx(0), warpy(0), revision(1)
+	  use_sstone(false), can_warp(false), xsize(0), ysize(0), pmult(1), pdiv(1),
+	  stx(0), sty(0), warpx(0), warpy(0), revision(1)
 {
 }
 
@@ -592,13 +592,13 @@ void tmx_map::set_current()
 	// Bounding boxes
 	g_map.bounds = bounds;
 	// Allocate space for layers
-	for (auto &&layer : layers)
+	for (auto && layer : layers)
 	{
 		if (layer.name == "map")
 		{
 			// map layers - these always have tile offset == 1
 			free(map_seg);
-			unsigned short *ptr = map_seg = static_cast<unsigned short *>(calloc(layer.size, sizeof(*map_seg)));
+			unsigned short* ptr = map_seg = static_cast<unsigned short*>(calloc(layer.size, sizeof(*map_seg)));
 			for (auto t : layer)
 			{
 				if (t > 0)
@@ -611,8 +611,8 @@ void tmx_map::set_current()
 		else if (layer.name == "bmap")
 		{
 			free(b_seg);
-			unsigned short *ptr = b_seg =
-				static_cast<unsigned short *>(calloc(layer.size, sizeof(*b_seg)));
+			unsigned short* ptr = b_seg =
+			                          static_cast<unsigned short*>(calloc(layer.size, sizeof(*b_seg)));
 			for (auto t : layer)
 			{
 				if (t > 0)
@@ -625,8 +625,8 @@ void tmx_map::set_current()
 		else if (layer.name == "fmap")
 		{
 			free(f_seg);
-			unsigned short *ptr = f_seg =
-				static_cast<unsigned short *>(calloc(layer.size, sizeof(*f_seg)));
+			unsigned short* ptr = f_seg =
+			                          static_cast<unsigned short*>(calloc(layer.size, sizeof(*f_seg)));
 			for (auto t : layer)
 			{
 				if (t > 0)
@@ -640,9 +640,9 @@ void tmx_map::set_current()
 		{
 			// Shadows
 			unsigned short shadow_offset =
-				find_tileset("misc").firstgid + SHADOW_OFFSET;
+			    find_tileset("misc").firstgid + SHADOW_OFFSET;
 			free(s_seg);
-			auto sptr = s_seg = static_cast<unsigned char *>(calloc(layer.size, sizeof(*s_seg)));
+			auto sptr = s_seg = static_cast<unsigned char*>(calloc(layer.size, sizeof(*s_seg)));
 			for (auto t : layer)
 			{
 				if (t > 0)
@@ -658,7 +658,7 @@ void tmx_map::set_current()
 			unsigned short obstacle_offset = find_tileset("obstacles").firstgid - 1;
 			free(o_seg);
 			auto sptr = o_seg =
-				static_cast<unsigned char *>(calloc(layer.size, sizeof(*o_seg)));
+			                static_cast<unsigned char*>(calloc(layer.size, sizeof(*o_seg)));
 
 			for (auto t : layer)
 			{
@@ -673,9 +673,9 @@ void tmx_map::set_current()
 
 	// Zones
 	free(z_seg);
-	z_seg = static_cast<unsigned char *>(
-		calloc(xsize * ysize, sizeof(unsigned char)));
-	for (auto &&zone : zones)
+	z_seg = static_cast<unsigned char*>(
+	            calloc(xsize * ysize, sizeof(unsigned char)));
+	for (auto && zone : zones)
 	{
 		for (int i = 0; i < zone.w; ++i)
 		{
@@ -689,7 +689,7 @@ void tmx_map::set_current()
 	// Entities
 	memset(&g_ent[PSIZE], 0, (MAX_ENTITIES - PSIZE) * sizeof(KQEntity));
 	copy(begin(entities), end(entities),
-		make_checked_array_iterator(g_ent, MAX_ENTITIES, PSIZE));
+	     make_checked_array_iterator(g_ent, MAX_ENTITIES, PSIZE));
 
 	// Tilemaps
 	g_map.map_tiles = find_tileset(primary_tileset_name).imagedata;
@@ -698,18 +698,18 @@ void tmx_map::set_current()
 
 	// Animations
 	Animation.clear_animations();
-	for (auto &a : find_tileset(primary_tileset_name).animations)
+	for (auto& a : find_tileset(primary_tileset_name).animations)
 	{
 		Animation.add_animation(a);
 	}
 }
 
-const KTmxTileset &tmx_map::find_tileset(const string &name) const
+const KTmxTileset& tmx_map::find_tileset(const string& name) const
 {
-	for (auto &&ans : tilesets)
+	for (auto && ans : tilesets)
 	{
 		if (ans.name == name)
-			return ans;
+		{ return ans; }
 	}
 	// not found
 	TRACE("Tileset '%s' not found in map.\n", name.c_str());
@@ -728,7 +728,7 @@ const KTmxTileset &tmx_map::find_tileset(const string &name) const
  */
 struct b64
 {
-	b64(const char *_ptr) : ptr(_ptr), errbit(false)
+	b64(const char* _ptr) : ptr(_ptr), errbit(false)
 	{
 		while (isspace(*ptr))
 		{
@@ -739,7 +739,7 @@ struct b64
 	{
 		if (ptr)
 		{
-			const char *pos = strchr(validchars, *ptr++);
+			const char* pos = strchr(validchars, *ptr++);
 			while (isspace(*ptr))
 			{
 				++ptr;
@@ -776,16 +776,16 @@ struct b64
 	{
 		return ptr != nullptr;
 	}
-	static const char *validchars;
+	static const char* validchars;
 	static const uint8_t PAD = 0x40;
 	static const uint8_t ERROR = 0xff;
-	const char *ptr;
+	const char* ptr;
 	bool errbit;
 };
-const char *b64::validchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-"abcdefghijklmnopqrstuvwxyz"
-"0123456789"
-"+/=";
+const char* b64::validchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                              "abcdefghijklmnopqrstuvwxyz"
+                              "0123456789"
+                              "+/=";
 /// Return true if a byte is a valid 6-bit block.
 static bool valid(uint8_t v)
 {
@@ -798,7 +798,7 @@ static bool valid(uint8_t v)
  * \param text the input characters
  * \returns the converted bytes
  */
-vector<uint8_t> KTiledMap::b64decode(const char *text)
+vector<uint8_t> KTiledMap::b64decode(const char* text)
 {
 	vector<uint8_t> data;
 	b64 nextc(text);
@@ -857,7 +857,7 @@ vector<uint8_t> KTiledMap::b64decode(const char *text)
  * \param data the input compressed data
  * \returns the uncompressed data
  */
-vector<uint8_t> KTiledMap::uncompress(const vector<uint8_t> &data)
+vector<uint8_t> KTiledMap::uncompress(const vector<uint8_t>& data)
 {
 	z_stream stream;
 	vector<uint8_t> out;
@@ -865,7 +865,7 @@ vector<uint8_t> KTiledMap::uncompress(const vector<uint8_t> &data)
 	stream.zfree = Z_NULL;
 	stream.opaque = Z_NULL;
 	stream.avail_in = data.size();
-	stream.next_in = reinterpret_cast<z_const Bytef *>(data.data());
+	stream.next_in = reinterpret_cast<z_const Bytef*>(data.data());
 
 	if (inflateInit(&stream) == Z_OK)
 	{
@@ -884,7 +884,7 @@ vector<uint8_t> KTiledMap::uncompress(const vector<uint8_t> &data)
 			if (stream.avail_out < sizeof(buffer))
 			{
 				std::copy(buffer, buffer + sizeof(buffer) - stream.avail_out,
-					back_inserter(out));
+				          back_inserter(out));
 				stream.avail_out = sizeof(buffer);
 				stream.next_out = buffer;
 			}

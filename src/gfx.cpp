@@ -7,7 +7,7 @@ Raster::Raster(uint16_t w, uint16_t h)
 {
 }
 
-Raster::Raster(Raster &&other)
+Raster::Raster(Raster&& other)
 	: width(other.width), height(other.height), stride(other.stride), data(other.data)
 {
 	other.data = nullptr;
@@ -18,7 +18,7 @@ Raster::~Raster()
 	delete[] data;
 }
 
-void Raster::blitTo(Raster *target, int16_t src_x, int16_t src_y, uint16_t src_w, uint16_t src_h, int16_t dest_x, int16_t dest_y, uint16_t dest_w, uint16_t dest_h, bool masked)
+void Raster::blitTo(Raster* target, int16_t src_x, int16_t src_y, uint16_t src_w, uint16_t src_h, int16_t dest_x, int16_t dest_y, uint16_t dest_w, uint16_t dest_h, bool masked)
 {
 	auto x0 = std::max(0, int(dest_x));
 	auto x1 = std::min(int(target->width), dest_x + dest_w);
@@ -39,27 +39,27 @@ void Raster::blitTo(Raster *target, int16_t src_x, int16_t src_y, uint16_t src_w
 	}
 }
 
-void Raster::blitTo(Raster *target, int16_t src_x, int16_t src_y, uint16_t dest_x, uint16_t dest_y, uint16_t src_w, uint16_t src_h, bool masked)
+void Raster::blitTo(Raster* target, int16_t src_x, int16_t src_y, uint16_t dest_x, uint16_t dest_y, uint16_t src_w, uint16_t src_h, bool masked)
 {
 	blitTo(target, src_x, src_y, src_w, src_h, dest_x, dest_y, src_w, src_h, masked);
 }
 
-void Raster::blitTo(Raster *target, int16_t src_x, int16_t src_y, int16_t dest_x, int16_t dest_y, uint16_t src_w, uint16_t src_h)
+void Raster::blitTo(Raster* target, int16_t src_x, int16_t src_y, int16_t dest_x, int16_t dest_y, uint16_t src_w, uint16_t src_h)
 {
 	blitTo(target, src_x, src_y, src_w, src_h, dest_x, dest_y, src_w, src_h, false);
 }
 
-void Raster::blitTo(Raster *target, int16_t dest_x, int16_t dest_y)
+void Raster::blitTo(Raster* target, int16_t dest_x, int16_t dest_y)
 {
 	blitTo(target, 0, 0, width, height, dest_x, dest_y, width, height, false);
 }
 
-void Raster::blitTo(Raster *target)
+void Raster::blitTo(Raster* target)
 {
 	blitTo(target, 0, 0, width, height, 0, 0, width, height, false);
 }
 
-void Raster::maskedBlitTo(Raster *target, int16_t dest_x, int16_t dest_y)
+void Raster::maskedBlitTo(Raster* target, int16_t dest_x, int16_t dest_y)
 {
 	blitTo(target, 0, 0, width, height, dest_x, dest_y, width, height, true);
 }
@@ -118,7 +118,12 @@ void Raster::fill(uint8_t color)
 	fill(0, 0, width, height, color);
 }
 
-void ellipsefill(Raster *r, int x, int y, int rx, int ry, int color)
+uint8_t& Raster::ptr(int16_t x, int16_t y)
+{
+	return data[x + y * stride];
+}
+
+void ellipsefill(Raster* r, int x, int y, int rx, int ry, int color)
 {
 	for (int i = 0; i < rx; ++i)
 	{
@@ -135,7 +140,7 @@ void ellipsefill(Raster *r, int x, int y, int rx, int ry, int color)
 	}
 }
 
-void draw_trans_sprite(Raster *dest, Raster *src, int x, int y)
+void draw_trans_sprite(Raster* dest, Raster* src, int x, int y)
 {
 	for (int i = 0; i < src->width; ++i)
 	{
@@ -149,9 +154,9 @@ void draw_trans_sprite(Raster *dest, Raster *src, int x, int y)
 	// todo
 }
 
-Raster *raster_from_bitmap(BITMAP *bmp)
+Raster* raster_from_bitmap(BITMAP* bmp)
 {
-	Raster *ans = new Raster(bmp->w, bmp->h);
+	Raster* ans = new Raster(bmp->w, bmp->h);
 	for (int i = 0; i < ans->width; ++i)
 	{
 		for (int j = 0; j < ans->height; ++j)

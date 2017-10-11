@@ -6,10 +6,10 @@
 class KAnimSequence
 {
 public:
-	KAnimSequence(const KTmxAnimation &);
-	KAnimSequence(KAnimSequence &&);
+	KAnimSequence(const KTmxAnimation& base);
+	KAnimSequence(KAnimSequence&& other);
 
-	const KTmxAnimation::animation_frame &current();
+	const KTmxAnimation::animation_frame& current();
 
 	void advance();
 

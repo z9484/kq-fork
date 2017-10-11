@@ -139,7 +139,7 @@ public:
 	int imb_s;
 	int imb_a;
 	int imb[2];
-	Raster *img;
+	Raster* img;
 };
 
 extern KFighter fighter[NUM_FIGHTERS];

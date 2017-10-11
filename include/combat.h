@@ -39,4 +39,4 @@ extern int deffect[NUM_FIGHTERS];
 extern int rcount;
 extern uint8_t vspell;
 extern uint8_t ms;
-extern Raster *backart;
+extern Raster* backart;

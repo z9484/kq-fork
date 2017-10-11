@@ -38,7 +38,7 @@ shared_ptr<KBound> KBounds::GetBound(size_t index)
 * \returns index+1 in array if found, else 0 if not found
 */
 uint32_t KBounds::IsBound(const uint16_t left, const uint16_t top,
-	const uint16_t right, const uint16_t bottom) const
+                          const uint16_t right, const uint16_t bottom) const
 {
 	size_t i;
 	uint16_t x1, y1, x2, y2;
@@ -69,7 +69,7 @@ uint32_t KBounds::IsBound(const uint16_t left, const uint16_t top,
 	{
 		auto current_bound = m_bounds[i];
 		if (x1 > current_bound->right || x2 < current_bound->left ||
-			y1 > current_bound->bottom || y2 < current_bound->top)
+		        y1 > current_bound->bottom || y2 < current_bound->top)
 		{
 			continue;
 		}

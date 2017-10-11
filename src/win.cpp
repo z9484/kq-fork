@@ -21,7 +21,7 @@
 static int init_path = 0;
 static char user_dir[MAX_PATH];
 static char game_dir[MAX_PATH];
-typedef HRESULT(WINAPI *SHGETFOLDERPATH)(HWND, int, HANDLE, DWORD, LPWSTR);
+typedef HRESULT(WINAPI* SHGETFOLDERPATH)(HWND, int, HANDLE, DWORD, LPWSTR);
 
 #define CSIDL_FLAG_CREATE 0x8000
 #define CSIDL_APPDATA 0x1A
@@ -65,7 +65,7 @@ const string CombinePaths(size_t numStringsToCombine, ...)
  */
 const string get_resource_file_path(const string str1, const string str2, const string file)
 {
-	FILE *fp = nullptr;
+	FILE* fp = nullptr;
 
 	const string userDirFound = CombinePaths(3, user_dir, str2, file);
 	fp = fopen(userDirFound.c_str(), "r");
@@ -99,7 +99,7 @@ const string get_resource_file_path(const string str1, const string str2, const 
  */
 const string get_lua_file_path(const string file)
 {
-	FILE *fp = nullptr;
+	FILE* fp = nullptr;
 
 	const string userDirLob = CombinePaths(3, user_dir, "scripts", file + ".lob");
 	fp = fopen(userDirLob.c_str(), "r");
@@ -146,7 +146,7 @@ const string kqres(eDirectories dir, string file)
 {
 	HINSTANCE SHFolder;
 	SHGETFOLDERPATH SHGetFolderPath;
-	char *home;
+	char* home;
 
 	if (!init_path)
 	{
@@ -162,7 +162,7 @@ const string kqres(eDirectories dir, string file)
 				/* Get the "Application Data" folder for the current user */
 				if (SHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, tmp) == S_OK)
 				{
-					home = uconvert((const char *)tmp, U_UNICODE, NULL, U_UTF8, 0);
+					home = uconvert((const char*)tmp, U_UNICODE, NULL, U_UTF8, 0);
 				}
 			}
 			FreeLibrary(SHFolder);
