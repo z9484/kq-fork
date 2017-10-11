@@ -182,11 +182,8 @@ s_heroinfo players[MAXCHRS];
 /*! Name of current shop */
 string shop_name;
 
-/*! Items in a shop */
-/* int shin[SHOPITEMS]; One global variable down; 999,999 to go --WK */
-
 /*! Should we display a box with attack_string in it (used in combat) */
-int display_attack_string = 0;
+bool display_attack_string = false;
 
 /*! Name of current spell or special ability */
 char attack_string[39];

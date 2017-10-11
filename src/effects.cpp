@@ -296,9 +296,9 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color) {
   curx = -1;
   cury = -1;
   fighter[caster_fighter_index].fighterAttackSpriteFrame = 2;
-  display_attack_string = 1;
+  display_attack_string = true;
   battle_render(0, 0, 0);
-  display_attack_string = 0;
+  display_attack_string = false;
   fullblit(double_buffer, back);
   play_effect(22, 128);
 
@@ -350,9 +350,9 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
   }
   curx = -1;
   cury = -1;
-  display_attack_string = 1;
+  display_attack_string = true;
   battle_render(0, 0, 0);
-  display_attack_string = 0;
+  display_attack_string = false;
   fullblit(double_buffer, back);
   play_effect(eff[effect_index].snd, 128);
   for (frame_index = 0; frame_index < eff[effect_index].numf; frame_index++) {
@@ -423,9 +423,9 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
   }
   curx = -1;
   cury = -1;
-  display_attack_string = 1;
+  display_attack_string = true;
   battle_render(0, 0, 0);
-  display_attack_string = 0;
+  display_attack_string = false;
   fullblit(double_buffer, back);
   play_effect(eff[effect_index].snd, 128);
   for (num_frames = 0; num_frames < eff[effect_index].numf; num_frames++) {

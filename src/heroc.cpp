@@ -267,9 +267,9 @@ static int combat_item(int ss, int t1, int tg) {
     return 0;
   }
   strcpy(attack_string, items[t1].itemName);
-  display_attack_string = 1;
+  display_attack_string = true;
   r = item_effects(ss, tg, t1);
-  display_attack_string = 0;
+  display_attack_string = false;
   if (r < 2) {
     return r;
   }
@@ -983,7 +983,7 @@ static int hero_invokeitem(size_t attacker_fighter_index, size_t item_index) {
   if (item_index == I_ROD1) {
     unsigned int random_fighter_index = kqrandom->random_range_exclusive(1, 4);
     strcpy(attack_string, _("Magic Missiles"));
-    display_attack_string = 1;
+    display_attack_string = true;
     ta[defender_fighter_index] = 0;
     for (unsigned fighter_index = 0; fighter_index < random_fighter_index;
          fighter_index++) {
@@ -993,7 +993,7 @@ static int hero_invokeitem(size_t attacker_fighter_index, size_t item_index) {
                                       defender_fighter_index, 0);
       }
     }
-    display_attack_string = 0;
+    display_attack_string = false;
   }
   return 1;
 }

@@ -453,7 +453,7 @@ int skill_use(size_t attack_fighter_index) {
     color_scale(temp.get(), backart, 16, 31);
     b = fighter[attack_fighter_index].fighterMaxHealth / 20;
     strcpy(attack_string, _("Rage"));
-    display_attack_string = 1;
+    display_attack_string = true;
     tempa.fighterStats[A_ATT] = fighter[attack_fighter_index].fighterStats[A_ATT];
     tempa.fighterStats[A_HIT] = fighter[attack_fighter_index].fighterStats[A_HIT];
     if (fighter[enemy_index].fighterCanCriticalHit == 1) {
@@ -477,7 +477,7 @@ int skill_use(size_t attack_fighter_index) {
 
     fighter[attack_fighter_index].fighterHealth -= (b * 2);
     ta[attack_fighter_index] = (b * 2);
-    display_attack_string = 0;
+    display_attack_string = false;
     blit(temp.get(), backart, 0, 0, 0, 0, 320, 240);
     display_amount(attack_fighter_index, FONT_DECIDE, 0);
     if (fighter[attack_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0) {
@@ -489,7 +489,7 @@ int skill_use(size_t attack_fighter_index) {
   case SARINA:
     fighter[attack_fighter_index].ctmem = 1000;
     strcpy(attack_string, _("Sweep"));
-    display_attack_string = 1;
+    display_attack_string = true;
     tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
     fighter[attack_fighter_index].fighterAttackSpriteFrame = 6;
     curx = -1;
@@ -498,12 +498,12 @@ int skill_use(size_t attack_fighter_index) {
     blit2screen(0, 0);
     kq_wait(150);
     multi_fight(attack_fighter_index);
-    display_attack_string = 0;
+    display_attack_string = false;
     break;
 
   case CORIN:
     strcpy(attack_string, _("Elemental Infusion"));
-    display_attack_string = 1;
+    display_attack_string = true;
     fighter[attack_fighter_index].aux = 2;
     if (combat_spell_menu(attack_fighter_index) == 1) {
       draw_castersprite(
@@ -550,10 +550,10 @@ int skill_use(size_t attack_fighter_index) {
       fighter[attack_fighter_index].aux = 1;
     } else {
       fighter[attack_fighter_index].aux = 0;
-      display_attack_string = 0;
+      display_attack_string = false;
       return 0;
     }
-    display_attack_string = 0;
+    display_attack_string = false;
     fighter[attack_fighter_index].fighterSpellEffectStats[S_INFUSE] =
         magic[fighter[attack_fighter_index].csmem].elem;
     break;
@@ -561,7 +561,7 @@ int skill_use(size_t attack_fighter_index) {
   case AJATHAR:
     if (fighter[attack_fighter_index].unl > 0) {
       strcpy(attack_string, _("Dispel Undead"));
-      display_attack_string = 1;
+      display_attack_string = true;
       fullblit(double_buffer, back);
       for (a = 0; a < 14; a++) {
         convert_cframes(PSIZE, 1 + a, 15, 1);
@@ -576,7 +576,7 @@ int skill_use(size_t attack_fighter_index) {
         fullblit(back, double_buffer);
       }
       revert_cframes(PSIZE, 1);
-      display_attack_string = 0;
+      display_attack_string = false;
       b = fighter[attack_fighter_index].fighterLevel * 15;
       for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++) {
         if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0) {
@@ -617,9 +617,9 @@ int skill_use(size_t attack_fighter_index) {
         }
       }
       strcpy(attack_string, _("Divine Cure"));
-      display_attack_string = 1;
+      display_attack_string = true;
       draw_spellsprite(0, 1, 15, 1);
-      display_attack_string = 0;
+      display_attack_string = false;
       for (fighter_index = 0; fighter_index < numchrs; fighter_index++) {
         if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
             fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) {
@@ -686,13 +686,13 @@ int skill_use(size_t attack_fighter_index) {
     fighter[attack_fighter_index].fighterImageDatafileY = fighter[enemy_index].fighterImageDatafileY + fighter[enemy_index].fighterImageDatafileHeight - 40;
     fighter[attack_fighter_index].fighterSpriteFacing = 1;
     strcpy(attack_string, _("Steal"));
-    display_attack_string = 1;
+    display_attack_string = true;
     battle_render(0, attack_fighter_index + 1, 0);
     blit2screen(0, 0);
     kq_wait(100);
     play_effect(SND_MENU, 128);
     kq_wait(500);
-    display_attack_string = 0;
+    display_attack_string = false;
     battle_render(attack_fighter_index, attack_fighter_index, 0);
     found_item = 0;
 #ifdef DEBUGMODE
@@ -755,7 +755,7 @@ int skill_use(size_t attack_fighter_index) {
 #endif
     fighter[attack_fighter_index].fighterImageDatafileX = tx;
     fighter[attack_fighter_index].fighterImageDatafileY = ty;
-    display_attack_string = 0;
+    display_attack_string = false;
     fighter[attack_fighter_index].fighterSpriteFacing = 0;
     battle_render(attack_fighter_index, attack_fighter_index, 0);
     blit2screen(0, 0);

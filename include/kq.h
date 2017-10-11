@@ -129,7 +129,7 @@ extern uint16_t tilex[MAX_TILES], adelay[MAX_ANIM];
 extern char *strbuf, *savedir;
 extern s_player party[MAXCHRS];
 extern s_heroinfo players[MAXCHRS];
-extern int shin[12], display_attack_string;
+extern bool display_attack_string;
 extern string shop_name;
 extern char attack_string[39];
 extern volatile int timer, ksec, kmin, khr, animation_count, timer_count;

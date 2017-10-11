@@ -47,7 +47,7 @@ void combat_skill(size_t fighter_index)
 		display_attack_string = 1;
 		tempa.welem = R_POISON + 1;
 		fight(fighter_index, tgt, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
 	case 102:
@@ -55,7 +55,7 @@ void combat_skill(size_t fighter_index)
 		display_attack_string = 1;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 15 / 10;
 		fight(fighter_index, tgt, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
 	case 103:
@@ -63,7 +63,7 @@ void combat_skill(size_t fighter_index)
 		display_attack_string = 1;
 		draw_spellsprite(tgt, 0, 10, 1);
 		special_damage_oneall_enemies(fighter_index, 60, R_ICE, tgt, 0);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
 	case 104:
@@ -72,7 +72,7 @@ void combat_skill(size_t fighter_index)
 		draw_hugesprite(0, 80, 108, 21, 1);
 		/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
 		special_damage_oneall_enemies(fighter_index, 40, R_ICE, SEL_ALL_ENEMIES, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 105:
@@ -89,7 +89,7 @@ void combat_skill(size_t fighter_index)
 		display_attack_string = 1;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
 		multi_fight(fighter_index);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
 	case 106:
@@ -97,7 +97,7 @@ void combat_skill(size_t fighter_index)
 		display_attack_string = 1;
 		tempa.welem = R_PARALYZE + 1;
 		fight(fighter_index, tgt, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 107:
@@ -107,7 +107,7 @@ void combat_skill(size_t fighter_index)
 		tempa.fighterStats[A_HIT] = tempa.fighterStats[A_HIT] * 9 / 10;
 		tempa.welem = 0;
 		fight(fighter_index, tgt, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
 	case 108:
@@ -213,7 +213,7 @@ void combat_skill(size_t fighter_index)
 		tempa.fighterStats[A_HIT] = tempa.fighterStats[A_HIT] * 8 / 10;
 		tempa.welem = R_PETRIFY + 1;
 		fight(fighter_index, tgt, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 113:
@@ -229,7 +229,7 @@ void combat_skill(size_t fighter_index)
 		display_attack_string = 1;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 8 / 10;
 		fight(fighter_index, tgt, 1);
-		display_attack_string = 0;
+		display_attack_string = false;
 		if (non_dmg_save(tgt, 80) == 0 && ta[tgt] != MISS) {
 			fighter[tgt].fighterSpellEffectStats[S_STOP] = 2;
 		}
