@@ -412,7 +412,7 @@ bool player2fighter(size_t partyIndex, KFighter &outFighter) {
       }
       /* Set current weapon type. When the hero wields a weapon
        * in combat, it will look like this.
-       * The colour comes from s_item::kol
+       * The color comes from s_item::kol
        */
       fighterFromPlayer.current_weapon_type = items[a].icon;
       if (fighterFromPlayer.current_weapon_type == W_CHENDIGAL) {

@@ -23,7 +23,7 @@ struct s_item
 {
 	char itemName[17]; /*!< Name of the item */
 	uint8_t icon;  /*!< Small icon */
-	uint8_t kol;   /*!< Colour to draw?? See hero_init() */
+	uint8_t kol;   /*!< Color to draw?? See hero_init() */
 	char desc[40]; /*!< One line description */
 	uint8_t tgt;   /*!< Targetting type for combat items. See TGT_* constants in kq.h */
 	uint8_t type; /*!< Relates to which slot (hand, etc.) this item goes into */

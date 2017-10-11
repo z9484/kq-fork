@@ -32,12 +32,12 @@ static int palindex(uint8_t *ptr) {
   uint8_t b = ptr[2] >> 2;
   uint8_t a = ptr[3];
 
-  // Any transparency at all means return the palette transparent colour (0)
+  // Any transparency at all means return the palette transparent color (0)
   if (a != 0xFF) {
     return 0;
   }
   int bestindex = 255, bestdist = 0x1000;
-  // Start at 1 because 0 is the transparent colour and we don't want to match
+  // Start at 1 because 0 is the transparent color and we don't want to match
   // it
   for (int i = 1; i < 256; ++i) {
     RGB &rgb = pal[i];
@@ -70,7 +70,7 @@ static Raster *bmp_from_png(const string &path) {
   png_image_begin_read_from_file(&image, path.c_str());
   Raster *bitmap = nullptr;
   if (!PNG_IMAGE_FAILED(image)) {
-    // Force load in true colour with alpha format
+    // Force load in true color with alpha format
     image.format = PNG_FORMAT_RGBA;
     std::unique_ptr<uint8_t[]> imagedata(new uint8_t[PNG_IMAGE_SIZE(image)]);
     png_image_finish_read(&image, nullptr, imagedata.get(),

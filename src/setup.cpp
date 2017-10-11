@@ -58,7 +58,7 @@ static void music_feedback(int val) {
  * \param   y y-coord of line
  * \param   caption Title of the setting (e.g. "Windowed mode:")
  * \param   value The setting (e.g. "Yes")
- * \param   color The foreground colour of the text
+ * \param   color The foreground color of the text
  */
 static void citem(int y, const char *caption, const char *value,
                   eFontColor color) {

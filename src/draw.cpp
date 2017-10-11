@@ -4,7 +4,7 @@
  * \date ????????
  *
  * Includes functions to draw characters, text and maps.
- * Also some colour manipulation.
+ * Also some color manipulation.
  */
 
 #include <assert.h>
@@ -146,14 +146,14 @@ static void border(Raster *where, int left, int top, int right, int bottom) {
   putpixel(where, right - 4, bottom - 4, WHITE);
 }
 
-/*! \brief Scale colours
+/*! \brief Scale colors
  *
  * This takes a bitmap and scales it to fit in the color range specified.
  * Output goes to a new bitmap.
  * This is used to make a monochrome version of a bitmap, for example to
  * display a green, poisoned character, or the red 'rage' effect for
  * Sensar. This relies on the palette having continuous lightness ranges
- * of one colour (as the KQ palette does!).
+ * of one color (as the KQ palette does!).
  * An alternative would be to use makecol(), though this would incur
  * a speed penalty.
  * Another alternative would be to precalculate some maps for each case.
@@ -602,7 +602,7 @@ void draw_icon(Raster *where, int ino, int icx, int icy) {
  * \param   y1 y-coord of top left
  * \param   x2 x-coord of bottom right
  * \param   y2 y-coord of bottom right
- * \param   bg Colour/style of background
+ * \param   bg Color/style of background
  * \param   bstyle Style of border
  */
 static void draw_kq_box(Raster *where, int x1, int y1, int x2, int y2, int bg,
@@ -1053,7 +1053,7 @@ int is_forestsquare(int fx, int fy) {
  * \param   y y-coord
  * \param   w Width
  * \param   h Height
- * \param   c Colour (see note above)
+ * \param   c Color (see note above)
  */
 void menubox(Raster *where, int x, int y, int w, int h, int c) {
   draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, c, B_TEXT);
@@ -1672,7 +1672,7 @@ static const char *relay(const char *buf) {
   }
 }
 
-/*! \brief Restore colours
+/*! \brief Restore colors
  *
  * Restore specified fighter frames to normal color. This is done
  * by blitting the 'master copy' from tcframes.

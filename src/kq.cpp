@@ -196,10 +196,9 @@ char attack_string[39];
  * hours, minutes and seconds. They're all used in the my_counter() timer
  * function just below
  */
-volatile int timer = 0, ksec = 0, kmin = 0, khr = 0, timer_count = 0,
-             animation_count = 0;
+volatile int timer = 0, ksec = 0, kmin = 0, khr = 0, timer_count = 0, animation_count = 0;
 
-/*! Current colour map */
+/*! Current color map */
 COLOR_MAP cmap;
 
 /*! Party can run away from combat? */

@@ -21,7 +21,7 @@ public:
 	void hline(int16_t x0, int16_t x1, int16_t y, uint8_t color);
 	void vline(int16_t x, int16_t y0, int16_t y1, uint8_t color);
 	void fill(int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t color);
-	void fill(uint8_t colour);
+	void fill(uint8_t color);
 	uint8_t &ptr(int16_t x, int16_t y)
 	{
 		return data[x + y * stride];
