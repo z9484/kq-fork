@@ -21,7 +21,7 @@ enum eDirectories
 /* Get the directory for application data (music, gfx, etc.)
    or user data (screenshots, prefs, saved games)
  */
-const std::string kqres(enum eDirectories, const std::string);
+std::string kqres(enum eDirectories, const std::string& file);
 
 const std::string get_lua_file_path(const std::string, const std::string);
 const std::string get_resource_file_path(const std::string, const std::string, const std::string);

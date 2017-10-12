@@ -99,25 +99,24 @@ void KMusic::play_music(const std::string& music_name, long position)
 {
 	if (is_sound != 0)
 	{
-		const std::string fstr = kqres(MUSIC_DIR, music_name);
-		const char* filename = fstr.c_str();
+		std::string fstr = kqres(MUSIC_DIR, music_name);
 
 		stop_music();
-		if (exists(filename))
+		if (exists(fstr.c_str()))
 		{
-			if (strstr(filename, ".mod"))
+			if (strstr(fstr.c_str(), ".mod"))
 			{
-				mod_song[current_music_player] = dumb_load_mod(filename);
+				mod_song[current_music_player] = dumb_load_mod(fstr.c_str());
 			}
 
-			else if (strstr(filename, ".xm"))
+			else if (strstr(fstr.c_str(), ".xm"))
 			{
-				mod_song[current_music_player] = dumb_load_xm(filename);
+				mod_song[current_music_player] = dumb_load_xm(fstr.c_str());
 			}
 
-			else if (strstr(filename, ".s3m"))
+			else if (strstr(fstr.c_str(), ".s3m"))
 			{
-				mod_song[current_music_player] = dumb_load_s3m(filename);
+				mod_song[current_music_player] = dumb_load_s3m(fstr.c_str());
 			}
 
 			else
@@ -133,7 +132,7 @@ void KMusic::play_music(const std::string& music_name, long position)
 			}
 			else
 			{
-				TRACE(_("Could not load %s!\n"), filename);
+				TRACE(_("Could not load %s!\n"), fstr.c_str());
 			}
 		}
 		else

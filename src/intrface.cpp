@@ -582,12 +582,11 @@ void do_entity(int en_num)
 void do_luacheat(void)
 {
 	int oldtop;
-	std::string cheatfile;
 
 	/* kqres might return null if the cheat file doesn't exist.
 	 * in that case, just do a no-op.
 	 */
-	cheatfile = kqres(SCRIPT_DIR, "cheat");
+	std::string cheatfile = kqres(SCRIPT_DIR, "cheat");
 	if (cheatfile.empty())
 	{
 		return;

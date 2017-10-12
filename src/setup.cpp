@@ -676,7 +676,7 @@ static int load_samples(void)
  */
 static void parse_allegro_setup(void)
 {
-	const std::string cfg = kqres(SETTINGS_DIR, "kq.cfg").c_str();
+	std::string cfg = kqres(SETTINGS_DIR, "kq.cfg").c_str();
 
 	if (!exists(cfg.c_str()))
 	{

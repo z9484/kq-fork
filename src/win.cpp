@@ -142,7 +142,7 @@ const std::string get_lua_file_path(const std::string file)
  * \param   file File name below that directory.
  * \returns the combined path
  */
-const std::string kqres(eDirectories dir, std::string file)
+std::string kqres(eDirectories dir, const std::string& file)
 {
 	HINSTANCE SHFolder;
 	SHGETFOLDERPATH SHGetFolderPath;
