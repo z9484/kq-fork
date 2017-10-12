@@ -78,7 +78,20 @@ void menubox(Raster* where, int x, int y, int w, int h, int c);
 void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_index);
 void print_num(Raster* where, int sx, int sy, const string msg, eFont font_index);
 void text_ex(int, int, const char*);
-void porttext_ex(int, int, const char*);
+
+/*! \brief Display speech/thought bubble with portrait
+ * \author Z9484
+ * \date 2008
+ *
+ * Displays text, like bubble_text, but passing the args
+ * through the relay function first
+ * \date updated 20030401 merged thought and speech
+ * \sa bubble_text()
+ * \param   fmt Format, B_TEXT or B_THOUGHT
+ * \param   who Character that is speaking
+ * \param   s The text to display
+ */
+void porttext_ex(eBubbleStyle fmt, int who, const char* s);
 int prompt(int, int, int, const char*, const char*, const char*, const char*);
 int prompt_ex(int, const char*, const char* [], int);
 void message(const char*, int, int, int, int);

@@ -25,7 +25,7 @@
  * \date ??????
  */
 
-namespace Kqlives
+namespace KqFork
 {
 int check_xp(int, int);
 void ilist_add(info_list*, const char*, const char*);
@@ -33,7 +33,7 @@ void level_up(int);
 void quest_info(void);
 void status_screen(size_t);
 info_list quest_list;
-}
+} // namespace KqFork
 
 /*! \brief Add a new quest item
  *
@@ -46,7 +46,7 @@ info_list quest_list;
  */
 void add_questinfo(const char* key, const char* text)
 {
-	Kqlives::ilist_add(&Kqlives::quest_list, key, text);
+	KqFork::ilist_add(&KqFork::quest_list, key, text);
 }
 
 /*! \brief Check for level-ups
@@ -57,7 +57,7 @@ void add_questinfo(const char* key, const char* text)
  * \param   ls - Learned new spell
  * \returns 1 if new spell learned, 0 otherwise
  */
-int Kqlives::check_xp(int pl, int ls)
+int KqFork::check_xp(int pl, int ls)
 {
 	int stp = 0, z = 0;
 
@@ -174,7 +174,7 @@ void draw_playerstat(Raster* where, int player_index_in_party, int dx, int dy)
 int give_xp(int pl, int the_xp, int ls)
 {
 	party[pl].xp += the_xp;
-	return Kqlives::check_xp(pl, ls);
+	return KqFork::check_xp(pl, ls);
 }
 
 /*! \brief Add a new quest into the list
@@ -183,7 +183,7 @@ int give_xp(int pl, int the_xp, int ls)
  * \param   key - Title of the item
  * \param   text - Text to associate with the quest
  */
-void Kqlives::ilist_add(info_list* l, const char* key, const char* text)
+void KqFork::ilist_add(info_list* l, const char* key, const char* text)
 {
 	if (l->count >= l->capacity)
 	{
@@ -227,7 +227,7 @@ static void ilist_clear(info_list* l)
  *
  * \param   pr - Person leveling up
  */
-void Kqlives::level_up(int pr)
+void KqFork::level_up(int pr)
 {
 	int a, b = 0;
 	float z;
@@ -311,7 +311,7 @@ void menu(void)
 				spec_items();
 				break;
 			case 5:
-				Kqlives::quest_info();
+				KqFork::quest_info();
 				break;
 			default:
 				z = select_player();
@@ -326,7 +326,7 @@ void menu(void)
 						equip_menu(z);
 						break;
 					case 4:
-						Kqlives::status_screen(z);
+						KqFork::status_screen(z);
 						break;
 					}
 				}
@@ -562,15 +562,15 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
  * \author PH
  * \date 20050429
  */
-void Kqlives::quest_info(void)
+void KqFork::quest_info(void)
 {
 	int ii = 0;
 	int i, base;
 
 	/* Call into the script */
-	ilist_clear(&Kqlives::quest_list);
+	ilist_clear(&KqFork::quest_list);
 	do_questinfo();
-	if (Kqlives::quest_list.count == 0)
+	if (KqFork::quest_list.count == 0)
 	{
 		/* There was nothing.. */
 		play_effect(SND_BAD, 128);
@@ -586,15 +586,15 @@ void Kqlives::quest_info(void)
 		menubox(double_buffer, 88 + xofs, 188 + yofs, 18, 3, BLUE);
 		for (i = 0; i < 10; ++i)
 		{
-			if (i + base < Kqlives::quest_list.count)
+			if (i + base < KqFork::quest_list.count)
 			{
-				print_font(double_buffer, 104 + xofs, 100 + 8 * i + yofs, Kqlives::quest_list.root[i + base].key, FNORMAL);
+				print_font(double_buffer, 104 + xofs, 100 + 8 * i + yofs, KqFork::quest_list.root[i + base].key, FNORMAL);
 			}
 		}
 		draw_sprite(double_buffer, menuptr, 88 + xofs, 100 + 8 * (ii - base) + yofs);
-		if (ii < Kqlives::quest_list.count)
+		if (ii < KqFork::quest_list.count)
 		{
-			print_font(double_buffer, 96 + xofs, 196 + yofs, Kqlives::quest_list.root[ii].text, FNORMAL);
+			print_font(double_buffer, 96 + xofs, 196 + yofs, KqFork::quest_list.root[ii].text, FNORMAL);
 		}
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
@@ -624,9 +624,9 @@ void Kqlives::quest_info(void)
 		}
 		if (ii < 0)
 		{
-			ii = Kqlives::quest_list.count - 1;
+			ii = KqFork::quest_list.count - 1;
 		}
-		if (ii >= Kqlives::quest_list.count)
+		if (ii >= KqFork::quest_list.count)
 		{
 			ii = 0;
 		}
@@ -766,7 +766,7 @@ void spec_items(void)
  * Draw the verbose stats of a single player.
  * \param   fighter_index - Character to draw (index in pidx array)
  */
-void Kqlives::status_screen(size_t fighter_index)
+void KqFork::status_screen(size_t fighter_index)
 {
 	int stop = 0;
 	int bc = 0;

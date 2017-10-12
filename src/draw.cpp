@@ -35,27 +35,77 @@ int gbx, gby, gbbx, gbby, gbbw, gbbh, gbbs;
 eBubbleStemStyle bubble_stem_style;
 uint8_t BLUE = 2, DARKBLUE = 0, DARKRED = 4;
 
+namespace KqFork
+{
 /*  Internal prototypes  */
-static void border(Raster*, int, int, int, int);
-static void draw_backlayer(void);
-static void draw_char(int, int);
-static void draw_forelayer(void);
-static void draw_midlayer(void);
-static void draw_playerbound(void);
-static void draw_shadows(void);
-static void draw_textbox(int);
-static void draw_porttextbox(int, int);
-static void generic_text(int, int, int);
-const char* parse_string(const char*);
-static const char* relay(const char*);
-static void set_textpos(uint32_t);
-static int get_glyph_index(uint32_t);
+void border(Raster*, int, int, int, int);
+void draw_backlayer(void);
+void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, int bstyle);
+void draw_char(int, int);
+void draw_forelayer(void);
+void draw_midlayer(void);
+void draw_playerbound(void);
+void draw_shadows(void);
+void draw_textbox(int);
+void draw_porttextbox(int, int);
+void generic_text(int, int, int);
+const char* decode_utf8(const char* string, uint32_t* cp);
+
+/*! \brief Insert character names
+ *
+ * This checks a string for $0, or $1 and replaces with player names.
+ *
+ * PH 20030107 Increased limit on length of the_string.
+ * NB. Values for $ other than $0 or $1 will cause errors.
+ *
+ * \param   the_string Input string
+ * \returns processed string, in a static buffer strbuf or the_string, if it had no replacement chars.
+ */
+const char* parse_string(const char* the_string);
+const char* relay(const char*);
+void set_textpos(uint32_t);
+int get_glyph_index(uint32_t);
 
 /*! \brief The internal processing modes during text reformatting
  *
  * \sa relay()
  */
 enum m_mode { M_UNDEF, M_SPACE, M_NONSPACE, M_END };
+
+/*! \brief glyph look up table
+ *
+ * maps unicode char to glyph index for characters > 128.
+ * { unicode, glyph }
+ * n.b. must be sorted in order of unicode char and terminated by {0, 0}
+ */
+const uint32_t glyph_lookup[][2] =
+{
+	{ 0x00c9, 'E' - 32 }, /* E-acute */
+	{ 0x00d3, 'O' - 32 }, /* O-acute */
+	{ 0x00df, 107 },      /* sharp s */
+	{ 0x00e1, 92 },       /* a-grave */
+	{ 0x00e4, 94 },       /* a-umlaut */
+	{ 0x00e9, 95 },       /* e-acute */
+	{ 0x00ed, 'i' - 32 }, /* i-acute */
+	{ 0x00f1, 108 },      /* n-tilde */
+	{ 0x00f3, 99 },       /* o-acute */
+	{ 0x00f6, 102 },      /* o-umlaut */
+	{ 0x00fa, 103 },      /* u-acute */
+	{ 0x00fc, 106 },      /* u-umlaut */
+	{ 0, 0 },
+};
+
+/*! \brief Get glyph index
+ *
+ * Convert a unicode char to a glyph index.
+ * \param cp unicode character
+ * \return glyph index
+ * \author PH
+ * \date 20071116
+ * \note uses inefficient linear search for now.
+ */
+int get_glyph_index(uint32_t cp);
+} // namespace KqFork
 
 /*! \brief Blit from double buffer to the screen
  *
@@ -69,7 +119,7 @@ enum m_mode { M_UNDEF, M_SPACE, M_NONSPACE, M_END };
  */
 void blit2screen(int xw, int yw)
 {
-	static int frate;
+	static int frate = limit_frame_rate(25);
 
 	if (show_frate == 1)
 	{
@@ -124,7 +174,7 @@ void blit2screen(int xw, int yw)
  * \param   right Bottom-right x-coord
  * \param   bottom Bottom-right y-coord
  */
-static void border(Raster* where, int left, int top, int right, int bottom)
+void KqFork::border(Raster* where, int left, int top, int right, int bottom)
 {
 	vline(where, left + 1, top + 3, bottom - 3, GREY2);
 	vline(where, left + 2, top + 3, bottom - 3, GREY3);
@@ -282,7 +332,7 @@ Raster* copy_bitmap(Raster* target, Raster* source)
  * Draw the background layer.  Accounts for parallaxing.
  * Parallax is on for modes 2 & 3
  */
-static void draw_backlayer(void)
+void KqFork::draw_backlayer(void)
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -350,7 +400,7 @@ static void draw_backlayer(void)
  * \param   xw x-offset - always ==16
  * \param   yw y-offset - always ==16
  */
-static void draw_char(int xw, int yw)
+void KqFork::draw_char(int xw, int yw)
 {
 	signed int dx, dy;
 	int f;
@@ -537,7 +587,7 @@ static void draw_char(int xw, int yw)
  * Draw the foreground layer.  Accounts for parallaxing.
  * Parallax is on for modes 4 & 5.
  */
-static void draw_forelayer(void)
+void KqFork::draw_forelayer(void)
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -675,7 +725,7 @@ void draw_icon(Raster* where, int ino, int icx, int icy)
  * \param   bg Color/style of background
  * \param   bstyle Style of border
  */
-static void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, int bstyle)
+void KqFork::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, int bstyle)
 {
 	int a;
 
@@ -695,7 +745,7 @@ static void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, i
 	{
 	case B_TEXT:
 	case B_MESSAGE:
-		border(where, x1, y1, x2 - 1, y2 - 1);
+		KqFork::border(where, x1, y1, x2 - 1, y2 - 1);
 		break;
 
 	case B_THOUGHT:
@@ -728,7 +778,7 @@ static void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, i
  * Draw the middle layer.  Accounts for parallaxing.
  * Parallax is on for modes 3 & 4
  */
-static void draw_midlayer(void)
+void KqFork::draw_midlayer(void)
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -788,7 +838,7 @@ static void draw_midlayer(void)
  *
  * \param   map - The map containing the bounded area data
  */
-static void draw_playerbound(void)
+void KqFork::draw_playerbound(void)
 {
 	int dx, dy, xtc, ytc;
 	shared_ptr<KBound> found = nullptr;
@@ -855,7 +905,7 @@ static void draw_playerbound(void)
  * moved in the future to fall between the background and foreground layers.
  * Shadows are never parallaxed.
  */
-static void draw_shadows(void)
+void KqFork::draw_shadows(void)
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -942,7 +992,7 @@ void draw_stsicon(Raster* where, int cc, int who, int inum, int icx, int icy)
  * \date 20030417 PH This now draws the text as well as just the box
  * \param   bstyle Style (B_TEXT or B_THOUGHT or B_MESSAGE)
  */
-static void draw_textbox(int bstyle)
+void KqFork::draw_textbox(int bstyle)
 {
 	int wid, hgt, a;
 	Raster* stem = nullptr;
@@ -950,7 +1000,7 @@ static void draw_textbox(int bstyle)
 	wid = gbbw * 8 + 16;
 	hgt = gbbh * 12 + 16;
 
-	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
+	KqFork::draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 	if (bubble_stem_style != STEM_UNDEFINED)
 	{
 		/* select the correct stem-thingy that comes out of the speech bubble */
@@ -974,7 +1024,7 @@ static void draw_textbox(int bstyle)
  * \param   chr (what chr is talking)
  */
 
-static void draw_porttextbox(int bstyle, int chr)
+void KqFork::draw_porttextbox(int bstyle, int chr)
 {
 	int wid, hgt, a;
 	int linexofs;
@@ -983,7 +1033,7 @@ static void draw_porttextbox(int bstyle, int chr)
 	hgt = gbbh * 12 + 16;
 	chr = chr - PSIZE;
 
-	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
+	KqFork::draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 
 	for (a = 0; a < gbbh; a++)
 	{
@@ -1027,26 +1077,26 @@ void drawmap(void)
 	clear_bitmap(double_buffer);
 	if (draw_background)
 	{
-		draw_backlayer();
+		KqFork::draw_backlayer();
 	}
 	if (g_map.map_mode == 1 || g_map.map_mode == 3 || g_map.map_mode == 5)
 	{
-		draw_char(16, 16);
+		KqFork::draw_char(16, 16);
 	}
 	if (draw_middle)
 	{
-		draw_midlayer();
+		KqFork::draw_midlayer();
 	}
 	if (g_map.map_mode == 0 || g_map.map_mode == 2 || g_map.map_mode == 4)
 	{
-		draw_char(16, 16);
+		KqFork::draw_char(16, 16);
 	}
 	if (draw_foreground)
 	{
-		draw_forelayer();
+		KqFork::draw_forelayer();
 	}
-	draw_shadows();
-	draw_playerbound();
+	KqFork::draw_shadows();
+	KqFork::draw_playerbound();
 
 	/*  This is an obvious hack here.  When I first started, xofs and yofs could
 	 *  have values of anywhere between 0 and 15.  Therefore, I had to use these
@@ -1078,7 +1128,7 @@ void drawmap(void)
  * style)
  * \param   box_style Style (B_TEXT or B_THOUGHT or B_MESSAGE)
  */
-static void generic_text(int who, int box_style, int isPort)
+void KqFork::generic_text(int who, int box_style, int isPort)
 {
 	int a, stop = 0;
 	int len;
@@ -1099,7 +1149,7 @@ static void generic_text(int who, int box_style, int isPort)
 			}
 		}
 	}
-	set_textpos((box_style == B_MESSAGE) ? -1 : (isPort == 0) ? who : 255);
+	KqFork::set_textpos((box_style == B_MESSAGE) ? -1 : (isPort == 0) ? who : 255);
 	if (gbbw == -1 || gbbh == -1)
 	{
 		return;
@@ -1112,11 +1162,11 @@ static void generic_text(int who, int box_style, int isPort)
 		drawmap();
 		if (isPort == 0)
 		{
-			draw_textbox(box_style);
+			KqFork::draw_textbox(box_style);
 		}
 		else
 		{
-			draw_porttextbox(box_style, who);
+			KqFork::draw_porttextbox(box_style, who);
 		}
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
@@ -1131,7 +1181,7 @@ static void generic_text(int who, int box_style, int isPort)
 
 /*! \brief Check for forest square
  *
- * Helper function for the \sa draw_char routine.  Just returns whether or not
+ * Helper function for the draw_char() routine.  Just returns whether or not
  * the tile at the specified co-ordinates is a forest tile.  This could be
  * a headache if the tileset changes!
  * Looks in the \p map_seg[] array
@@ -1179,7 +1229,7 @@ int is_forestsquare(int fx, int fy)
  */
 void menubox(Raster* where, int x, int y, int w, int h, int c)
 {
-	draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, c, B_TEXT);
+	KqFork::draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, c, B_TEXT);
 }
 
 /*! \brief Alert player
@@ -1201,7 +1251,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 
 	/* Do the $0 replacement stuff */
 	memset(msg, 0, sizeof(msg));
-	strncpy(msg, parse_string(m), sizeof(msg) - 1);
+	strncpy(msg, KqFork::parse_string(m), sizeof(msg) - 1);
 	s = msg;
 
 	/* Save a copy of the screen */
@@ -1210,7 +1260,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 	/* Loop for each box full of text... */
 	while (s != NULL)
 	{
-		s = relay(s);
+		s = KqFork::relay(s);
 		/* Calculate the box size */
 		num_lines = max_len = 0;
 		for (i = 0; i < MSG_ROWS; ++i)
@@ -1258,18 +1308,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 	}
 }
 
-/*! \brief Insert character names
- *
- * This checks a string for $0, or $1 and replaces with player names.
- *
- * PH 20030107 Increased limit on length of the_string.
- * NB. Values for $ other than $0 or $1 will cause errors.
- *
- * \param   the_string Input string
- * \returns processed string, in a static buffer \p strbuf
- *          or \p the_string, if it had no replacement chars.
- */
-const char* parse_string(const char* the_string)
+const char* KqFork::parse_string(const char* the_string)
 {
 	static char strbuf[1024];
 	const char* ap = nullptr;
@@ -1313,7 +1352,7 @@ const char* parse_string(const char* the_string)
  * \author PH
  * \date 20071116
  */
-static const char* decode_utf8(const char* string, uint32_t* cp)
+const char* KqFork::decode_utf8(const char* string, uint32_t* cp)
 {
 	char ch = *string;
 
@@ -1414,40 +1453,7 @@ static const char* decode_utf8(const char* string, uint32_t* cp)
 	return string;
 }
 
-/*! \brief glyph look up table
- *
- * maps unicode char to glyph index for characters > 128.
- * { unicode, glyph }
- * n.b. must be sorted in order of unicode char
- * and terminated by {0, 0}
- */
-static uint32_t glyph_lookup[][2] =
-{
-	{0x00c9, 'E' - 32}, /* E-acute */
-	{0x00d3, 'O' - 32}, /* O-acute */
-	{0x00df, 107},      /* sharp s */
-	{0x00e1, 92},       /* a-grave */
-	{0x00e4, 94},       /* a-umlaut */
-	{0x00e9, 95},       /* e-acute */
-	{0x00ed, 'i' - 32}, /* i-acute */
-	{0x00f1, 108},      /* n-tilde */
-	{0x00f3, 99},       /* o-acute */
-	{0x00f6, 102},      /* o-umlaut */
-	{0x00fa, 103},      /* u-acute */
-	{0x00fc, 106},      /* u-umlaut */
-	{0, 0},
-};
-
-/*! \brief Get glyph index
- *
- * Convert a unicode char to a glyph index.
- * \param cp unicode character
- * \return glyph index
- * \author PH
- * \date 20071116
- * \note uses inefficient linear search for now.
- */
-static int get_glyph_index(uint32_t cp)
+int KqFork::get_glyph_index(uint32_t cp)
 {
 	int i;
 
@@ -1458,11 +1464,11 @@ static int get_glyph_index(uint32_t cp)
 
 	/* otherwise look up */
 	i = 0;
-	while (glyph_lookup[i][0] != 0)
+	while (KqFork::glyph_lookup[i][0] != 0)
 	{
-		if (glyph_lookup[i][0] == cp)
+		if (KqFork::glyph_lookup[i][0] == cp)
 		{
-			return glyph_lookup[i][1];
+			return KqFork::glyph_lookup[i][1];
 		}
 		++i;
 	}
@@ -1502,12 +1508,12 @@ void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_
 	}
 	while (1)
 	{
-		msg = decode_utf8(msg, &cc);
+		msg = KqFork::decode_utf8(msg, &cc);
 		if (cc == 0)
 		{
 			break;
 		}
-		cc = get_glyph_index(cc);
+		cc = KqFork::get_glyph_index(cc);
 		masked_blit(kfonts, where, cc * 8, font_index * 8, z + sx, sy, 8, hgt);
 		z += 8;
 	}
@@ -1569,10 +1575,10 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 	gbbw = 1;
 	gbbh = 0;
 	gbbs = 0;
-	strcpy(msgbuf[0], parse_string(sp1));
-	strcpy(msgbuf[1], parse_string(sp2));
-	strcpy(msgbuf[2], parse_string(sp3));
-	strcpy(msgbuf[3], parse_string(sp4));
+	strcpy(msgbuf[0], KqFork::parse_string(sp1));
+	strcpy(msgbuf[1], KqFork::parse_string(sp2));
+	strcpy(msgbuf[2], KqFork::parse_string(sp3));
+	strcpy(msgbuf[3], KqFork::parse_string(sp4));
 	Game.unpress();
 	for (a = 0; a < 4; a++)
 	{
@@ -1586,7 +1592,7 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 			}
 		}
 	}
-	set_textpos(who);
+	KqFork::set_textpos(who);
 	if (gbbw == -1 || gbbh == -1)
 	{
 		return -1;
@@ -1596,7 +1602,7 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 	{
 		Game.do_check_animation();
 		drawmap();
-		draw_textbox(bstyle);
+		KqFork::draw_textbox(bstyle);
 
 		draw_sprite(double_buffer, menuptr, gbbx + xofs + 8, ptr * 12 + ly + yofs);
 		blit2screen(xofs, yofs);
@@ -1661,16 +1667,16 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 	int winx, winy;
 	int i, w, running;
 
-	ptext = parse_string(ptext);
+	ptext = KqFork::parse_string(ptext);
 	while (1)
 	{
 		gbbw = 1;
 		gbbs = 0;
-		ptext = relay(ptext);
+		ptext = KqFork::relay(ptext);
 		if (ptext)
 		{
 			/* print prompt pages prior to the last one */
-			generic_text(who, B_TEXT, 0);
+			KqFork::generic_text(who, B_TEXT, 0);
 		}
 		else
 		{
@@ -1714,10 +1720,10 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				Game.do_check_animation();
 				drawmap();
 				/* Draw the prompt text */
-				set_textpos(who);
-				draw_textbox(B_TEXT);
+				KqFork::set_textpos(who);
+				KqFork::draw_textbox(B_TEXT);
 				/* Draw the  options text */
-				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, B_TEXT);
+				KqFork::draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, B_TEXT);
 				for (i = 0; i < winheight; ++i)
 				{
 					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], FBIG);
@@ -1784,18 +1790,18 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
  *
  *
  * Takes a string and re-formats it to fit into the msgbuf text buffer,
- * for displaying with  generic_text().  Processes as much as it can to
+ * for displaying with generic_text().  Processes as much as it can to
  * fit in one box, and returns a pointer to the next unprocessed character
  *
  * \param   buf The string to reformat
  * \returns the rest of the string that has not been processed, or NULL if
  *          it has all been processed.
  */
-static const char* relay(const char* buf)
+const char* KqFork::relay(const char* buf)
 {
 	int lasts, lastc, i, cr, cc;
 	char tc;
-	m_mode state;
+	KqFork::m_mode state;
 
 	for (i = 0; i < 4; ++i)
 	{
@@ -1806,24 +1812,24 @@ static const char* relay(const char* buf)
 	cr = 0;
 	lasts = -1;
 	lastc = 0;
-	state = M_UNDEF;
+	state = KqFork::M_UNDEF;
 	while (1)
 	{
 		tc = buf[i];
 		switch (state)
 		{
-		case M_UNDEF:
+		case KqFork::M_UNDEF:
 			switch (tc)
 			{
 			case ' ':
 				lasts = i;
 				lastc = cc;
-				state = M_SPACE;
+				state = KqFork::M_SPACE;
 				break;
 
 			case '\0':
 				msgbuf[cr][cc] = '\0';
-				state = M_END;
+				state = KqFork::M_END;
 				break;
 
 			case '\n':
@@ -1837,12 +1843,12 @@ static const char* relay(const char* buf)
 				break;
 
 			default:
-				state = M_NONSPACE;
+				state = KqFork::M_NONSPACE;
 				break;
 			}
 			break;
 
-		case M_SPACE:
+		case KqFork::M_SPACE:
 			switch (tc)
 			{
 			case ' ':
@@ -1858,18 +1864,18 @@ static const char* relay(const char* buf)
 				break;
 
 			default:
-				state = M_UNDEF;
+				state = KqFork::M_UNDEF;
 				break;
 			}
 			break;
 
-		case M_NONSPACE:
+		case KqFork::M_NONSPACE:
 			switch (tc)
 			{
 			case ' ':
 			case '\0':
 			case '\n':
-				state = M_UNDEF;
+				state = KqFork::M_UNDEF;
 				break;
 
 			default:
@@ -1892,7 +1898,7 @@ static const char* relay(const char* buf)
 			}
 			break;
 
-		case M_END:
+		case KqFork::M_END:
 			return NULL;
 			break;
 
@@ -1953,7 +1959,7 @@ void revert_cframes(size_t fighter_index, int revert_heroes)
  * \param   entity_index If value is between 0..MAX_ENTITIES (exclusive),
  *              character that is speaking, otherwise 'general'.
  */
-static void set_textpos(uint32_t entity_index)
+void KqFork::set_textpos(uint32_t entity_index)
 {
 	if (entity_index < MAX_ENTITIES)
 	{
@@ -2086,34 +2092,22 @@ void set_view(int vw, int x1, int y1, int x2, int y2)
  */
 void text_ex(int fmt, int who, const char* s)
 {
-	s = parse_string(s);
+	s = KqFork::parse_string(s);
 
 	while (s)
 	{
-		s = relay(s);
-		generic_text(who, fmt, 0);
+		s = KqFork::relay(s);
+		KqFork::generic_text(who, fmt, 0);
 	}
 }
 
-/*! \brief Display speech/thought bubble with portrait
- * \author Z9484
- * \date 2008
- *
- * Displays text, like bubble_text, but passing the args
- * through the relay function first
- * \date updated 20030401 merged thought and speech
- * \sa bubble_text()
- * \param   fmt Format, B_TEXT or B_THOUGHT
- * \param   who Character that is speaking
- * \param   s The text to display
- */
-void porttext_ex(int fmt, int who, const char* s)
+void porttext_ex(eBubbleStyle fmt, int who, const char* s)
 {
-	s = parse_string(s);
+	s = KqFork::parse_string(s);
 
 	while (s)
 	{
-		s = relay(s);
-		generic_text(who, fmt, 1);
+		s = KqFork::relay(s);
+		KqFork::generic_text(who, fmt, 1);
 	}
 }
