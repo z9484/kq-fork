@@ -18,10 +18,11 @@ KMarkers::KMarkers() {}
 
 KMarkers::~KMarkers()
 {
-	for (auto marker : m_markers)
+	for (auto& marker : m_markers)
 	{
 		marker = nullptr;
 	}
+	m_markers.clear();
 }
 
 bool KMarkers::Add(std::shared_ptr<KMarker> marker)
@@ -50,13 +51,13 @@ std::shared_ptr<KMarker> KMarkers::GetMarker(size_t index)
 	return nullptr;
 }
 
-std::shared_ptr<KMarker> KMarkers::GetMarker(std::string marker_name)
+std::shared_ptr<KMarker> KMarkers::GetMarker(const std::string& marker_name)
 {
-	for (auto it = m_markers.begin(); it != m_markers.end(); it++)
+	for (auto& marker : m_markers)
 	{
-		if ((*it)->markerName == marker_name)
+		if (marker->markerName == marker_name)
 		{
-			return *it;
+			return marker;
 		}
 	}
 	return nullptr;
@@ -64,11 +65,11 @@ std::shared_ptr<KMarker> KMarkers::GetMarker(std::string marker_name)
 
 std::shared_ptr<KMarker> KMarkers::GetMarker(int32_t x, int32_t y)
 {
-	for (auto it = m_markers.begin(); it != m_markers.end(); it++)
+	for (auto& marker : m_markers)
 	{
-		if ((*it)->x == x && (*it)->y == y)
+		if (marker->x == x && marker->y == y)
 		{
-			return *it;
+			return marker;
 		}
 	}
 	return nullptr;

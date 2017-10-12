@@ -50,7 +50,7 @@ public:
 
 	// Return a pointer to the marker that has the given @param name. If no
 	// markers by that name are found, returns null.
-	std::shared_ptr<KMarker> GetMarker(std::string name);
+	std::shared_ptr<KMarker> GetMarker(const std::string& name);
 
 	// Return a pointer to the marker whose @param x and @param y coordinates
 	// match. If no marker is at those coordinates, returns null.
