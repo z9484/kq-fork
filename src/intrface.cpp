@@ -1,15 +1,5 @@
-/*! \file
- * \brief Interface functions
- * \author JB, PH
- * \date Created ????????
- * \date Updated 20021125 -- Added extra functions
- * \date Updated 20030308 -- Added object interface
- * \date Updated 20051220 -- Change to Lua 5
- * \date Updated 20070809 -- Console stuff
- *
- * This file implements the interface between
- * the C code and the Lua scripts.
- *
+/**
+ * The interface between the C code and the Lua scripts.
  */
 #include "kq.h"
 
@@ -60,21 +50,22 @@ extern "C" {
 namespace KqFork
 {
 
-/*! \brief Sort field array
+/**
+ * Sort the field array.
  *
- * This uses qsort to sort the fields, ready for bsearch to search them
- * \author PH
- * \date Created 20030407
+ * This uses qsort to sort the fields, ready for bsearch to search them.
  */
 void fieldsort(void);
 
-/*! \brief Read file chunk
+/**
+ * Read a file chunk.
  *
- * Read in a piece of a file for the Lua system to compile
+ * Read in a piece of a file for the Lua system to compile.
  *
  * @param L the Lua state (ignored)
  * @param data a pointer to a readerbuf_t structure
  * @param size [out] the number of bytes read
+ * @return pointer to the string buffer
  */
 const char* filereader(lua_State*, void* data, size_t* size);
 
@@ -109,12 +100,9 @@ void init_obj(lua_State* L);
 
 /*! \brief Read in a complete file
  *
- * Read in a lua/lob file and execute it. Executing means
- * defining all the functions etc listed within
- * it.
+ * Read in a lua/lob file and execute it. Executing means defining all the functions etc listed within it.
  *
- * Note that lua files still have to be "prepared"
- * if they use any ITEM constants.
+ * Note that lua files still have to be "prepared" if they use any ITEM constants.
  *
  * @param L the Lua state
  * @param filename the full path of the file to read
@@ -124,32 +112,27 @@ int lua_dofile(lua_State* L, const char* filename);
 
 /*! \brief Process HERO1 and HERO2 pseudo-entity numbers
  *
- * Calculate what's the real entity number,
- * given an enemy number or HERO1 or HERO2
+ * Calculate what's the real entity number, given an enemy number or HERO1 or HERO2
  *
- * 20040911 PH modified so now it will decode an object (e.g. entity[0] or
- * party[0])
+ * It will also decode an object (e.g. entity[0] or party[0]).
  *
  * @param   L Lua state
  * @param   pos position on the lua stack
- * \returns real entity number
+ * @return real entity number
  */
 int real_entity_num(lua_State* L, int pos);
 
-/*! \brief Find a marker
+/**
+ * Find a named marker on the current map.
  *
- * Find the named marker on the current map.
- * Optionally throw a Lua error if it does not exist.
- * \author  PH
- * \date    Created 20060414
- * \date    20060502 PH added check for name == NULL
+ * A Lua error can be thrown if isMarkerRequired is true and the name cannot be found.
  *
- * @param   name - the name of the marker to search for
- * @param   required - if non-zero throw an error if the marker isn't found
+ * @param name The marker name to search for
+ * @param isMarkerRequired If true, throw an error if the marker cannot be found by that name.
  *
- * \returns pointer to marker or nullptr if name not found
+ * @return pointer to marker or nullptr if name not found
  */
-std::shared_ptr<KMarker> KQ_find_marker(const std::string& name, int required);
+std::shared_ptr<KMarker> KQ_find_marker(const std::string& name, bool isMarkerRequired);
 } // namespace KqFork
 
 // void remove_special_item (int index);
@@ -923,7 +906,7 @@ const char* KqFork::stringreader(lua_State* L, void* data, size_t* size)
 	return ans;
 }
 
-std::shared_ptr<KMarker> KqFork::KQ_find_marker(const std::string& name, int required)
+std::shared_ptr<KMarker> KqFork::KQ_find_marker(const std::string& name, bool isMarkerRequired)
 {
 	auto found_marker = g_map.markers.GetMarker(name);
 	if (found_marker != nullptr)
@@ -931,7 +914,7 @@ std::shared_ptr<KMarker> KqFork::KQ_find_marker(const std::string& name, int req
 		return found_marker;
 	}
 
-	if (required)
+	if (isMarkerRequired)
 	{
 		/* Error, marker name not found */
 		if (!name.empty())
@@ -954,7 +937,7 @@ std::shared_ptr<KMarker> KqFork::KQ_find_marker(const std::string& name, int req
  * Note that the field list MUST be sorted first
  * \author PH 20030309
  * @param   n The field name
- * \returns the index, or -1 if not found
+ * @return the index, or -1 if not found
  */
 static int get_field(const char* n)
 {
@@ -1604,7 +1587,7 @@ static int KQ_copy_ent(lua_State* L)
  * These params are meant to be similar to the allegro blit() function.
  *
  * @param   L::1 The Lua VM
- * \returns 0 (no values returned to Lua)
+ * @return 0 (no values returned to Lua)
  * \bug     No error checking is done. Uses direct access to the struct s_map.
  */
 static int KQ_copy_tile_all(lua_State* L)
@@ -1698,7 +1681,7 @@ static int KQ_door_in(lua_State* L)
 	if (lua_type(L, 1) == LUA_TSTRING)
 	{
 		/* It's in "marker" form */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			x = m->x + lua_tointeger(L, 2);
@@ -1737,7 +1720,7 @@ static int KQ_door_out(lua_State* L)
 	if (lua_type(L, 1) == LUA_TSTRING)
 	{
 		/* It's in "marker" form */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			x = m->x + lua_tointeger(L, 2);
@@ -1848,7 +1831,7 @@ static int KQ_get_autoparty(lua_State* L)
  * index of the one that the player is standing in:
  *
  * @param   L::1 - index of Entity (on the map)
- * \returns -1 if nothing found, else index of box: [0..bounds.size)
+ * @return -1 if nothing found, else index of box: [0..bounds.size)
  */
 static int KQ_get_bounds(lua_State* L)
 {
@@ -2009,12 +1992,12 @@ static int KQ_get_gp(lua_State* L)
 /*! \brief Get the x-coord of marker
  *
  * @param   L ::1 Marker name
- * \returns x-coord of marker
+ * @return x-coord of marker
  */
 static int KQ_get_marker_tilex(lua_State* L)
 {
 	const char* marker_name = lua_tostring(L, 1);
-	std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(marker_name, 1);
+	std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(marker_name, true);
 	if (m != nullptr)
 	{
 		lua_pushnumber(L, m->x);
@@ -2029,12 +2012,12 @@ static int KQ_get_marker_tilex(lua_State* L)
 /*! \brief Get the y-coord of marker
  *
  * @param   L ::1 Marker name
- * \returns y-coord of marker
+ * @return y-coord of marker
  */
 static int KQ_get_marker_tiley(lua_State* L)
 {
 	const char* marker_name = lua_tostring(L, 1);
-	std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(marker_name, 1);
+	std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(marker_name, true);
 	if (m != nullptr)
 	{
 		lua_pushnumber(L, m->y);
@@ -2064,7 +2047,7 @@ static int KQ_get_numchrs(lua_State* L)
  *
  * @param   L::1 Which person to check
  * @param   L::2 Which equipment slot
- * \returns person's equipment
+ * @return person's equipment
  */
 static int KQ_get_party_eqp(lua_State* L)
 {
@@ -2083,7 +2066,7 @@ static int KQ_get_party_eqp(lua_State* L)
  * This gets the person's current hit points
  *
  * @param   L::1 Which person's HP to check
- * \returns person's HP
+ * @return person's HP
  */
 static int KQ_get_party_hp(lua_State* L)
 {
@@ -2101,7 +2084,7 @@ static int KQ_get_party_hp(lua_State* L)
  * This gets the person's current level
  *
  * @param   L::1 Which person's level to check
- * \returns person's level
+ * @return person's level
  */
 static int KQ_get_party_lvl(lua_State* L)
 {
@@ -2119,7 +2102,7 @@ static int KQ_get_party_lvl(lua_State* L)
  * This gets the person's maximum hit points
  *
  * @param   L::1 Which person's MHP to check
- * \returns person's MHP
+ * @return person's MHP
  */
 static int KQ_get_party_mhp(lua_State* L)
 {
@@ -2137,7 +2120,7 @@ static int KQ_get_party_mhp(lua_State* L)
  * This gets the person's maximum magic points
  *
  * @param   L::1 Which person's MMP to check
- * \returns person's MMP
+ * @return person's MMP
  */
 static int KQ_get_party_mmp(lua_State* L)
 {
@@ -2155,7 +2138,7 @@ static int KQ_get_party_mmp(lua_State* L)
  * This gets the person's current magic points
  *
  * @param   L::1 Which person's mp to check
- * \returns person's MP
+ * @return person's MP
  */
 static int KQ_get_party_mp(lua_State* L)
 {
@@ -2173,7 +2156,7 @@ static int KQ_get_party_mp(lua_State* L)
  * This gets the person's current mrp
  *
  * @param   L::1 Which person's mrp to check
- * \returns person's mrp
+ * @return person's mrp
  */
 static int KQ_get_party_mrp(lua_State* L)
 {
@@ -2191,7 +2174,7 @@ static int KQ_get_party_mrp(lua_State* L)
  * This gets the name of one of the people in the party
  *
  * @param   L::1 Which party member to evaluate
- * \returns person's name
+ * @return person's name
  */
 static int KQ_get_party_name(lua_State* L)
 {
@@ -2209,7 +2192,7 @@ static int KQ_get_party_name(lua_State* L)
  * This gets the experience still needed to get a level-up for a person
  *
  * @param   L::1 Which person's EXP to evaluate
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_get_party_next(lua_State* L)
 {
@@ -2228,7 +2211,7 @@ static int KQ_get_party_next(lua_State* L)
  *
  * @param   L::1 Which person to check
  * @param   L::2 Which res to check
- * \returns person's res
+ * @return person's res
  */
 static int KQ_get_party_res(lua_State* L)
 {
@@ -2248,7 +2231,7 @@ static int KQ_get_party_res(lua_State* L)
  *
  * @param   L::1 Which person to check
  * @param   L::2 Which stat to check
- * \returns person's stats
+ * @return person's stats
  */
 static int KQ_get_party_stats(lua_State* L)
 {
@@ -2267,7 +2250,7 @@ static int KQ_get_party_stats(lua_State* L)
  * This gets the selected player's experience
  *
  * @param   L::1 Which person's EXP to get
- * \returns person's experience
+ * @return person's experience
  */
 static int KQ_get_party_xp(lua_State* L)
 {
@@ -2285,7 +2268,7 @@ static int KQ_get_party_xp(lua_State* L)
  * This just gets the player's ID
  *
  * @param   L::1 Which character inquired about
- * \returns character's ID
+ * @return character's ID
  */
 static int KQ_get_pidx(lua_State* L)
 {
@@ -2300,7 +2283,7 @@ static int KQ_get_pidx(lua_State* L)
  * This just gets the player's progress through the game
  *
  * @param   L::1 Which Progress to evaluate
- * \returns the value of the Progress
+ * @return the value of the Progress
  */
 static int KQ_get_progress(lua_State* L)
 {
@@ -2359,7 +2342,7 @@ static int KQ_get_vy(lua_State* L)
  * Usually called by the alias _.
  *
  * @param   L::1 The original english message
- * \returns the translation for the current language
+ * @return the translation for the current language
  */
 static int KQ_gettext(lua_State* L)
 {
@@ -2398,7 +2381,7 @@ static int KQ_inn(lua_State* L)
 /*! \brief Is the argument a table or not?
  *
  * @param L::1 any Lua type
- * \returns 1 if it was a table, nil otherwise
+ * @return 1 if it was a table, nil otherwise
  * \author PH
  */
 static int KQ_istable(lua_State* L)
@@ -2446,13 +2429,13 @@ static int KQ_log(lua_State* L)
  * @param L ::1 Marker name
  * @param L ::2 Offset of marker's x-coordinate
  * @param L ::3 Offset of marker's y-coordinate
- * \returns x,y coordinates if marker exists, otherwise nil
+ * @return x,y coordinates if marker exists, otherwise nil
  * \date updated 20060630 -- Added extra functions
  *
  */
 static int KQ_marker(lua_State* L)
 {
-	std::shared_ptr<KMarker> s = KqFork::KQ_find_marker(lua_tostring(L, 1), 0);
+	std::shared_ptr<KMarker> s = KqFork::KQ_find_marker(lua_tostring(L, 1), false);
 
 	if (s != nullptr)
 	{
@@ -2558,7 +2541,7 @@ static int KQ_move_entity(lua_State* L)
 
 	if (lua_type(L, 2) == LUA_TSTRING)
 	{
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 2), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 2), true);
 		if (m != nullptr)
 		{
 			target_x = m->x;
@@ -2594,7 +2577,7 @@ static int KQ_move_entity(lua_State* L)
  * @param   L::2 Icon number or 255 for none (icons are displayed, for
  *               instance, when items are procured)
  * @param   L::3 Delay time (see kq_wait()) , or 0 for indefinite
- * \returns 0 (no value returned)
+ * @return 0 (no value returned)
  *
  * 20040308 PH added code to default missing L::2 parameter to 255 (instead of
  * 0)
@@ -2663,7 +2646,7 @@ static int KQ_place_ent(lua_State* L)
 	if (lua_type(L, 2) == LUA_TSTRING)
 	{
 		/* It's in "marker" form */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 2), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 2), true);
 		if (m != nullptr)
 		{
 			x = m->x;
@@ -2887,7 +2870,7 @@ static int KQ_screen_dump(lua_State* L)
  * by selecting/changing some of the heroes.
  * \sa select_party()
  * @param L::1 Table containing IDs of heroes who might join the team
- * \returns Table containing heroes that weren't selected.
+ * @return Table containing heroes that weren't selected.
  * \author PH
  */
 static int KQ_select_team(lua_State* L)
@@ -2982,7 +2965,7 @@ static int KQ_set_background(lua_State* L)
  *          Or:           \n
  *          ::1 marker    \n
  *          ::2 New value
- * \returns 0 (Nothing returned)
+ * @return 0 (Nothing returned)
  */
 static int KQ_set_btile(lua_State* L)
 {
@@ -2991,7 +2974,7 @@ static int KQ_set_btile(lua_State* L)
 		/* Format:
 		 *    set_btile("marker", value)
 		 */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			set_btile(m->x, m->y, lua_tointeger(L, 2));
@@ -3200,7 +3183,7 @@ static int KQ_set_foreground(lua_State* L)
  *          Or:           \n
  *          ::1 marker    \n
  *          ::2 New value
- * \returns 0 (Nothing returned)
+ * @return 0 (Nothing returned)
  */
 static int KQ_set_ftile(lua_State* L)
 {
@@ -3209,7 +3192,7 @@ static int KQ_set_ftile(lua_State* L)
 		/* Format:
 		 *    set_ftile("marker", value)
 		 */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			set_ftile(m->x, m->y, lua_tointeger(L, 2));
@@ -3260,7 +3243,7 @@ static int KQ_set_marker(lua_State* L)
 	const int x_coord = lua_tonumber(L, 2);
 	const int y_coord = lua_tonumber(L, 3);
 
-	std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(marker_name, 0);
+	std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(marker_name, false);
 	if (m == nullptr)
 	{
 		/* Need to add a new marker */
@@ -3292,7 +3275,7 @@ static int KQ_set_midground(lua_State* L)
  *          Or:           \n
  *          ::1 marker    \n
  *          ::2 New value
- * \returns 0 (Nothing returned)
+ * @return 0 (Nothing returned)
  */
 static int KQ_set_mtile(lua_State* L)
 {
@@ -3301,7 +3284,7 @@ static int KQ_set_mtile(lua_State* L)
 		/* Format:
 		 *    set_mtile("marker", value)
 		 */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			set_mtile(m->x, m->y, lua_tointeger(L, 2));
@@ -3337,7 +3320,7 @@ static int KQ_set_noe(lua_State* L)
  *          Or:           \n
  *          ::1 marker    \n
  *          ::2 New value
- * \returns 0 (Nothing returned)
+ * @return 0 (Nothing returned)
  */
 static int KQ_set_obs(lua_State* L)
 {
@@ -3346,7 +3329,7 @@ static int KQ_set_obs(lua_State* L)
 		/* Format:
 		 *    set_obs("marker", value)
 		 */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			set_obs(m->x, m->y, lua_tointeger(L, 2));
@@ -3369,7 +3352,7 @@ static int KQ_set_obs(lua_State* L)
  * @param   L::1 Which person to check
  * @param   L::2 Which equipment slot
  * @param   L::3 Equipment to set in slot L::2
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_eqp(lua_State* L)
 {
@@ -3389,7 +3372,7 @@ static int KQ_set_party_eqp(lua_State* L)
  *
  * @param   L::1 Which person's level to set
  * @param   L::2 Amount of HP to set to L::1
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_hp(lua_State* L)
 {
@@ -3408,7 +3391,7 @@ static int KQ_set_party_hp(lua_State* L)
  *
  * @param   L::1 Which person's level to check
  * @param   L::2 Which level to set L::1 to
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_lvl(lua_State* L)
 {
@@ -3427,7 +3410,7 @@ static int KQ_set_party_lvl(lua_State* L)
  *
  * @param   L::1 Which person's MHP to set
  * @param   L::2 Amount of MHP to set to L::1
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_mhp(lua_State* L)
 {
@@ -3446,7 +3429,7 @@ static int KQ_set_party_mhp(lua_State* L)
  *
  * @param   L::1 Which person's MMP to set
  * @param   L::2 Amont of MMP to set to L::1
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_mmp(lua_State* L)
 {
@@ -3465,7 +3448,7 @@ static int KQ_set_party_mmp(lua_State* L)
  *
  * @param   L::1 Which person's MP to set
  * @param   L::2 Amount of MP to set to L::1
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_mp(lua_State* L)
 {
@@ -3484,7 +3467,7 @@ static int KQ_set_party_mp(lua_State* L)
  *
  * @param   L::1 Which person's mrp to set
  * @param   L::2 Amount of mrp to set to L::1
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_mrp(lua_State* L)
 {
@@ -3503,7 +3486,7 @@ static int KQ_set_party_mrp(lua_State* L)
  *
  * @param   L::1 Which person's EXP to evaluate
  * @param   L::2 Amount of EXP to set
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_next(lua_State* L)
 {
@@ -3543,7 +3526,7 @@ static int KQ_set_party_res(lua_State* L)
  * @param   L::1 Which person to check
  * @param   L::2 Which stats id to evaluate
  * @param   L::3 Value to stick in L::2
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_stats(lua_State* L)
 {
@@ -3563,7 +3546,7 @@ static int KQ_set_party_stats(lua_State* L)
  *
  * @param   L::1 Which person's EXP to set
  * @param   L::2 Amount of EXP to set
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_party_xp(lua_State* L)
 {
@@ -3582,7 +3565,7 @@ static int KQ_set_party_xp(lua_State* L)
  *
  * @param   L::1 The index of the Progress to evaluate
  * @param   L::2 The value of L::1
- * \returns 0 when done
+ * @return 0 when done
  */
 static int KQ_set_progress(lua_State* L)
 {
@@ -3638,7 +3621,7 @@ static int KQ_set_save(lua_State* L)
  *          Or:           \n
  *          ::1 marker    \n
  *          ::2 New value
- * \returns 0 (Nothing returned)
+ * @return 0 (Nothing returned)
  */
 static int KQ_set_shadow(lua_State* L)
 {
@@ -3647,7 +3630,7 @@ static int KQ_set_shadow(lua_State* L)
 		/* Format:
 		 *    set_shadow("marker", value)
 		 */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			set_shadow(m->x, m->y, lua_tointeger(L, 2));
@@ -3773,7 +3756,7 @@ static int KQ_set_can_use_item(lua_State* L)
  *          Or:           \n
  *          ::1 marker    \n
  *          ::2 New value
- * \returns 0 (Nothing returned)
+ * @return 0 (Nothing returned)
  */
 static int KQ_set_zone(lua_State* L)
 {
@@ -3782,7 +3765,7 @@ static int KQ_set_zone(lua_State* L)
 		/* Format:
 		 *    set_zone("marker", value)
 		 */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			set_zone(m->x, m->y, lua_tointeger(L, 2));
@@ -3831,7 +3814,7 @@ static int KQ_shop(lua_State* L)
  * Create a named shop (no items are added in this function)
  * @param L ::1 Shop name
  *          ::2 Shop index
- * \returns 0 (nothing returned)
+ * @return 0 (nothing returned)
  */
 static int KQ_shop_create(lua_State* L)
 {
@@ -3913,7 +3896,7 @@ static int KQ_portthought_ex(lua_State* L)
  * an error message on the game screen.
  *
  * @param L Lua state
- * \returns 0 (No value)
+ * @return 0 (No value)
  * \author PH
  * \date 20060401
  */
@@ -4006,7 +3989,7 @@ static int KQ_warp(lua_State* L)
 	if (lua_type(L, 1) == LUA_TSTRING)
 	{
 		/* Format is warp("marker", [speed]) */
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 1), true);
 		if (m != nullptr)
 		{
 			x = m->x;
@@ -4173,7 +4156,7 @@ int KQ_print(lua_State* L)
  * Implement the getting of character objects from the party
  * array.
  * @param L::1 which party member (0..numchrs-1)
- * \returns hero object
+ * @return hero object
  */
 static int KQ_party_getter(lua_State* L)
 {
@@ -4198,7 +4181,7 @@ static int KQ_party_getter(lua_State* L)
  * hero from the party.
  * @param L::1 which party member (0..PSIZE-1)
  * @param L::2 hero object
- * \returns 0 (no values returned)
+ * @return 0 (no values returned)
  */
 static int KQ_party_setter(lua_State* L)
 {
@@ -4268,7 +4251,7 @@ static int KQ_party_setter(lua_State* L)
  * Call as make_sprite(filename, [x, y, width, height]).
  * If dimensions are omitted it means the whole bitmap.
  * @param L Lua state
- * \returns 1 (the bitmap table object)
+ * @return 1 (the bitmap table object)
  */
 static int KQ_make_sprite(lua_State* L)
 {
@@ -4363,10 +4346,10 @@ int KqFork::real_entity_num(lua_State* L, int pos)
 
 		switch (ee)
 		{
-		case HERO1:
+		case eHero::HERO1:
 			return 0;
 
-		case HERO2:
+		case eHero::HERO2:
 			return 1;
 
 		case 255:
