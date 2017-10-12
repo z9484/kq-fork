@@ -23,7 +23,7 @@ enum eDirectories
  */
 std::string kqres(enum eDirectories, const std::string& file);
 
-const std::string get_lua_file_path(const std::string, const std::string);
-const std::string get_resource_file_path(const std::string, const std::string, const std::string);
+std::string get_lua_file_path(const std::string, const std::string);
+std::string get_resource_file_path(const std::string, const std::string, const std::string);
 
 #define maybe_poll_joystick poll_joystick
