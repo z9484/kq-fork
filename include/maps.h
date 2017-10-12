@@ -37,10 +37,8 @@ struct s_map
 	int32_t pdiv;       /*!< Parallax divider */
 	int32_t stx;        /*!< Default start x-coord */
 	int32_t sty;        /*!< Default start y-coord */
-	int32_t warpx;      /*!< x-coord where warp spell takes you to (see
-						   special_spells()) */
-	int32_t warpy;      /*!< y-coord where warp spell takes you to (see
-						   special_spells()) */
+	int32_t warpx;      /*!< x-coord where warp spell takes you to (see special_spells()) */
+	int32_t warpy;      /*!< y-coord where warp spell takes you to (see special_spells()) */
 	int revision;       /*!< Internal revision number for the map file */
 	int extra_sdword2;  /*!< Not used */
 	string song_file;   /*!< Base file name for map song */

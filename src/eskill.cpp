@@ -118,13 +118,11 @@ void combat_skill(size_t fighter_index)
 		affected_targets = 0;
 		strcpy(attack_string, _("Stone Gas"));
 		draw_spellsprite(0, 1, 46, 1);
-		for (target_fighter_index = 0; target_fighter_index < numchrs;
-		        target_fighter_index++)
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 			{
-				if (res_throw(target_fighter_index, R_PETRIFY) == 0 &&
-				        non_dmg_save(target_fighter_index, 75) == 0)
+				if (res_throw(target_fighter_index, R_PETRIFY) == 0 && non_dmg_save(target_fighter_index, 75) == 0)
 				{
 					fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] = kqrandom->random_range_exclusive(2, 5);
 					ta[target_fighter_index] = NODISPLAY;
@@ -149,19 +147,16 @@ void combat_skill(size_t fighter_index)
 		{
 			draw_spellsprite(0, 1, 11, 1);
 			/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
-			special_damage_oneall_enemies(fighter_index, 25, R_THUNDER,
-			                              SEL_ALL_ENEMIES, 1);
+			special_damage_oneall_enemies(fighter_index, 25, R_THUNDER, SEL_ALL_ENEMIES, 1);
 			fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 			return;
 		}
 		draw_spellsprite(0, 1, 40, 0);
-		for (target_fighter_index = 0; target_fighter_index < numchrs;
-		        target_fighter_index++)
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
 			if (res_throw(target_fighter_index, R_TIME) == 0)
 			{
-				if (non_dmg_save(target_fighter_index, 75) == 0 &&
-				        fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
+				if (non_dmg_save(target_fighter_index, 75) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 				{
 					if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 2)
 					{
@@ -203,8 +198,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Poison Gas"));
 		draw_spellsprite(0, 1, 47, 1);
 		/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
-		special_damage_oneall_enemies(fighter_index, 40, R_POISON, SEL_ALL_ENEMIES,
-		                              1);
+		special_damage_oneall_enemies(fighter_index, 40, R_POISON, SEL_ALL_ENEMIES, 1);
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 111:
@@ -244,8 +238,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Maul of the Titans"));
 		draw_hugesprite(0, 80, 110, 29, 1);
 		/*  dudaskank suggest replacing 999 with SEL_ALL_ENEMIES  */
-		special_damage_oneall_enemies(fighter_index, 60, R_EARTH, SEL_ALL_ENEMIES,
-		                              1);
+		special_damage_oneall_enemies(fighter_index, 60, R_EARTH, SEL_ALL_ENEMIES, 1);
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
 	case 114:
@@ -319,8 +312,7 @@ void combat_skill(size_t fighter_index)
 	case 117:
 		strcpy(attack_string, _("Shadow Blast"));
 		draw_spellsprite(0, 1, 49, 1);
-		special_damage_oneall_enemies(fighter_index, 75, R_BLACK, SEL_ALL_ENEMIES,
-		                              1);
+		special_damage_oneall_enemies(fighter_index, 75, R_BLACK, SEL_ALL_ENEMIES, 1);
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 	default:
 		break;

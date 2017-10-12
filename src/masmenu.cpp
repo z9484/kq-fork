@@ -64,26 +64,21 @@ static int camp_castable(int who, int sno)
  * \param   spell_page Page that spell is found on
  * \param   spell_page_cursor Cursor on current page
  */
-static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
-                                 size_t spell_page_cursor)
+static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page, size_t spell_page_cursor)
 {
 	eFontColor text_color;
 	size_t spell_index, pidx_index, current_spell, first_spell_index;
 
 	pidx_index = pidx[caster_fighter_index];
-	first_spell_index =
-	    party[pidx_index]
-	    .spells[spell_page * NUM_SPELLS_PER_PAGE + spell_page_cursor];
+	first_spell_index = party[pidx_index].spells[spell_page * NUM_SPELLS_PER_PAGE + spell_page_cursor];
 	menubox(double_buffer, 80 + xofs, 12 + yofs, 18, 1, BLUE);
 	print_font(double_buffer, 140 + xofs, 20 + yofs, _("Magic"), FGOLD);
 	menubox(double_buffer, 80 + xofs, 36 + yofs, 18, 5, BLUE);
 	draw_playerstat(double_buffer, pidx_index, 88 + xofs, 44 + yofs);
 	menubox(double_buffer, 80 + xofs, 92 + yofs, 18, 12, BLUE);
-	for (current_spell = 0; current_spell < NUM_SPELLS_PER_PAGE;
-	        current_spell++)
+	for (current_spell = 0; current_spell < NUM_SPELLS_PER_PAGE; current_spell++)
 	{
-		spell_index = party[pidx_index]
-		              .spells[spell_page * NUM_SPELLS_PER_PAGE + current_spell];
+		spell_index = party[pidx_index].spells[spell_page * NUM_SPELLS_PER_PAGE + current_spell];
 		text_color = FDARK;
 		if (camp_castable(caster_fighter_index, spell_index) == 1)
 		{
@@ -91,19 +86,14 @@ static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
 		}
 		if (spell_index > 0)
 		{
-			draw_icon(double_buffer, magic[spell_index].icon, 96 + xofs,
-			          current_spell * 8 + 100 + yofs);
-			print_font(double_buffer, 104 + xofs, current_spell * 8 + 100 + yofs,
-			           magic[spell_index].spellName, text_color);
+			draw_icon(double_buffer, magic[spell_index].icon, 96 + xofs, current_spell * 8 + 100 + yofs);
+			print_font(double_buffer, 104 + xofs, current_spell * 8 + 100 + yofs, magic[spell_index].spellName, text_color);
 			sprintf(strbuf, "%d", mp_needed(caster_fighter_index, spell_index));
-			print_font(double_buffer, 232 - (strlen(strbuf) * 8) + xofs,
-			           current_spell * 8 + 100 + yofs, strbuf, text_color);
+			print_font(double_buffer, 232 - (strlen(strbuf) * 8) + xofs, current_spell * 8 + 100 + yofs, strbuf, text_color);
 		}
 	}
 	menubox(double_buffer, 40 + xofs, 204 + yofs, 28, 1, BLUE);
-	print_font(double_buffer,
-	           (160 - (strlen(magic[first_spell_index].desc) * 4)) + xofs,
-	           212 + yofs, magic[first_spell_index].desc, FNORMAL);
+	print_font(double_buffer, (160 - (strlen(magic[first_spell_index].desc) * 4)) + xofs, 212 + yofs, magic[first_spell_index].desc, FNORMAL);
 	draw_sprite(double_buffer, pgb[spell_page], 230 + xofs, 194 + yofs);
 }
 
@@ -252,34 +242,28 @@ void camp_spell_menu(int c)
  * \param   caster_fighter_index Index of spell caster
  * \param   spell_number Spell number
  */
-static void camp_spell_targeting(size_t caster_fighter_index,
-                                 size_t spell_number)
+static void camp_spell_targeting(size_t caster_fighter_index, size_t spell_number)
 {
 	int tg = 0;
 	size_t fighter_index;
 
-	if (magic[spell_number].tgt == TGT_NONE ||
-	        magic[spell_number].tgt > TGT_ALLY_ALL)
+	if (magic[spell_number].tgt == TGT_NONE || magic[spell_number].tgt > TGT_ALLY_ALL)
 	{
 		return;
 	}
 	while (tg != PIDX_UNDEFINED)
 	{
-		if (party[pidx[caster_fighter_index]].mp <
-		        mp_needed(caster_fighter_index, spell_number))
+		if (party[pidx[caster_fighter_index]].mp < mp_needed(caster_fighter_index, spell_number))
 		{
 			return;
 		}
-		if (magic[spell_number].use != USE_ANY_INF &&
-		        magic[spell_number].use != USE_CAMP_INF)
+		if (magic[spell_number].use != USE_ANY_INF && magic[spell_number].use != USE_CAMP_INF)
 		{
 			return;
 		}
 		if (spell_number != M_WARP && spell_number != M_REPULSE)
 		{
-			tg =
-			    select_any_player((eTarget)magic[spell_number].tgt,
-			                      magic[spell_number].icon, magic[spell_number].spellName);
+			tg = select_any_player((eTarget)magic[spell_number].tgt, magic[spell_number].icon, magic[spell_number].spellName);
 			if (tg == PIDX_UNDEFINED)
 			{
 				return;
@@ -372,12 +356,9 @@ int learn_new_spells(int who)
 				{
 					sprintf(strbuf, _("%s learned %s"), party[who].playerName, magic[a].spellName);
 					fullblit(back, double_buffer);
-					menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152,
-					        strlen(strbuf) + 1, 1, BLUE);
-					draw_icon(double_buffer, magic[a].icon, 156 - (strlen(strbuf) * 4),
-					          160);
-					print_font(double_buffer, 164 - (strlen(strbuf) * 4), 160, strbuf,
-					           FNORMAL);
+					menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152, strlen(strbuf) + 1, 1, BLUE);
+					draw_icon(double_buffer, magic[a].icon, 156 - (strlen(strbuf) * 4), 160);
+					print_font(double_buffer, 164 - (strlen(strbuf) * 4), 160, strbuf, FNORMAL);
 					blit2screen(0, 0);
 					Game.wait_enter();
 					g++;
@@ -411,8 +392,7 @@ static int need_spell(size_t target_fighter_index, size_t spell_number)
 	switch (spell_number)
 	{
 	case M_RESTORE:
-		if (party[victim_figher_index].sts[S_POISON] == 0 &&
-		        party[victim_figher_index].sts[S_BLIND] == 0)
+		if (party[victim_figher_index].sts[S_POISON] == 0 && party[victim_figher_index].sts[S_BLIND] == 0)
 		{
 			return 0;
 		}
@@ -447,9 +427,7 @@ static int need_spell(size_t target_fighter_index, size_t spell_number)
 			affected_targets = 0;
 			for (figher_index = 0; figher_index < numchrs; figher_index++)
 			{
-				if (party[pidx[figher_index]].hp == party[pidx[figher_index]].mhp ||
-				        party[pidx[figher_index]].sts[S_STONE] != 0 ||
-				        party[pidx[figher_index]].sts[S_DEAD] != 0)
+				if (party[pidx[figher_index]].hp == party[pidx[figher_index]].mhp || party[pidx[figher_index]].sts[S_STONE] != 0 || party[pidx[figher_index]].sts[S_DEAD] != 0)
 				{
 					affected_targets++;
 				}

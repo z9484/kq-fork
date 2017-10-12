@@ -69,8 +69,7 @@ void display_console(uint32_t xofs, uint32_t yofs)
 	{
 		return;
 	}
-	rectfill(double_buffer, xofs, max_y, xofs + 320, yofs + 240,
-	         makecol(0, 0, 0));
+	rectfill(double_buffer, xofs, max_y, xofs + 320, yofs + 240, makecol(0, 0, 0));
 	hline(double_buffer, xofs, max_y, xofs + 320, makecol(255, 255, 255));
 	y = yofs + 240 - 2 * text_height(font);
 	i = CONSOLE_LINES - 1;
@@ -84,10 +83,7 @@ void display_console(uint32_t xofs, uint32_t yofs)
 		--i;
 	}
 	print_font(double_buffer, xofs, yofs + 240 - 8, g_console.inputline, FNORMAL);
-	rectfill(double_buffer, xofs + text_length(font, g_console.inputline),
-	         yofs + 238, xofs + text_length(font, g_console.inputline) +
-	         text_length(font, "_"),
-	         yofs + 240, makecol(192, 192, 192));
+	rectfill(double_buffer, xofs + text_length(font, g_console.inputline), yofs + 238, xofs + text_length(font, g_console.inputline) + text_length(font, "_"), yofs + 240, makecol(192, 192, 192));
 }
 
 /*! \brief Display a line on the console

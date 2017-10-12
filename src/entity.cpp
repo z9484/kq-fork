@@ -53,8 +53,7 @@ static void chase(t_entity target_entity)
 
 	if (g_ent[target_entity].chasing == 0)
 	{
-		if (entity_near(target_entity, 0, 3) == 1 &&
-		        kqrandom->random_range_exclusive(0, 100) <= g_ent[target_entity].extra)
+		if (entity_near(target_entity, 0, 3) == 1 && kqrandom->random_range_exclusive(0, 100) <= g_ent[target_entity].extra)
 		{
 			g_ent[target_entity].chasing = 1;
 			if (g_ent[target_entity].speed < 7)
@@ -150,8 +149,7 @@ static int entity_near(t_entity eno, t_entity tgt, int rad)
 	{
 		for (ax = b; ax <= rad; ax++)
 		{
-			if (ex + ax >= view_x1 && ax + ax <= view_x2 && ey + ay >= view_y1 &&
-			        ey + ay <= view_y2)
+			if (ex + ax >= view_x1 && ax + ax <= view_x2 && ey + ay >= view_y1 && ey + ay <= view_y2)
 			{
 				if (ex + ax == g_ent[tgt].tilex && ey + ay == g_ent[tgt].tiley)
 				{
@@ -421,9 +419,7 @@ static void getcommand(t_entity target_entity)
 #ifdef DEBUGMODE
 		if (debugging > 0)
 		{
-			sprintf(strbuf,
-			        _("Invalid entity command (%c) at position %d for ent %d"), s,
-			        g_ent[target_entity].sidx, target_entity);
+			sprintf(strbuf, _("Invalid entity command (%c) at position %d for ent %d"), s, g_ent[target_entity].sidx, target_entity);
 			Game.program_death(strbuf);
 		}
 #endif
@@ -469,7 +465,7 @@ static int move(t_entity target_entity, int dx, int dy)
 		ent->facing = FACE_UP;
 	}
 	if (tile_x + dx == -1 || tile_x + dx == (int)g_map.xsize ||
-	        tile_y + dy == -1 || tile_y + dy == (int)g_map.ysize)
+		tile_y + dy == -1 || tile_y + dy == (int)g_map.ysize)
 	{
 		return 0;
 	}
@@ -479,14 +475,14 @@ static int move(t_entity target_entity, int dx, int dy)
 		if (dx && obstruction(tile_x, tile_y, dx, 0, FALSE))
 		{
 			if (dy != -1 && oldfacing == ent->facing &&
-			        !obstruction(tile_x, tile_y + 1, dx, 0, TRUE) &&
-			        !obstruction(tile_x, tile_y, 0, 1, TRUE))
+				!obstruction(tile_x, tile_y + 1, dx, 0, TRUE) &&
+				!obstruction(tile_x, tile_y, 0, 1, TRUE))
 			{
 				dy = 1;
 			}
 			else if (dy != 1 && oldfacing == ent->facing &&
-			         !obstruction(tile_x, tile_y - 1, dx, 0, TRUE) &&
-			         !obstruction(tile_x, tile_y, 0, -1, TRUE))
+				!obstruction(tile_x, tile_y - 1, dx, 0, TRUE) &&
+				!obstruction(tile_x, tile_y, 0, -1, TRUE))
 			{
 				dy = -1;
 			}
@@ -498,14 +494,14 @@ static int move(t_entity target_entity, int dx, int dy)
 		if (dy && obstruction(tile_x, tile_y, 0, dy, FALSE))
 		{
 			if (dx != -1 && oldfacing == ent->facing &&
-			        !obstruction(tile_x + 1, tile_y, 0, dy, TRUE) &&
-			        !obstruction(tile_x, tile_y, 1, 0, TRUE))
+				!obstruction(tile_x + 1, tile_y, 0, dy, TRUE) &&
+				!obstruction(tile_x, tile_y, 1, 0, TRUE))
 			{
 				dx = 1;
 			}
 			else if (dx != 1 && oldfacing == ent->facing &&
-			         !obstruction(tile_x - 1, tile_y, 0, dy, TRUE) &&
-			         !obstruction(tile_x, tile_y, -1, 0, TRUE))
+				!obstruction(tile_x - 1, tile_y, 0, dy, TRUE) &&
+				!obstruction(tile_x, tile_y, -1, 0, TRUE))
 			{
 				dx = -1;
 			}
@@ -535,7 +531,7 @@ static int move(t_entity target_entity, int dx, int dy)
 	{
 		source_tile = tile_y * g_map.xsize + tile_x;
 		if (z_seg[source_tile] != z_seg[source_tile + dx] ||
-		        z_seg[source_tile] != z_seg[source_tile + dy * g_map.xsize])
+			z_seg[source_tile] != z_seg[source_tile + dy * g_map.xsize])
 		{
 			if (ent->facing == FACE_LEFT || ent->facing == FACE_RIGHT)
 			{
@@ -566,7 +562,7 @@ static int move(t_entity target_entity, int dx, int dy)
 	if (dx && dy)
 	{
 		if (obstruction(tile_x, tile_y, dx, 0, TRUE) &&
-		        obstruction(tile_x, tile_y, 0, dy, TRUE))
+			obstruction(tile_x, tile_y, 0, dy, TRUE))
 		{
 			return 0;
 		}
@@ -601,9 +597,10 @@ static int obstruction(int origin_x, int origin_y, int move_x, int move_y, int c
 	t_entity i;
 
 	// Block entity if it tries to walk off the map
-	if ((origin_x == 0 && move_x < 0) || (origin_y == 0 && move_y < 0) ||
-	        (origin_x == (int)g_map.xsize - 1 && move_x > 0) ||
-	        (origin_y == (int)g_map.ysize - 1 && move_y > 0))
+	if ((origin_x == 0 && move_x < 0) ||
+		(origin_y == 0 && move_y < 0) ||
+		(origin_x == (int)g_map.xsize - 1 && move_x > 0) ||
+		(origin_y == (int)g_map.ysize - 1 && move_y > 0))
 	{
 		return 1;
 	}
@@ -656,8 +653,7 @@ static int obstruction(int origin_x, int origin_y, int move_x, int move_y, int c
 	{
 		for (i = 0; i < MAX_ENTITIES; i++)
 		{
-			if (g_ent[i].active && dest_x == g_ent[i].tilex &&
-			        dest_y == g_ent[i].tiley)
+			if (g_ent[i].active && dest_x == g_ent[i].tilex && dest_y == g_ent[i].tiley)
 			{
 				return 1;
 			}

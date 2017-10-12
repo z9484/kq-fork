@@ -83,8 +83,7 @@ static Raster* bmp_from_png(const string& path)
 		// Force load in true color with alpha format
 		image.format = PNG_FORMAT_RGBA;
 		std::unique_ptr<uint8_t[]> imagedata(new uint8_t[PNG_IMAGE_SIZE(image)]);
-		png_image_finish_read(&image, nullptr, imagedata.get(),
-		                      PNG_IMAGE_ROW_STRIDE(image), nullptr);
+		png_image_finish_read(&image, nullptr, imagedata.get(), PNG_IMAGE_ROW_STRIDE(image), nullptr);
 		bitmap = new Raster(image.width, image.height);
 		// Then convert to paletted.
 		// This can be optimised or go away later
@@ -110,8 +109,7 @@ static Raster* bmp_from_png(const string& path)
 	{
 		return nullptr;
 	}
-	png_structp png_ptr =
-	    png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if (!png_ptr)
 	{ return nullptr; }
 
@@ -129,8 +127,7 @@ static Raster* bmp_from_png(const string& path)
 		return nullptr;
 	}
 	png_init_io(png_ptr, fp);
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_STRIP_16,
-	             nullptr);
+	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_STRIP_16, nullptr);
 	auto row_pointers = png_get_rows(png_ptr, info_ptr);
 	auto width = png_get_image_width(png_ptr, info_ptr);
 	auto height = png_get_image_height(png_ptr, info_ptr);

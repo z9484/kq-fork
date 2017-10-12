@@ -114,11 +114,9 @@ static std::string make_list(_InputIterator begin, _InputIterator end)
 }
 /* Insert a list of things into the content of an element */
 template <typename _InputIterator>
-static XMLElement* value_list(XMLElement* elem, _InputIterator begin,
-                              _InputIterator end)
+static XMLElement* value_list(XMLElement* elem, _InputIterator begin, _InputIterator end)
 {
-	tinyxml2::XMLText* content =
-	    elem->GetDocument()->NewText(make_list(begin, end).c_str());
+	tinyxml2::XMLText* content = elem->GetDocument()->NewText(make_list(begin, end).c_str());
 	elem->DeleteChildren();
 	elem->InsertFirstChild(content);
 	return elem;
@@ -184,8 +182,7 @@ static int load_resistances(s_player* s, XMLElement* node)
 			}
 			else
 			{
-				TRACE("Wrong number of resistances, expected %d and got %d", NUM_RES,
-				      values.size());
+				TRACE("Wrong number of resistances, expected %d and got %d", NUM_RES, values.size());
 				Game.program_death("Error loading XML");
 			}
 		}
@@ -229,8 +226,7 @@ static int load_spells(s_player* s, XMLElement* node)
 			}
 			else
 			{
-				TRACE("Wrong number of spells, expected %d and got %d", NUM_SPELLS,
-				      values.size());
+				TRACE("Wrong number of spells, expected %d and got %d", NUM_SPELLS, values.size());
 				Game.program_death("Error loading XML");
 			}
 		}
@@ -252,8 +248,7 @@ static int load_equipment(s_player* s, XMLElement* node)
 			}
 			else
 			{
-				TRACE("Wrong number of equipment, expected %d and got %d",
-				      NUM_EQUIPMENT, values.size());
+				TRACE("Wrong number of equipment, expected %d and got %d", NUM_EQUIPMENT, values.size());
 				Game.program_death("Error loading XML");
 			}
 		}
@@ -419,8 +414,7 @@ static XMLElement* addprop(XMLElement* parent, const char* name, T value)
 	return property;
 }
 
-static XMLElement* addprop(XMLElement* parent, const char* name,
-                           const std::string& value)
+static XMLElement* addprop(XMLElement* parent, const char* name, const std::string& value)
 {
 	return addprop(parent, name, value.c_str());
 }
@@ -787,8 +781,7 @@ static int save_shop_info(XMLElement* node)
 				XMLElement* shop_elem = doc->NewElement("shop");
 				shop_elem->SetAttribute("id", i);
 				shop_elem->SetAttribute("time", shop.time);
-				value_list(shop_elem, std::begin(shop.items_current),
-				           std::end(shop.items_current));
+				value_list(shop_elem, std::begin(shop.items_current), std::end(shop.items_current));
 				shops_elem->InsertEndChild(shop_elem);
 			}
 		}
@@ -967,8 +960,7 @@ int load_game_xml(const char* filename)
 	}
 	else
 	{
-		TRACE("%s(%d)\n%s\n%s", doc.ErrorName(), doc.ErrorID(), doc.GetErrorStr1(),
-		      doc.GetErrorStr2());
+		TRACE("%s(%d)\n%s\n%s", doc.ErrorName(), doc.ErrorID(), doc.GetErrorStr1(), doc.GetErrorStr2());
 		Game.program_death("Unable to load XML file");
 	}
 	return 0;
@@ -1117,8 +1109,7 @@ int load_stats_only(const char* filename, s_sgstats& stats)
 	}
 	else
 	{
-		TRACE("%s(%d)\n%s\n%s", doc.ErrorName(), doc.ErrorID(), doc.GetErrorStr1(),
-		      doc.GetErrorStr2());
+		TRACE("%s(%d)\n%s\n%s", doc.ErrorName(), doc.ErrorID(), doc.GetErrorStr1(), doc.GetErrorStr2());
 	}
 	return 1;
 }

@@ -17,24 +17,25 @@
 static int ease(int);
 
 /*! Array of strings */
-static const char* credits[] = {"(C) 2001 DoubleEdge Software",
-                                "(C) 2002-2016 KQ Lives Team",
-                                "http://kqlives.sourceforge.net/",
-                                "Peter Hull",
-                                "TeamTerradactyl",
-                                "Chris Barry",
-                                "Eduardo Dudaskank",
-                                "Troy D Patterson",
-                                "Master Goodbytes",
-                                "Rey Brujo",
-                                "Matthew Leverton",
-                                "Sam Hocevar",
-                                "Günther Brammer",
-                                "WinterKnight",
-                                "Edgar Alberto Molina",
-                                "Steven Fullmer (OnlineCop)",
-                                NULL
-                               };
+static const char* credits[] = {
+	"(C) 2001 DoubleEdge Software",
+	"(C) 2002-2016 KQ Lives Team",
+	"http://kqlives.sourceforge.net/",
+	"Peter Hull",
+	"TeamTerradactyl",
+	"Chris Barry",
+	"Eduardo Dudaskank",
+	"Troy D Patterson",
+	"Master Goodbytes",
+	"Rey Brujo",
+	"Matthew Leverton",
+	"Sam Hocevar",
+	"Günther Brammer",
+	"WinterKnight",
+	"Edgar Alberto Molina",
+	"Steven Fullmer (OnlineCop)",
+	NULL
+};
 
 static const int NUM_EASE_VALUES = 32;
 
@@ -51,8 +52,7 @@ void allocate_credits(void)
 		unsigned int tlen = 0;
 
 		// Determine the longest text in the credits.
-		for (auto credits_current_line = credits; *credits_current_line;
-		        ++credits_current_line)
+		for (auto credits_current_line = credits; *credits_current_line; ++credits_current_line)
 		{
 			size_t current_line_length = strlen(*credits_current_line);
 			if (current_line_length > tlen)
@@ -67,9 +67,7 @@ void allocate_credits(void)
 		// are integer division.
 		for (int ease_index = 0; ease_index < NUM_EASE_VALUES; ++ease_index)
 		{
-			ease_table[ease_index] = short(ease_index * ease_index *
-			                               (3 * NUM_EASE_VALUES - 2 * ease_index) /
-			                               NUM_EASE_VALUES / NUM_EASE_VALUES);
+			ease_table[ease_index] = short(ease_index * ease_index * (3 * NUM_EASE_VALUES - 2 * ease_index) / NUM_EASE_VALUES / NUM_EASE_VALUES);
 		}
 	}
 	cc = credits;
@@ -110,18 +108,15 @@ void display_credits(Raster* double_buffer)
 	int x0 = (320 - wk->width) / 2;
 	for (int i = 0; i < wk->width; ++i)
 	{
-		blit(wk, double_buffer, i, ease(i + ease_amount), i + x0, KQ_SCREEN_H - 55,
-		     1, 32);
+		blit(wk, double_buffer, i, ease(i + ease_amount), i + x0, KQ_SCREEN_H - 55, 1, 32);
 	}
-	print_font(double_buffer, (KQ_SCREEN_W - 8 * strlen(pressf1)) / 2,
-	           KQ_SCREEN_H - 30, pressf1, FNORMAL);
+	print_font(double_buffer, (KQ_SCREEN_W - 8 * strlen(pressf1)) / 2, KQ_SCREEN_H - 30, pressf1, FNORMAL);
 #ifdef KQ_CHEATS
 	/* Put an un-ignorable cheat message; this should stop
 	 * PH releasing versions with cheat mode compiled in ;)
 	 */
 	extern int cheat;
-	print_font(double_buffer, 80, 40,
-	           cheat ? _("*CHEAT MODE ON*") : _("*CHEAT MODE OFF*"), FGOLD);
+	print_font(double_buffer, 80, 40, cheat ? _("*CHEAT MODE ON*") : _("*CHEAT MODE OFF*"), FGOLD);
 #endif
 #ifdef DEBUGMODE
 	/* TT: Similarly, if we are in debug mode, we should be warned. */

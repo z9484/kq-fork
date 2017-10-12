@@ -159,8 +159,7 @@ void camp_item_menu(void)
 								drawmap();
 								draw_itemmenu(ptr, pptr, sel);
 								menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, DARKBLUE);
-								print_font(double_buffer, 104 + xofs, 212 + yofs,
-								           _("Confirm/Cancel"), FNORMAL);
+								print_font(double_buffer, 104 + xofs, 212 + yofs, _("Confirm/Cancel"), FNORMAL);
 								blit2screen(xofs, yofs);
 								PlayerInput.readcontrols();
 
@@ -220,8 +219,7 @@ static void camp_item_targetting(int pp)
 	while (1)
 	{
 		update_equipstats();
-		ePIDX tg = select_any_player((eTarget)items[t1].tgt, items[t1].icon,
-		                             items[t1].itemName);
+		ePIDX tg = select_any_player((eTarget)items[t1].tgt, items[t1].icon, items[t1].itemName);
 		if (tg != PIDX_UNDEFINED)
 		{
 			eItemEffectResult z = item_effects(0, tg, t1);
@@ -280,8 +278,7 @@ int check_inventory(size_t inventory_index, int item_quantity)
 		/* Check if this item index == inventory_index, and if it is,
 		 * check if there is enough room in that slot to fit all of item_quantity.
 		 */
-		if (g_inv[n].item == inventory_index &&
-		        g_inv[n].quantity <= MAX_ITEMS - item_quantity)
+		if (g_inv[n].item == inventory_index && g_inv[n].quantity <= MAX_ITEMS - item_quantity)
 		{
 			d = n;
 		}
@@ -328,8 +325,7 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 	menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 1, BLUE);
 	if (sl == 1)
 	{
-		menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1,
-		        DARKBLUE);
+		menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1, DARKBLUE);
 		print_font(double_buffer, 92 + xofs, 44 + yofs, _("Use"), FGOLD);
 		print_font(double_buffer, 144 + xofs, 44 + yofs, _("Sort   Drop"), FGOLD);
 	}
@@ -350,10 +346,8 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 		// item_index == item index #
 		item_index = g_inv[pg * 16 + k].item;
 		item_quantity = g_inv[pg * 16 + k].quantity;
-		draw_icon(double_buffer, items[item_index].icon, 88 + xofs,
-		          k * 8 + 68 + yofs);
-		if (items[item_index].use >= USE_ANY_ONCE &&
-		        items[item_index].use <= USE_CAMP_INF)
+		draw_icon(double_buffer, items[item_index].icon, 88 + xofs, k * 8 + 68 + yofs);
+		if (items[item_index].use >= USE_ANY_ONCE && items[item_index].use <= USE_CAMP_INF)
 		{
 			palette_color = FNORMAL;
 		}
@@ -365,21 +359,18 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 		{
 			palette_color = FDARK;
 		}
-		print_font(double_buffer, 96 + xofs, k * 8 + 68 + yofs,
-		           items[item_index].itemName, palette_color);
+		print_font(double_buffer, 96 + xofs, k * 8 + 68 + yofs, items[item_index].itemName, palette_color);
 		if (item_quantity > 1)
 		{
 			sprintf(strbuf, "^%u", (uint32_t)item_quantity);
-			print_font(double_buffer, 224 + xofs, k * 8 + 68 + yofs, strbuf,
-			           palette_color);
+			print_font(double_buffer, 224 + xofs, k * 8 + 68 + yofs, strbuf, palette_color);
 		}
 	}
 	menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
 	if (sl == 0)
 	{
 		item_name_length = strlen(items[g_inv[pg * 16 + ptr].item].desc) * 4;
-		print_font(double_buffer, 160 - item_name_length + xofs, 212 + yofs,
-		           items[g_inv[pg * 16 + ptr].item].desc, FNORMAL);
+		print_font(double_buffer, 160 - item_name_length + xofs, 212 + yofs, items[g_inv[pg * 16 + ptr].item].desc, FNORMAL);
 		draw_sprite(double_buffer, menuptr, 72 + xofs, ptr * 8 + 68 + yofs);
 	}
 	draw_sprite(double_buffer, pgb[pg], 238 + xofs, 194 + yofs);
@@ -396,8 +387,7 @@ static void draw_itemmenu(int ptr, int pg, int sl)
  * \returns ITEM_EFFECT_SUCCESS_SINGLE if success (1 target)
  * \returns ITEM_EFFECT_SUCCESS_MULTIPLE if success (multiple targets)
  */
-eItemEffectResult item_effects(size_t attack_fighter_index,
-                               size_t fighter_index, int ti)
+eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index, int ti)
 {
 	int tmp = 0, i, a, b, z, san = 0, sen = 0;
 	size_t start_fighter_index = 0;
@@ -577,8 +567,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
 		{
 			draw_spellsprite(attack_fighter_index, 1, items[ti].eff, 1);
 			display_amount(attack_fighter_index, FONT_YELLOW, 1);
-			for (fighter_index = attack_fighter_index;
-			        fighter_index < attack_fighter_index + san; fighter_index++)
+			for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++)
 			{
 				adjust_hp(fighter_index, ta[fighter_index]);
 			}
@@ -676,8 +665,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index,
 		tmp = 0;
 		for (spell_index = 0; spell_index < NUM_SPELLS - 1; spell_index++)
 		{
-			if (party[pidx[fighter_index]].spells[spell_index] == items[ti].hnds ||
-			        party[pidx[fighter_index]].lvl < items[ti].ilvl)
+			if (party[pidx[fighter_index]].spells[spell_index] == items[ti].hnds || party[pidx[fighter_index]].lvl < items[ti].ilvl)
 			{
 				tmp = 1;
 			}
@@ -817,8 +805,7 @@ static void sort_inventory(void)
 {
 	size_t old_inventory_index, new_inventory_index, stop;
 
-	for (old_inventory_index = 0; old_inventory_index < MAX_INV - 1;
-	        old_inventory_index++)
+	for (old_inventory_index = 0; old_inventory_index < MAX_INV - 1; old_inventory_index++)
 	{
 		// This slot is empty
 		if (g_inv[old_inventory_index].item == 0)
@@ -833,8 +820,7 @@ static void sort_inventory(void)
 					// Move the item in the next slot into this one
 					g_inv[old_inventory_index].item = g_inv[new_inventory_index].item;
 					// Move its quantity as well
-					g_inv[old_inventory_index].quantity =
-					    g_inv[new_inventory_index].quantity;
+					g_inv[old_inventory_index].quantity = g_inv[new_inventory_index].quantity;
 					// Clear the next slot of items now
 					g_inv[new_inventory_index].item = 0;
 					// Clear if quantity as well

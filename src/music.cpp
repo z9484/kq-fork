@@ -129,8 +129,7 @@ void KMusic::play_music(const std::string& music_name, long position)
 				/* ML: we should (?) adjust the buffer size after everything is running
 				 * smooth */
 				float vol = float(gmvol) / 250.0f;
-				mod_player[current_music_player] = al_start_duh(
-				                                       mod_song[current_music_player], 2, position, vol, 4096 * 4, 44100);
+				mod_player[current_music_player] = al_start_duh(mod_song[current_music_player], 2, position, vol, 4096 * 4, 44100);
 			}
 			else
 			{

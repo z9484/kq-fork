@@ -198,12 +198,9 @@ static eMiniMenu mini_menu(int omask)
 	{
 		Game.do_check_animation();
 		menubox(double_buffer, mini_menu_x - 13, mini_menu_y - 8, 6, 3, DARKBLUE);
-		print_font(double_buffer, mini_menu_x, mini_menu_y, _("Join"),
-		           (omask & MM_JOIN) ? FNORMAL : FDARK);
-		print_font(double_buffer, mini_menu_x, mini_menu_y + 8, _("Leave"),
-		           (omask & MM_LEAVE) ? FNORMAL : FDARK);
-		print_font(double_buffer, mini_menu_x, mini_menu_y + 16, _("Lead"),
-		           (omask & MM_LEAD) ? FNORMAL : FDARK);
+		print_font(double_buffer, mini_menu_x, mini_menu_y, _("Join"), (omask & MM_JOIN) ? FNORMAL : FDARK);
+		print_font(double_buffer, mini_menu_x, mini_menu_y + 8, _("Leave"), (omask & MM_LEAVE) ? FNORMAL : FDARK);
+		print_font(double_buffer, mini_menu_x, mini_menu_y + 16, _("Lead"), (omask & MM_LEAD) ? FNORMAL : FDARK);
 		draw_sprite(double_buffer, menuptr, mini_menu_x - 13, mini_menu_y + 8 * cp);
 		blit2screen(xofs, yofs);
 
@@ -336,10 +333,8 @@ static void party_remove(ePIDX id)
 		if (pidx[pidx_index] == id)
 		{
 			--numchrs;
-			memmove(&pidx[pidx_index], &pidx[pidx_index + 1],
-			        sizeof(*pidx) * (numchrs - pidx_index));
-			memmove(&g_ent[pidx_index], &g_ent[pidx_index + 1],
-			        sizeof(*g_ent) * (numchrs - pidx_index));
+			memmove(&pidx[pidx_index], &pidx[pidx_index + 1], sizeof(*pidx) * (numchrs - pidx_index));
+			memmove(&g_ent[pidx_index], &g_ent[pidx_index + 1], sizeof(*g_ent) * (numchrs - pidx_index));
 			pidx[numchrs] = PIDX_UNDEFINED;
 			g_ent[numchrs].active = 0;
 			return;
@@ -377,23 +372,18 @@ ePIDX select_any_player(eTarget csa, unsigned int icn, const char* msg)
 		drawmap();
 		if (csa != TGT_NONE)
 		{
-			menubox(double_buffer, 152 - ((strlen(msg) + 1) * 4) + xofs, 8 + yofs,
-			        strlen(msg) + 1, 1, BLUE);
-			draw_icon(double_buffer, icn, 160 - ((strlen(msg) + 1) * 4) + xofs,
-			          16 + yofs);
-			print_font(double_buffer, 168 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs,
-			           msg, FNORMAL);
+			menubox(double_buffer, 152 - ((strlen(msg) + 1) * 4) + xofs, 8 + yofs, strlen(msg) + 1, 1, BLUE);
+			draw_icon(double_buffer, icn, 160 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs);
+			print_font(double_buffer, 168 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs, msg, FNORMAL);
 		}
 		for (unsigned int k = 0; k < numchrs; k++)
 		{
 			menubox(double_buffer, 80 + xofs, k * 56 + shy + yofs, 18, 5, BLUE);
-			draw_playerstat(double_buffer, pidx[k], 88 + xofs,
-			                k * 56 + shy + 8 + yofs);
+			draw_playerstat(double_buffer, pidx[k], 88 + xofs, k * 56 + shy + 8 + yofs);
 			// Draw the pointer
 			if (select_all || k == ptr)
 			{
-				draw_sprite(double_buffer, menuptr, 72 + xofs,
-				            k * 56 + shy + 24 + yofs);
+				draw_sprite(double_buffer, menuptr, 72 + xofs, k * 56 + shy + 24 + yofs);
 			}
 		}
 		blit2screen(xofs, yofs);
@@ -406,8 +396,7 @@ ePIDX select_any_player(eTarget csa, unsigned int icn, const char* msg)
 				Game.unpress();
 				return PIDX_UNDEFINED;
 			}
-			if (PlayerInput.left || PlayerInput.right || PlayerInput.down ||
-			        PlayerInput.up)
+			if (PlayerInput.left || PlayerInput.right || PlayerInput.down || PlayerInput.up)
 			{
 				Game.unpress();
 			}
@@ -478,8 +467,7 @@ ePIDX select_any_player(eTarget csa, unsigned int icn, const char* msg)
  */
 ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 {
-	if (!(multi_target == TGT_ENEMY_ONE || multi_target == TGT_ENEMY_ONEALL ||
-	        multi_target == TGT_ENEMY_ALL))
+	if (!(multi_target == TGT_ENEMY_ONE || multi_target == TGT_ENEMY_ONEALL || multi_target == TGT_ENEMY_ALL))
 	{
 		Game.program_death("Invalid enemy target mode");
 		return PIDX_UNDEFINED;
@@ -487,8 +475,7 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 	unsigned int cntr = 0;
 	size_t ptr;
 	int tmpd[NUM_FIGHTERS];
-	for (unsigned int fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-	        fighter_index++)
+	for (unsigned int fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 	{
 		if (can_attack(fighter_index) == 1)
 		{
@@ -585,11 +572,9 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
  * \returns index of player (0..numchrs-1) or PIDX_UNDEFINED if cancelled
  *          or SEL_ALL_ALLIES if 'all' was selected (by pressing U or D)
  */
-ePIDX select_hero(size_t target_fighter_index, eTarget multi_target,
-                  bool can_select_dead)
+ePIDX select_hero(size_t target_fighter_index, eTarget multi_target, bool can_select_dead)
 {
-	if (!(multi_target == TGT_ALLY_ALL || multi_target == TGT_ALLY_ONE ||
-	        multi_target == TGT_ALLY_ONEALL))
+	if (!(multi_target == TGT_ALLY_ALL || multi_target == TGT_ALLY_ONE || multi_target == TGT_ALLY_ONEALL))
 	{
 		Game.program_death("Invalid hero target mode");
 		return PIDX_UNDEFINED;
@@ -597,8 +582,7 @@ ePIDX select_hero(size_t target_fighter_index, eTarget multi_target,
 	unsigned int cntr = 0, ptr = 0;
 	int tmpd[NUM_FIGHTERS];
 	bool select_all = (multi_target == TGT_ALLY_ALL);
-	for (unsigned int fighter_index = 0; fighter_index < numchrs;
-	        fighter_index++)
+	for (unsigned int fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
 		if (can_select_dead || fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -740,12 +724,10 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		for (fighter_index = 0; fighter_index < n_avail; ++fighter_index)
 		{
 			x = xofs + (KQ_SCREEN_W - 32 * n_avail) / 2 + 32 * fighter_index;
-			menubox(double_buffer, x, y, 2, 2,
-			        (fighter_index == cur ? DARKRED : DARKBLUE));
+			menubox(double_buffer, x, y, 2, 2, (fighter_index == cur ? DARKRED : DARKBLUE));
 			if (avail[fighter_index] != PIDX_UNDEFINED)
 			{
-				draw_sprite(double_buffer, frames[avail[fighter_index]][0], x + 8,
-				            y + 8);
+				draw_sprite(double_buffer, frames[avail[fighter_index]][0], x + 8, y + 8);
 			}
 		}
 		/* draw the party */
@@ -753,18 +735,15 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		y = yofs + 88;
 		for (fighter_index = 0; fighter_index < PSIZE; ++fighter_index)
 		{
-			menubox(double_buffer, x, y, 2, 2,
-			        (cur == MAXCHRS + fighter_index ? DARKRED : DARKBLUE));
+			menubox(double_buffer, x, y, 2, 2, (cur == MAXCHRS + fighter_index ? DARKRED : DARKBLUE));
 			if (fighter_index < numchrs && pidx[fighter_index] != PIDX_UNDEFINED)
 			{
-				draw_sprite(double_buffer, frames[pidx[fighter_index]][0], x + 8,
-				            y + 8);
+				draw_sprite(double_buffer, frames[pidx[fighter_index]][0], x + 8, y + 8);
 			}
 			x += 40;
 		}
 		/* Draw the 'Exit' button */
-		menubox(double_buffer, x, y, 4, 1,
-		        (cur == PSIZE + MAXCHRS ? DARKRED : DARKBLUE));
+		menubox(double_buffer, x, y, 4, 1, (cur == PSIZE + MAXCHRS ? DARKRED : DARKBLUE));
 		print_font(double_buffer, x + 8, y + 8, _("Exit"), FNORMAL);
 		/* See which hero is selected and draw his/her stats */
 		if (cur < n_avail)

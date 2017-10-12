@@ -114,8 +114,7 @@ void KSaveGame::delete_game(void)
 	if (remove_result == 0)
 	{
 		menubox(double_buffer, 128, pointer_offset + 12, 12, 1, DARKBLUE);
-		print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"),
-		           FNORMAL);
+		print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), FNORMAL);
 
 		s_sgstats& stats = savegame[save_ptr];
 		stats.num_characters = 0;
@@ -125,8 +124,7 @@ void KSaveGame::delete_game(void)
 	else
 	{
 		menubox(double_buffer, 128, pointer_offset + 12, 16, 1, DARKBLUE);
-		print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"),
-		           FNORMAL);
+		print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), FNORMAL);
 	}
 	blit2screen(0, 0);
 	fullblit(back, double_buffer);
@@ -157,9 +155,7 @@ int KSaveGame::load_game(void)
 	timer_count = 0;
 	ksec = 0;
 	hold_fade = 0;
-	Game.change_map(Game.GetCurmap(),
-	                g_ent[0].tilex, g_ent[0].tiley,
-	                g_ent[0].tilex, g_ent[0].tiley);
+	Game.change_map(Game.GetCurmap(), g_ent[0].tilex, g_ent[0].tiley, g_ent[0].tilex, g_ent[0].tiley);
 	/* Set music and sound volume */
 	set_volume(gsvol, -1);
 	Music.set_music_volume(((float)gmvol) / 250.0);
@@ -415,15 +411,13 @@ void KSaveGame::show_sgstats(int saving)
 
 		if (savegame[sg].num_characters == -1)
 		{
-			print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"),
-			           FNORMAL);
+			print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), FNORMAL);
 		}
 		else
 		{
 			if (stats.num_characters == 0)
 			{
-				print_font(double_buffer, 168, pointer_offset + 20, _("Empty"),
-				           FNORMAL);
+				print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), FNORMAL);
 			}
 			else
 			{
@@ -491,8 +485,7 @@ int KSaveGame::start_menu(int skip_splash)
 			kq_wait(1000);
 			for (a = 0; a < 42; a++)
 			{
-				stretch_blit(staff, double_buffer, 0, 0, 72, 226, 124 - (a * 32),
-				             22 - (a * 96), 72 + (a * 64), 226 + (a * 192));
+				stretch_blit(staff, double_buffer, 0, 0, 72, 226, 124 - (a * 32), 22 - (a * 96), 72 + (a * 64), 226 + (a * 192));
 				blit2screen(0, 0);
 				kq_wait(100);
 			}
@@ -524,8 +517,7 @@ int KSaveGame::start_menu(int skip_splash)
 		for (fade_color = 0; fade_color < 16; fade_color++)
 		{
 			clear_to_color(double_buffer, 15 - fade_color);
-			masked_blit(title, double_buffer, 0, 0, 0, 60 - (fade_color * 4),
-			            KQ_SCREEN_W, 124);
+			masked_blit(title, double_buffer, 0, 0, 0, 60 - (fade_color * 4), KQ_SCREEN_W, 124);
 			blit2screen(0, 0);
 			kq_wait(fade_color == 0 ? 500 : 100);
 		}

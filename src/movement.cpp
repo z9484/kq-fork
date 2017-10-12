@@ -16,8 +16,7 @@
 static int compose_path(AL_CONST int*, uint32_t, uint32_t, char*, size_t);
 static void copy_map(int*);
 static int minimize_path(AL_CONST char*, char*, size_t);
-static int search_paths(uint32_t, int*, uint32_t, uint32_t, uint32_t, uint32_t,
-                        uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
+static int search_paths(uint32_t, int*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
 /*! \brief Generates the solution path.
  *
@@ -37,8 +36,7 @@ static int search_paths(uint32_t, int*, uint32_t, uint32_t, uint32_t, uint32_t,
  *
  * \sa search_paths copy_map find_path minimize_path
  */
-static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
-                        char* buffer, size_t size)
+static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y, char* buffer, size_t size)
 {
 	char temp[1024];
 	int index = 0;
@@ -55,8 +53,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 	while (value > 1)
 	{
 		/*  move as many squares up as possible  */
-		while ((y > 0) && (map[(y - 1) * g_map.xsize + x] == (value - 1)) &&
-		        (value > 1))
+		while ((y > 0) && (map[(y - 1) * g_map.xsize + x] == (value - 1)) && (value > 1))
 		{
 			value--;
 			y--;
@@ -64,8 +61,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 
 		/*  move as many squares left as possible  */
-		while ((x > 0) && (map[y * g_map.xsize + (x - 1)] == (value - 1)) &&
-		        (value > 1))
+		while ((x > 0) && (map[y * g_map.xsize + (x - 1)] == (value - 1)) && (value > 1))
 		{
 			value--;
 			x--;
@@ -73,8 +69,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 
 		/*  move as many squares down as possible  */
-		while ((y < g_map.ysize - 1) &&
-		        (map[(y + 1) * g_map.xsize + x] == (value - 1)) && (value > 1))
+		while ((y < g_map.ysize - 1) && (map[(y + 1) * g_map.xsize + x] == (value - 1)) && (value > 1))
 		{
 			value--;
 			y++;
@@ -82,8 +77,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 
 		/*  move as many squares right as possible  */
-		while ((x < g_map.xsize - 1) &&
-		        (map[y * g_map.xsize + (x + 1)] == (value - 1)) && (value > 1))
+		while ((x < g_map.xsize - 1) && (map[y * g_map.xsize + (x + 1)] == (value - 1)) && (value > 1))
 		{
 			value--;
 			x++;
@@ -127,8 +121,7 @@ static void copy_map(int* map)
 	{
 		if (g_ent[entity_index].active)
 		{
-			map[g_ent[entity_index].tilex * g_map.ysize + g_ent[entity_index].tiley] =
-			    -1;
+			map[g_ent[entity_index].tilex * g_map.ysize + g_ent[entity_index].tiley] = -1;
 		}
 	}
 }
@@ -154,9 +147,7 @@ static void copy_map(int* map)
  *
  * \sa copy_map compose_path search_paths minimize_path
  */
-int find_path(size_t entity_id, uint32_t source_x, uint32_t source_y,
-              uint32_t target_x, uint32_t target_y, char* buffer,
-              uint32_t size)
+int find_path(size_t entity_id, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, char* buffer, uint32_t size)
 {
 	int* map = NULL;
 	uint32_t result = 0;
@@ -178,8 +169,7 @@ int find_path(size_t entity_id, uint32_t source_x, uint32_t source_y,
 
 	memset(map, 0, result);
 	copy_map(map);
-	result = search_paths(entity_id, map, 1, source_x, source_y, target_x,
-	                      target_y, 0, 0, g_map.xsize, g_map.ysize);
+	result = search_paths(entity_id, map, 1, source_x, source_y, target_x, target_y, 0, 0, g_map.xsize, g_map.ysize);
 
 	if (result == 0)
 	{
@@ -266,10 +256,7 @@ static int minimize_path(AL_CONST char* source, char* target, size_t size)
  *
  * \sa copy_map compose_path find_path minimize_path
  */
-static int search_paths(uint32_t entity_id, int* map, uint32_t step,
-                        uint32_t source_x, uint32_t source_y, uint32_t target_x,
-                        uint32_t target_y, uint32_t start_x, uint32_t start_y,
-                        uint32_t limit_x, uint32_t limit_y)
+static int search_paths(uint32_t entity_id, int* map, uint32_t step, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, uint32_t start_x, uint32_t start_y, uint32_t limit_x, uint32_t limit_y)
 {
 	int index;
 	int value;
@@ -277,8 +264,7 @@ static int search_paths(uint32_t entity_id, int* map, uint32_t step,
 
 	index = source_y * limit_x + source_x;
 	value = map[index];
-	if ((value != -1) && (value == 0 || value > (int)step) &&
-	        (step == 1 || !entityat(source_x, source_y, entity_id)))
+	if ((value != -1) && (value == 0 || value > (int)step) && (step == 1 || !entityat(source_x, source_y, entity_id)))
 	{
 		map[index] = step;
 
@@ -289,30 +275,22 @@ static int search_paths(uint32_t entity_id, int* map, uint32_t step,
 
 		if (source_x > start_x)
 		{
-			result &=
-			    search_paths(entity_id, map, step + 1, source_x - 1, source_y,
-			                 target_x, target_y, start_x, start_y, limit_x, limit_y);
+			result &= search_paths(entity_id, map, step + 1, source_x - 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
 		}
 
 		if (source_x < limit_x - 1)
 		{
-			result &=
-			    search_paths(entity_id, map, step + 1, source_x + 1, source_y,
-			                 target_x, target_y, start_x, start_y, limit_x, limit_y);
+			result &= search_paths(entity_id, map, step + 1, source_x + 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
 		}
 
 		if (source_y > start_y)
 		{
-			result &=
-			    search_paths(entity_id, map, step + 1, source_x, source_y - 1,
-			                 target_x, target_y, start_x, start_y, limit_x, limit_y);
+			result &= search_paths(entity_id, map, step + 1, source_x, source_y - 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
 		}
 
 		if (source_y < limit_y - 1)
 		{
-			result &=
-			    search_paths(entity_id, map, step + 1, source_x, source_y + 1,
-			                 target_x, target_y, start_x, start_y, limit_x, limit_y);
+			result &= search_paths(entity_id, map, step + 1, source_x, source_y + 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
 		}
 	}
 

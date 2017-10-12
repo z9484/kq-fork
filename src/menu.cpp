@@ -100,8 +100,7 @@ void draw_mainmenu(int swho)
 	timer_count = 0;
 	for (fighter_index = 0; fighter_index < PSIZE; fighter_index++)
 	{
-		menubox(double_buffer, 44 + xofs, fighter_index * 64 + 64 + yofs, 18, 6,
-		        (size_t)swho == fighter_index ? DARKBLUE : BLUE);
+		menubox(double_buffer, 44 + xofs, fighter_index * 64 + 64 + yofs, 18, 6, (size_t)swho == fighter_index ? DARKBLUE : BLUE);
 	}
 	menubox(double_buffer, 204 + xofs, 64 + yofs, 7, 6, BLUE);
 	menubox(double_buffer, 204 + xofs, 128 + yofs, 7, 6, BLUE);
@@ -115,19 +114,16 @@ void draw_mainmenu(int swho)
 	print_font(double_buffer, 212 + xofs, 164 + yofs, _("Gold:"), FGOLD);
 	/* PH: print time as h:mm */
 	sprintf(strbuf, "%d:%02d", khr, kmin);
-	print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 144 + yofs,
-	           strbuf, FNORMAL);
+	print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 144 + yofs, strbuf, FNORMAL);
 	sprintf(strbuf, "%d", gp);
-	print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 172 + yofs,
-	           strbuf, FNORMAL);
+	print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 172 + yofs, strbuf, FNORMAL);
 	if (swho != -1)
 	{
 		menubox(double_buffer, 44 + xofs, swho * 64 + 64 + yofs, 18, 6, DARKBLUE);
 	}
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		draw_playerstat(double_buffer, pidx[fighter_index], 52 + xofs,
-		                fighter_index * 64 + 76 + yofs);
+		draw_playerstat(double_buffer, pidx[fighter_index], 52 + xofs, fighter_index * 64 + 76 + yofs);
 	}
 }
 
@@ -143,8 +139,7 @@ void draw_playerstat(Raster* where, int player_index_in_party, int dx, int dy)
 {
 	int j;
 	players[player_index_in_party].portrait->maskedBlitTo(where, dx, dy);
-	print_font(where, dx + 48, dy, party[player_index_in_party].playerName,
-	           FNORMAL);
+	print_font(where, dx + 48, dy, party[player_index_in_party].playerName, FNORMAL);
 	draw_stsicon(where, 0, player_index_in_party, 8, dx + 48, dy + 8);
 	print_font(where, dx + 48, dy + 16, _("LV"), FGOLD);
 	sprintf(strbuf, "%d", party[player_index_in_party].lvl);
@@ -248,8 +243,7 @@ void Kqlives::level_up(int pr)
 	z = ((a / 3) + (xpi * (a / 20 + 1) - 1)) * (((a - 2) / 2) * (a - 1));
 	z += (bxp * (a / 20 + 1) * (a - 1));
 	party[pr].next += (int)z;
-	a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] +
-	    (tmpf.fighterStats[A_VIT] / 5);
+	a = (kqrandom->random_range_exclusive(0, lup[2] / 2)) + lup[2] + (tmpf.fighterStats[A_VIT] / 5);
 	party[pr].hp += a;
 	party[pr].mhp += a;
 	b = (kqrandom->random_range_exclusive(0, lup[3] / 2)) + lup[3];
@@ -394,10 +388,7 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
 	}
 	for (int j = 0; j < NUM_ATTRIBUTES; j++)
 	{
-		fighterFromPlayer.fighterStats[j] =
-		    ((playerInParty.lvl - 1) * playerInParty.lup[j + 4] +
-		     playerInParty.stats[j]) /
-		    100;
+		fighterFromPlayer.fighterStats[j] = ((playerInParty.lvl - 1) * playerInParty.lup[j + 4] + playerInParty.stats[j]) / 100;
 	}
 	for (int j = 0; j < R_TOTAL_RES; j++)
 	{
@@ -421,9 +412,7 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
 	 */
 	for (int a = 0; a < 5; a++)
 	{
-		static const int z[5] = {EQP_SPECIAL, EQP_ARMOR, EQP_HELMET, EQP_SHIELD,
-		                         EQP_HAND
-		                        };
+		static const int z[5] = { EQP_SPECIAL, EQP_ARMOR, EQP_HELMET, EQP_SHIELD, EQP_HAND };
 		int current_equipment_slot = playerInParty.eqp[z[a]];
 		if (items[current_equipment_slot].use == USE_IMBUED)
 		{
@@ -499,14 +488,10 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
 	}
 	if (partyIndex == CORIN)
 	{
-		fighterFromPlayer.fighterResistance[R_EARTH] +=
-		    fighterFromPlayer.fighterLevel / 4;
-		fighterFromPlayer.fighterResistance[R_FIRE] +=
-		    fighterFromPlayer.fighterLevel / 4;
-		fighterFromPlayer.fighterResistance[R_AIR] +=
-		    fighterFromPlayer.fighterLevel / 4;
-		fighterFromPlayer.fighterResistance[R_WATER] +=
-		    fighterFromPlayer.fighterLevel / 4;
+		fighterFromPlayer.fighterResistance[R_EARTH] += fighterFromPlayer.fighterLevel / 4;
+		fighterFromPlayer.fighterResistance[R_FIRE] += fighterFromPlayer.fighterLevel / 4;
+		fighterFromPlayer.fighterResistance[R_AIR] += fighterFromPlayer.fighterLevel / 4;
+		fighterFromPlayer.fighterResistance[R_WATER] += fighterFromPlayer.fighterLevel / 4;
 	}
 	if (playerInParty.eqp[5] == I_AGRAN)
 	{
@@ -551,18 +536,11 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
 	{
 		fighterFromPlayer.mrp = playerInParty.mrp;
 	}
-	fighterFromPlayer.fighterStats[A_HIT] +=
-	    fighterFromPlayer.fighterStats[A_STR] / 5;
-	fighterFromPlayer.fighterStats[A_HIT] +=
-	    fighterFromPlayer.fighterStats[A_AGI] / 5;
-	fighterFromPlayer.fighterStats[A_DEF] +=
-	    fighterFromPlayer.fighterStats[A_VIT] / 8;
-	fighterFromPlayer.fighterStats[A_EVD] +=
-	    fighterFromPlayer.fighterStats[A_AGI] / 5;
-	fighterFromPlayer.fighterStats[A_MAG] +=
-	    (fighterFromPlayer.fighterStats[A_INT] +
-	     fighterFromPlayer.fighterStats[A_SAG]) /
-	    20;
+	fighterFromPlayer.fighterStats[A_HIT] += fighterFromPlayer.fighterStats[A_STR] / 5;
+	fighterFromPlayer.fighterStats[A_HIT] += fighterFromPlayer.fighterStats[A_AGI] / 5;
+	fighterFromPlayer.fighterStats[A_DEF] += fighterFromPlayer.fighterStats[A_VIT] / 8;
+	fighterFromPlayer.fighterStats[A_EVD] += fighterFromPlayer.fighterStats[A_AGI] / 5;
+	fighterFromPlayer.fighterStats[A_MAG] += (fighterFromPlayer.fighterStats[A_INT] + fighterFromPlayer.fighterStats[A_SAG]) / 20;
 	for (int j = 0; j < NUM_STATS; j++)
 	{
 		if (fighterFromPlayer.fighterStats[j] < 1)
@@ -610,16 +588,13 @@ void Kqlives::quest_info(void)
 		{
 			if (i + base < Kqlives::quest_list.count)
 			{
-				print_font(double_buffer, 104 + xofs, 100 + 8 * i + yofs,
-				           Kqlives::quest_list.root[i + base].key, FNORMAL);
+				print_font(double_buffer, 104 + xofs, 100 + 8 * i + yofs, Kqlives::quest_list.root[i + base].key, FNORMAL);
 			}
 		}
-		draw_sprite(double_buffer, menuptr, 88 + xofs,
-		            100 + 8 * (ii - base) + yofs);
+		draw_sprite(double_buffer, menuptr, 88 + xofs, 100 + 8 * (ii - base) + yofs);
 		if (ii < Kqlives::quest_list.count)
 		{
-			print_font(double_buffer, 96 + xofs, 196 + yofs, Kqlives::quest_list.root[ii].text,
-			           FNORMAL);
+			print_font(double_buffer, 96 + xofs, 196 + yofs, Kqlives::quest_list.root[ii].text, FNORMAL);
 		}
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
@@ -698,18 +673,13 @@ void revert_equipstats(void)
 		{
 			party[pidx_index].sts[stats_index] = 0;
 		}
-		party[pidx_index].sts[S_POISON] =
-		    fighter[fighter_index].fighterSpellEffectStats[S_POISON];
-		party[pidx_index].sts[S_BLIND] =
-		    fighter[fighter_index].fighterSpellEffectStats[S_BLIND];
-		party[pidx_index].sts[S_MUTE] =
-		    fighter[fighter_index].fighterSpellEffectStats[S_MUTE];
-		party[pidx_index].sts[S_DEAD] =
-		    fighter[fighter_index].fighterSpellEffectStats[S_DEAD];
+		party[pidx_index].sts[S_POISON] = fighter[fighter_index].fighterSpellEffectStats[S_POISON];
+		party[pidx_index].sts[S_BLIND] = fighter[fighter_index].fighterSpellEffectStats[S_BLIND];
+		party[pidx_index].sts[S_MUTE] = fighter[fighter_index].fighterSpellEffectStats[S_MUTE];
+		party[pidx_index].sts[S_DEAD] = fighter[fighter_index].fighterSpellEffectStats[S_DEAD];
 		for (stats_index = 0; stats_index < 12; stats_index++)
 		{
-			if (stats_index != S_POISON && stats_index != S_BLIND &&
-			        stats_index != S_MUTE && stats_index != S_DEAD)
+			if (stats_index != S_POISON && stats_index != S_BLIND && stats_index != S_MUTE && stats_index != S_DEAD)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[stats_index] = 0;
 			}
@@ -756,21 +726,17 @@ void spec_items(void)
 		menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 19, BLUE);
 		for (a = 0; a < num_items; a++)
 		{
-			draw_icon(double_buffer, special_items[list_item_which[a]].icon,
-			          88 + xofs, a * 8 + 44 + yofs);
-			print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs,
-			           special_items[list_item_which[a]].specialItemName, FNORMAL);
+			draw_icon(double_buffer, special_items[list_item_which[a]].icon, 88 + xofs, a * 8 + 44 + yofs);
+			print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs, special_items[list_item_which[a]].specialItemName, FNORMAL);
 			if (list_item_quantity[a] > 1)
 			{
 				sprintf(strbuf, "^%d", list_item_quantity[a]);
-				print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf,
-				           FNORMAL);
+				print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf, FNORMAL);
 			}
 		}
 		menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
 		a = strlen(special_items[list_item_which[ptr]].description) * 4;
-		print_font(double_buffer, 160 - a + xofs, 212 + yofs,
-		           special_items[list_item_which[ptr]].description, FNORMAL);
+		print_font(double_buffer, 160 - a + xofs, 212 + yofs, special_items[list_item_which[ptr]].description, FNORMAL);
 		draw_sprite(double_buffer, menuptr, 72 + xofs, ptr * 8 + 44 + yofs);
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
@@ -824,8 +790,7 @@ void Kqlives::status_screen(size_t fighter_index)
 		menubox(double_buffer, xofs, 72 + yofs, 18, 17, BLUE);
 		print_font(double_buffer, 8 + xofs, 80 + yofs, _("Exp:"), FGOLD);
 		sprintf(strbuf, "%d", party[pidx_index].xp);
-		print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 80 + yofs,
-		           strbuf, FNORMAL);
+		print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 80 + yofs, strbuf, FNORMAL);
 		print_font(double_buffer, 8 + xofs, 88 + yofs, _("Next:"), FGOLD);
 		// TT: Does this mean we can only level up to 50?
 		if (party[pidx_index].lvl < 50)
@@ -836,8 +801,7 @@ void Kqlives::status_screen(size_t fighter_index)
 		{
 			sprintf(strbuf, "%d", 0);
 		}
-		print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 88 + yofs,
-		           strbuf, FNORMAL);
+		print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 88 + yofs, strbuf, FNORMAL);
 		print_font(double_buffer, 8 + xofs, 104 + yofs, _("Strength"), FGOLD);
 		print_font(double_buffer, 8 + xofs, 112 + yofs, _("Agility"), FGOLD);
 		print_font(double_buffer, 8 + xofs, 120 + yofs, _("Vitality"), FGOLD);
@@ -863,8 +827,7 @@ void Kqlives::status_screen(size_t fighter_index)
 			}
 			print_font(double_buffer, 96 + xofs, stats_y + yofs, "$", FGOLD);
 			sprintf(strbuf, "%d", fighter[fighter_index].fighterStats[stats_index]);
-			print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs,
-			           stats_y + yofs, strbuf, FNORMAL);
+			print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, stats_y + yofs, strbuf, FNORMAL);
 		}
 
 		menubox(double_buffer, 160 + xofs, 16 + yofs, 18, 16, BLUE);
@@ -887,16 +850,13 @@ void Kqlives::status_screen(size_t fighter_index)
 
 		for (res_index = 0; res_index < R_TOTAL_RES; res_index++)
 		{
-			rectfill(double_buffer, 240 + xofs, res_index * 8 + 25 + yofs, 310 + xofs,
-			         res_index * 8 + 31 + yofs, 3);
+			rectfill(double_buffer, 240 + xofs, res_index * 8 + 25 + yofs, 310 + xofs, res_index * 8 + 31 + yofs, 3);
 			if (fighter[fighter_index].fighterResistance[res_index] < 0)
 			{
 				bc = 18; // bright red, meaning WEAK defense
-				rect_fill_amount =
-				    abs(fighter[fighter_index].fighterResistance[res_index]);
+				rect_fill_amount = abs(fighter[fighter_index].fighterResistance[res_index]);
 			}
-			else if (fighter[fighter_index].fighterResistance[res_index] >= 0 &&
-			         fighter[fighter_index].fighterResistance[res_index] <= 10)
+			else if (fighter[fighter_index].fighterResistance[res_index] >= 0 && fighter[fighter_index].fighterResistance[res_index] <= 10)
 			{
 				bc = 34; // bright green, meaning so-so defense
 				rect_fill_amount = fighter[fighter_index].fighterResistance[res_index];
@@ -904,30 +864,22 @@ void Kqlives::status_screen(size_t fighter_index)
 			else if (fighter[fighter_index].fighterResistance[res_index] > 10)
 			{
 				bc = 50; // bright blue, meaning STRONG defense
-				rect_fill_amount =
-				    fighter[fighter_index].fighterResistance[res_index] - 10;
+				rect_fill_amount = fighter[fighter_index].fighterResistance[res_index] - 10;
 			}
 
 			if (rect_fill_amount > 0)
 			{
 				for (curr_fill = 0; curr_fill < rect_fill_amount; curr_fill++)
 				{
-					rectfill(double_buffer, curr_fill * 7 + 241 + xofs,
-					         res_index * 8 + 26 + yofs, curr_fill * 7 + 246 + xofs,
-					         res_index * 8 + 30 + yofs, bc + curr_fill);
+					rectfill(double_buffer, curr_fill * 7 + 241 + xofs, res_index * 8 + 26 + yofs, curr_fill * 7 + 246 + xofs, res_index * 8 + 30 + yofs, bc + curr_fill);
 				}
 			}
 		}
 		menubox(double_buffer, 160 + xofs, 160 + yofs, 18, 6, BLUE);
-		for (equipment_index = 0; equipment_index < NUM_EQUIPMENT;
-		        equipment_index++)
+		for (equipment_index = 0; equipment_index < NUM_EQUIPMENT; equipment_index++)
 		{
-			draw_icon(double_buffer,
-			          items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs,
-			          equipment_index * 8 + 168 + yofs);
-			print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs,
-			           items[party[pidx_index].eqp[equipment_index]].itemName,
-			           FNORMAL);
+			draw_icon(double_buffer, items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs, equipment_index * 8 + 168 + yofs);
+			print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].itemName, FNORMAL);
 		}
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();

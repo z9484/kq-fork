@@ -71,10 +71,8 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 		// TT: slow_computer additions for speed-ups
 		for (color_range = 0; color_range < 16; color_range += count)
 		{
-			convert_cframes(target_fighter_index, 1, 15 - (color_range / 2),
-			                target_all_flag);
-			for (fighter_index = start_fighter_index;
-			        fighter_index < start_fighter_index + num_targets; fighter_index++)
+			convert_cframes(target_fighter_index, 1, 15 - (color_range / 2), target_all_flag);
+			for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_targets; fighter_index++)
 			{
 				if (deffect[fighter_index] == 1)
 				{
@@ -96,8 +94,7 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 			fullblit(back, double_buffer);
 		}
 	}
-	for (fighter_index = start_fighter_index;
-	        fighter_index < start_fighter_index + num_targets; fighter_index++)
+	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_targets; fighter_index++)
 	{
 		if (deffect[fighter_index] == 1)
 		{
@@ -162,9 +159,7 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 		for (c = 0; c < ccount; c++)
 		{
 			fullblit(back, double_buffer);
-			for (fighter_index = start_fighter_index;
-			        fighter_index < start_fighter_index + num_fighters;
-			        fighter_index++)
+			for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 			{
 				if (is_active(fighter_index) == 1)
 				{
@@ -229,8 +224,7 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
  * \param   magic_effect_index Magic effect to draw
  * \param   shows Show the image
  */
-void draw_attacksprite(size_t target_fighter_index, int multiple_target,
-                       size_t magic_effect_index, int shows)
+void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t magic_effect_index, int shows)
 {
 	int a, dx, dy;
 	size_t fighter_index;
@@ -258,8 +252,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
 
 	if (target_fighter_index < PSIZE)
 	{
-		for (fighter_index = start_fighter_index;
-		        fighter_index < start_fighter_index + num_fighters; fighter_index++)
+		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 		{
 			fighter[fighter_index].fighterAttackSpriteFrame = 5;
 		}
@@ -285,8 +278,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
 	}
 	for (a = 0; a < eff[magic_effect_index].numf; a++)
 	{
-		for (fighter_index = start_fighter_index;
-		        fighter_index < start_fighter_index + num_fighters; fighter_index++)
+		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 		{
 			if (is_active(fighter_index) == 1)
 			{
@@ -297,14 +289,14 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
 				{
 					// The shield sprite in MISC is 48x48 pixels, so center it over the
 					// fighter.
-					draw_trans_sprite(
-					    double_buffer, b_shield,
-					    fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
-					    fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
+					draw_trans_sprite(double_buffer, b_shield,
+						fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
+						fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
 				}
-				masked_blit(eb, double_buffer, 0, eff[magic_effect_index].ysize * a, dx,
-				            dy, eff[magic_effect_index].xsize,
-				            eff[magic_effect_index].ysize);
+				masked_blit(eb, double_buffer,
+					0, eff[magic_effect_index].ysize * a,
+					dx, dy,
+					eff[magic_effect_index].xsize, eff[magic_effect_index].ysize);
 			}
 		}
 		blit2screen(0, 0);
@@ -313,8 +305,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target,
 	}
 	if (target_fighter_index < PSIZE)
 	{
-		for (fighter_index = start_fighter_index;
-		        fighter_index < start_fighter_index + num_fighters; fighter_index++)
+		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 		{
 			fighter[fighter_index].fighterAttackSpriteFrame = 0;
 		}
@@ -371,8 +362,7 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color)
 			dx = fighter[caster_fighter_index].fighterImageDatafileX + (fighter[caster_fighter_index].fighterImageDatafileWidth / 2);
 			dy = fighter[caster_fighter_index].fighterImageDatafileY + (fighter[caster_fighter_index].fighterImageDatafileHeight / 2);
 			draw_fighter(caster_fighter_index, 0);
-			masked_blit(cs, double_buffer, 0, frame_index * 32, dx - 16, dy - 16, 32,
-			            32);
+			masked_blit(cs, double_buffer, 0, frame_index * 32, dx - 16, dy - 16, 32, 32);
 		}
 		blit2screen(0, 0);
 		kq_wait(120);
@@ -395,16 +385,14 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color)
  * \param   effect_index Magic effect
  * \param   shows Show the magic sprite
  */
-void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
-                     size_t effect_index, int shows)
+void draw_hugesprite(size_t target_fighter_index, int hx, int hy, size_t effect_index, int shows)
 {
 	size_t frame_index;
 	size_t fighter_index;
 	size_t start_fighter_index, num_fighters;
 	Raster* eb = get_cached_image(eff[effect_index].ename);
 
-	convert_cframes(target_fighter_index, eff[effect_index].kolor - 3,
-	                eff[effect_index].kolor + 3, 1);
+	convert_cframes(target_fighter_index, eff[effect_index].kolor - 3, eff[effect_index].kolor + 3, 1);
 	if (target_fighter_index < PSIZE)
 	{
 		start_fighter_index = 0;
@@ -426,18 +414,15 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
 	{
 		if (eff[effect_index].orient == 0)
 		{
-			masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * frame_index,
-			            hx, hy, eff[effect_index].xsize, eff[effect_index].ysize);
+			masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * frame_index, hx, hy, eff[effect_index].xsize, eff[effect_index].ysize);
 		}
-		for (fighter_index = start_fighter_index;
-		        fighter_index < start_fighter_index + num_fighters; fighter_index++)
+		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 		{
 			if (is_active(fighter_index) == 1)
 			{
 				if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] > 0)
 				{
-					draw_trans_sprite(
-					    double_buffer, b_shell,
+					draw_trans_sprite(double_buffer, b_shell,
 					    fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
 					    fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
 				}
@@ -446,8 +431,7 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
 		}
 		if (eff[effect_index].orient == 1)
 		{
-			masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * frame_index,
-			            hx, hy, eff[effect_index].xsize, eff[effect_index].ysize);
+			masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * frame_index, hx, hy, eff[effect_index].xsize, eff[effect_index].ysize);
 		}
 		blit2screen(0, 0);
 		kq_wait(eff[effect_index].delay);
@@ -473,16 +457,14 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy,
  * \param   effect_index Effect (which spell is being cast)
  * \param   shows Show the spell cast
  */
-void draw_spellsprite(size_t target_fighter_index, int multiple_target,
-                      size_t effect_index, int shows)
+void draw_spellsprite(size_t target_fighter_index, int multiple_target, size_t effect_index, int shows)
 {
 	int dx, dy = 0;
 	size_t num_frames;
 	size_t start_fighter_index, num_fighers, fighter_index;
 	Raster* eb = get_cached_image(eff[effect_index].ename);
 
-	convert_cframes(target_fighter_index, eff[effect_index].kolor - 3,
-	                eff[effect_index].kolor + 3, multiple_target);
+	convert_cframes(target_fighter_index, eff[effect_index].kolor - 3, eff[effect_index].kolor + 3, multiple_target);
 	if (multiple_target == 1)
 	{
 		if (target_fighter_index < PSIZE)
@@ -510,8 +492,7 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
 	play_effect(eff[effect_index].snd, 128);
 	for (num_frames = 0; num_frames < eff[effect_index].numf; num_frames++)
 	{
-		for (fighter_index = start_fighter_index;
-		        fighter_index < start_fighter_index + num_fighers; fighter_index++)
+		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighers; fighter_index++)
 		{
 			if (is_active(fighter_index) == 1)
 			{
@@ -531,12 +512,11 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
 				draw_fighter(fighter_index, 0);
 				if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] > 0)
 				{
-					draw_trans_sprite(
-					    double_buffer, b_shell,
-					    fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24, fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
+					draw_trans_sprite(double_buffer, b_shell,
+					    fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
+						fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
 				}
-				masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * num_frames,
-				            dx, dy, eff[effect_index].xsize, eff[effect_index].ysize);
+				masked_blit(eb, double_buffer, 0, eff[effect_index].ysize * num_frames, dx, dy, eff[effect_index].xsize, eff[effect_index].ysize);
 			}
 		}
 		blit2screen(0, 0);
@@ -556,8 +536,7 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target,
  * \param   fighter_index Character attacking
  * \param   multiple_target Multiple targets
  */
-void fight_animation(size_t target_fighter_index, size_t fighter_index,
-                     int multiple_target)
+void fight_animation(size_t target_fighter_index, size_t fighter_index, int multiple_target)
 {
 	size_t magic_effect_index;
 	size_t fighter_weapon_index;
@@ -571,8 +550,7 @@ void fight_animation(size_t target_fighter_index, size_t fighter_index,
 	{
 		magic_effect_index = fighter[fighter_index].current_weapon_type;
 	}
-	draw_attacksprite(target_fighter_index, multiple_target, magic_effect_index,
-	                  1);
+	draw_attacksprite(target_fighter_index, multiple_target, magic_effect_index, 1);
 }
 
 /*! \brief Fighter status

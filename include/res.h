@@ -76,8 +76,7 @@ struct s_effect
 	uint8_t numf;   /*!< Number of frames within the sprite */
 	uint16_t xsize; /*!< Width of each frame */
 	uint16_t ysize; /*!< Height of each frame */
-	uint8_t orient; /*!< When 0, draw effect behind fighter; when 1, draw effect
-					   in front of fighter */
+	uint8_t orient; /*!< When 0, draw effect behind fighter; when 1, draw effect in front of fighter */
 	uint16_t delay; /*!< Time to wait between frame transitions */
 	uint8_t kolor;  /*!< Relates to the nth color entry within the PALETTE pal */
 	uint8_t snd;    /*!< Sound that is played when effect is used */
@@ -89,8 +88,7 @@ struct s_erow
 {
 	uint8_t tnum; /*!< Encounter number in the Encounter table */
 	uint8_t lvl;  /*!< Level of monsters */
-	uint8_t per; /*!< When random encounters are specified, this is the cumulative
-					percentage that this one will be selected */
+	uint8_t per; /*!< When random encounters are specified, this is the cumulative percentage that this one will be selected */
 	uint8_t idx[5]; /*!< Index of enemies */
 };
 
@@ -99,8 +97,7 @@ struct s_encounter
 {
 	uint8_t extra_byte;  /*!< Map where this battle occurs */
 	uint8_t extra_byte2; /*!< Zone that triggers this battle */
-	uint8_t enc;   /*!< For random encounters, a 1 in enc chance there will not be
-					  combat */
+	uint8_t enc;   /*!< For random encounters, a 1 in enc chance there will not be combat */
 	uint8_t etnum; /*!< Select rows in the encounter table */
 	uint8_t eidx;  /*!< Select a specific row, or 99 to pick a random one */
 	char bmusic[16];  /*!< music file to play */

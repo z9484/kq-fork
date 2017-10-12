@@ -381,8 +381,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
 		draw_stsicon(double_buffer, 1, z, 17, b + 8, 200);
 	}
 
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-	        fighter_index++)
+	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -734,8 +733,7 @@ static void do_round(void)
 				rcount = 0;
 			}
 
-			for (fighter_index = 0; fighter_index < PSIZE + num_enemies;
-			        fighter_index++)
+			for (fighter_index = 0; fighter_index < PSIZE + num_enemies; fighter_index++)
 			{
 				if ((fighter_index < numchrs) || (fighter_index >= PSIZE))
 				{
@@ -868,8 +866,7 @@ static void do_round(void)
 			battle_render(0, 0, 0);
 			blit2screen(0, 0);
 
-			for (fighter_index = 0; fighter_index < (PSIZE + num_enemies);
-			        fighter_index++)
+			for (fighter_index = 0; fighter_index < (PSIZE + num_enemies); fighter_index++)
 			{
 				if ((bspeed[fighter_index] >= ROUND_MAX) && (bIsEtherEffectActive[fighter_index]))
 				{
@@ -1069,8 +1066,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 		}
 	}
 
-	if ((pidx[defend_fighter_index] == TEMMIN) &&
-	        (fighter[defend_fighter_index].aux == 2))
+	if ((pidx[defend_fighter_index] == TEMMIN) && (fighter[defend_fighter_index].aux == 2))
 	{
 		fighter[defend_fighter_index].aux = 1;
 		a = 1 - defend_fighter_index;
@@ -1107,8 +1103,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 
 	if (ta[defend_fighter_index] != MISS)
 	{
-		ta[defend_fighter_index] =
-		    do_shield_check(defend_fighter_index, ta[defend_fighter_index]);
+		ta[defend_fighter_index] = do_shield_check(defend_fighter_index, ta[defend_fighter_index]);
 	}
 
 	display_amount(defend_fighter_index, FONT_DECIDE, 0);
@@ -1136,8 +1131,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 			fighter[defend_fighter_index].fighterSpellEffectStats[S_SLEEP] = 0;
 		}
 
-		if ((fighter[defend_fighter_index].fighterSpellEffectStats[S_CHARM] > 0) &&
-		        (attack_fighter_index == defend_fighter_index))
+		if ((fighter[defend_fighter_index].fighterSpellEffectStats[S_CHARM] > 0) && (attack_fighter_index == defend_fighter_index))
 		{
 			fighter[defend_fighter_index].fighterSpellEffectStats[S_CHARM] = 0;
 		}
@@ -1219,8 +1213,7 @@ static void heroes_win(void)
 	kq_wait(250);
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
-		        fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
 			nc++;
 		}
@@ -1228,8 +1221,7 @@ static void heroes_win(void)
 		ta[fighter_index] = 0;
 	}
 
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-	        fighter_index++)
+	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 	{
 		txp += fighter[fighter_index].fighterExperience;
 		tgp += fighter[fighter_index].fighterMoney;
@@ -1299,8 +1291,7 @@ static void heroes_win(void)
 	nr = 0;
 	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
-		if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
-		        party[pidx[pidx_index]].sts[S_DEAD] == 0)
+		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == 0)
 		{
 			b = pidx_index * 160;
 			player2fighter(pidx[pidx_index], t1);
@@ -1355,8 +1346,7 @@ static void heroes_win(void)
 	blit2screen(0, 0);
 	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
-		if (party[pidx[pidx_index]].sts[S_STONE] == 0 &&
-		        party[pidx[pidx_index]].sts[S_DEAD] == 0)
+		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == 0)
 		{
 			ent += learn_new_spells(pidx[pidx_index]);
 		}
@@ -1393,8 +1383,7 @@ static void init_fighters(void)
 	 */
 	hero_init();
 	enemy_init();
-	for (fighter_index = 0; fighter_index < (PSIZE + num_enemies);
-	        fighter_index++)
+	for (fighter_index = 0; fighter_index < (PSIZE + num_enemies); fighter_index++)
 	{
 		nspeed[fighter_index] = (fighter[fighter_index].fighterStats[A_SPD] + 50) / 5;
 	}
@@ -1442,15 +1431,12 @@ void multi_fight(size_t attack_fighter_index)
 		end_fighter_index = numchrs;
 	}
 
-	for (fighter_index = start_fighter_index;
-	        fighter_index < start_fighter_index + end_fighter_index;
-	        fighter_index++)
+	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 	{
 		tempd = status_adjust(fighter_index);
 		if ((fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) && (fighter[fighter_index].fighterMaxHealth > 0))
 		{
-			// ares[fighter_index] = attack_result(attack_fighter_index,
-			// fighter_index);
+			// ares[fighter_index] = attack_result(attack_fighter_index, fighter_index);
 			for (spell_index = 0; spell_index < NUM_SPELL_TYPES; spell_index++)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[spell_index] = tempd.fighterSpellEffectStats[spell_index];
@@ -1511,9 +1497,7 @@ void multi_fight(size_t attack_fighter_index)
 	}
 
 	display_amount(start_fighter_index, FONT_DECIDE, 1);
-	for (fighter_index = start_fighter_index;
-	        fighter_index < start_fighter_index + end_fighter_index;
-	        fighter_index++)
+	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 	{
 		if (killed_warrior[fighter_index] != 0)
 		{
@@ -1571,8 +1555,7 @@ static void roll_initiative(void)
 		}
 	}
 
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-	        fighter_index++)
+	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 	{
 		if (hs == 1)
 		{
@@ -1589,8 +1572,7 @@ static void roll_initiative(void)
 	/* PH: This should be ok */
 	for (fighter_index = 0; fighter_index < NUM_FIGHTERS; fighter_index++)
 	{
-		if (fighter_index < numchrs ||
-		        (fighter_index >= PSIZE && fighter_index < (PSIZE + num_enemies)))
+		if (fighter_index < numchrs || (fighter_index >= PSIZE && fighter_index < (PSIZE + num_enemies)))
 		{
 			for (j = 0; j < 2; j++)
 			{
@@ -1644,8 +1626,7 @@ static void snap_togrid(void)
 		fighter[fighter_index].fighterSpriteFacing = hf;
 	}
 
-	for (fighter_index = PSIZE; fighter_index < (PSIZE + num_enemies);
-	        fighter_index++)
+	for (fighter_index = PSIZE; fighter_index < (PSIZE + num_enemies); fighter_index++)
 	{
 		fighter[fighter_index].fighterSpriteFacing = mf;
 	}
@@ -1659,8 +1640,7 @@ static void snap_togrid(void)
 
 	a = fighter[PSIZE].fighterImageDatafileWidth + 16;
 	mf = 170 - (num_enemies * a / 2);
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-	        fighter_index++)
+	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 	{
 		fighter[fighter_index].fighterImageDatafileX = (fighter_index - PSIZE) * a + mf;
 

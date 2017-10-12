@@ -204,8 +204,7 @@ uint8_t display_desc = 0;
 /*! Which map layers should be drawn. These are set when the map is loaded;
      see change_map()
  */
-uint8_t draw_background = 1, draw_middle = 1, draw_foreground = 1,
-        draw_shadow = 1;
+uint8_t draw_background = 1, draw_middle = 1, draw_foreground = 1, draw_shadow = 1;
 
 /*! Items in inventory.  */
 s_inventory g_inv[MAX_INV];
@@ -683,8 +682,7 @@ void KGame::calc_viewport(int /*center*/)
  *              to use the default: s_map::stx and s_map::sty)
  * \param   mvy New y-coord for camera
  */
-void KGame::change_map(const string& map_name, int msx, int msy, int mvx,
-                       int mvy)
+void KGame::change_map(const string& map_name, int msx, int msy, int mvx, int mvy)
 {
 	TiledMap.load_tmx(map_name);
 	prepare_map(msx, msy, mvx, mvy);
@@ -705,8 +703,7 @@ void KGame::change_map(const string& map_name, int msx, int msy, int mvx,
  * \param   offset_x Push player left/right this many tiles from the marker
  * \param   offset_y Push player up/down this many tiles from the marker
  */
-void KGame::change_mapm(const string& map_name, const string& marker_name,
-                        int offset_x, int offset_y)
+void KGame::change_mapm(const string& map_name, const string& marker_name, int offset_x, int offset_y)
 {
 	int msx = 0, msy = 0, mvx = 0, mvy = 0;
 
@@ -1041,8 +1038,7 @@ void KGame::kwait(int dtime)
 			if (key[KEY_W] && key[KEY_ALT])
 			{
 				Game.klog(_("Alt+W Pressed:"));
-				sprintf(strbuf, "\tkwait(); cnt=%d, dtime=%d, timer_count=%d", cnt,
-				        dtime, timer_count);
+				sprintf(strbuf, "\tkwait(); cnt=%d, dtime=%d, timer_count=%d", cnt, dtime, timer_count);
 				Game.klog(strbuf);
 				break;
 			}
@@ -1052,8 +1048,7 @@ void KGame::kwait(int dtime)
 		{
 			if (debugging > 0)
 			{
-				sprintf(strbuf, "kwait(); cnt = %d, dtime = %d, timer_count = %d", cnt,
-				        dtime, timer_count);
+				sprintf(strbuf, "kwait(); cnt = %d, dtime = %d, timer_count = %d", cnt, dtime, timer_count);
 			}
 			else
 			{
@@ -1089,8 +1084,7 @@ void KGame::load_heroes(void)
 	{
 		for (int frame_index = 0; frame_index < MAXFRAMES; frame_index++)
 		{
-			blit(eb, frames[party_index][frame_index], frame_index * 16,
-			     party_index * 16, 0, 0, 16, 16);
+			blit(eb, frames[party_index][frame_index], frame_index * 16, party_index * 16, 0, 0, 16, 16);
 		}
 	}
 	/* portraits */
@@ -1098,10 +1092,8 @@ void KGame::load_heroes(void)
 
 	for (int player_index = 0; player_index < 4; ++player_index)
 	{
-		faces->blitTo(players[player_index].portrait, 0, player_index * 40, 0, 0,
-		              40, 40);
-		faces->blitTo(players[player_index + 4].portrait, 40, player_index * 40, 0,
-		              0, 40, 40);
+		faces->blitTo(players[player_index].portrait, 0, player_index * 40, 0, 0, 40, 40);
+		faces->blitTo(players[player_index + 4].portrait, 40, player_index * 40, 0, 0, 40, 40);
 	}
 }
 
@@ -1319,8 +1311,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 	{
 		for (i = 0; i < (size_t)pcxb->width / 16; i++)
 		{
-			pcxb->blitTo(map_icons[o * (pcxb->width / 16) + i], i * 16, o * 16, 0, 0,
-			             16, 16);
+			pcxb->blitTo(map_icons[o * (pcxb->width / 16) + i], i * 16, o * 16, 0, 0, 16, 16);
 		}
 	}
 
@@ -1526,8 +1517,7 @@ void KGame::startup(void)
 
 		if (use_joy == 0)
 		{
-			Game.klog(
-			    _("Only joysticks/gamepads with at least 4 buttons can be used."));
+			Game.klog(_("Only joysticks/gamepads with at least 4 buttons can be used."));
 			remove_joystick();
 		}
 	}
@@ -1685,9 +1675,7 @@ void KGame::unpress(void)
 	while (timer_count < 20)
 	{
 		PlayerInput.readcontrols();
-		if (!(PlayerInput.balt || PlayerInput.bctrl || PlayerInput.benter ||
-		        PlayerInput.besc || PlayerInput.up || PlayerInput.down ||
-		        PlayerInput.right || PlayerInput.left || PlayerInput.bcheat))
+		if (!(PlayerInput.balt || PlayerInput.bctrl || PlayerInput.benter || PlayerInput.besc || PlayerInput.up || PlayerInput.down || PlayerInput.right || PlayerInput.left || PlayerInput.bcheat))
 		{
 			break;
 		}
@@ -1732,8 +1720,7 @@ void KGame::wait_enter(void)
  * \param   first_entity_index First entity
  * \param   last_entity_index Last entity
  */
-void KGame::wait_for_entity(size_t first_entity_index,
-                            size_t last_entity_index)
+void KGame::wait_for_entity(size_t first_entity_index, size_t last_entity_index)
 {
 	int any_following_entities;
 	uint8_t move_mode;
@@ -1771,12 +1758,10 @@ void KGame::wait_for_entity(size_t first_entity_index,
 		}
 
 		any_following_entities = 0;
-		for (entity_index = first_entity_index; entity_index <= last_entity_index;
-		        ++entity_index)
+		for (entity_index = first_entity_index; entity_index <= last_entity_index; ++entity_index)
 		{
 			move_mode = g_ent[entity_index].movemode;
-			if (g_ent[entity_index].active == 1 &&
-			        (move_mode == MM_SCRIPT || move_mode == MM_TARGET))
+			if (g_ent[entity_index].active == 1 && (move_mode == MM_SCRIPT || move_mode == MM_TARGET))
 			{
 				any_following_entities = 1;
 				break; // for()

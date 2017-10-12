@@ -60,17 +60,14 @@ int hero_skillcheck(size_t fighter_index)
 
 	case SARINA:
 		weapon_index = items[party[pidx_index].eqp[0]].icon;
-		if (weapon_index != W_SWORD && weapon_index != W_AXE &&
-		        weapon_index != W_KNIFE && weapon_index != W_CHENDIGAL)
+		if (weapon_index != W_SWORD && weapon_index != W_AXE && weapon_index != W_KNIFE && weapon_index != W_CHENDIGAL)
 		{
 			return 0;
 		}
 		// See whether any enemies CAN be turned to stone.
-		for (target_fighter_index = PSIZE;
-		        target_fighter_index < PSIZE + num_enemies; target_fighter_index++)
+		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + num_enemies; target_fighter_index++)
 		{
-			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 &&
-			        fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
+			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
 				can_be_affected++;
 			}
@@ -113,12 +110,9 @@ int hero_skillcheck(size_t fighter_index)
 		{
 			return 0;
 		}
-		for (target_fighter_index = PSIZE;
-		        target_fighter_index < PSIZE + num_enemies; target_fighter_index++)
+		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + num_enemies; target_fighter_index++)
 		{
-			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 &&
-			        fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
-			        fighter[target_fighter_index].unl > 0)
+			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[target_fighter_index].unl > 0)
 			{
 				can_be_affected++;
 			}
@@ -165,8 +159,7 @@ int hero_skillcheck(size_t fighter_index)
 		{
 			return 0;
 		}
-		for (target_fighter_index = 0; target_fighter_index < numchrs;
-		        target_fighter_index++)
+		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 			{
@@ -474,8 +467,7 @@ void reveal(int tgt)
 		{
 			for (b = 0; b < d; b++)
 			{
-				rectfill(double_buffer, b * 7 + 157, c * 8 + 98, b * 7 + 162,
-				         c * 8 + 102, g + b);
+				rectfill(double_buffer, b * 7 + 157, c * 8 + 98, b * 7 + 162, c * 8 + 102, g + b);
 			}
 		}
 	}
@@ -494,8 +486,7 @@ void reveal(int tgt)
  */
 int skill_use(size_t attack_fighter_index)
 {
-	int tgt, found_item, a, b, c, p, cts, tx, ty, next_target = 0,
-	                                              nn[NUM_FIGHTERS];
+	int tgt, found_item, a, b, c, p, cts, tx, ty, next_target = 0, nn[NUM_FIGHTERS];
 	size_t enemy_index;
 	size_t fighter_index;
 	std::unique_ptr<Raster> temp;
@@ -525,8 +516,7 @@ int skill_use(size_t attack_fighter_index)
 		fight(attack_fighter_index, enemy_index, 1);
 		if (fighter[enemy_index].fighterSpellEffectStats[S_DEAD] == 1)
 		{
-			for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-			        fighter_index++)
+			for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -574,14 +564,11 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].aux = 2;
 		if (combat_spell_menu(attack_fighter_index) == 1)
 		{
-			draw_castersprite(
-			    attack_fighter_index,
-			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
+			draw_castersprite(attack_fighter_index, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
 			fighterImageDatafileX = -1;
 			fighterImageDatafileY = -1;
 			play_effect(22, 128);
-			convert_cframes(
-			    attack_fighter_index,
+			convert_cframes(attack_fighter_index,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor - 3,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor + 3, 0);
 			battle_render(0, 0, 0);
@@ -594,15 +581,11 @@ int skill_use(size_t attack_fighter_index)
 					ty = fighter[attack_fighter_index].fighterImageDatafileY + (fighter[attack_fighter_index].fighterImageDatafileHeight / 2);
 					if (p == 0)
 					{
-						circlefill(
-						    double_buffer, tx, ty, a,
-						    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
+						circlefill(double_buffer, tx, ty, a, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
 					}
 					else
 					{
-						circlefill(
-						    double_buffer, tx, ty, 15 - a,
-						    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
+						circlefill(double_buffer, tx, ty, 15 - a, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
 						draw_fighter(attack_fighter_index, 0);
 					}
 					blit2screen(0, 0);
@@ -630,8 +613,7 @@ int skill_use(size_t attack_fighter_index)
 			return 0;
 		}
 		display_attack_string = false;
-		fighter[attack_fighter_index].fighterSpellEffectStats[S_INFUSE] =
-		    magic[fighter[attack_fighter_index].csmem].elem;
+		fighter[attack_fighter_index].fighterSpellEffectStats[S_INFUSE] = magic[fighter[attack_fighter_index].csmem].elem;
 		break;
 
 	case AJATHAR:
@@ -643,8 +625,7 @@ int skill_use(size_t attack_fighter_index)
 			for (a = 0; a < 14; a++)
 			{
 				convert_cframes(PSIZE, 1 + a, 15, 1);
-				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies;
-				        fighter_index++)
+				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
 				{
 					if (is_active(fighter_index))
 					{
@@ -663,7 +644,7 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0)
 				{
 					if (fighter[fighter_index].unl == 99 ||
-					        fighter[fighter_index].unl == 0)
+						fighter[fighter_index].unl == 0)
 					{
 						cts = 0;
 					}
@@ -721,7 +702,7 @@ int skill_use(size_t attack_fighter_index)
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
-				        fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+					fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
 					ta[fighter_index] = b;
 					ta[fighter_index] = do_shell_check(fighter_index, ta[fighter_index]);
@@ -731,7 +712,7 @@ int skill_use(size_t attack_fighter_index)
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
-				        fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+					fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
 					adjust_hp(fighter_index, ta[fighter_index]);
 				}
@@ -740,36 +721,25 @@ int skill_use(size_t attack_fighter_index)
 		break;
 
 	case CASANDRA:
-		fighter[attack_fighter_index].atrack[0] =
-		    fighter[attack_fighter_index].fighterStats[A_AUR];
-		fighter[attack_fighter_index].atrack[1] =
-		    fighter[attack_fighter_index].fighterStats[A_SPI];
-		fighter[attack_fighter_index].fighterStats[A_AUR] =
-		    fighter[attack_fighter_index].fighterStats[A_AUR] * 15 / 10;
-		fighter[attack_fighter_index].fighterStats[A_SPI] =
-		    fighter[attack_fighter_index].fighterStats[A_SPI] * 15 / 10;
+		fighter[attack_fighter_index].atrack[0] = fighter[attack_fighter_index].fighterStats[A_AUR];
+		fighter[attack_fighter_index].atrack[1] = fighter[attack_fighter_index].fighterStats[A_SPI];
+		fighter[attack_fighter_index].fighterStats[A_AUR] = fighter[attack_fighter_index].fighterStats[A_AUR] * 15 / 10;
+		fighter[attack_fighter_index].fighterStats[A_SPI] = fighter[attack_fighter_index].fighterStats[A_SPI] * 15 / 10;
 		fighter[attack_fighter_index].atrack[2] = fighter[attack_fighter_index].mrp;
-		fighter[attack_fighter_index].mrp =
-		    fighter[attack_fighter_index].mrp * 15 / 10;
+		fighter[attack_fighter_index].mrp = fighter[attack_fighter_index].mrp * 15 / 10;
 		if (combat_spell_menu(attack_fighter_index) == 1)
 		{
 			bIsEtherEffectActive[attack_fighter_index] = false;
 			fighter[attack_fighter_index].aux = 1;
-			fighter[attack_fighter_index].fighterStats[A_AUR] =
-			    fighter[attack_fighter_index].atrack[0];
-			fighter[attack_fighter_index].fighterStats[A_SPI] =
-			    fighter[attack_fighter_index].atrack[1];
-			fighter[attack_fighter_index].mrp =
-			    fighter[attack_fighter_index].atrack[2];
+			fighter[attack_fighter_index].fighterStats[A_AUR] = fighter[attack_fighter_index].atrack[0];
+			fighter[attack_fighter_index].fighterStats[A_SPI] = fighter[attack_fighter_index].atrack[1];
+			fighter[attack_fighter_index].mrp = fighter[attack_fighter_index].atrack[2];
 		}
 		else
 		{
-			fighter[attack_fighter_index].fighterStats[A_AUR] =
-			    fighter[attack_fighter_index].atrack[0];
-			fighter[attack_fighter_index].fighterStats[A_SPI] =
-			    fighter[attack_fighter_index].atrack[1];
-			fighter[attack_fighter_index].mrp =
-			    fighter[attack_fighter_index].atrack[2];
+			fighter[attack_fighter_index].fighterStats[A_AUR] = fighter[attack_fighter_index].atrack[0];
+			fighter[attack_fighter_index].fighterStats[A_SPI] = fighter[attack_fighter_index].atrack[1];
+			fighter[attack_fighter_index].mrp = fighter[attack_fighter_index].atrack[2];
 			return 0;
 		}
 		break;
@@ -827,7 +797,7 @@ int skill_use(size_t attack_fighter_index)
 			else
 			{
 				if (fighter[enemy_index].fighterStealItemCommon == 0 &&
-				        fighter[enemy_index].fighterStealItemRare == 0)
+					fighter[enemy_index].fighterStealItemRare == 0)
 				{
 					message(_("Nothing to steal!"), 255, 0, 0, 0);
 				}
@@ -851,8 +821,7 @@ int skill_use(size_t attack_fighter_index)
 				found_item = fighter[enemy_index].fighterStealItemRare;
 				fighter[enemy_index].fighterStealItemRare = 0;
 			}
-			else if (fighter[enemy_index].fighterStealItemCommon > 0 &&
-			         (kqrandom->random_range_exclusive(0, 100) < 95))
+			else if (fighter[enemy_index].fighterStealItemCommon > 0 && (kqrandom->random_range_exclusive(0, 100) < 95))
 			{
 				/* This steals a common item from a monster, if there is one */
 				found_item = fighter[enemy_index].fighterStealItemCommon;
@@ -869,7 +838,7 @@ int skill_use(size_t attack_fighter_index)
 			else
 			{
 				if (fighter[enemy_index].fighterStealItemCommon == 0 &&
-				        fighter[enemy_index].fighterStealItemRare == 0)
+					fighter[enemy_index].fighterStealItemRare == 0)
 				{
 					message(_("Nothing to steal!"), 255, 0, 0, 0);
 				}

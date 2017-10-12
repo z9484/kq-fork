@@ -62,12 +62,10 @@ static void music_feedback(int val)
  * \param   value The setting (e.g. "Yes")
  * \param   color The foreground color of the text
  */
-static void citem(int y, const char* caption, const char* value,
-                  eFontColor color)
+static void citem(int y, const char* caption, const char* value, eFontColor color)
 {
 	print_font(double_buffer, 48 + xofs, y + yofs, caption, color);
-	print_font(double_buffer, SCREEN_H2 - 8 * strlen(value) + xofs, y + yofs,
-	           value, color);
+	print_font(double_buffer, SCREEN_H2 - 8 * strlen(value) + xofs, y + yofs, value, color);
 }
 
 /*! \brief Display configuration menu
@@ -140,18 +138,13 @@ void config_menu(void)
 		Game.do_check_animation();
 		drawmap();
 		menubox(double_buffer, 88 + xofs, yofs, 16, 1, BLUE);
-		print_font(double_buffer, 96 + xofs, 8 + yofs, _("KQ Configuration"),
-		           FGOLD);
+		print_font(double_buffer, 96 + xofs, 8 + yofs, _("KQ Configuration"), FGOLD);
 		menubox(double_buffer, 32 + xofs, 24 + yofs, 30, MENU_SIZE + 3, BLUE);
 
-		citem(row[0], _("Windowed mode:"), windowed == 1 ? _("YES") : _("NO"),
-		      FNORMAL);
-		citem(row[1], _("Stretch Display:"), stretch_view == 1 ? _("YES") : _("NO"),
-		      FNORMAL);
-		citem(row[2], _("Show Frame Rate:"), show_frate == 1 ? _("YES") : _("NO"),
-		      FNORMAL);
-		citem(row[3], _("Wait for Retrace:"),
-		      wait_retrace == 1 ? _("YES") : _("NO"), FNORMAL);
+		citem(row[0], _("Windowed mode:"), windowed == 1 ? _("YES") : _("NO"), FNORMAL);
+		citem(row[1], _("Stretch Display:"), stretch_view == 1 ? _("YES") : _("NO"), FNORMAL);
+		citem(row[2], _("Show Frame Rate:"), show_frate == 1 ? _("YES") : _("NO"), FNORMAL);
+		citem(row[3], _("Wait for Retrace:"), wait_retrace == 1 ? _("YES") : _("NO"), FNORMAL);
 		citem(row[4], _("Up Key:"), kq_keyname(PlayerInput.kup), FNORMAL);
 		citem(row[5], _("Down Key:"), kq_keyname(PlayerInput.kdown), FNORMAL);
 		citem(row[6], _("Left Key:"), kq_keyname(PlayerInput.kleft), FNORMAL);
@@ -159,8 +152,7 @@ void config_menu(void)
 		citem(row[8], _("Confirm Key:"), kq_keyname(PlayerInput.kalt), FNORMAL);
 		citem(row[9], _("Cancel Key:"), kq_keyname(PlayerInput.kctrl), FNORMAL);
 		citem(row[10], _("Menu Key:"), kq_keyname(PlayerInput.kenter), FNORMAL);
-		citem(row[11], _("System Menu Key:"), kq_keyname(PlayerInput.kesc),
-		      FNORMAL);
+		citem(row[11], _("System Menu Key:"), kq_keyname(PlayerInput.kesc), FNORMAL);
 		citem(row[12], _("Sound System:"), is_sound ? _("ON") : _("OFF"), FNORMAL);
 
 		fontColor = FNORMAL;
@@ -176,8 +168,7 @@ void config_menu(void)
 		sprintf(strbuf, "%3d%%", gmvol * 100 / 250);
 		citem(row[14], _("Music Volume:"), strbuf, fontColor);
 
-		citem(row[15], _("Slow Computer:"), slow_computer ? _("YES") : _("NO"),
-		      FNORMAL);
+		citem(row[15], _("Slow Computer:"), slow_computer ? _("YES") : _("NO"), FNORMAL);
 
 		if (cpu_usage)
 		{
@@ -194,8 +185,7 @@ void config_menu(void)
 		{
 			sprintf(strbuf, "%d", debugging);
 		}
-		citem(row[17], _("DebugMode Stuff:"), debugging ? strbuf : _("OFF"),
-		      FNORMAL);
+		citem(row[17], _("DebugMode Stuff:"), debugging ? strbuf : _("OFF"), FNORMAL);
 #endif
 
 		/* This affects the VISUAL placement of the arrow */
@@ -421,8 +411,7 @@ void config_menu(void)
 			case 14:
 				if (is_sound == 2)
 				{
-					p = getavalue(_("Music Volume"), 0, 25, gmvol / 10, true,
-					              music_feedback);
+					p = getavalue(_("Music Volume"), 0, 25, gmvol / 10, true, music_feedback);
 					if (p != -1)
 					{
 						gmvol = p * 10;
@@ -540,8 +529,7 @@ static int getakey(void)
  * \param   fb Feedback function (or NULL for no feedback)
  * \returns the new value for option, or -1 if cancelled.
  */
-static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp,
-                     void (*fb)(int))
+static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp, void (*fb)(int))
 {
 	if (maxu <= 0 || maxu >= 40)
 	{
@@ -551,21 +539,15 @@ static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp,
 	while (!stop)
 	{
 		Game.do_check_animation();
-		menubox(double_buffer, 148 - (maxu * 4) + xofs, 100 + yofs, maxu + 1, 3,
-		        DARKBLUE);
-		print_font(double_buffer, 160 - (strlen(capt) * 4) + xofs, 108 + yofs, capt,
-		           FGOLD);
-		print_font(double_buffer, 152 - (maxu * 4) + xofs, 116 + yofs, "<",
-		           FNORMAL);
-		print_font(double_buffer, 160 + (maxu * 4) + xofs, 116 + yofs, ">",
-		           FNORMAL);
+		menubox(double_buffer, 148 - (maxu * 4) + xofs, 100 + yofs, maxu + 1, 3, DARKBLUE);
+		print_font(double_buffer, 160 - (strlen(capt) * 4) + xofs, 108 + yofs, capt, FGOLD);
+		print_font(double_buffer, 152 - (maxu * 4) + xofs, 116 + yofs, "<", FNORMAL);
+		print_font(double_buffer, 160 + (maxu * 4) + xofs, 116 + yofs, ">", FNORMAL);
 		int b = 160 - (maxu * 4) + xofs;
 		for (int a = 0; a < cv; a++)
 		{
-			rectfill(double_buffer, a * 8 + b + 1, 117 + yofs, a * 8 + b + 7,
-			         123 + yofs, 50);
-			rectfill(double_buffer, a * 8 + b, 116 + yofs, a * 8 + b + 6, 122 + yofs,
-			         21);
+			rectfill(double_buffer, a * 8 + b + 1, 117 + yofs, a * 8 + b + 7, 123 + yofs, 50);
+			rectfill(double_buffer, a * 8 + b, 116 + yofs, a * 8 + b + 6, 122 + yofs, 21);
 		}
 		char strbuf[10];
 		if (sp)
@@ -576,8 +558,7 @@ static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp,
 		{
 			sprintf(strbuf, "%d", cv);
 		}
-		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 124 + yofs,
-		           strbuf, FGOLD);
+		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 124 + yofs, strbuf, FGOLD);
 		blit2screen(xofs, yofs);
 
 		PlayerInput.readcontrols();
@@ -973,8 +954,7 @@ void play_effect(int efc, int panning)
 			play_sample(samp, gsvol, panning, 1000, 0);
 		}
 		clear_bitmap(double_buffer);
-		blit(fx_buffer, double_buffer, xofs, yofs, xofs, yofs, KQ_SCREEN_W,
-		     KQ_SCREEN_H);
+		blit(fx_buffer, double_buffer, xofs, yofs, xofs, yofs, KQ_SCREEN_W, KQ_SCREEN_H);
 
 		if (in_combat == 0)
 		{
@@ -998,8 +978,7 @@ void play_effect(int efc, int panning)
 			s = (old[a].r + old[a].g + old[a].b) > 40 ? 0 : 63;
 			whiteout[a].r = whiteout[a].g = whiteout[a].b = s;
 		}
-		blit(fx_buffer, double_buffer, xofs, yofs, xofs, yofs, KQ_SCREEN_W,
-		     KQ_SCREEN_H);
+		blit(fx_buffer, double_buffer, xofs, yofs, xofs, yofs, KQ_SCREEN_W, KQ_SCREEN_H);
 		if (samp)
 		{
 			play_sample(samp, gsvol, panning, 1000, 0);
@@ -1037,13 +1016,11 @@ void set_graphics_mode(void)
 	{
 		if (windowed == 1)
 		{
-			set_gfx_mode(GFX_AUTODETECT_WINDOWED, KQ_SCALED_SCREEN_W,
-			             KQ_SCALED_SCREEN_H, 0, 0);
+			set_gfx_mode(GFX_AUTODETECT_WINDOWED, KQ_SCALED_SCREEN_W, KQ_SCALED_SCREEN_H, 0, 0);
 		}
 		else
 		{
-			set_gfx_mode(GFX_AUTODETECT, KQ_SCALED_SCREEN_W, KQ_SCALED_SCREEN_H, 0,
-			             0);
+			set_gfx_mode(GFX_AUTODETECT, KQ_SCALED_SCREEN_W, KQ_SCALED_SCREEN_H, 0, 0);
 		}
 	}
 	else
@@ -1072,8 +1049,7 @@ void show_help(void)
 	print_font(double_buffer, 132 + xofs, 8 + yofs, _("KQ Help"), FGOLD);
 	menubox(double_buffer, 32 + xofs, 32 + yofs, 30, 20, BLUE);
 	menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
-	print_font(double_buffer, 16 + xofs, 224 + yofs,
-	           _("Press CONFIRM to exit this screen"), FNORMAL);
+	print_font(double_buffer, 16 + xofs, 224 + yofs, _("Press CONFIRM to exit this screen"), FNORMAL);
 	citem(72, _("Up Key:"), kq_keyname(PlayerInput.kup), FNORMAL);
 	citem(80, _("Down Key:"), kq_keyname(PlayerInput.kdown), FNORMAL);
 	citem(88, _("Left Key:"), kq_keyname(PlayerInput.kleft), FNORMAL);

@@ -83,8 +83,7 @@ static void calc_possible_equip(int c, int slot)
 		// Check if we have any items at all
 		if (g_inv[k].item > 0 && g_inv[k].quantity > 0)
 		{
-			if (items[g_inv[k].item].type == slot &&
-			        items[g_inv[k].item].eq[pidx[c]] != 0)
+			if (items[g_inv[k].item].type == slot && items[g_inv[k].item].eq[pidx[c]] != 0)
 			{
 				t_inv[tot] = k;
 				tot++;
@@ -277,8 +276,7 @@ static void draw_equipmenu(int c, int sel)
 	{
 		j = party[l].eqp[k];
 		draw_icon(double_buffer, items[j].icon, 84 + xofs, k * 8 + 36 + yofs);
-		print_font(double_buffer, 92 + xofs, k * 8 + 36 + yofs, items[j].itemName,
-		           FNORMAL);
+		print_font(double_buffer, 92 + xofs, k * 8 + 36 + yofs, items[j].itemName, FNORMAL);
 	}
 }
 
@@ -320,13 +318,11 @@ static void draw_equippable(uint32_t c, uint32_t slot, uint32_t pptr)
 		// z == number of items
 		z = g_inv[t_inv[pptr + k]].quantity;
 		draw_icon(double_buffer, items[j].icon, 28 + xofs, k * 8 + 100 + yofs);
-		print_font(double_buffer, 36 + xofs, k * 8 + 100 + yofs, items[j].itemName,
-		           FNORMAL);
+		print_font(double_buffer, 36 + xofs, k * 8 + 100 + yofs, items[j].itemName, FNORMAL);
 		if (z > 1)
 		{
 			sprintf(strbuf, "^%d", z);
-			print_font(double_buffer, 164 + xofs, k * 8 + 100 + yofs, strbuf,
-			           FNORMAL);
+			print_font(double_buffer, 164 + xofs, k * 8 + 100 + yofs, strbuf, FNORMAL);
 		}
 	}
 	if (pptr > 0)
@@ -383,21 +379,23 @@ static void draw_equippreview(int ch, int ptr, int pp)
 		c1 = fighter[ch].fighterStats[z];
 		c2 = tstats[z];
 		sprintf(strbuf, "%d", c1);
-		print_font(double_buffer, 252 - (strlen(strbuf) * 8) + xofs,
-		           z * 8 + 100 + yofs, strbuf, FNORMAL);
+		print_font(double_buffer, 252 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FNORMAL);
 		print_font(double_buffer, 260 + xofs, z * 8 + 100 + yofs, ">", FNORMAL);
 		if (ptr >= 0)
 		{
 			sprintf(strbuf, "%d", c2);
 			if (c1 < c2)
-				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs,
-				           z * 8 + 100 + yofs, strbuf, FGREEN);
+			{
+				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FGREEN);
+			}
 			if (c2 < c1)
-				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs,
-				           z * 8 + 100 + yofs, strbuf, FRED);
+			{
+				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FRED);
+			}
 			if (c1 == c2)
-				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs,
-				           z * 8 + 100 + yofs, strbuf, FNORMAL);
+			{
+				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FNORMAL);
+			}
 		}
 	}
 	menubox(double_buffer, 188 + xofs, 212 + yofs, 13, 1, BLUE);
@@ -411,11 +409,13 @@ static void draw_equippreview(int ch, int ptr, int pp)
 			c2 += tres[z];
 		}
 		if (c1 < c2)
-			print_font(double_buffer, 212 + xofs, 220 + yofs, _("Resist up"),
-			           FNORMAL);
+		{
+			print_font(double_buffer, 212 + xofs, 220 + yofs, _("Resist up"), FNORMAL);
+		}
 		if (c1 > c2)
-			print_font(double_buffer, 204 + xofs, 220 + yofs, _("Resist down"),
-			           FNORMAL);
+		{
+			print_font(double_buffer, 204 + xofs, 220 + yofs, _("Resist down"), FNORMAL);
+		}
 	}
 }
 
@@ -468,8 +468,7 @@ static int equip(uint32_t c, uint32_t selected_item, uint32_t forced)
 	}
 	if (a == EQP_SHIELD)
 	{
-		if (party[c].eqp[EQP_WEAPON] > 0 &&
-		        items[party[c].eqp[EQP_WEAPON]].hnds == 1)
+		if (party[c].eqp[EQP_WEAPON] > 0 && items[party[c].eqp[EQP_WEAPON]].hnds == 1)
 		{
 			return 0;
 		}

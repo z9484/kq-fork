@@ -515,10 +515,12 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			case M_QUICKEN:
 				aux = 0;
 				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 2)
 					{
 						aux++;
 					}
+				}
 				if (aux > 0)
 				{
 					yes = 1;
@@ -550,10 +552,12 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			case M_SLOW:
 				aux = 0;
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
+				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 1)
 					{
 						aux++;
 					}
+				}
 				if (aux > 0)
 				{
 					yes = 1;
@@ -562,10 +566,12 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			case M_SLEEPALL:
 				aux = 0;
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
+				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] == 0)
 					{
 						aux++;
 					}
+				}
 				if (aux > 0)
 				{
 					yes = 1;
@@ -574,10 +580,12 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			case M_DIVINEGUARD:
 				aux = 0;
 				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] == 0)
 					{
 						aux++;
 					}
+				}
 				if (aux > 0)
 				{
 					yes = 1;
@@ -586,10 +594,12 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			case M_DOOM:
 				aux = 0;
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
+				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth >= fighter[fighter_index].fighterMaxHealth / 3)
 					{
 						aux++;
 					}
+				}
 				if (aux > 0)
 				{
 					yes = 1;
@@ -939,8 +949,7 @@ int select_encounter(int en, int etid)
 	}
 	num_enemies = p;
 	/* adjust 'too hard' combat where player is alone and faced by >2 enemies */
-	if (num_enemies > 2 && numchrs == 1 &&
-	        erows[entry].lvl + 2 > party[pidx[0]].lvl && etid == 99)
+	if (num_enemies > 2 && numchrs == 1 && erows[entry].lvl + 2 > party[pidx[0]].lvl && etid == 99)
 	{
 		num_enemies = 2;
 	}
@@ -969,12 +978,12 @@ int KqFork::EnemyC::skill_setup(size_t fighterIndex, size_t skillNumber)
 
 	fighter[fighterIndex].csmem = skillNumber;
 	if (fighterCombatSkill == 101/*"Venomous Bite"*/ ||
-	        fighterCombatSkill == 102/*"Double Slash"*/ ||
-	        fighterCombatSkill == 103/*"Chill Touch"*/ ||
-	        fighterCombatSkill == 106/*"ParaClaw"*/ ||
-	        fighterCombatSkill == 107/*"Dragon Bite"*/ ||
-	        fighterCombatSkill == 112/*"Petrifying Bite"*/ ||
-	        fighterCombatSkill == 114/*"Stunning Strike"*/)
+		fighterCombatSkill == 102/*"Double Slash"*/ ||
+		fighterCombatSkill == 103/*"Chill Touch"*/ ||
+		fighterCombatSkill == 106/*"ParaClaw"*/ ||
+		fighterCombatSkill == 107/*"Dragon Bite"*/ ||
+		fighterCombatSkill == 112/*"Petrifying Bite"*/ ||
+		fighterCombatSkill == 114/*"Stunning Strike"*/)
 	{
 		fighter[fighterIndex].ctmem = auto_select_hero(fighterIndex, NO_STS_CHECK);
 		if (fighter[fighterIndex].ctmem == -1)

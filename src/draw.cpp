@@ -173,8 +173,7 @@ static void border(Raster* where, int left, int top, int right, int bottom)
  * \param   output_range_start Start of output color range
  * \param   output_range_end End of output color range
  */
-void color_scale(Raster* src, Raster* dest, int output_range_start,
-                 int output_range_end)
+void color_scale(Raster* src, Raster* dest, int output_range_start, int output_range_end)
 {
 	int ix, iy, z;
 	int current_pixel_color;
@@ -213,8 +212,7 @@ void color_scale(Raster* src, Raster* dest, int output_range_start,
  * \param   convert_heroes If ==1 then \cframe_index fighter_index<PSIZE means
  * convert all heroes, otherwise all enemies
  */
-void convert_cframes(size_t fighter_index, int output_range_start,
-                     int output_range_end, int convert_heroes)
+void convert_cframes(size_t fighter_index, int output_range_start, int output_range_end, int convert_heroes)
 {
 	size_t start_fighter_index, end_fighter_index, cframe_index;
 
@@ -242,9 +240,7 @@ void convert_cframes(size_t fighter_index, int output_range_start,
 	{
 		for (cframe_index = 0; cframe_index < MAXCFRAMES; cframe_index++)
 		{
-			color_scale(tcframes[start_fighter_index][cframe_index],
-			            cframes[start_fighter_index][cframe_index],
-			            output_range_start, output_range_end);
+			color_scale(tcframes[start_fighter_index][cframe_index], cframes[start_fighter_index][cframe_index], output_range_start, output_range_end);
 		}
 		++start_fighter_index;
 	}
@@ -336,8 +332,7 @@ static void draw_backlayer(void)
 				{
 					here = ((ytc + dy) * g_map.xsize) + xtc + dx;
 					pix = map_seg[here];
-					blit(map_icons[tilex[pix]], double_buffer, 0, 0, dx * 16 + xofs,
-					     dy * 16 + yofs, 16, 16);
+					blit(map_icons[tilex[pix]], double_buffer, 0, 0, dx * 16 + xofs, dy * 16 + yofs, 16, 16);
 				}
 			}
 		}
@@ -369,8 +364,7 @@ static void draw_char(int xw, int yw)
 	size_t fighter_frame, fighter_frame_add;
 	size_t fighter_type_id;
 
-	for (follower_fighter_index = PSIZE + noe; follower_fighter_index > 0;
-	        follower_fighter_index--)
+	for (follower_fighter_index = PSIZE + noe; follower_fighter_index > 0; follower_fighter_index--)
 	{
 		fighter_index = follower_fighter_index - 1;
 		fighter_type_id = g_ent[fighter_index].eid;
@@ -383,8 +377,7 @@ static void draw_char(int xw, int yw)
 		else
 		{
 			fighter_frame_add = g_ent[fighter_index].framectr > 10 ? 1 : 0;
-			fighter_frame =
-			    g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + fighter_frame_add;
+			fighter_frame = g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + fighter_frame_add;
 		}
 		if (fighter_index < PSIZE && fighter_index < numchrs)
 		{
@@ -409,13 +402,10 @@ static void draw_char(int xw, int yw)
 			{
 				spr = sprite_base[fighter_frame];
 			}
-			if (is_forestsquare(g_ent[fighter_index].tilex,
-			                    g_ent[fighter_index].tiley))
+			if (is_forestsquare(g_ent[fighter_index].tilex, g_ent[fighter_index].tiley))
 			{
 				f = !g_ent[fighter_index].moving;
-				if (g_ent[fighter_index].moving &&
-				        is_forestsquare(g_ent[fighter_index].x / TILE_W,
-				                        g_ent[fighter_index].y / TILE_H))
+				if (g_ent[fighter_index].moving && is_forestsquare(g_ent[fighter_index].x / TILE_W, g_ent[fighter_index].y / TILE_H))
 				{
 					f = 1;
 				}
@@ -452,8 +442,7 @@ static void draw_char(int xw, int yw)
 				{
 					horiz = 1; // Right
 				}
-				else if (g_ent[fighter_index].tilex * TILE_W <
-				         g_ent[fighter_index].x)
+				else if (g_ent[fighter_index].tilex * TILE_W < g_ent[fighter_index].x)
 				{
 					horiz = -1; // Left
 				}
@@ -462,8 +451,7 @@ static void draw_char(int xw, int yw)
 				{
 					vert = 1; // Down
 				}
-				else if (g_ent[fighter_index].tiley * TILE_H <
-				         g_ent[fighter_index].y)
+				else if (g_ent[fighter_index].tiley * TILE_H < g_ent[fighter_index].y)
 				{
 					vert = -1; // Up
 				}
@@ -484,11 +472,9 @@ static void draw_char(int xw, int yw)
 						// Final y-coord is same as starting y-coord
 						y = g_ent[fighter_index].tiley * TILE_H - vy + yw;
 						// Where the tile is on the map that we will draw over
-						there = (g_ent[fighter_index].tiley) * g_map.xsize +
-						        g_ent[fighter_index].tilex - horiz;
+						there = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
 						// Original position, before you started moving
-						here = (g_ent[fighter_index].tiley - vert) * g_map.xsize +
-						       g_ent[fighter_index].tilex - horiz;
+						here = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
 					}
 					else
 					{
@@ -499,11 +485,9 @@ static void draw_char(int xw, int yw)
 						// Final y-coord is above starting y-coord
 						y = (g_ent[fighter_index].tiley - vert) * TILE_H - vy + yw;
 						// Where the tile is on the map that we will draw over
-						there = (g_ent[fighter_index].tiley - vert) * g_map.xsize +
-						        g_ent[fighter_index].tilex;
+						there = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex;
 						// Target position
-						here = (g_ent[fighter_index].tiley) * g_map.xsize +
-						       g_ent[fighter_index].tilex;
+						here = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex;
 					}
 
 					/* Because of possible redraw problems, only draw if there is
@@ -522,13 +506,13 @@ static void draw_char(int xw, int yw)
 		{
 			/* It's an NPC */
 			if (g_ent[fighter_index].active &&
-			        g_ent[fighter_index].tilex >= view_x1 &&
-			        g_ent[fighter_index].tilex <= view_x2 &&
-			        g_ent[fighter_index].tiley >= view_y1 &&
-			        g_ent[fighter_index].tiley <= view_y2)
+				g_ent[fighter_index].tilex >= view_x1 &&
+				g_ent[fighter_index].tilex <= view_x2 &&
+				g_ent[fighter_index].tiley >= view_y1 &&
+				g_ent[fighter_index].tiley <= view_y2)
 			{
 				if (dx >= TILE_W * -1 && dx <= TILE_W * (ONSCREEN_TILES_W + 1) &&
-				        dy >= TILE_H * -1 && dy <= TILE_H * (ONSCREEN_TILES_H + 1))
+					dy >= TILE_H * -1 && dy <= TILE_H * (ONSCREEN_TILES_H + 1))
 				{
 					spr = (g_ent[fighter_index].eid >= ID_ENEMY)
 					      ? eframes[g_ent[fighter_index].chrx][fighter_frame]
@@ -633,16 +617,12 @@ static void draw_forelayer(void)
 						else if (z_seg[here] < 10)
 						{
 							/* The zone's number is single-digit, center vert+horiz */
-							textprintf(double_buffer, font, dx * 16 + 4 + xofs,
-							           dy * 16 + 4 + yofs, makecol(255, 255, 255), "%d",
-							           z_seg[here]);
+							textprintf(double_buffer, font, dx * 16 + 4 + xofs, dy * 16 + 4 + yofs, makecol(255, 255, 255), "%d", z_seg[here]);
 						}
 						else if (z_seg[here] < 100)
 						{
 							/* The zone's number is double-digit, center only vert */
-							textprintf(double_buffer, font, dx * 16 + xofs,
-							           dy * 16 + 4 + yofs, makecol(255, 255, 255), "%d",
-							           z_seg[here]);
+							textprintf(double_buffer, font, dx * 16 + xofs, dy * 16 + 4 + yofs, makecol(255, 255, 255), "%d", z_seg[here]);
 						}
 						else if (z_seg[here] < 10)
 						{
@@ -650,12 +630,8 @@ static void draw_forelayer(void)
 							 * digit in top-center of the square; the 10's and 1's
 							 * digits on bottom of the square
 							 */
-							textprintf(double_buffer, font, dx * 16 + 4 + xofs,
-							           dy * 16 + yofs, makecol(255, 255, 255), "%d",
-							           (int)(z_seg[here] / 100));
-							textprintf(double_buffer, font, dx * 16 + xofs,
-							           dy * 16 + 8 + yofs, makecol(255, 255, 255), "%02d",
-							           (int)(z_seg[here] % 100));
+							textprintf(double_buffer, font, dx * 16 + 4 + xofs, dy * 16 + yofs, makecol(255, 255, 255), "%d", (int)(z_seg[here] / 100));
+							textprintf(double_buffer, font, dx * 16 + xofs, dy * 16 + 8 + yofs, makecol(255, 255, 255), "%02d", (int)(z_seg[here] % 100));
 						}
 #endif /* (ALLEGRO_VERSION) */
 					}
@@ -699,8 +675,7 @@ void draw_icon(Raster* where, int ino, int icx, int icy)
  * \param   bg Color/style of background
  * \param   bstyle Style of border
  */
-static void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg,
-                        int bstyle)
+static void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, int bstyle)
 {
 	int a;
 
@@ -801,8 +776,7 @@ static void draw_midlayer(void)
 				{
 					here = ((ytc + dy) * g_map.xsize) + xtc + dx;
 					pix = b_seg[here];
-					draw_sprite(double_buffer, map_icons[tilex[pix]], dx * 16 + xofs,
-					            dy * 16 + yofs);
+					draw_sprite(double_buffer, map_icons[tilex[pix]], dx * 16 + xofs, dy * 16 + yofs);
 				}
 			}
 		}
@@ -845,8 +819,7 @@ static void draw_playerbound(void)
 	{
 		for (dx = 0; dx <= ONSCREEN_TILES_W; dx++)
 		{
-			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0,
-			     dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
+			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0, dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
 		}
 	}
 
@@ -856,15 +829,13 @@ static void draw_playerbound(void)
 		// Left side
 		for (dx = 0; dx < found->left - xtc; dx++)
 		{
-			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0,
-			     dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
+			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0, dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
 		}
 
 		// Right side
 		for (dx = found->right - xtc + 1; dx <= ONSCREEN_TILES_W; dx++)
 		{
-			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0,
-			     dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
+			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0, dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
 		}
 	}
 
@@ -873,8 +844,7 @@ static void draw_playerbound(void)
 	{
 		for (dx = 0; dx <= ONSCREEN_TILES_W; dx++)
 		{
-			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0,
-			     dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
+			blit(map_icons[tilex[found->btile]], double_buffer, 0, 0, dx * TILE_W + xofs, dy * TILE_H + yofs, TILE_W, TILE_H);
 		}
 	}
 }
@@ -910,15 +880,14 @@ static void draw_shadows(void)
 	{
 		for (dx = 0; dx < 21; dx++)
 		{
-			if (ytc + dy >= view_y1 && xtc + dx >= view_x1 && ytc + dy <= view_y2 &&
-			        xtc + dx <= view_x2)
+			if (ytc + dy >= view_y1 && xtc + dx >= view_x1 &&
+				ytc + dy <= view_y2 && xtc + dx <= view_x2)
 			{
 				here = ((ytc + dy) * g_map.xsize) + xtc + dx;
 				pix = s_seg[here];
 				if (pix > 0)
 				{
-					draw_trans_sprite(double_buffer, shadow[pix], dx * 16 + xofs,
-					                  dy * 16 + yofs);
+					draw_trans_sprite(double_buffer, shadow[pix], dx * 16 + xofs, dy * 16 + yofs);
 				}
 			}
 		}
@@ -981,21 +950,18 @@ static void draw_textbox(int bstyle)
 	wid = gbbw * 8 + 16;
 	hgt = gbbh * 12 + 16;
 
-	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid,
-	            gbby + yofs + hgt, BLUE, bstyle);
+	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 	if (bubble_stem_style != STEM_UNDEFINED)
 	{
 		/* select the correct stem-thingy that comes out of the speech bubble */
-		stem =
-		    bub[bubble_stem_style + (bstyle == B_THOUGHT ? NUM_BUBBLE_STEMS : 0)];
+		stem = bub[bubble_stem_style + (bstyle == B_THOUGHT ? NUM_BUBBLE_STEMS : 0)];
 		/* and draw it */
 		draw_sprite(double_buffer, stem, gbx + xofs, gby + yofs);
 	}
 
 	for (a = 0; a < gbbh; a++)
 	{
-		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs,
-		           msgbuf[a], FBIG);
+		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], FBIG);
 	}
 }
 
@@ -1017,13 +983,11 @@ static void draw_porttextbox(int bstyle, int chr)
 	hgt = gbbh * 12 + 16;
 	chr = chr - PSIZE;
 
-	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid,
-	            gbby + yofs + hgt, BLUE, bstyle);
+	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 
 	for (a = 0; a < gbbh; a++)
 	{
-		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs,
-		           msgbuf[a], FBIG);
+		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], FBIG);
 	}
 
 	a--;
@@ -1101,10 +1065,8 @@ void drawmap(void)
 	}
 	if (display_desc == 1)
 	{
-		menubox(double_buffer, 152 - (g_map.map_desc.length() * 4) + xofs, 8 + yofs,
-		        g_map.map_desc.length(), 1, BLUE);
-		print_font(double_buffer, 160 - (g_map.map_desc.length() * 4) + xofs,
-		           16 + yofs, g_map.map_desc.c_str(), FNORMAL);
+		menubox(double_buffer, 152 - (g_map.map_desc.length() * 4) + xofs, 8 + yofs, g_map.map_desc.length(), 1, BLUE);
+		print_font(double_buffer, 160 - (g_map.map_desc.length() * 4) + xofs, 16 + yofs, g_map.map_desc.c_str(), FNORMAL);
 	}
 }
 
@@ -1267,22 +1229,19 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 		if (icn == 255)
 		{
 			/* No icon */
-			menubox(double_buffer, 152 - (max_len * 4) + x_m, 108 + y_m, max_len,
-			        num_lines, DARKBLUE);
+			menubox(double_buffer, 152 - (max_len * 4) + x_m, 108 + y_m, max_len, num_lines, DARKBLUE);
 		}
 		else
 		{
 			/* There is an icon; make the box a little bit bigger to the left */
-			menubox(double_buffer, 144 - (max_len * 4) + x_m, 108 + y_m, max_len + 1,
-			        num_lines, DARKBLUE);
+			menubox(double_buffer, 144 - (max_len * 4) + x_m, 108 + y_m, max_len + 1, num_lines, DARKBLUE);
 			draw_icon(double_buffer, icn, 152 - (max_len * 4) + x_m, 116 + y_m);
 		}
 
 		/* Draw the text */
 		for (i = 0; i < num_lines; ++i)
 		{
-			print_font(double_buffer, 160 - (max_len * 4) + x_m, 116 + 8 * i + y_m,
-			           msgbuf[i], FNORMAL);
+			print_font(double_buffer, 160 - (max_len * 4) + x_m, 116 + 8 * i + y_m, msgbuf[i], FNORMAL);
 		}
 		/* Show it */
 		blit2screen(x_m, y_m);
@@ -1602,8 +1561,7 @@ void print_num(Raster* where, int sx, int sy, const string msg, eFont font_index
  * \param   sp4 Line 4 of text
  * \returns index of option chosen (0..numopt-1)
  */
-int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2,
-           const char* sp3, const char* sp4)
+int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, const char* sp3, const char* sp4)
 {
 	int ly, stop = 0, ptr = 0, a;
 	uint32_t str_len;
@@ -1759,15 +1717,12 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				set_textpos(who);
 				draw_textbox(B_TEXT);
 				/* Draw the  options text */
-				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13,
-				            winy + winheight * 12 + 5, BLUE, B_TEXT);
+				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, B_TEXT);
 				for (i = 0; i < winheight; ++i)
 				{
-					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt],
-					           FBIG);
+					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], FBIG);
 				}
-				draw_sprite(double_buffer, menuptr, winx + 8 - menuptr->width,
-				            (curopt - topopt) * 12 + winy + 4);
+				draw_sprite(double_buffer, menuptr, winx + 8 - menuptr->width, (curopt - topopt) * 12 + winy + 4);
 				/* Draw the 'up' and 'down' markers if there are more options than will
 				 * fit in the window */
 				if (topopt > 0)
@@ -1953,8 +1908,7 @@ static const char* relay(const char* buf)
  * by blitting the 'master copy' from tcframes.
  *
  * \param   fighter_index Character to restore
- * \param   revert_heroes If ==1 then convert all heroes if fighter_index <
- * PSIZE, otherwise convert all enemies
+ * \param   revert_heroes If ==1 then convert all heroes if fighter_index < PSIZE, otherwise convert all enemies
  */
 void revert_cframes(size_t fighter_index, int revert_heroes)
 {
@@ -1985,9 +1939,7 @@ void revert_cframes(size_t fighter_index, int revert_heroes)
 	{
 		for (cframe_index = 0; cframe_index < MAXCFRAMES; cframe_index++)
 		{
-			blit(tcframes[start_fighter_index][cframe_index],
-			     cframes[start_fighter_index][cframe_index], 0, 0, 0, 0,
-			     fighter[start_fighter_index].fighterImageDatafileWidth, fighter[start_fighter_index].fighterImageDatafileHeight);
+			blit(tcframes[start_fighter_index][cframe_index], cframes[start_fighter_index][cframe_index], 0, 0, 0, 0, fighter[start_fighter_index].fighterImageDatafileWidth, fighter[start_fighter_index].fighterImageDatafileHeight);
 		}
 		++start_fighter_index;
 	}

@@ -70,8 +70,7 @@ int limit_frame_rate(int fps)
 
 	gettimeofday(&tv, 0);
 	/* The time between now and (last exec + delay) */
-	timeout.tv_usec = last_exec.tv_usec - tv.tv_usec + (1000000 / fps) +
-	                  1000000 * (last_exec.tv_sec - tv.tv_sec);
+	timeout.tv_usec = last_exec.tv_usec - tv.tv_usec + (1000000 / fps) + 1000000 * (last_exec.tv_sec - tv.tv_sec);
 	seconds = last_exec.tv_sec;
 	/* Negative waits are not yet possible */
 	if (timeout.tv_usec < 0 || !last_exec.tv_sec)
