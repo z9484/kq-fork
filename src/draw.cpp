@@ -49,7 +49,7 @@ void draw_shadows(void);
 void draw_textbox(int);
 void draw_porttextbox(int, int);
 void generic_text(int, int, int);
-const char* decode_utf8(const char* string, uint32_t* cp);
+const char* decode_utf8(const char* inputString, uint32_t* cp);
 
 /*! \brief Insert character names
  *
@@ -841,7 +841,7 @@ void KqFork::draw_midlayer(void)
 void KqFork::draw_playerbound(void)
 {
 	int dx, dy, xtc, ytc;
-	shared_ptr<KBound> found = nullptr;
+	std::shared_ptr<KBound> found = nullptr;
 	uint16_t ent_x = g_ent[0].tilex;
 	uint16_t ent_y = g_ent[0].tiley;
 
@@ -1352,105 +1352,105 @@ const char* KqFork::parse_string(const char* the_string)
  * \author PH
  * \date 20071116
  */
-const char* KqFork::decode_utf8(const char* string, uint32_t* cp)
+const char* KqFork::decode_utf8(const char* inputString, uint32_t* cp)
 {
-	char ch = *string;
+	char ch = *inputString;
 
 	if ((ch & 0x80) == 0x0)
 	{
 		/* single byte */
 		*cp = (int)ch;
-		++string;
+		++inputString;
 	}
 	else if ((ch & 0xe0) == 0xc0)
 	{
 		/* double byte */
 		*cp = ((ch & 0x1f) << 6);
-		++string;
-		ch = *string;
+		++inputString;
+		ch = *inputString;
 
 		if ((ch & 0xc0) == 0x80)
 		{
 			*cp |= (ch & 0x3f);
-			++string;
+			++inputString;
 		}
 		else
 		{
-			string = NULL;
+			inputString = NULL;
 		}
 	}
 	else if ((ch & 0xf0) == 0xe0)
 	{
 		/* triple */
 		*cp = (ch & 0x0f) << 12;
-		++string;
-		ch = *string;
+		++inputString;
+		ch = *inputString;
 		if ((ch & 0xc0) == 0x80)
 		{
 			*cp |= (ch & 0x3f) << 6;
-			++string;
-			ch = *string;
+			++inputString;
+			ch = *inputString;
 			if ((ch & 0xc0) == 0x80)
 			{
 				*cp |= (ch & 0x3f);
-				++string;
+				++inputString;
 			}
 			else
 			{
-				string = NULL;
+				inputString = NULL;
 			}
 		}
 		else
 		{
-			string = NULL;
+			inputString = NULL;
 		}
 	}
 	else if ((ch & 0xf8) == 0xe0)
 	{
 		/* Quadruple */
 		*cp = (ch & 0x0f) << 18;
-		++string;
-		ch = *string;
+		++inputString;
+		ch = *inputString;
 		if ((ch & 0xc0) == 0x80)
 		{
 			*cp |= (ch & 0x3f) << 12;
-			++string;
-			ch = *string;
+			++inputString;
+			ch = *inputString;
 			if ((ch & 0xc0) == 0x80)
 			{
 				*cp |= (ch & 0x3f) << 6;
-				++string;
-				ch = *string;
+				++inputString;
+				ch = *inputString;
 				if ((ch & 0xc0) == 0x80)
 				{
 					*cp |= (ch & 0x3f);
-					++string;
+					++inputString;
 				}
 				else
 				{
-					string = NULL;
+					inputString = NULL;
 				}
 			}
 			else
 			{
-				string = NULL;
+				inputString = NULL;
 			}
 		}
 		else
 		{
-			string = NULL;
+			inputString = NULL;
 		}
 	}
 	else
 	{
-		string = NULL;
+		inputString = NULL;
 	}
 
-	if (string == NULL)
+	if (inputString == NULL)
 	{
 		Game.program_death(_("UTF-8 decode error"));
 	}
-	return string;
+	return inputString;
 }
 
 int KqFork::get_glyph_index(uint32_t cp)
@@ -1481,8 +1481,7 @@ int KqFork::get_glyph_index(uint32_t cp)
 
 /*! \brief Display string
  *
- * Display a string in a particular font on a bitmap at the specified
- * co-ordinates.
+ * Display a string in a particular font on a bitmap at the specified coordinates.
  *
  * \param   where Bitmap to draw to
  * \param   sx x-coord
@@ -1532,7 +1531,7 @@ void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_
  * \param   msg String to draw
  * \param   font_index Font index (0..4)
  */
-void print_num(Raster* where, int sx, int sy, const string msg, eFont font_index)
+void print_num(Raster* where, int sx, int sy, const std::string& msg, eFont font_index)
 {
 	assert(where && "where == NULL");
 	// Check ought not to be necessary if using the enum correctly.
@@ -1794,8 +1793,7 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
  * fit in one box, and returns a pointer to the next unprocessed character
  *
  * \param   buf The string to reformat
- * \returns the rest of the string that has not been processed, or NULL if
- *          it has all been processed.
+ * \returns the rest of the string that has not been processed, or NULL if it has all been processed.
  */
 const char* KqFork::relay(const char* buf)
 {

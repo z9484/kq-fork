@@ -13,7 +13,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
 #include "combat.h"
 #include "constants.h"
@@ -174,7 +174,7 @@ void KSaveGame::load_sgstats(void)
 	{
 		char buf[32];
 		sprintf(buf, "sg%u.xml", sg);
-		string path = kqres(SAVE_DIR, string(buf));
+		std::string path = kqres(SAVE_DIR, std::string(buf));
 		s_sgstats& stats = savegame[sg];
 		if (exists(path.c_str()) && (load_stats_only(path.c_str(), stats) != 0))
 		{

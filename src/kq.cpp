@@ -177,7 +177,7 @@ s_player party[MAXCHRS];
 s_heroinfo players[MAXCHRS];
 
 /*! Name of current shop */
-string shop_name;
+std::string shop_name;
 
 /*! Should we display a box with attack_string in it (used in combat) */
 bool display_attack_string = false;
@@ -682,7 +682,7 @@ void KGame::calc_viewport(int /*center*/)
  *              to use the default: s_map::stx and s_map::sty)
  * \param   mvy New y-coord for camera
  */
-void KGame::change_map(const string& map_name, int msx, int msy, int mvx, int mvy)
+void KGame::change_map(const std::string& map_name, int msx, int msy, int mvx, int mvy)
 {
 	TiledMap.load_tmx(map_name);
 	prepare_map(msx, msy, mvx, mvy);
@@ -703,7 +703,7 @@ void KGame::change_map(const string& map_name, int msx, int msy, int mvx, int mv
  * \param   offset_x Push player left/right this many tiles from the marker
  * \param   offset_y Push player up/down this many tiles from the marker
  */
-void KGame::change_mapm(const string& map_name, const string& marker_name, int offset_x, int offset_y)
+void KGame::change_mapm(const std::string& map_name, const std::string& marker_name, int offset_x, int offset_y)
 {
 	int msx = 0, msy = 0, mvx = 0, mvy = 0;
 

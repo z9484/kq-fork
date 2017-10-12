@@ -9,17 +9,17 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 
 #include "bounds.h"
 
-bool KBounds::Add(shared_ptr<KBound> bound)
+bool KBounds::Add(std::shared_ptr<KBound> bound)
 {
 	m_bounds.push_back(bound);
 	return true;
 }
 
-shared_ptr<KBound> KBounds::GetBound(size_t index)
+std::shared_ptr<KBound> KBounds::GetBound(size_t index)
 {
 	if (index < m_bounds.size())
 	{

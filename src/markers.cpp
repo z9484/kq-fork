@@ -11,9 +11,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
-using std::string;
 #include <memory>
-using std::shared_ptr;
 
 #include "markers.h"
 KMarkers::KMarkers() {}
@@ -26,13 +24,13 @@ KMarkers::~KMarkers()
 	}
 }
 
-bool KMarkers::Add(shared_ptr<KMarker> marker)
+bool KMarkers::Add(std::shared_ptr<KMarker> marker)
 {
 	m_markers.push_back(marker);
 	return true;
 }
 
-bool KMarkers::Remove(shared_ptr<KMarker> marker)
+bool KMarkers::Remove(std::shared_ptr<KMarker> marker)
 {
 	auto found = std::find(m_markers.begin(), m_markers.end(), marker);
 	if (found != m_markers.end())
@@ -43,7 +41,7 @@ bool KMarkers::Remove(shared_ptr<KMarker> marker)
 	return false;
 }
 
-shared_ptr<KMarker> KMarkers::GetMarker(size_t index)
+std::shared_ptr<KMarker> KMarkers::GetMarker(size_t index)
 {
 	if (index < m_markers.size())
 	{
@@ -52,7 +50,7 @@ shared_ptr<KMarker> KMarkers::GetMarker(size_t index)
 	return nullptr;
 }
 
-shared_ptr<KMarker> KMarkers::GetMarker(string marker_name)
+std::shared_ptr<KMarker> KMarkers::GetMarker(std::string marker_name)
 {
 	for (auto it = m_markers.begin(); it != m_markers.end(); it++)
 	{
@@ -64,7 +62,7 @@ shared_ptr<KMarker> KMarkers::GetMarker(string marker_name)
 	return nullptr;
 }
 
-shared_ptr<KMarker> KMarkers::GetMarker(int32_t x, int32_t y)
+std::shared_ptr<KMarker> KMarkers::GetMarker(int32_t x, int32_t y)
 {
 	for (auto it = m_markers.begin(); it != m_markers.end(); it++)
 	{

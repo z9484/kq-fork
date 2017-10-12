@@ -7,18 +7,17 @@
 #include <memory>
 #include <png.h>
 #include <string>
-using std::string;
 
 typedef std::unique_ptr<Raster> BITMAP_PTR;
 
 class image_cache
 {
 public:
-	Raster* get(const string& name);
+	Raster* get(const std::string& name);
 	void clear();
 
 private:
-	std::map<string, BITMAP_PTR> cache;
+	std::map<std::string, BITMAP_PTR> cache;
 };
 
 // At the moment there is one global cache; in the future multiple caches could be
@@ -71,7 +70,7 @@ static int palindex(uint8_t* ptr)
   * \param path the filename
   * \returns the bitmap
 */
-static Raster* bmp_from_png(const string& path)
+static Raster* bmp_from_png(const std::string& path)
 {
 	png_image image;
 	image.version = PNG_IMAGE_VERSION;
@@ -102,7 +101,7 @@ static Raster* bmp_from_png(const string& path)
 }
 #else // !PNG_SIMPLIFIED_READ_SUPPORTED
 #include <cstdio>
-static Raster* bmp_from_png(const string& path)
+static Raster* bmp_from_png(const std::string& path)
 {
 	FILE* fp = std::fopen(path.c_str(), "rb");
 	if (!fp)

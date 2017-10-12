@@ -1,12 +1,9 @@
 #pragma once
 
 #include <memory>
-using std::unique_ptr;
 #include <string>
-using std::string;
 #include <tinyxml2.h>
 #include <vector>
-using std::vector;
 using namespace tinyxml2;
 
 #include "bounds.h"
@@ -27,18 +24,18 @@ public:
 		, data(new uint32_t[size])
 	{
 	}
-	string name;
+	std::string name;
 	const int width;
 	const int height;
 	const int size;
-	unique_ptr<uint32_t[]> data;
+	std::unique_ptr<uint32_t[]> data;
 };
 
 class tmx_map
 {
 public:
 	tmx_map();
-	string name;
+	std::string name;
 	int map_no;
 
 	// Non-zero if zone 0 triggers an event
@@ -87,43 +84,43 @@ public:
 	int revision;
 
 	// Base file name for map song
-	string song_file;
+	std::string song_file;
 
 	// Map name (shown when map first appears)
-	string description;
+	std::string description;
 
 	// The name of the primary tileset (the one with gid=1)
-	string primary_tileset_name;
+	std::string primary_tileset_name;
 
 	// Tilesets defined within this tilemap
-	vector<KTmxTileset> tilesets;
+	std::vector<KTmxTileset> tilesets;
 
 	KBounds bounds;
-	vector<KZone> zones;
+	std::vector<KZone> zones;
 	KMarkers markers;
-	vector<KQEntity> entities;
-	vector<tmx_layer> layers;
+	std::vector<KQEntity> entities;
+	std::vector<tmx_layer> layers;
 	void set_current();
-	const KTmxTileset& find_tileset(const string&) const;
+	const KTmxTileset& find_tileset(const std::string&) const;
 };
 
 class KTiledMap
 {
 public:
-	void load_tmx(const string&);
+	void load_tmx(const std::string&);
 
 private:
 	tmx_map load_tmx_map(XMLElement const* root);
 	XMLElement const* find_tmx_element(XMLElement const*, const char*, const char*);
 	KBounds load_tmx_bounds(XMLElement const*);
 	KMarkers load_tmx_markers(XMLElement const*);
-	vector<KZone> load_tmx_zones(XMLElement const*);
+	std::vector<KZone> load_tmx_zones(XMLElement const*);
 	tmx_layer load_tmx_layer(XMLElement const* el);
-	vector<KQEntity> load_tmx_entities(XMLElement const*);
+	std::vector<KQEntity> load_tmx_entities(XMLElement const*);
 	KTmxTileset load_tmx_tileset(XMLElement const*);
 	XMLElement const* find_objectgroup(XMLElement const* root, const char* name);
-	vector<uint8_t> b64decode(const char*);
-	vector<uint8_t> uncompress(const vector<uint8_t>& data);
+	std::vector<uint8_t> b64decode(const char*);
+	std::vector<uint8_t> uncompress(const std::vector<uint8_t>& data);
 };
 
 extern KTiledMap TiledMap;

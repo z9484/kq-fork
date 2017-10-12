@@ -7,7 +7,6 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 #include <string>
 
 #include "combat.h"
@@ -654,7 +653,7 @@ static int load_samples(void)
 	{
 		return 1;
 	}
-	string sound_datafile(kqres(DATA_DIR, "kqsnd.dat"));
+	std::string sound_datafile(kqres(DATA_DIR, "kqsnd.dat"));
 	for (index = 0; index < MAX_SAMPLES; index++)
 	{
 		sfx[index] = load_datafile_object(sound_datafile.c_str(), sndfiles[index]);
@@ -677,7 +676,7 @@ static int load_samples(void)
  */
 static void parse_allegro_setup(void)
 {
-	const string cfg = kqres(SETTINGS_DIR, "kq.cfg").c_str();
+	const std::string cfg = kqres(SETTINGS_DIR, "kq.cfg").c_str();
 
 	if (!exists(cfg.c_str()))
 	{

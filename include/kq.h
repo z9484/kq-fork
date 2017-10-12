@@ -29,7 +29,6 @@
 
 #include <stdint.h>
 #include <string>
-using std::string;
 
 #include "gettext.h"
 #define _(s) gettext(s)
@@ -49,8 +48,8 @@ class KGame
 public:
 	KGame();
 
-	void change_map(const string&, int, int, int, int);
-	void change_mapm(const string&, const string&, int, int);
+	void change_map(const std::string&, int, int, int, int);
+	void change_mapm(const std::string&, const std::string&, int, int);
 	void calc_viewport(int);
 	void zone_check(void);
 	void warp(int, int, int);
@@ -82,19 +81,19 @@ public:
 	void prepare_map(int, int, int, int);
 	void data_dump(void);
 
-	string GetCurmap() { return m_curmap; }
-	void SetCurmap(string curmap) { m_curmap = curmap; }
+	std::string GetCurmap() { return m_curmap; }
+	void SetCurmap(std::string curmap) { m_curmap = curmap; }
 
 	bool IsOverworldMap() { return m_curmap == WORLD_MAP; }
 
 public:
-	const string WORLD_MAP;
+	const std::string WORLD_MAP;
 	/*! The number of frames per second */
 	const int32_t KQ_TICKS;
 
 protected:
 	/*! Name of the current map */
-	string m_curmap;
+	std::string m_curmap;
 };
 
 extern int vx, vy, mx, my, steps, lastm[PSIZE];
@@ -130,7 +129,7 @@ extern char* strbuf, *savedir;
 extern s_player party[MAXCHRS];
 extern s_heroinfo players[MAXCHRS];
 extern bool display_attack_string;
-extern string shop_name;
+extern std::string shop_name;
 extern char attack_string[39];
 extern volatile int timer, ksec, kmin, khr, animation_count, timer_count;
 extern COLOR_MAP cmap;

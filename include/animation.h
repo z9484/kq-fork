@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <vector>
-using std::vector;
 
 #include "tmx_animation.h"
 
@@ -15,7 +14,7 @@ public:
 	void clear_animations();
 
 private:
-	vector<KAnimSequence> animations;
+	std::vector<KAnimSequence> animations;
 };
 
 extern KAnimation Animation;

@@ -46,10 +46,7 @@ extern "C" {
 #include "timing.h"
 
 #include <string>
-using std::string;
 #include <memory>
-using std::shared_ptr;
-using std::make_shared;
 
 #include "gfx.h"
 #include "imgcache.h"
@@ -585,7 +582,7 @@ void do_entity(int en_num)
 void do_luacheat(void)
 {
 	int oldtop;
-	string cheatfile;
+	std::string cheatfile;
 
 	/* kqres might return null if the cheat file doesn't exist.
 	 * in that case, just do a no-op.
@@ -875,7 +872,7 @@ static const char* stringreader(lua_State* L, void* data, size_t* size)
  *
  * \returns pointer to marker or nullptr if name not found
  */
-static shared_ptr<KMarker> KQ_find_marker(string name, int required)
+static std::shared_ptr<KMarker> KQ_find_marker(std::string name, int required)
 {
 	auto found_marker = g_map.markers.GetMarker(name);
 	if (found_marker != nullptr)
@@ -1137,8 +1134,7 @@ static int KQ_battle(lua_State* L)
 	return 1;
 }
 
-/* The text_ex function just takes one string, and does the line breaks
- * automatically.
+/* The text_ex function just takes one string, and does the line breaks automatically.
  * The old bubble/thought functions which took four strings are handled by
  * code in global.lua. This is for backward compatibility with the old scripts.
  * You can use either, but bubble_ex() does avoid some extra processing.
@@ -1665,7 +1661,7 @@ static int KQ_door_in(lua_State* L)
 	if (lua_type(L, 1) == LUA_TSTRING)
 	{
 		/* It's in "marker" form */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			x = m->x + lua_tointeger(L, 2);
@@ -1704,7 +1700,7 @@ static int KQ_door_out(lua_State* L)
 	if (lua_type(L, 1) == LUA_TSTRING)
 	{
 		/* It's in "marker" form */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			x = m->x + lua_tointeger(L, 2);
@@ -1981,7 +1977,7 @@ static int KQ_get_gp(lua_State* L)
 static int KQ_get_marker_tilex(lua_State* L)
 {
 	const char* marker_name = lua_tostring(L, 1);
-	shared_ptr<KMarker> m = KQ_find_marker(marker_name, 1);
+	std::shared_ptr<KMarker> m = KQ_find_marker(marker_name, 1);
 	if (m != nullptr)
 	{
 		lua_pushnumber(L, m->x);
@@ -2001,7 +1997,7 @@ static int KQ_get_marker_tilex(lua_State* L)
 static int KQ_get_marker_tiley(lua_State* L)
 {
 	const char* marker_name = lua_tostring(L, 1);
-	shared_ptr<KMarker> m = KQ_find_marker(marker_name, 1);
+	std::shared_ptr<KMarker> m = KQ_find_marker(marker_name, 1);
 	if (m != nullptr)
 	{
 		lua_pushnumber(L, m->y);
@@ -2419,7 +2415,7 @@ static int KQ_log(lua_State* L)
  */
 static int KQ_marker(lua_State* L)
 {
-	shared_ptr<KMarker> s = KQ_find_marker(lua_tostring(L, 1), 0);
+	std::shared_ptr<KMarker> s = KQ_find_marker(lua_tostring(L, 1), 0);
 
 	if (s != nullptr)
 	{
@@ -2525,7 +2521,7 @@ static int KQ_move_entity(lua_State* L)
 
 	if (lua_type(L, 2) == LUA_TSTRING)
 	{
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 2), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 2), 1);
 		if (m != nullptr)
 		{
 			target_x = m->x;
@@ -2630,7 +2626,7 @@ static int KQ_place_ent(lua_State* L)
 	if (lua_type(L, 2) == LUA_TSTRING)
 	{
 		/* It's in "marker" form */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 2), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 2), 1);
 		if (m != nullptr)
 		{
 			x = m->x;
@@ -2958,7 +2954,7 @@ static int KQ_set_btile(lua_State* L)
 		/* Format:
 		 *    set_btile("marker", value)
 		 */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			set_btile(m->x, m->y, lua_tointeger(L, 2));
@@ -3176,7 +3172,7 @@ static int KQ_set_ftile(lua_State* L)
 		/* Format:
 		 *    set_ftile("marker", value)
 		 */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			set_ftile(m->x, m->y, lua_tointeger(L, 2));
@@ -3227,11 +3223,11 @@ static int KQ_set_marker(lua_State* L)
 	const int x_coord = lua_tonumber(L, 2);
 	const int y_coord = lua_tonumber(L, 3);
 
-	shared_ptr<KMarker> m = KQ_find_marker(marker_name, 0);
+	std::shared_ptr<KMarker> m = KQ_find_marker(marker_name, 0);
 	if (m == nullptr)
 	{
 		/* Need to add a new marker */
-		auto new_marker = make_shared<KMarker>();
+		auto new_marker = std::make_shared<KMarker>();
 		new_marker->markerName = marker_name;
 		new_marker->x = x_coord;
 		new_marker->y = y_coord;
@@ -3268,7 +3264,7 @@ static int KQ_set_mtile(lua_State* L)
 		/* Format:
 		 *    set_mtile("marker", value)
 		 */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			set_mtile(m->x, m->y, lua_tointeger(L, 2));
@@ -3313,7 +3309,7 @@ static int KQ_set_obs(lua_State* L)
 		/* Format:
 		 *    set_obs("marker", value)
 		 */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			set_obs(m->x, m->y, lua_tointeger(L, 2));
@@ -3614,7 +3610,7 @@ static int KQ_set_shadow(lua_State* L)
 		/* Format:
 		 *    set_shadow("marker", value)
 		 */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			set_shadow(m->x, m->y, lua_tointeger(L, 2));
@@ -3749,7 +3745,7 @@ static int KQ_set_zone(lua_State* L)
 		/* Format:
 		 *    set_zone("marker", value)
 		 */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			set_zone(m->x, m->y, lua_tointeger(L, 2));
@@ -3973,7 +3969,7 @@ static int KQ_warp(lua_State* L)
 	if (lua_type(L, 1) == LUA_TSTRING)
 	{
 		/* Format is warp("marker", [speed]) */
-		shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
+		std::shared_ptr<KMarker> m = KQ_find_marker(lua_tostring(L, 1), 1);
 		if (m != nullptr)
 		{
 			x = m->x;

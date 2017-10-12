@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
-using std::string;
 
 class Raster;
 
@@ -37,6 +36,7 @@ enum eFont
 	FONT_GREEN,
 	FONT_PURPLE,
 	FONT_DECIDE,
+
 	NUM_FONTS // always last
 };
 
@@ -76,7 +76,7 @@ int is_forestsquare(int, int);
 void drawmap(void);
 void menubox(Raster* where, int x, int y, int w, int h, int c);
 void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_index);
-void print_num(Raster* where, int sx, int sy, const string msg, eFont font_index);
+void print_num(Raster* where, int sx, int sy, const std::string& msg, eFont font_index);
 void text_ex(int, int, const char*);
 
 /*! \brief Display speech/thought bubble with portrait

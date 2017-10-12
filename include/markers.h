@@ -1,11 +1,8 @@
 #pragma once
 
 #include <memory>
-using std::shared_ptr;
 #include <string>
-using std::string;
 #include <vector>
-using std::vector;
 
 /*! \file
  * \brief Structures common to mapedit and the game (s_map and s_entity)
@@ -25,7 +22,7 @@ using std::vector;
 struct KMarker
 {
 	// The name of the current marker
-	string markerName;
+	std::string markerName;
 
 	// The X position the marker refers to
 	int32_t x;
@@ -41,29 +38,29 @@ public:
 	~KMarkers();
 
 	// Add a new marker to the map. Returns true on success, or false on failure.
-	bool Add(shared_ptr<KMarker> marker);
+	bool Add(std::shared_ptr<KMarker> marker);
 
 	// Remove the specified marker from the map. Returns true if the marker was
 	// removed, or false if the marker was not found.
-	bool Remove(shared_ptr<KMarker> marker);
+	bool Remove(std::shared_ptr<KMarker> marker);
 
 	// Return a pointer to the marker at the given @param index. If index is
 	// invalid, returns null.
-	shared_ptr<KMarker> GetMarker(size_t index);
+	std::shared_ptr<KMarker> GetMarker(size_t index);
 
 	// Return a pointer to the marker that has the given @param name. If no
 	// markers by that name are found, returns null.
-	shared_ptr<KMarker> GetMarker(string name);
+	std::shared_ptr<KMarker> GetMarker(std::string name);
 
 	// Return a pointer to the marker whose @param x and @param y coordinates
 	// match. If no marker is at those coordinates, returns null.
-	shared_ptr<KMarker> GetMarker(int32_t x, int32_t y);
+	std::shared_ptr<KMarker> GetMarker(int32_t x, int32_t y);
 
 	// Return the number of markers in the array.
 	inline size_t Size() const { return m_markers.size(); }
 
 protected:
-	vector<shared_ptr<KMarker>> m_markers;
+	std::vector<std::shared_ptr<KMarker>> m_markers;
 };
 
 extern KMarker Marker;

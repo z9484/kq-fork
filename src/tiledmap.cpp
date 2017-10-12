@@ -2,9 +2,7 @@
 #include <string>
 #include <tinyxml2.h>
 #include <vector>
-using std::map;
 #include <memory>
-using std::make_shared;
 #include <iterator>
 #define ZLIB_CONST
 #include "animation.h"
@@ -17,10 +15,6 @@ using std::make_shared;
 #include "tiledmap.h"
 #include <zlib.h>
 
-using std::string;
-using std::map;
-using std::vector;
-using std::unique_ptr;
 using namespace tinyxml2;
 KTiledMap TiledMap;
 
@@ -48,10 +42,10 @@ struct s_zone
 struct tmx_tileset
 {
 	uint32_t firstgid;
-	string name;
-	string sourceimage;
+	std::string name;
+	std::string sourceimage;
 	Raster* imagedata;
-	vector<KTmxAnimation> animations;
+	std::vector<KTmxAnimation> animations;
 	int width;
 	int height;
 };
@@ -70,10 +64,10 @@ uint32_t* end(tmx_layer& l)
  * Make it the current map for the game
  * \param name the filename
  */
-void KTiledMap::load_tmx(const string& name)
+void KTiledMap::load_tmx(const std::string& name)
 {
 	XMLDocument tmx;
-	string path = name + string(".tmx");
+	std::string path = name + std::string(".tmx");
 	tmx.LoadFile(kqres(MAP_DIR, path).c_str());
 	if (tmx.Error())
 	{
@@ -93,9 +87,9 @@ void KTiledMap::load_tmx(const string& name)
 
 // Convert pointer-to-char to string,
 // converting NULL to the empty string.
-static string strconv(const char* ptr)
+static std::string strconv(const char* ptr)
 {
-	return string(ptr ? ptr : "");
+	return std::string(ptr ? ptr : "");
 }
 
 tmx_map KTiledMap::load_tmx_map(XMLElement const* root)
@@ -213,7 +207,7 @@ KBounds KTiledMap::load_tmx_bounds(XMLElement const* el)
 		{
 			if (i->Attribute("type", "bounds"))
 			{
-				auto new_bound = make_shared<KBound>();
+				auto new_bound = std::make_shared<KBound>();
 				new_bound->left = i->IntAttribute("x") / TILE_W;
 				new_bound->top = i->IntAttribute("y") / TILE_H;
 				new_bound->right = i->IntAttribute("width") / TILE_W + new_bound->left - 1;
@@ -270,7 +264,7 @@ KMarkers KTiledMap::load_tmx_markers(XMLElement const* el)
 		{
 			if (obj->Attribute("type", "marker"))
 			{
-				auto marker = make_shared<KMarker>();
+				auto marker = std::make_shared<KMarker>();
 				marker->x = obj->IntAttribute("x") / TILE_W;
 				marker->y = obj->IntAttribute("y") / TILE_H;
 				marker->markerName = obj->Attribute("name");
@@ -313,10 +307,10 @@ tmx_layer KTiledMap::load_tmx_layer(XMLElement const* el)
 	}
 	else if (data->Attribute("encoding", "base64"))
 	{
-		vector<uint8_t> bytes = b64decode(data->GetText());
+		std::vector<uint8_t> bytes = b64decode(data->GetText());
 		if (data->Attribute("compression", "zlib"))
 		{
-			vector<uint8_t> raw = uncompress(bytes);
+			std::vector<uint8_t> raw = uncompress(bytes);
 			if (raw.size() != layer.size * sizeof(uint32_t))
 			{
 				Game.program_death("Layer size mismatch");
@@ -346,9 +340,9 @@ tmx_layer KTiledMap::load_tmx_layer(XMLElement const* el)
  * \param el the <objectgroup> element containing the zones
  * \returns a vector of zones
  */
-vector<KZone> KTiledMap::load_tmx_zones(XMLElement const* el)
+std::vector<KZone> KTiledMap::load_tmx_zones(XMLElement const* el)
 {
-	vector<KZone> zones;
+	std::vector<KZone> zones;
 	if (el)
 	{
 		for (auto i = el->FirstChildElement("object"); i; i = i->NextSiblingElement("object"))
@@ -372,9 +366,9 @@ vector<KZone> KTiledMap::load_tmx_zones(XMLElement const* el)
  * \param el the objectgroup element containing the entities
  * \returns a vector of entities
  */
-vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const* el)
+std::vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const* el)
 {
-	vector<KQEntity> entities;
+	std::vector<KQEntity> entities;
 	for (auto i = el->FirstChildElement("object"); i; i = i->NextSiblingElement("object"))
 	{
 		auto properties = i->FirstChildElement("properties");
@@ -704,7 +698,7 @@ void tmx_map::set_current()
 	}
 }
 
-const KTmxTileset& tmx_map::find_tileset(const string& name) const
+const KTmxTileset& tmx_map::find_tileset(const std::string& name) const
 {
 	for (auto && ans : tilesets)
 	{
@@ -804,9 +798,9 @@ static bool valid(uint8_t v)
  * \param text the input characters
  * \returns the converted bytes
  */
-vector<uint8_t> KTiledMap::b64decode(const char* text)
+std::vector<uint8_t> KTiledMap::b64decode(const char* text)
 {
-	vector<uint8_t> data;
+	std::vector<uint8_t> data;
 	b64 nextc(text);
 	while (nextc)
 	{
@@ -854,7 +848,7 @@ vector<uint8_t> KTiledMap::b64decode(const char* text)
 	}
 	else
 	{
-		return vector<uint8_t>();
+		return std::vector<uint8_t>();
 	}
 }
 
@@ -863,10 +857,10 @@ vector<uint8_t> KTiledMap::b64decode(const char* text)
  * \param data the input compressed data
  * \returns the uncompressed data
  */
-vector<uint8_t> KTiledMap::uncompress(const vector<uint8_t>& data)
+std::vector<uint8_t> KTiledMap::uncompress(const std::vector<uint8_t>& data)
 {
 	z_stream stream;
-	vector<uint8_t> out;
+	std::vector<uint8_t> out;
 	stream.zalloc = Z_NULL;
 	stream.zfree = Z_NULL;
 	stream.opaque = Z_NULL;

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 class KTmxTileset
 {
 public:
@@ -8,10 +11,10 @@ public:
 	{}
 
 	uint32_t firstgid;
-	string name;
-	string sourceimage;
+	std::string name;
+	std::string sourceimage;
 	Raster* imagedata;
-	vector<KTmxAnimation> animations;
+	std::vector<KTmxAnimation> animations;
 	int width;
 	int height;
 };

@@ -2,9 +2,7 @@
 
 #include <allegro.h>
 #include <memory>
-using std::shared_ptr;
 #include <vector>
-using std::vector;
 
 struct PACKFILE;
 
@@ -53,11 +51,11 @@ public:
 	}
 
 	// Add a new bound to the map. Returns true on success, or false on failure.
-	bool Add(shared_ptr<KBound> bound);
+	bool Add(std::shared_ptr<KBound> bound);
 
 	// Return a pointer to the bound at the given @param index. If index is
 	// invalid, returns null.
-	shared_ptr<KBound> GetBound(size_t index);
+	std::shared_ptr<KBound> GetBound(size_t index);
 
 	size_t Size()
 	{
@@ -67,5 +65,5 @@ public:
 	uint32_t IsBound(const uint16_t left, const uint16_t top, const uint16_t right, const uint16_t bottom) const;
 
 protected:
-	vector<shared_ptr<KBound>> m_bounds;
+	std::vector<std::shared_ptr<KBound>> m_bounds;
 };

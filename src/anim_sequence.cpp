@@ -1,6 +1,3 @@
-#include <vector>
-using std::vector;
-
 #include "anim_sequence.h"
 #include "tmx_animation.h"
 

@@ -7,7 +7,6 @@
  */
 
 #include <string>
-using std::string;
 
 enum eDirectories
 {
@@ -22,9 +21,9 @@ enum eDirectories
 /* Get the directory for application data (music, gfx, etc.)
    or user data (screenshots, prefs, saved games)
  */
-const string kqres(enum eDirectories, const string);
+const std::string kqres(enum eDirectories, const std::string);
 
-const string get_lua_file_path(const string, const string);
-const string get_resource_file_path(const string, const string, const string);
+const std::string get_lua_file_path(const std::string, const std::string);
+const std::string get_resource_file_path(const std::string, const std::string, const std::string);
 
 #define maybe_poll_joystick poll_joystick

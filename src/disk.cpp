@@ -28,10 +28,6 @@
 
 using tinyxml2::XMLElement;
 using tinyxml2::XMLDocument;
-using std::vector;
-using std::copy;
-using std::begin;
-using std::end;
 
 /*! Iteration helper class.
  * Allows use of C++11's range-based for syntax to iterate
@@ -69,9 +65,9 @@ xiterable children(XMLElement* parent, const char* tag = nullptr)
  * \param str a string containing the list
  * \returns the numbers in a vector
  */
-static vector<int> parse_list(const char* str)
+static std::vector<int> parse_list(const char* str)
 {
-	vector<int> list;
+	std::vector<int> list;
 	while (str && *str)
 	{
 		const char* next = strchr(str, ',');
@@ -178,7 +174,7 @@ static int load_resistances(s_player* s, XMLElement* node)
 			// Gave some, has to be the right number of elements
 			if (values.size() == NUM_RES)
 			{
-				copy(values.begin(), values.end(), s->res);
+				std::copy(values.begin(), values.end(), s->res);
 			}
 			else
 			{
@@ -200,7 +196,7 @@ static int load_spelltypes(s_player* s, XMLElement* node)
 		{
 			if (values.size() == NUM_SPELL_TYPES)
 			{
-				copy(values.begin(), values.end(), s->sts);
+				std::copy(values.begin(), values.end(), s->sts);
 			}
 			else
 			{
@@ -222,7 +218,7 @@ static int load_spells(s_player* s, XMLElement* node)
 		{
 			if (values.size() == NUM_SPELLS)
 			{
-				copy(values.begin(), values.end(), s->spells);
+				std::copy(values.begin(), values.end(), s->spells);
 			}
 			else
 			{
@@ -244,7 +240,7 @@ static int load_equipment(s_player* s, XMLElement* node)
 		{
 			if (values.size() == NUM_EQUIPMENT)
 			{
-				copy(values.begin(), values.end(), s->eqp);
+				std::copy(values.begin(), values.end(), s->eqp);
 			}
 			else
 			{
@@ -377,7 +373,7 @@ static int load_lup(s_player* s, XMLElement* node)
 	if (elem && !elem->NoChildren())
 	{
 		auto vals = parse_list(elem->FirstChild()->Value());
-		copy(vals.begin(), vals.end(), s->lup);
+		std::copy(vals.begin(), vals.end(), s->lup);
 		return 0;
 	}
 	else
@@ -834,7 +830,7 @@ static int save_general_props(XMLElement* node)
 	addprop(properties, "random-state", kqrandom->kq_get_random_state());
 	// Save-Game Stats - id, level, hp (as a % of mhp), mp% for each member of the
 	// party
-	vector<int> sgs;
+	std::vector<int> sgs;
 	for (int i = 0; i < stats.num_characters; ++i)
 	{
 		auto& chr = stats.characters[i];
@@ -1037,7 +1033,7 @@ static int save_s_fighter(tinyxml2::XMLPrinter& out, const KFighter& f)
 	out.PushText(make_list(std::begin(f.atrack), std::end(f.atrack)).c_str());
 	out.CloseElement(/*atrack*/);
 	out.OpenElement("imb");
-	vector<int> imb{ f.imb_s, f.imb_a, f.imb[0], f.imb[1] };
+	std::vector<int> imb{ f.imb_s, f.imb_a, f.imb[0], f.imb[1] };
 	out.PushText(make_list(imb.begin(), imb.end()).c_str());
 	out.CloseElement(/*imb*/);
 	out.CloseElement(/*fighter*/);

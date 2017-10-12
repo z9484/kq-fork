@@ -29,9 +29,9 @@ typedef HRESULT(WINAPI* SHGETFOLDERPATH)(HWND, int, HANDLE, DWORD, LPWSTR);
 
 namespace
 {
-const string CombinePaths(size_t numStringsToCombine, ...)
+const std::string CombinePaths(size_t numStringsToCombine, ...)
 {
-	string constructedPath = "";
+	std::string constructedPath = "";
 
 	if (numStringsToCombine == 0)
 	{
@@ -63,11 +63,11 @@ const string CombinePaths(size_t numStringsToCombine, ...)
  * \param file The filename
  * \returns the combined path
  */
-const string get_resource_file_path(const string str1, const string str2, const string file)
+const std::string get_resource_file_path(const std::string str1, const std::string str2, const std::string file)
 {
 	FILE* fp = nullptr;
 
-	const string userDirFound = CombinePaths(3, user_dir, str2, file);
+	const std::string userDirFound = CombinePaths(3, user_dir, str2, file);
 	fp = fopen(userDirFound.c_str(), "r");
 	if (fp)
 	{
@@ -75,7 +75,7 @@ const string get_resource_file_path(const string str1, const string str2, const 
 		return userDirFound;
 	}
 
-	const string customDirFound = CombinePaths(3, str1, str2, file);
+	const std::string customDirFound = CombinePaths(3, str1, str2, file);
 	fp = fopen(customDirFound.c_str(), "r");
 	if (fp)
 	{
@@ -97,11 +97,11 @@ const string get_resource_file_path(const string str1, const string str2, const 
  * \param file The filename
  * \returns the combined path
  */
-const string get_lua_file_path(const string file)
+const std::string get_lua_file_path(const std::string file)
 {
 	FILE* fp = nullptr;
 
-	const string userDirLob = CombinePaths(3, user_dir, "scripts", file + ".lob");
+	const std::string userDirLob = CombinePaths(3, user_dir, "scripts", file + ".lob");
 	fp = fopen(userDirLob.c_str(), "r");
 	if (fp)
 	{
@@ -109,7 +109,7 @@ const string get_lua_file_path(const string file)
 		return userDirLob;
 	}
 
-	const string userDirLua = CombinePaths(3, user_dir, "scripts", file + ".lua");
+	const std::string userDirLua = CombinePaths(3, user_dir, "scripts", file + ".lua");
 	fp = fopen(userDirLua.c_str(), "r");
 	if (fp)
 	{
@@ -117,7 +117,7 @@ const string get_lua_file_path(const string file)
 		return userDirLua;
 	}
 
-	const string gameDirLob = CombinePaths(3, game_dir, "scripts", file + ".lob");
+	const std::string gameDirLob = CombinePaths(3, game_dir, "scripts", file + ".lob");
 	fp = fopen(gameDirLob.c_str(), "r");
 	if (fp)
 	{
@@ -125,7 +125,7 @@ const string get_lua_file_path(const string file)
 		return gameDirLob;
 	}
 
-	const string gameDirLua = CombinePaths(3, game_dir, "scripts", file + ".lua");
+	const std::string gameDirLua = CombinePaths(3, game_dir, "scripts", file + ".lua");
 	fp = fopen(gameDirLua.c_str(), "r");
 	if (fp)
 	{
@@ -142,7 +142,7 @@ const string get_lua_file_path(const string file)
  * \param   file File name below that directory.
  * \returns the combined path
  */
-const string kqres(eDirectories dir, string file)
+const std::string kqres(eDirectories dir, std::string file)
 {
 	HINSTANCE SHFolder;
 	SHGETFOLDERPATH SHGetFolderPath;
