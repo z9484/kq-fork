@@ -106,7 +106,7 @@ void init_obj(lua_State* L);
  *
  * @param L the Lua state
  * @param filename the full path of the file to read
- * \return 0 on success, 1 on error
+ * @return 0 on success, 1 on error
  */
 int lua_dofile(lua_State* L, const char* filename);
 
@@ -3140,7 +3140,7 @@ static int KQ_set_ent_tilex(lua_State* L)
 	int a = KqFork::real_entity_num(L, 1);
 
 	g_ent[a].tilex = (int)lua_tonumber(L, 2);
-	g_ent[a].x = g_ent[a].tilex * 16;
+	g_ent[a].x = g_ent[a].tilex * TILE_W;
 	return 0;
 }
 
@@ -3149,7 +3149,7 @@ static int KQ_set_ent_tiley(lua_State* L)
 	int a = KqFork::real_entity_num(L, 1);
 
 	g_ent[a].tiley = (int)lua_tonumber(L, 2);
-	g_ent[a].y = g_ent[a].tiley * 16;
+	g_ent[a].y = g_ent[a].tiley * TILE_H;
 	return 0;
 }
 
@@ -4020,7 +4020,7 @@ static int KQ_warp(lua_State* L)
  *
  * @param L the Lua state
  * @param filename the full path of the file to read
- * \return 0 on success, 1 on error
+ * @return 0 on success, 1 on error
  */
 int KqFork::lua_dofile(lua_State* L, const char* filename)
 {

@@ -680,7 +680,7 @@ static void parsems(t_entity target_entity)
 	s = g_ent[target_entity].script[g_ent[target_entity].sidx];
 
 	// 48..57 are '0'..'9' ASCII
-	while (s >= 48 && s <= 57)
+	while (s >= '0' && s <= '9')
 	{
 		tok[p] = s;
 		p++;
