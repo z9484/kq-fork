@@ -887,13 +887,11 @@ const char* KqFork::filereader(lua_State*, void* data, size_t* size)
 	return r->buffer;
 }
 
-const char* KqFork::stringreader(lua_State* L, void* data, size_t* size)
+const char* KqFork::stringreader(lua_State* /*L*/, void* data, size_t* size)
 {
 	char** f = (char**)data;
 	char* ans = *f;
 
-	/* Avoid 'unused' warning */
-	(void)L;
 	if (ans == NULL)
 	{
 		*size = 0;
@@ -4016,12 +4014,9 @@ static int KQ_warp(lua_State* L)
 
 /*! \brief Read in a complete file
  *
- * Read in a lua/lob file and execute it. Executing means
- * defining all the functions etc listed within
- * it.
+ * Read in a lua/lob file and execute it. Executing means defining all the functions etc listed within it.
  *
- * Note that lua files still have to be "prepared"
- * if they use any ITEM constants.
+ * Note that lua files still have to be "prepared" if they use any ITEM constants.
  *
  * @param L the Lua state
  * @param filename the full path of the file to read
