@@ -479,7 +479,7 @@ void reveal(int tgt)
 /*! \brief Activate the special skill
  *
  * This function activates the special skill for a hero,
- * including targetting etc. if required.
+ * including targeting etc. if required.
  *
  * \param   attack_fighter_index Hero to process
  * \returns 1 if the skill was used, otherwise 0

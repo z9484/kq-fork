@@ -143,7 +143,7 @@ int auto_select_hero(int whom, int csts)
 /*! \brief  Check if attacker is able to attack
  * \author  Josh Bolduc
  *
- * Just checks the status of a fighter for purposes of targetting.
+ * Just checks the status of a fighter for purposes of targeting.
  *
  * \param   tgt Index into fighter array
  * \returns 0 if fighter is dead or has HP<1 or MHP<1, otherwise 1
@@ -347,11 +347,11 @@ static void party_remove(ePIDX id)
  * This is used to select a recipient or recipients for items/spells.
  * Used in itemmenu.c and masmenu.c.
  *
- * If targetting mode is TGT_NONE, just show the player but don't allow
+ * If targeting mode is TGT_NONE, just show the player but don't allow
  * any change in selection.
  *
  * \sa draw_icon()
- * \sa camp_item_targetting()
+ * \sa camp_item_targeting()
  *
  * \param   csa - Mode (TGT_ALLY_ONE, TGT_ALLY_ONEALL, TGT_ALLY_ALL or TGT_NONE)
  * \param   icn - Icon to draw (see also draw_icon() in draw.c)

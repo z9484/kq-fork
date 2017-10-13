@@ -30,7 +30,7 @@ char item_act;
 static void draw_itemmenu(int, int, int);
 static void sort_items(void);
 static void join_items(void);
-static void camp_item_targetting(int);
+static void camp_item_targeting(int);
 static void sort_inventory(void);
 
 /*! \brief Process the item menu
@@ -142,7 +142,7 @@ void camp_item_menu(void)
 					// Player's cursor was over the USE menu
 					if (item_act == 0)
 					{
-						camp_item_targetting(pptr * 16 + ptr);
+						camp_item_targeting(pptr * 16 + ptr);
 					}
 					// Player's curor was over the DROP menu
 					else
@@ -205,7 +205,7 @@ void camp_item_menu(void)
  *
  * \param   pp Item index
  */
-static void camp_item_targetting(int pp)
+static void camp_item_targeting(int pp)
 {
 	int t1 = g_inv[pp].item;
 	if (items[t1].use == USE_NOT || items[t1].use > USE_CAMP_INF)

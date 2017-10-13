@@ -579,13 +579,13 @@ int combat_spell_menu(int c)
 	return 0;
 }
 
-/*! \brief Check spell targetting
+/*! \brief Check spell targeting
  *
  * Perform the necessary checking to determine target selection for the
  * particular character's spell.
  *
  * \param   whom Character id
- * \returns -1 if the spell has no targetting,
+ * \returns -1 if the spell has no targeting,
  *          0 if cancelled
  *          1 if target selected
  */
