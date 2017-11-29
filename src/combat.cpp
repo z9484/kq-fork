@@ -48,25 +48,29 @@ uint8_t vspell;
 uint8_t ms;
 Raster* backart = nullptr;
 
+namespace KqForkCombat {
+
 /* Internal variables */
-static int curw;
-static int nspeed[NUM_FIGHTERS];
-static int bspeed[NUM_FIGHTERS];
-static uint8_t hs;
+int curw;
+int nspeed[NUM_FIGHTERS];
+int bspeed[NUM_FIGHTERS];
+uint8_t hs;
 
 enum eAttackResult { ATTACK_MISS, ATTACK_SUCCESS, ATTACK_CRITICAL };
 
 /* Internal prototypes */
-static eAttackResult attack_result(int, int);
-static int check_end(void);
-static void do_action(size_t);
-static int do_combat(char*, char*, int);
-static void do_round(void);
-static void enemies_win(void);
-static void heroes_win(void);
-static void init_fighters(void);
-static void roll_initiative(void);
-static void snap_togrid(void);
+eAttackResult attack_result(int, int);
+int check_end(void);
+void do_action(size_t);
+int do_combat(const std::string& backgroundImageName, char* mus, int is_rnd);
+void do_round(void);
+void enemies_win(void);
+void heroes_win(void);
+void init_fighters(void);
+void roll_initiative(void);
+void snap_togrid(void);
+
+} // namespace KqForkCombat
 
 /*! \brief Attack all enemies at once
  * \author Josh Bolduc
@@ -82,9 +86,8 @@ static void snap_togrid(void);
  *          ATTACK_SUCCESS if attack was successful,
  *          ATTACK_CRITICAL if attack was a critical hit.
  */
-eAttackResult attack_result(int ar, int dr)
+KqForkCombat::eAttackResult KqForkCombat::attack_result(int ar, int dr)
 {
-	int c;
 	int check_for_critical_hit;
 	int attacker_critical_status = 0;
 	int crit_hit = 0;
@@ -204,29 +207,51 @@ eAttackResult attack_result(int ar, int dr)
 			base = 1;
 		}
 
-		c = attacker_weapon_element - 1;
-		if ((c >= R_EARTH) && (c <= R_ICE))
-		{
-			base = res_adjust(dr, c, base);
-		}
-
-		if ((c >= R_POISON) && (c <= R_SLEEP))
-		{
-			if ((res_throw(dr, c) == 0) && (fighter[dr].fighterSpellEffectStats[c - R_POISON] == 0))
-			{
-				if (non_dmg_save(dr, 50) == 0)
-				{
-					if ((c == R_POISON) || (c == R_PETRIFY) || (c == R_SILENCE))
-					{
-						tempd.fighterSpellEffectStats[c - R_POISON] = 1;
-					}
-					else
-					{
-						tempd.fighterSpellEffectStats[c - R_POISON] = kqrandom->random_range_exclusive(2, 5);
-					}
-				}
-			}
-		}
+		// Depending on what element the attacker had on the weapon (or its main attack),
+		// the defender may take damage, get an effect set on them (sleep, blind, etc.).
+        eResistance defenderRes = static_cast<eResistance>(attacker_weapon_element - 1);
+        switch (defenderRes)
+        {
+        case R_EARTH:
+        case R_BLACK:
+        case R_FIRE:
+        case R_THUNDER:
+        case R_AIR:
+        case R_WHITE:
+        case R_WATER:
+        case R_ICE:
+        {
+            base = res_adjust(dr, defenderRes, base);
+            break;
+        }
+        case R_POISON:
+        case R_BLIND:
+        case R_CHARM:
+        case R_PARALYZE:
+        case R_PETRIFY:
+        case R_SILENCE:
+        case R_SLEEP:
+        {
+            uint8_t spellEffectStatIndex = defenderRes - R_POISON;
+            if ((res_throw(dr, defenderRes) == 0) && (fighter[dr].fighterSpellEffectStats[spellEffectStatIndex] == 0))
+            {
+                if (non_dmg_save(dr, 50) == 0)
+                {
+                    if ((defenderRes == R_POISON) || (defenderRes == R_PETRIFY) || (defenderRes == R_SILENCE))
+                    {
+                        tempd.fighterSpellEffectStats[spellEffectStatIndex] = 1;
+                    }
+                    else
+                    {
+                        tempd.fighterSpellEffectStats[spellEffectStatIndex] = kqrandom->random_range_exclusive(2, 5);
+                    }
+                }
+            }
+            break;
+        }
+        default:
+            break;
+        }
 	}
 
 	/*  JB: Apply the damage multiplier  */
@@ -237,7 +262,7 @@ eAttackResult attack_result(int ar, int dr)
 	 */
 
 #ifdef KQ_CHEATS
-	if (cheat && every_hit_999)
+	if (hasCheatEnabled && every_hit_999)
 	{
 		ta[dr] = -999;
 		return ATTACK_SUCCESS;
@@ -281,7 +306,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
 	if (plyr > 0)
 	{
 		current_fighter_index = plyr - 1;
-		curw = fighter[current_fighter_index].fighterImageDatafileWidth;
+        KqForkCombat::curw = fighter[current_fighter_index].fighterImageDatafileWidth;
 		fighterImageDatafileX = fighter[current_fighter_index].fighterImageDatafileX;
 		fighterImageDatafileY = fighter[current_fighter_index].fighterImageDatafileY;
 	}
@@ -296,11 +321,11 @@ void battle_render(signed int plyr, size_t hl, int sall)
 
 	if ((sall == 0) && (fighterImageDatafileX > -1) && (fighterImageDatafileY > -1))
 	{
-		draw_sprite(double_buffer, bptr, fighterImageDatafileX + (curw / 2) - 8, fighterImageDatafileY - 8);
+		draw_sprite(double_buffer, bptr, fighterImageDatafileX + (KqForkCombat::curw / 2) - 8, fighterImageDatafileY - 8);
 		if (current_fighter_index >= PSIZE)
 		{
 			current_fighter_index = plyr - 1;
-			t = fighterImageDatafileX + (curw / 2);
+			t = fighterImageDatafileX + (KqForkCombat::curw / 2);
 			t -= (fighter[current_fighter_index].fighterName.length() * 4);
 			z = (fighter[current_fighter_index].fighterImageDatafileY < 32
 			     ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].fighterImageDatafileHeight
@@ -329,7 +354,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
 		menubox(double_buffer, b, 184, 11, 5, BLUE);
 		if (fighter[z].fighterSpellEffectStats[S_DEAD] == 0)
 		{
-			sz = bspeed[z] * 88 / ROUND_MAX;
+			sz = KqForkCombat::bspeed[z] * 88 / ROUND_MAX;
 			if (sz > 88)
 			{
 				sz = 88;
@@ -407,7 +432,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
  * \returns 1 if the battle ended (either the heroes or the enemies won),
  *          0 otherwise.
  */
-static int check_end(void)
+int KqForkCombat::check_end(void)
 {
 	size_t fighter_index;
 	int alive = 0;
@@ -463,7 +488,7 @@ int combat(int bno)
 	int lc;
 
 #ifdef KQ_CHEATS
-	if (cheat && no_monsters)
+	if (hasCheatEnabled && no_monsters)
 	{
 		return 0;
 	}
@@ -491,7 +516,7 @@ int combat(int bno)
 	{
 #ifdef KQ_CHEATS
 		/* skip battle if no_random_encouters cheat is set */
-		if (cheat && no_random_encounters)
+		if (hasCheatEnabled && no_random_encounters)
 		{
 			return 0;
 		}
@@ -537,8 +562,8 @@ int combat(int bno)
 	/* Player is about to do battle. */
 
 	steps = 0;
-	init_fighters();
-	return do_combat(battles[bno].backimg, battles[bno].bmusic, battles[bno].eidx == 99);
+    KqForkCombat::init_fighters();
+	return KqForkCombat::do_combat(battles[bno].backimg, battles[bno].bmusic, battles[bno].eidx == 99);
 }
 
 /*! \brief Choose an action
@@ -548,7 +573,7 @@ int combat(int bno)
  *
  * Choose a fighter action.
  */
-static void do_action(size_t fighter_index)
+void KqForkCombat::do_action(size_t fighter_index)
 {
 	size_t imb_index;
 	uint8_t imbued_item;
@@ -613,17 +638,17 @@ static void do_action(size_t fighter_index)
 
 /*! \brief Really do combat once fighters have been inited
  *
- * \param   bg Background image
+ * \param   backgroundImageName Background image
  * \param   mus Music
  * \param   is_rnd If !=0 then this is a random combat
  * \returns 1 if battle occurred
  */
-static int do_combat(char* bg, char* mus, int is_rnd)
+int KqForkCombat::do_combat(const std::string& backgroundImageName, char* mus, int is_rnd)
 {
 	int zoom_step;
 
 	in_combat = 1;
-	backart = get_cached_image(bg);
+	backart = get_cached_image(backgroundImageName);
 	if (is_rnd)
 	{
 		if ((numchrs == 1) && (pidx[0] == AYLA))
@@ -663,15 +688,14 @@ static int do_combat(char* bg, char* mus, int is_rnd)
 	}
 	else
 	{
+        static const uint8_t NUM_ZOOM_STEPS = 8;
 		/* TT TODO:
 		 * Change this so when we zoom into the battle, it won't just zoom into the
-		 * middle
-		 * of the screen.  Instead, it's going to zoom into the location where the
-		 * player
-		 * is, so if he's on the side of the map somewhere...
+		 * middle of the screen.  Instead, it's going to zoom into the location where the
+		 * player is, so if he's on the side of the map somewhere...
 		 */
 		std::unique_ptr<Raster> temp(copy_bitmap(nullptr, double_buffer));
-		for (zoom_step = 0; zoom_step < 9; zoom_step++)
+		for (zoom_step = 0; zoom_step <= NUM_ZOOM_STEPS; zoom_step++)
 		{
 			Music.poll_music();
 			stretch_blit(temp.get(), double_buffer,
@@ -716,7 +740,7 @@ static int do_combat(char* bg, char* mus, int is_rnd)
  * when necessary. This is also where things like poison, sleep,
  * and what-not are checked.
  */
-static void do_round(void)
+void KqForkCombat::do_round(void)
 {
 	size_t a;
 	size_t fighter_index;
@@ -992,7 +1016,7 @@ void draw_fighter(size_t fighter_index, size_t dcur)
  * Play some sad music and set the dead flag so that the game
  * will return to the main menu.
  */
-static void enemies_win(void)
+void KqForkCombat::enemies_win(void)
 {
 	Music.play_music("rain.s3m", 0);
 	battle_render(0, 0, 0);
@@ -1046,8 +1070,8 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 	}
 
 	tempd = status_adjust(defend_fighter_index);
-	ares = attack_result(attack_fighter_index, defend_fighter_index);
-	for (stats_index = 0; stats_index < 24; stats_index++)
+	ares = KqForkCombat::attack_result(attack_fighter_index, defend_fighter_index);
+	for (stats_index = 0; stats_index < NUM_SPELL_TYPES; stats_index++)
 	{
 		fighter[defend_fighter_index].fighterSpellEffectStats[stats_index] = tempd.fighterSpellEffectStats[stats_index];
 	}
@@ -1155,7 +1179,7 @@ void fkill(size_t fighter_index)
 {
 #ifdef KQ_CHEATS
 	/* PH Combat cheat: when a hero dies s/he is mysteriously boosted back to full HP. */
-	if (cheat && fighter_index < PSIZE)
+	if (hasCheatEnabled && fighter_index < PSIZE)
 	{
 		fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
 		return;
@@ -1185,7 +1209,7 @@ void fkill(size_t fighter_index)
  *
  * Distribute the booty!
  */
-static void heroes_win(void)
+void KqForkCombat::heroes_win(void)
 {
 	int tgp = 0;
 	size_t fighter_index;
@@ -1365,7 +1389,7 @@ static void heroes_win(void)
  *
  * Pre-combat setup of fighter structures and initial vars.
  */
-static void init_fighters(void)
+void KqForkCombat::init_fighters(void)
 {
 	size_t fighter_index;
 
@@ -1519,7 +1543,7 @@ void multi_fight(size_t attack_fighter_index)
  *
  * Set up surprise vars, speeds, act vars, etc.
  */
-static void roll_initiative(void)
+void KqForkCombat::roll_initiative(void)
 {
 	size_t fighter_index, j;
 
@@ -1604,7 +1628,7 @@ static void roll_initiative(void)
  *
  * Calculate where the fighters should be drawn.
  */
-static void snap_togrid(void)
+void KqForkCombat::snap_togrid(void)
 {
 	size_t fighter_index;
 	int hf = 0;

@@ -115,8 +115,8 @@ void display_credits(Raster* double_buffer)
 	/* Put an un-ignorable cheat message; this should stop
 	 * PH releasing versions with cheat mode compiled in ;)
 	 */
-	extern int cheat;
-	print_font(double_buffer, 80, 40, cheat ? _("*CHEAT MODE ON*") : _("*CHEAT MODE OFF*"), FGOLD);
+	extern bool hasCheatEnabled;
+	print_font(double_buffer, 80, 40, hasCheatEnabled ? _("*CHEAT MODE ON*") : _("*CHEAT MODE OFF*"), FGOLD);
 #endif
 #ifdef DEBUGMODE
 	/* TT: Similarly, if we are in debug mode, we should be warned. */

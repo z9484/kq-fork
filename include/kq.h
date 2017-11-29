@@ -142,7 +142,7 @@ extern int view_x1, view_y1, view_x2, view_y2, view_on, in_combat;
 extern int show_frate, use_joy;
 
 /*! Variables used with KQ_CHEATS */
-extern int cheat;
+extern bool hasCheatEnabled;
 extern int no_random_encounters;
 extern int every_hit_999;
 extern int no_monsters;

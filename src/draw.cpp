@@ -261,7 +261,8 @@ void color_scale(Raster* src, Raster* dest, int output_range_start, int output_r
  */
 void convert_cframes(size_t fighter_index, int output_range_start, int output_range_end, int convert_heroes)
 {
-	size_t start_fighter_index, end_fighter_index, cframe_index;
+    uint32_t start_fighter_index = 0;
+    uint32_t end_fighter_index = 0;
 
 	/* Determine the range of frames to convert */
 	if (convert_heroes == 1)
@@ -285,7 +286,7 @@ void convert_cframes(size_t fighter_index, int output_range_start, int output_ra
 
 	while (start_fighter_index < end_fighter_index)
 	{
-		for (cframe_index = 0; cframe_index < MAXCFRAMES; cframe_index++)
+		for (size_t cframe_index = 0; cframe_index < MAXCFRAMES; cframe_index++)
 		{
 			color_scale(tcframes[start_fighter_index][cframe_index], cframes[start_fighter_index][cframe_index], output_range_start, output_range_end);
 		}
@@ -305,7 +306,12 @@ void convert_cframes(size_t fighter_index, int output_range_start, int output_ra
  */
 Raster* copy_bitmap(Raster* target, Raster* source)
 {
-	if (target)
+    if (source == nullptr)
+    {
+        return nullptr;
+    }
+
+	if (target != nullptr)
 	{
 		if (target->width < source->width || target->height < source->height)
 		{
