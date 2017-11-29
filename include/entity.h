@@ -11,7 +11,19 @@
 typedef uint32_t t_entity;
 
 void process_entities(void);
-int entityat(int, int, t_entity);
+
+/*! \brief Check entities at location
+*
+* Check for any entities in the specified coordinates. Runs combat routines if a
+* character and an enemy meet, and deactivate the enemy if it was defeated.
+*
+* @param ox x-coordinate to check
+* @param oy y-coordinate to check
+* @param who Id of entity doing the checking
+* @return index+1 of entity found or 0 if none found.
+*/
+int entityat(int ox, int oy, t_entity who);
+
 void set_script(t_entity, const char*);
 void place_ent(t_entity, int, int);
 void count_entities(void);
