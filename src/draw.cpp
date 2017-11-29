@@ -225,23 +225,20 @@ void KqFork::border(Raster* where, int left, int top, int right, int bottom)
  */
 void color_scale(Raster* src, Raster* dest, int output_range_start, int output_range_end)
 {
-	int ix, iy, z;
-	int current_pixel_color;
-
-	if (src == 0 || dest == 0)
+	if (src == nullptr || dest == nullptr)
 	{
 		return;
 	}
 
 	clear_bitmap(dest);
-	for (iy = 0; iy < dest->height; iy++)
+	for (uint16_t iy = 0; iy < dest->height; iy++)
 	{
-		for (ix = 0; ix < dest->width; ix++)
+		for (uint16_t ix = 0; ix < dest->width; ix++)
 		{
-			current_pixel_color = src->getpixel(ix, iy);
+			uint8_t current_pixel_color = src->getpixel(ix, iy);
 			if (current_pixel_color > 0)
 			{
-				z = pal[current_pixel_color].r;
+				uint8_t z = pal[current_pixel_color].r;
 				z += pal[current_pixel_color].g;
 				z += pal[current_pixel_color].b;
 				// 192 is '64*3' (max value for each of R, G and B).
