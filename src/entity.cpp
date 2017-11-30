@@ -32,7 +32,7 @@ namespace KqFork
  *
  * @param target_entity Index of entity
  */
-void chase(t_entity target_entity);
+void ChaseAfterMainPlayer(t_entity target_entity);
 
 /**
  * Check proximity
@@ -172,7 +172,7 @@ void target(t_entity target_entity);
 void wander(t_entity target_entity);
 }
 
-void KqFork::chase(t_entity target_entity)
+void KqFork::ChaseAfterMainPlayer(t_entity target_entity)
 {
 	int emoved = 0;
 
@@ -843,7 +843,7 @@ void KqFork::process_entity(t_entity target_entity)
 			KqFork::entscript(target_entity);
 			break;
 		case MM_CHASE:
-			KqFork::chase(target_entity);
+			KqFork::ChaseAfterMainPlayer(target_entity);
 			break;
 		case MM_TARGET:
 			KqFork::target(target_entity);

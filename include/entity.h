@@ -8,7 +8,7 @@
  * \date ??????
  */
 
-typedef uint32_t t_entity;
+using t_entity = uint32_t;
 
 void process_entities(void);
 
