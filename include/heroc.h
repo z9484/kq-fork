@@ -4,8 +4,6 @@
  * \brief Hero combat header file
  */
 
-#include <stdlib.h>
-
  /*! \name Hero identifiers */
 enum ePIDX
 {
@@ -87,6 +85,23 @@ public:
      * \returns 0 if canceled or 1 if something happened
      */
     int combat_spell_menu(int c);
+
+    /**
+     * Enable or disable the use of the Item option during battles.
+     *
+     * Some battles prohibit the use of the Item option during battles (such as the
+     * coliseum).
+     *
+     * @param canUseItem True to allow items during battle, false to disallow it.
+     */
+    void allowItemUseDuringBattle(bool canUseItem);
+
+    /**
+     * Get whether the use of the Item option during battle is allowed.
+     *
+     * @return True if Item option is given to player, false if not.
+     */
+    bool canItemBeUsedDuringBattle() const;
 
 private:
     /*! \brief Select target for hero
@@ -222,7 +237,7 @@ private:
     /* Text names of hero skills */
     char sk_names[MAXCHRS][7];
 
-    bool can_use_item; /* intrface.c */
+    bool m_CanUseItem;
 };
 
 // Global hero class

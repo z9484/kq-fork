@@ -36,9 +36,6 @@
 #include <stdio.h>
 #include <string.h>
 
- /* External variables */
-int can_use_item = 1;
-
 KHero heroc;
 
 KHero::KHero()
@@ -169,6 +166,16 @@ int KHero::combat_castable(int spell_caster, int spell_number)
 		}
 	}
 	return 0;
+}
+
+void KHero::allowItemUseDuringBattle(bool canUseItem)
+{
+    m_CanUseItem = canUseItem;
+}
+
+bool KHero::canItemBeUsedDuringBattle() const
+{
+    return m_CanUseItem;
 }
 
 void KHero::combat_draw_items(int pg)
@@ -634,7 +641,7 @@ void KHero::hero_choose_action(size_t fighter_index)
 			chi[my] = C_SPELL;
 			my++;
 		}
-		if (can_use_item)
+		if (heroc.canItemBeUsedDuringBattle())
 		{
 			strcpy(ca[my], _("Item"));
 			chi[my] = C_ITEM;

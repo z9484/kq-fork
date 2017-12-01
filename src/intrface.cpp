@@ -3741,7 +3741,8 @@ static int KQ_set_warp(lua_State* L)
 
 static int KQ_set_can_use_item(lua_State* L)
 {
-	can_use_item = (int)lua_tonumber(L, 1);
+    bool canItemBeUsed = (0 != lua_tonumber(L, 1));
+    heroc.allowItemUseDuringBattle(canItemBeUsed);
 	return 0;
 }
 
