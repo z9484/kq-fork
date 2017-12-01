@@ -90,7 +90,7 @@ int hero_skillcheck(size_t fighter_index)
 		if (fighter[fighter_index].aux == 0)
 		{
 			fighter[fighter_index].aux = 2;
-			can_be_affected = available_spells(fighter_index);
+			can_be_affected = heroc.available_spells(fighter_index);
 			fighter[fighter_index].aux = 0;
 			if (can_be_affected > 0)
 			{
@@ -137,7 +137,7 @@ int hero_skillcheck(size_t fighter_index)
 		{
 			fighter[fighter_index].atrack[2] = fighter[fighter_index].mrp;
 			fighter[fighter_index].mrp = fighter[fighter_index].mrp * 15 / 10;
-			can_be_affected = available_spells(fighter_index);
+			can_be_affected = heroc.available_spells(fighter_index);
 			fighter[fighter_index].mrp = fighter[fighter_index].atrack[2];
 			if (can_be_affected > 0)
 			{
@@ -562,7 +562,7 @@ int skill_use(size_t attack_fighter_index)
 		strcpy(attack_string, _("Elemental Infusion"));
 		display_attack_string = true;
 		fighter[attack_fighter_index].aux = 2;
-		if (combat_spell_menu(attack_fighter_index) == 1)
+		if (heroc.combat_spell_menu(attack_fighter_index) == 1)
 		{
 			draw_castersprite(attack_fighter_index, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
 			fighterImageDatafileX = -1;
@@ -727,7 +727,7 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].fighterStats[A_SPI] = fighter[attack_fighter_index].fighterStats[A_SPI] * 15 / 10;
 		fighter[attack_fighter_index].atrack[2] = fighter[attack_fighter_index].mrp;
 		fighter[attack_fighter_index].mrp = fighter[attack_fighter_index].mrp * 15 / 10;
-		if (combat_spell_menu(attack_fighter_index) == 1)
+		if (heroc.combat_spell_menu(attack_fighter_index) == 1)
 		{
 			bIsEtherEffectActive[attack_fighter_index] = false;
 			fighter[attack_fighter_index].aux = 1;

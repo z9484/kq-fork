@@ -605,7 +605,7 @@ void KqForkCombat::do_action(size_t fighter_index)
 
 		if (fighter_index < PSIZE)
 		{
-			auto_herochooseact(fighter_index);
+			heroc.auto_herochooseact(fighter_index);
 		}
 		else
 		{
@@ -620,7 +620,7 @@ void KqForkCombat::do_action(size_t fighter_index)
 		{
 			if (spell_type_status == 0)
 			{
-				hero_choose_action(fighter_index);
+				heroc.hero_choose_action(fighter_index);
 			}
 		}
 		else
@@ -1405,7 +1405,7 @@ void KqForkCombat::init_fighters(void)
 	/* TT: These two are only called once in the game.
 	 *     Should we move them here?
 	 */
-	hero_init();
+	heroc.hero_init();
 	enemy_init();
 	for (fighter_index = 0; fighter_index < (PSIZE + num_enemies); fighter_index++)
 	{
