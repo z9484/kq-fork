@@ -282,7 +282,7 @@ static void camp_spell_targeting(size_t caster_fighter_index, size_t spell_numbe
 		fighter[caster_fighter_index].csmem = spell_number;
 		for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 		{
-			ta[fighter_index] = 0;
+            gCombat.ta[fighter_index] = 0;
 		}
 		if (cast_spell(caster_fighter_index, 0) == 1)
 		{
@@ -298,7 +298,7 @@ static void camp_spell_targeting(size_t caster_fighter_index, size_t spell_numbe
 				 */
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 				{
-					adjust_hp(fighter_index, ta[fighter_index]);
+					adjust_hp(fighter_index, gCombat.ta[fighter_index]);
 				}
 			}
 			play_effect(SND_TWINKLE, 128);

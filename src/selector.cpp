@@ -59,7 +59,7 @@ int auto_select_enemy(int whom, int csts)
 {
 	unsigned int i, number_enemies = 0;
 	int tmpd[NUM_FIGHTERS];
-	for (i = PSIZE; i < PSIZE + num_enemies; i++)
+	for (i = PSIZE; i < PSIZE + gCombat.num_enemies; i++)
 	{
 		if (fighter[i].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -462,7 +462,7 @@ ePIDX select_any_player(eTarget csa, unsigned int icn, const char* msg)
  * \param   attack_fighter_index Attacker (person doing the action)
  * \param   multi_target Target(s)
  * \returns enemy index (PSIZE..PSIZE+num_enemies-1) or PIDX_UNDEFINED if
- * cancelled
+ * canceled
  *          or SEL_ALL_ENEMIES if 'all' was selected (by pressing U or D)
  */
 ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
@@ -475,7 +475,7 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 	unsigned int cntr = 0;
 	size_t ptr;
 	int tmpd[NUM_FIGHTERS];
-	for (unsigned int fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+	for (unsigned int fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 	{
 		if (can_attack(fighter_index) == 1)
 		{
@@ -497,11 +497,11 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 		Game.do_check_animation();
 		if (select_all)
 		{
-			battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 2);
+            gCombat.battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 2);
 		}
 		else
 		{
-			battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 0);
+            gCombat.battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 0);
 		}
 
 		blit2screen(0, 0);
@@ -605,11 +605,11 @@ ePIDX select_hero(size_t target_fighter_index, eTarget multi_target, bool can_se
 		Game.do_check_animation();
 		if (select_all)
 		{
-			battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 1);
+            gCombat.battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 1);
 		}
 		else
 		{
-			battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 0);
+            gCombat.battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 0);
 		}
 		blit2screen(0, 0);
 

@@ -275,7 +275,7 @@ void convert_cframes(size_t fighter_index, int output_range_start, int output_ra
 		else
 		{
 			start_fighter_index = PSIZE;
-			end_fighter_index = PSIZE + num_enemies;
+			end_fighter_index = PSIZE + gCombat.num_enemies;
 		}
 	}
 	else
@@ -1933,7 +1933,7 @@ void revert_cframes(size_t fighter_index, int revert_heroes)
 		else
 		{
 			start_fighter_index = PSIZE;
-			end_fighter_index = PSIZE + num_enemies;
+			end_fighter_index = PSIZE + gCombat.num_enemies;
 		}
 	}
 	else

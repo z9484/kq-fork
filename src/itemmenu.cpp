@@ -397,11 +397,11 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 	{
 		san = numchrs;
 		start_fighter_index = PSIZE;
-		sen = num_enemies;
+		sen = gCombat.num_enemies;
 	}
 	else
 	{
-		san = num_enemies;
+		san = gCombat.num_enemies;
 		start_fighter_index = 0;
 		sen = numchrs;
 	}
@@ -425,10 +425,10 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		}
 		else
 		{
-			ta[fighter_index] = tmp;
+            gCombat.ta[fighter_index] = tmp;
 			draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
 			display_amount(fighter_index, FONT_YELLOW, 0);
-			adjust_hp(fighter_index, ta[fighter_index]);
+			adjust_hp(fighter_index, gCombat.ta[fighter_index]);
 		}
 		break;
 	case I_OSEED:
@@ -448,10 +448,10 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		}
 		else
 		{
-			ta[fighter_index] = tmp;
+            gCombat.ta[fighter_index] = tmp;
 			draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
 			display_amount(fighter_index, FONT_GREEN, 0);
-			adjust_mp(fighter_index, ta[fighter_index]);
+			adjust_mp(fighter_index, gCombat.ta[fighter_index]);
 		}
 		break;
 	case I_NLEAF:
@@ -559,7 +559,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 				}
 				else
 				{
-					ta[fighter_index] = do_shell_check(fighter_index, tmp);
+                    gCombat.ta[fighter_index] = do_shell_check(fighter_index, tmp);
 				}
 			}
 		}
@@ -569,7 +569,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 			display_amount(attack_fighter_index, FONT_YELLOW, 1);
 			for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++)
 			{
-				adjust_hp(fighter_index, ta[fighter_index]);
+				adjust_hp(fighter_index, gCombat.ta[fighter_index]);
 			}
 		}
 		break;
@@ -594,11 +594,11 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 				}
 				b = res_adjust(fighter_index, tmp, a);
 				a = do_shell_check(fighter_index, b);
-				ta[fighter_index] = 0 - a;
+                gCombat.ta[fighter_index] = 0 - a;
 			}
 			else
 			{
-				ta[fighter_index] = 0;
+                gCombat.ta[fighter_index] = 0;
 			}
 		}
 		draw_spellsprite(start_fighter_index, 1, items[ti].eff, 1);
@@ -610,7 +610,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		}
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 		{
-			ta[fighter_index] = items[ti].stats[A_ATT];
+			gCombat.ta[fighter_index] = items[ti].stats[A_ATT];
 		}
 		draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
 		return ITEM_EFFECT_SUCCESS_MULTIPLE;

@@ -118,7 +118,7 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 		if (kqrandom->random_range_exclusive(0, 4) == 0)
 		{
 			fighter[target_fighter_index].fighterWillDefend = 1;
-			bIsEtherEffectActive[target_fighter_index] = false;
+            gCombat.bIsEtherEffectActive[target_fighter_index] = false;
 			return;
 		}
 	}
@@ -140,7 +140,7 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 	if (b < 0)
 	{
 		fighter[target_fighter_index].fighterWillDefend = 1;
-		bIsEtherEffectActive[target_fighter_index] = false;
+        gCombat.bIsEtherEffectActive[target_fighter_index] = false;
 		return;
 	}
 	if ((uint32_t)b < PSIZE && numchrs > 1)
@@ -162,8 +162,8 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 			}
 		}
 	}
-	fight(target_fighter_index, b, 0);
-	bIsEtherEffectActive[target_fighter_index] = false;
+	gCombat.fight(target_fighter_index, b, 0);
+	gCombat.bIsEtherEffectActive[target_fighter_index] = false;
 }
 
 /*! \brief Check if enemy can cast this spell
@@ -218,13 +218,13 @@ void enemy_charmaction(size_t fighter_index)
 {
 	int a;
 
-	if (!bIsEtherEffectActive[fighter_index])
+	if (!gCombat.bIsEtherEffectActive[fighter_index])
 	{
 		return;
 	}
 	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0)
 	{
-		bIsEtherEffectActive[fighter_index] = false;
+        gCombat.bIsEtherEffectActive[fighter_index] = false;
 		return;
 	}
 	for (a = 0; a < 5; a++)
@@ -237,7 +237,7 @@ void enemy_charmaction(size_t fighter_index)
 	a = kqrandom->random_range_exclusive(0, 4);
 	if (a == 0)
 	{
-		bIsEtherEffectActive[fighter_index] = false;
+		gCombat.bIsEtherEffectActive[fighter_index] = false;
 		return;
 	}
 	if (a == 1)
@@ -263,13 +263,13 @@ void enemy_chooseaction(size_t fighter_index)
 	int ap;
 	size_t a;
 
-	if (!bIsEtherEffectActive[fighter_index])
+	if (!gCombat.bIsEtherEffectActive[fighter_index])
 	{
 		return;
 	}
 	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0)
 	{
-		bIsEtherEffectActive[fighter_index] = false;
+		gCombat.bIsEtherEffectActive[fighter_index] = false;
 		return;
 	}
 
@@ -285,7 +285,7 @@ void enemy_chooseaction(size_t fighter_index)
 	if (fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 2 / 3 && kqrandom->random_range_exclusive(0, 100) < 50 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0)
 	{
 		KqFork::EnemyC::enemy_curecheck(fighter_index);
-		if (!bIsEtherEffectActive[fighter_index])
+		if (!gCombat.bIsEtherEffectActive[fighter_index])
 		{
 			return;
 		}
@@ -299,7 +299,7 @@ void enemy_chooseaction(size_t fighter_index)
 			if (fighter[fighter_index].fighterCombatSkill[a] >= 100 && fighter[fighter_index].fighterCombatSkill[a] < 254)
 			{
 				KqFork::EnemyC::enemy_skillcheck(fighter_index, a);
-				if (!bIsEtherEffectActive[fighter_index])
+				if (!gCombat.bIsEtherEffectActive[fighter_index])
 				{
 					return;
 				}
@@ -311,7 +311,7 @@ void enemy_chooseaction(size_t fighter_index)
 			if (fighter[fighter_index].fighterCombatSkill[a] > 0 && fighter[fighter_index].fighterCombatSkill[a] < 100 && fighter[fighter_index].fighterSpellEffectStats[S_MUTE] == 0)
 			{
 				KqFork::EnemyC::enemy_spellcheck(fighter_index, a);
-				if (!bIsEtherEffectActive[fighter_index])
+				if (!gCombat.bIsEtherEffectActive[fighter_index])
 				{
 					return;
 				}
@@ -323,7 +323,7 @@ void enemy_chooseaction(size_t fighter_index)
 		}
 	}
 	KqFork::EnemyC::enemy_attack(fighter_index);
-	bIsEtherEffectActive[fighter_index] = false;
+	gCombat.bIsEtherEffectActive[fighter_index] = false;
 }
 
 /*! \brief Use cure spell
@@ -362,7 +362,7 @@ void KqFork::EnemyC::enemy_curecheck(int w)
 		fighter[w].csmem = a;
 		fighter[w].ctmem = w;
 		combat_spell(w, 0);
-		bIsEtherEffectActive[w] = false;
+		gCombat.bIsEtherEffectActive[w] = false;
 	}
 }
 
@@ -384,7 +384,7 @@ void enemy_init(void)
 	{
 		KqFork::EnemyC::load_enemies();
 	}
-	for (fighter_index = 0; fighter_index < num_enemies; ++fighter_index)
+	for (fighter_index = 0; fighter_index < gCombat.num_enemies; ++fighter_index)
 	{
 		size_t enemyFighterIndex = cf[fighter_index];
 		KFighter* f = nullptr;
@@ -444,7 +444,7 @@ void KqFork::EnemyC::enemy_skillcheck(size_t fighterIndex, size_t skillNumber)
 		if (fighter[fighterIndex].atrack[skillNumber] == 0 && KqFork::EnemyC::skill_setup(fighterIndex, skillNumber) == 1)
 		{
 			combat_skill(fighterIndex);
-			bIsEtherEffectActive[fighterIndex] = false;
+			gCombat.bIsEtherEffectActive[fighterIndex] = false;
 		}
 	}
 }
@@ -476,7 +476,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				break;
 			case M_HOLYMIGHT:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STRENGTH] < 2)
 					{
@@ -490,7 +490,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				break;
 			case M_BLESS:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_BLESS] < 3)
 					{
@@ -514,7 +514,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			case M_HASTEN:
 			case M_QUICKEN:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 2)
 					{
@@ -579,7 +579,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				break;
 			case M_DIVINEGUARD:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] == 0)
 					{
@@ -624,7 +624,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 	if (KqFork::EnemyC::spell_setup(attack_fighter_index, fighterCombatSkill) == 1)
 	{
 		combat_spell(attack_fighter_index, 0);
-		bIsEtherEffectActive[attack_fighter_index] = false;
+		gCombat.bIsEtherEffectActive[attack_fighter_index] = false;
 	}
 }
 
@@ -643,7 +643,7 @@ int KqFork::EnemyC::enemy_stscheck(int ws, int s)
 
 	if (s == PSIZE)
 	{
-		for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+		for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 		{
 			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[ws] == 0)
 			{
@@ -947,13 +947,13 @@ int select_encounter(int en, int etid)
 			p++;
 		}
 	}
-	num_enemies = p;
+    gCombat.num_enemies = p;
 	/* adjust 'too hard' combat where player is alone and faced by >2 enemies */
-	if (num_enemies > 2 && numchrs == 1 && erows[entry].lvl + 2 > party[pidx[0]].lvl && etid == 99)
+	if (gCombat.num_enemies > 2 && numchrs == 1 && erows[entry].lvl + 2 > party[pidx[0]].lvl && etid == 99)
 	{
-		num_enemies = 2;
+        gCombat.num_enemies = 2;
 	}
-	if (num_enemies == 0)
+	if (gCombat.num_enemies == 0)
 	{
 		Game.program_death(_("Empty encounter table row!"));
 	}
@@ -1053,7 +1053,7 @@ int KqFork::EnemyC::spell_setup(int whom, int z)
 		if (z == M_CURE1 || z == M_CURE2 || z == M_CURE3 || z == M_CURE4)
 		{
 			aux = 0;
-			for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 75 / 100)
 				{

@@ -65,7 +65,7 @@ int hero_skillcheck(size_t fighter_index)
 			return 0;
 		}
 		// See whether any enemies CAN be turned to stone.
-		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + num_enemies; target_fighter_index++)
+		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + gCombat.num_enemies; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
@@ -110,7 +110,7 @@ int hero_skillcheck(size_t fighter_index)
 		{
 			return 0;
 		}
-		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + num_enemies; target_fighter_index++)
+		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + gCombat.num_enemies; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[target_fighter_index].unl > 0)
 			{
@@ -501,8 +501,8 @@ int skill_use(size_t attack_fighter_index)
 		}
 		enemy_index = (unsigned int)tgt;
 		temp = std::unique_ptr<Raster>(new Raster(320, 240));
-		blit(backart, temp.get(), 0, 0, 0, 0, 320, 240);
-		color_scale(temp.get(), backart, 16, 31);
+		blit(gCombat.backart, temp.get(), 0, 0, 0, 0, 320, 240);
+		color_scale(temp.get(), gCombat.backart, 16, 31);
 		b = fighter[attack_fighter_index].fighterMaxHealth / 20;
 		strcpy(attack_string, _("Rage"));
 		display_attack_string = true;
@@ -513,10 +513,10 @@ int skill_use(size_t attack_fighter_index)
 			tempa.fighterStats[A_ATT] += b;
 			tempa.fighterStats[A_HIT] += b;
 		}
-		fight(attack_fighter_index, enemy_index, 1);
+        gCombat.fight(attack_fighter_index, enemy_index, 1);
 		if (fighter[enemy_index].fighterSpellEffectStats[S_DEAD] == 1)
 		{
-			for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -527,18 +527,18 @@ int skill_use(size_t attack_fighter_index)
 			if (next_target > 0)
 			{
 				enemy_index = nn[kqrandom->random_range_exclusive(0, next_target)];
-				fight(attack_fighter_index, enemy_index, 1);
+                gCombat.fight(attack_fighter_index, enemy_index, 1);
 			}
 		}
 
 		fighter[attack_fighter_index].fighterHealth -= (b * 2);
-		ta[attack_fighter_index] = (b * 2);
+        gCombat.ta[attack_fighter_index] = (b * 2);
 		display_attack_string = false;
-		blit(temp.get(), backart, 0, 0, 0, 0, 320, 240);
+		blit(temp.get(), gCombat.backart, 0, 0, 0, 0, 320, 240);
 		display_amount(attack_fighter_index, FONT_DECIDE, 0);
 		if (fighter[attack_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0)
 		{
-			fkill(attack_fighter_index);
+            gCombat.fkill(attack_fighter_index);
 			death_animation(attack_fighter_index, 0);
 		}
 		break;
@@ -549,12 +549,12 @@ int skill_use(size_t attack_fighter_index)
 		display_attack_string = true;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 6;
-		fighterImageDatafileX = -1;
-		fighterImageDatafileY = -1;
-		battle_render(0, 0, 0);
+		gCombat.fighterImageDatafileX = -1;
+		gCombat.fighterImageDatafileY = -1;
+		gCombat.battle_render(0, 0, 0);
 		blit2screen(0, 0);
 		kq_wait(150);
-		multi_fight(attack_fighter_index);
+        gCombat.multi_fight(attack_fighter_index);
 		display_attack_string = false;
 		break;
 
@@ -565,13 +565,13 @@ int skill_use(size_t attack_fighter_index)
 		if (heroc.combat_spell_menu(attack_fighter_index) == 1)
 		{
 			draw_castersprite(attack_fighter_index, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
-			fighterImageDatafileX = -1;
-			fighterImageDatafileY = -1;
+			gCombat.fighterImageDatafileX = -1;
+			gCombat.fighterImageDatafileY = -1;
 			play_effect(22, 128);
 			convert_cframes(attack_fighter_index,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor - 3,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor + 3, 0);
-			battle_render(0, 0, 0);
+            gCombat.battle_render(0, 0, 0);
 			fullblit(double_buffer, back);
 			for (p = 0; p < 2; p++)
 			{
@@ -586,7 +586,7 @@ int skill_use(size_t attack_fighter_index)
 					else
 					{
 						circlefill(double_buffer, tx, ty, 15 - a, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
-						draw_fighter(attack_fighter_index, 0);
+                        gCombat.draw_fighter(attack_fighter_index, 0);
 					}
 					blit2screen(0, 0);
 					kq_wait(50);
@@ -594,7 +594,7 @@ int skill_use(size_t attack_fighter_index)
 				}
 			}
 			revert_cframes(attack_fighter_index, 0);
-			battle_render(0, 0, 0);
+			gCombat.battle_render(0, 0, 0);
 			blit2screen(0, 0);
 			infusion(attack_fighter_index, fighter[attack_fighter_index].csmem);
 			c = mp_needed(attack_fighter_index, fighter[attack_fighter_index].csmem);
@@ -603,7 +603,7 @@ int skill_use(size_t attack_fighter_index)
 				c = 1;
 			}
 			fighter[attack_fighter_index].fighterMagic -= c;
-			bIsEtherEffectActive[attack_fighter_index] = false;
+            gCombat.bIsEtherEffectActive[attack_fighter_index] = false;
 			fighter[attack_fighter_index].aux = 1;
 		}
 		else
@@ -625,11 +625,11 @@ int skill_use(size_t attack_fighter_index)
 			for (a = 0; a < 14; a++)
 			{
 				convert_cframes(PSIZE, 1 + a, 15, 1);
-				for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (is_active(fighter_index))
 					{
-						draw_fighter(fighter_index, 0);
+                        gCombat.draw_fighter(fighter_index, 0);
 					}
 				}
 				blit2screen(0, 0);
@@ -639,7 +639,7 @@ int skill_use(size_t attack_fighter_index)
 			revert_cframes(PSIZE, 1);
 			display_attack_string = false;
 			b = fighter[attack_fighter_index].fighterLevel * 15;
-			for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0)
 				{
@@ -665,16 +665,16 @@ int skill_use(size_t attack_fighter_index)
 						if (b >= fighter[fighter_index].fighterHealth)
 						{
 							b -= fighter[fighter_index].fighterHealth;
-							deffect[fighter_index] = 1;
-							fkill(fighter_index);
+							gCombat.deffect[fighter_index] = 1;
+							gCombat.fkill(fighter_index);
 						}
 					}
 				}
 			}
 			death_animation(PSIZE, 1);
-			fighterImageDatafileX = -1;
-			fighterImageDatafileY = -1;
-			battle_render(attack_fighter_index, attack_fighter_index, 0);
+			gCombat.fighterImageDatafileX = -1;
+			gCombat.fighterImageDatafileY = -1;
+			gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
 		}
 		else
 		{
@@ -704,8 +704,8 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
 					fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
-					ta[fighter_index] = b;
-					ta[fighter_index] = do_shell_check(fighter_index, ta[fighter_index]);
+					gCombat.ta[fighter_index] = b;
+					gCombat.ta[fighter_index] = do_shell_check(fighter_index, gCombat.ta[fighter_index]);
 				}
 			}
 			display_amount(0, FONT_YELLOW, 1);
@@ -714,7 +714,7 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
 					fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
-					adjust_hp(fighter_index, ta[fighter_index]);
+					adjust_hp(fighter_index, gCombat.ta[fighter_index]);
 				}
 			}
 		}
@@ -729,7 +729,7 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].mrp = fighter[attack_fighter_index].mrp * 15 / 10;
 		if (heroc.combat_spell_menu(attack_fighter_index) == 1)
 		{
-			bIsEtherEffectActive[attack_fighter_index] = false;
+            gCombat.bIsEtherEffectActive[attack_fighter_index] = false;
 			fighter[attack_fighter_index].aux = 1;
 			fighter[attack_fighter_index].fighterStats[A_AUR] = fighter[attack_fighter_index].atrack[0];
 			fighter[attack_fighter_index].fighterStats[A_SPI] = fighter[attack_fighter_index].atrack[1];
@@ -763,13 +763,13 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].fighterSpriteFacing = 1;
 		strcpy(attack_string, _("Steal"));
 		display_attack_string = true;
-		battle_render(0, attack_fighter_index + 1, 0);
+		gCombat.battle_render(0, attack_fighter_index + 1, 0);
 		blit2screen(0, 0);
 		kq_wait(100);
 		play_effect(SND_MENU, 128);
 		kq_wait(500);
 		display_attack_string = false;
-		battle_render(attack_fighter_index, attack_fighter_index, 0);
+		gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
 		found_item = 0;
 #ifdef DEBUGMODE
 		if (debugging > 2)
@@ -857,7 +857,7 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].fighterImageDatafileY = ty;
 		display_attack_string = false;
 		fighter[attack_fighter_index].fighterSpriteFacing = 0;
-		battle_render(attack_fighter_index, attack_fighter_index, 0);
+		gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
 		blit2screen(0, 0);
 		break;
 

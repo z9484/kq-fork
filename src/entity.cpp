@@ -284,7 +284,7 @@ int entityat(int ox, int oy, t_entity who)
 			{
 				if (g_ent[who].eid == ID_ENEMY && i < PSIZE)
 				{
-					if (combat(0) == 1)
+					if (gCombat.combat(0) == 1)
 					{
 						g_ent[who].active = 0;
 					}
@@ -296,7 +296,7 @@ int entityat(int ox, int oy, t_entity who)
 			{
 				if (g_ent[i].eid == ID_ENEMY)
 				{
-					if (combat(0) == 1)
+					if (gCombat.combat(0) == 1)
 					{
 						g_ent[i].active = 0;
 					}

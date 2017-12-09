@@ -50,32 +50,32 @@ void KHero::auto_herochooseact(int who)
 {
 	int eact;
 
-	if (!bIsEtherEffectActive[who])
+	if (!gCombat.bIsEtherEffectActive[who])
 	{
 		return;
 	}
 	if (fighter[who].fighterSpellEffectStats[S_DEAD] != 0 || fighter[who].fighterHealth <= 0)
 	{
-		bIsEtherEffectActive[who] = false;
+		gCombat.bIsEtherEffectActive[who] = false;
 		return;
 	}
 	fighter[who].fighterSpriteFacing = 0;
 	eact = kqrandom->random_range_exclusive(0, 4);
 	if (eact == 0)
 	{
-		bIsEtherEffectActive[who] = false;
+		gCombat.bIsEtherEffectActive[who] = false;
 		return;
 	}
 	if (eact == 1)
 	{
 		fighter[who].ctmem = 0;
 		hero_attack(who);
-		bIsEtherEffectActive[who] = false;
+		gCombat.bIsEtherEffectActive[who] = false;
 		return;
 	}
 	fighter[who].ctmem = auto_select_hero(who, 0);
 	hero_attack(who);
-	bIsEtherEffectActive[who] = false;
+	gCombat.bIsEtherEffectActive[who] = false;
 }
 
 int KHero::available_spells(int who)
@@ -266,25 +266,25 @@ int KHero::combat_item(int ss, int t1, int tg)
 		else
 		{
 			st = PSIZE;
-			tt = num_enemies;
+			tt = gCombat.num_enemies;
 		}
 	}
 	display_amount(st, FONT_DECIDE, tl);
 	for (a = st; a < st + tt; a++)
 	{
-		adjust_hp(a, ta[a]);
+		adjust_hp(a, gCombat.ta[a]);
 	}
 	b = 0;
 	for (a = st; a < st + tt; a++)
 	{
 		if (fighter[a].fighterSpellEffectStats[S_DEAD] == 0 && fighter[a].fighterHealth <= 0)
 		{
-			fkill(a);
+			gCombat.fkill(a);
 			b++;
 		}
 		else
 		{
-			ta[a] = 0;
+			gCombat.ta[a] = 0;
 		}
 	}
 	if (b > 0)
@@ -581,12 +581,12 @@ int KHero::hero_attack(int whom)
 		return 0;
 	}
 	fighter[whom].fighterAttackSpriteFrame = 6;
-	fighterImageDatafileX = -1;
-	fighterImageDatafileY = -1;
-	battle_render(0, 0, 0);
+	gCombat.fighterImageDatafileX = -1;
+	gCombat.fighterImageDatafileY = -1;
+	gCombat.battle_render(0, 0, 0);
 	blit2screen(0, 0);
 	kq_wait(150);
-	fight(whom, tgt, 0);
+	gCombat.fight(whom, tgt, 0);
 	return 1;
 }
 
@@ -610,7 +610,7 @@ void KHero::hero_choose_action(size_t fighter_index)
 	strcpy(sk_names[6], _("Steal"));
 	strcpy(sk_names[7], _("Sense"));
 
-	if (!bIsEtherEffectActive[fighter_index])
+	if (!gCombat.bIsEtherEffectActive[fighter_index])
 	{
 		return;
 	}
@@ -624,7 +624,7 @@ void KHero::hero_choose_action(size_t fighter_index)
 	while (!stop)
 	{
 		Game.do_check_animation();
-		battle_render(fighter_index + 1, fighter_index + 1, 0);
+		gCombat.battle_render(fighter_index + 1, fighter_index + 1, 0);
 		my = 0;
 		strcpy(ca[my], _("Attack"));
 		chi[my] = C_ATTACK;
@@ -751,13 +751,13 @@ void KHero::hero_choose_action(size_t fighter_index)
 			if (sptr == 0)
 			{
 				fighter[fighter_index].fighterWillDefend = 1;
-				bIsEtherEffectActive[fighter_index] = false;
+				gCombat.bIsEtherEffectActive[fighter_index] = false;
 				stop = 1;
 			}
 			if (sptr == 2)
 			{
 				hero_run();
-				bIsEtherEffectActive[fighter_index] = false;
+				gCombat.bIsEtherEffectActive[fighter_index] = false;
 				stop = 1;
 			}
 			if (sptr == 1)
@@ -767,35 +767,35 @@ void KHero::hero_choose_action(size_t fighter_index)
 				case C_ATTACK:
 					if (hero_attack(fighter_index) == 1)
 					{
-						bIsEtherEffectActive[fighter_index] = false;
+						gCombat.bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_ITEM:
 					if (combat_item_menu(fighter_index) == 1)
 					{
-						bIsEtherEffectActive[fighter_index] = false;
+						gCombat.bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_INVOKE:
 					if (hero_invoke(fighter_index) == 1)
 					{
-						bIsEtherEffectActive[fighter_index] = false;
+						gCombat.bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_SPELL:
 					if (heroc.combat_spell_menu(fighter_index) == 1)
 					{
-						bIsEtherEffectActive[fighter_index] = false;
+						gCombat.bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
 				case C_SKILL:
 					if (skill_use(fighter_index) == 1)
 					{
-						bIsEtherEffectActive[fighter_index] = false;
+						gCombat.bIsEtherEffectActive[fighter_index] = false;
 						stop = 1;
 					}
 					break;
@@ -1005,7 +1005,7 @@ int KHero::hero_invokeitem(size_t attacker_fighter_index, size_t item_index)
 		unsigned int random_fighter_index = kqrandom->random_range_exclusive(1, 4);
 		strcpy(attack_string, _("Magic Missiles"));
 		display_attack_string = true;
-		ta[defender_fighter_index] = 0;
+		gCombat.ta[defender_fighter_index] = 0;
 		for (unsigned fighter_index = 0; fighter_index < random_fighter_index; fighter_index++)
 		{
 			if (fighter[defender_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
@@ -1027,7 +1027,7 @@ void KHero::hero_run(void)
 	// TT: slow_computer additions for speed-ups
 	int count;
 
-	if (ms == 1)
+	if (gCombat.ms == 1)
 	{
 		a = 125;
 	}
@@ -1051,7 +1051,7 @@ void KHero::hero_run(void)
 	{
 		bt = bt / b;
 	}
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+	for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -1142,5 +1142,5 @@ void KHero::hero_run(void)
 		}
 	}
 	revert_equipstats();
-	combatend = ESCAPED_COMBAT;
+    gCombat.combatend = ESCAPED_COMBAT;
 }

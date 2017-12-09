@@ -39,7 +39,7 @@ void combat_skill(size_t fighter_index)
 	int b;
 
 	tempa = status_adjust(fighter_index);
-	battle_render(0, 0, 0);
+	gCombat.battle_render(0, 0, 0);
 	blit2screen(0, 0);
 	switch (fighterCombatSkill)
 	{
@@ -47,7 +47,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Venomous Bite"));
 		display_attack_string = 1;
 		tempa.welem = R_POISON + 1;
-		fight(fighter_index, tgt, 1);
+		gCombat.fight(fighter_index, tgt, 1);
 		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
@@ -55,7 +55,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Double Slash"));
 		display_attack_string = 1;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 15 / 10;
-		fight(fighter_index, tgt, 1);
+		gCombat.fight(fighter_index, tgt, 1);
 		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
@@ -92,7 +92,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Sweep"));
 		display_attack_string = 1;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
-		multi_fight(fighter_index);
+        gCombat.multi_fight(fighter_index);
 		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
@@ -100,7 +100,7 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("ParaClaw"));
 		display_attack_string = 1;
 		tempa.welem = R_PARALYZE + 1;
-		fight(fighter_index, tgt, 1);
+		gCombat.fight(fighter_index, tgt, 1);
 		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
@@ -110,7 +110,7 @@ void combat_skill(size_t fighter_index)
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 15 / 10;
 		tempa.fighterStats[A_HIT] = tempa.fighterStats[A_HIT] * 9 / 10;
 		tempa.welem = 0;
-		fight(fighter_index, tgt, 1);
+		gCombat.fight(fighter_index, tgt, 1);
 		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 2;
 		break;
@@ -125,11 +125,11 @@ void combat_skill(size_t fighter_index)
 				if (res_throw(target_fighter_index, R_PETRIFY) == 0 && non_dmg_save(target_fighter_index, 75) == 0)
 				{
 					fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] = kqrandom->random_range_exclusive(2, 5);
-					ta[target_fighter_index] = NODISPLAY;
+					gCombat.ta[target_fighter_index] = NODISPLAY;
 				}
 				else
 				{
-					ta[target_fighter_index] = MISS;
+					gCombat.ta[target_fighter_index] = MISS;
 					affected_targets++;
 				}
 			}
@@ -167,24 +167,24 @@ void combat_skill(size_t fighter_index)
 						if (fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] == 0)
 						{
 							fighter[target_fighter_index].fighterSpellEffectStats[S_TIME] = 1;
-							ta[target_fighter_index] = NODISPLAY;
+							gCombat.ta[target_fighter_index] = NODISPLAY;
 						}
 						else
 						{
-							ta[target_fighter_index] = MISS;
+							gCombat.ta[target_fighter_index] = MISS;
 							affected_targets++;
 						}
 					}
 				}
 				else
 				{
-					ta[target_fighter_index] = MISS;
+					gCombat.ta[target_fighter_index] = MISS;
 					affected_targets++;
 				}
 			}
 			else
 			{
-				ta[target_fighter_index] = MISS;
+				gCombat.ta[target_fighter_index] = MISS;
 				affected_targets++;
 			}
 		}
@@ -210,11 +210,11 @@ void combat_skill(size_t fighter_index)
 			if (res_throw(target_fighter_index, S_STOP) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
 				fighter[target_fighter_index].fighterSpellEffectStats[S_STOP] = kqrandom->random_range_exclusive(2, 4);
-				ta[target_fighter_index] = NODISPLAY;
+				gCombat.ta[target_fighter_index] = NODISPLAY;
 			}
 			else
 			{
-				ta[target_fighter_index] = MISS;
+				gCombat.ta[target_fighter_index] = MISS;
 				affected_targets++;
 			}
 		}
@@ -230,7 +230,7 @@ void combat_skill(size_t fighter_index)
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT];
 		tempa.fighterStats[A_HIT] = tempa.fighterStats[A_HIT] * 8 / 10;
 		tempa.welem = R_PETRIFY + 1;
-		fight(fighter_index, tgt, 1);
+		gCombat.fight(fighter_index, tgt, 1);
 		display_attack_string = false;
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;
@@ -245,9 +245,9 @@ void combat_skill(size_t fighter_index)
 		strcpy(attack_string, _("Stunning Strike"));
 		display_attack_string = 1;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 8 / 10;
-		fight(fighter_index, tgt, 1);
+		gCombat.fight(fighter_index, tgt, 1);
 		display_attack_string = false;
-		if (non_dmg_save(tgt, 80) == 0 && ta[tgt] != MISS)
+		if (non_dmg_save(tgt, 80) == 0 && gCombat.ta[tgt] != MISS)
 		{
 			fighter[tgt].fighterSpellEffectStats[S_STOP] = 2;
 		}
@@ -264,17 +264,17 @@ void combat_skill(size_t fighter_index)
 				if (res_throw(target_fighter_index, S_CHARM) == 0 && non_dmg_save(target_fighter_index, 65) == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 				{
 					fighter[target_fighter_index].fighterSpellEffectStats[S_CHARM] = kqrandom->random_range_exclusive(2, 4);
-					ta[target_fighter_index] = NODISPLAY;
+					gCombat.ta[target_fighter_index] = NODISPLAY;
 				}
 				else
 				{
-					ta[target_fighter_index] = MISS;
+					gCombat.ta[target_fighter_index] = MISS;
 					affected_targets++;
 				}
 			}
 			else
 			{
-				ta[target_fighter_index] = MISS;
+				gCombat.ta[target_fighter_index] = MISS;
 				affected_targets++;
 			}
 		}
@@ -290,22 +290,22 @@ void combat_skill(size_t fighter_index)
 		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
 			b = fighter[target_fighter_index].fighterHealth / 3;
-			ta[target_fighter_index] = 0 - b;
+			gCombat.ta[target_fighter_index] = 0 - b;
 		}
 		display_amount(0, FONT_WHITE, 1);
 		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
-			adjust_hp(target_fighter_index, ta[target_fighter_index]);
+			adjust_hp(target_fighter_index, gCombat.ta[target_fighter_index]);
 		}
 		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
 			b = fighter[target_fighter_index].fighterMagic / 3;
-			ta[target_fighter_index] = 0 - b;
+			gCombat.ta[target_fighter_index] = 0 - b;
 		}
 		display_amount(0, FONT_RED, 1);
 		for (target_fighter_index = 0; target_fighter_index < numchrs; target_fighter_index++)
 		{
-			adjust_mp(target_fighter_index, ta[target_fighter_index]);
+			adjust_mp(target_fighter_index, gCombat.ta[target_fighter_index]);
 		}
 		fighter[fighter_index].atrack[fighter[fighter_index].csmem] = 3;
 		break;

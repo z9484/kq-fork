@@ -1,16 +1,5 @@
-/*! \file
- * \brief Combat mode
- *
- * This is the main file where combat is initiated.
- * \author JB
- * \date ????????
- */
-
-#include <memory>
-#include <stdio.h>
-#include <string.h>
-
 #include "combat.h"
+
 #include "constants.h"
 #include "draw.h"
 #include "effects.h"
@@ -34,59 +23,39 @@
 #include "structs.h"
 #include "timing.h"
 
-/*! \name global variables  */
+#include <memory>
+#include <stdio.h>
 
-ECombatEnd combatend;
-bool bIsEtherEffectActive[NUM_FIGHTERS];
-int fighterImageDatafileX;
-int fighterImageDatafileY;
-uint32_t num_enemies;
-int ta[NUM_FIGHTERS];
-int deffect[NUM_FIGHTERS];
-int rcount;
-uint8_t vspell;
-uint8_t ms;
-Raster* backart = nullptr;
+KCombat gCombat;
 
-namespace KqForkCombat {
 
-/* Internal variables */
-int curw;
-int nspeed[NUM_FIGHTERS];
-int bspeed[NUM_FIGHTERS];
-uint8_t hs;
+KCombat::KCombat()
+    : combatend(ECombatEnd::NOT_IN_COMBAT)
+    , fighterImageDatafileX()
+    , fighterImageDatafileY()
+    , num_enemies()
+    , rcount()
+    , vspell()
+    , ms()
+    , backart(nullptr)
+    , curw()
+    , hs()
+{
+    for (size_t i = 0; i < NUM_FIGHTERS; ++i)
+    {
+        bIsEtherEffectActive[i] = false;
+        ta[i] = 0;
+        deffect[i] = 0;
+        nspeed[i] = 0;
+        bspeed[i] = 0;
+    }
+}
 
-enum eAttackResult { ATTACK_MISS, ATTACK_SUCCESS, ATTACK_CRITICAL };
+KCombat::~KCombat()
+{
+}
 
-/* Internal prototypes */
-eAttackResult attack_result(int, int);
-int check_end(void);
-void do_action(size_t);
-int do_combat(const std::string& backgroundImageName, char* mus, int is_rnd);
-void do_round(void);
-void enemies_win(void);
-void heroes_win(void);
-void init_fighters(void);
-void roll_initiative(void);
-void snap_togrid(void);
-
-} // namespace KqForkCombat
-
-/*! \brief Attack all enemies at once
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * This does the actual attack calculation. The damage done to
- * the target is kept in the ta[] array.
- *
- * \param   ar Attacker
- * \param   dr Defender
- * \returns ATTACK_MISS if attack was a miss,
- *          ATTACK_SUCCESS if attack was successful,
- *          ATTACK_CRITICAL if attack was a critical hit.
- */
-KqForkCombat::eAttackResult KqForkCombat::attack_result(int ar, int dr)
+KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 {
 	int check_for_critical_hit;
 	int attacker_critical_status = 0;
@@ -281,19 +250,7 @@ KqForkCombat::eAttackResult KqForkCombat::attack_result(int ar, int dr)
 	return crit_hit == 1 ? ATTACK_CRITICAL : ATTACK_SUCCESS;
 }
 
-/*! \brief Draw the battle screen
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated 20020914 - 16:16 (RB)
- *
- * Draw the battle screen.
- *
- * \param   plyr Player: -1 means "no one is selected" (roll_initiative()), else
- * index of fighter
- * \param   hl Highlighted
- * \param   sall Select all
- */
-void battle_render(signed int plyr, size_t hl, int sall)
+void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 {
 	int a = 0;
 	int b = 0;
@@ -306,7 +263,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
 	if (plyr > 0)
 	{
 		current_fighter_index = plyr - 1;
-        KqForkCombat::curw = fighter[current_fighter_index].fighterImageDatafileWidth;
+        curw = fighter[current_fighter_index].fighterImageDatafileWidth;
 		fighterImageDatafileX = fighter[current_fighter_index].fighterImageDatafileX;
 		fighterImageDatafileY = fighter[current_fighter_index].fighterImageDatafileY;
 	}
@@ -321,11 +278,11 @@ void battle_render(signed int plyr, size_t hl, int sall)
 
 	if ((sall == 0) && (fighterImageDatafileX > -1) && (fighterImageDatafileY > -1))
 	{
-		draw_sprite(double_buffer, bptr, fighterImageDatafileX + (KqForkCombat::curw / 2) - 8, fighterImageDatafileY - 8);
+		draw_sprite(double_buffer, bptr, fighterImageDatafileX + (curw / 2) - 8, fighterImageDatafileY - 8);
 		if (current_fighter_index >= PSIZE)
 		{
 			current_fighter_index = plyr - 1;
-			t = fighterImageDatafileX + (KqForkCombat::curw / 2);
+			t = fighterImageDatafileX + (curw / 2);
 			t -= (fighter[current_fighter_index].fighterName.length() * 4);
 			z = (fighter[current_fighter_index].fighterImageDatafileY < 32
 			     ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].fighterImageDatafileHeight
@@ -354,7 +311,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
 		menubox(double_buffer, b, 184, 11, 5, BLUE);
 		if (fighter[z].fighterSpellEffectStats[S_DEAD] == 0)
 		{
-			sz = KqForkCombat::bspeed[z] * 88 / ROUND_MAX;
+			sz = bspeed[z] * 88 / ROUND_MAX;
 			if (sz > 88)
 			{
 				sz = 88;
@@ -422,17 +379,7 @@ void battle_render(signed int plyr, size_t hl, int sall)
 	}
 }
 
-/*! \brief Check if all heroes/enemies dead.
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * Just check to see if all the enemies or heroes are dead.
- *
- * \returns 1 if the battle ended (either the heroes or the enemies won),
- *          0 otherwise.
- */
-int KqForkCombat::check_end(void)
+int KCombat::check_end()
 {
 	size_t fighter_index;
 	int alive = 0;
@@ -471,17 +418,7 @@ int KqForkCombat::check_end(void)
 	return 0;
 }
 
-/*! \brief Main combat function
- *
- * The big one... I say that because the game is mostly combat :p
- * First, check to see if a random encounter has occured. The check is skipped
- * if it's a scripted battle.  Then call all the helper and setup functions
- * and start the combat by calling do_round.
- *
- * \param   bno Combat identifier (index into battles[])
- * \returns 0 if no combat, 1 otherwise
- */
-int combat(int bno)
+int KCombat::combat(size_t bno)
 {
 	int hero_level;
 	int encounter;
@@ -495,9 +432,9 @@ int combat(int bno)
 #endif
 
 	/* PH: some checking! */
-	if (bno < 0 || bno >= NUM_BATTLES)
+	if (bno >= NUM_BATTLES)
 	{
-		sprintf(strbuf, _("Combat: battle %d does not exist."), bno);
+		sprintf(strbuf, _("Combat: battle %ld does not exist."), bno);
 		return 1;
 		// program_death(strbuf);
 	}
@@ -562,18 +499,11 @@ int combat(int bno)
 	/* Player is about to do battle. */
 
 	steps = 0;
-    KqForkCombat::init_fighters();
-	return KqForkCombat::do_combat(battles[bno].backimg, battles[bno].bmusic, battles[bno].eidx == 99);
+    init_fighters();
+    return do_combat(bno);
 }
 
-/*! \brief Choose an action
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * Choose a fighter action.
- */
-void KqForkCombat::do_action(size_t fighter_index)
+void KCombat::do_action(size_t fighter_index)
 {
 	size_t imb_index;
 	uint8_t imbued_item;
@@ -636,14 +566,16 @@ void KqForkCombat::do_action(size_t fighter_index)
 	}
 }
 
-/*! \brief Really do combat once fighters have been inited
- *
- * \param   backgroundImageName Background image
- * \param   mus Music
- * \param   is_rnd If !=0 then this is a random combat
- * \returns 1 if battle occurred
- */
-int KqForkCombat::do_combat(const std::string& backgroundImageName, char* mus, int is_rnd)
+int KCombat::do_combat(size_t bno)
+{
+    if (bno < NUM_BATTLES)
+    {
+        return do_combat(battles[bno].backimg, battles[bno].bmusic, battles[bno].eidx == 99);
+    }
+    return 0;
+}
+
+int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is_rnd)
 {
 	int zoom_step;
 
@@ -731,16 +663,7 @@ int KqForkCombat::do_combat(const std::string& backgroundImageName, char* mus, i
 	return (1);
 }
 
-/*! \brief Battle gauge, action controls
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated 20020914 - 16:16 (RB)
- *
- * This function controls the battle gauges and calls for action
- * when necessary. This is also where things like poison, sleep,
- * and what-not are checked.
- */
-void KqForkCombat::do_round(void)
+void KCombat::do_round()
 {
 	size_t a;
 	size_t fighter_index;
@@ -887,7 +810,7 @@ void KqForkCombat::do_round(void)
 			}
 
 			PlayerInput.readcontrols();
-			battle_render(0, 0, 0);
+            gCombat.battle_render(0, 0, 0);
 			blit2screen(0, 0);
 
 			for (fighter_index = 0; fighter_index < (PSIZE + num_enemies); fighter_index++)
@@ -914,18 +837,7 @@ void KqForkCombat::do_round(void)
 	}
 }
 
-/*! \brief Display one fighter on the screen
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated 20020914 - 16:37 (RB)
- * \date Updated 20031009 PH (put fr-> instead of fighter[fighter_index]. every
- * time)
- *
- * Display a single fighter on the screen. Checks for dead and
- * stone, and if the fighter is selected. Also displays 'Vision'
- * spell information.
- */
-void draw_fighter(size_t fighter_index, size_t dcur)
+void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 {
 	static const int AUGMENT_STRONGEST = 20;
 	static const int AUGMENT_STRONG = 10;
@@ -1008,18 +920,10 @@ void draw_fighter(size_t fighter_index, size_t dcur)
 	}
 }
 
-/*! \brief Enemies defeated the player
- * \author Josh Bolduc
- * \date created ????????
- * \date updated
- *
- * Play some sad music and set the dead flag so that the game
- * will return to the main menu.
- */
-void KqForkCombat::enemies_win(void)
+void KCombat::enemies_win()
 {
 	Music.play_music("rain.s3m", 0);
-	battle_render(0, 0, 0);
+    gCombat.battle_render(0, 0, 0);
 	/*  RB FIXME: rest()?  */
 	blit2screen(0, 0);
 	kq_wait(1000);
@@ -1032,20 +936,7 @@ void KqForkCombat::enemies_win(void)
 	alldead = 1;
 }
 
-/*! \brief Main fighting routine
- *
- * I don't really need to describe this :p
- *
- * \author Josh Bolduc
- * \date created ????????
- * \date updated
-
- * \param   attack_fighter_index Attacker ID
- * \param   defend_fighter_index Defender ID
- * \param   sk If non-zero, override the attacker's stats.
- * \returns 1 if damage done, 0 otherwise
- */
-int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
+int KCombat::fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 {
 	int a;
 	int tx = -1;
@@ -1070,7 +961,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 	}
 
 	tempd = status_adjust(defend_fighter_index);
-	ares = KqForkCombat::attack_result(attack_fighter_index, defend_fighter_index);
+	ares = attack_result(attack_fighter_index, defend_fighter_index);
 	for (stats_index = 0; stats_index < NUM_SPELL_TYPES; stats_index++)
 	{
 		fighter[defend_fighter_index].fighterSpellEffectStats[stats_index] = tempd.fighterSpellEffectStats[stats_index];
@@ -1166,16 +1057,7 @@ int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk)
 	return 0;
 }
 
-/*! \brief Kill a fighter
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated 20020917 (PH) -- added cheat mode
- *
- * Do what it takes to put a fighter out of commission.
- *
- * \param   fighter_index The one who will die
- */
-void fkill(size_t fighter_index)
+void KCombat::fkill(size_t fighter_index)
 {
 #ifdef KQ_CHEATS
 	/* PH Combat cheat: when a hero dies s/he is mysteriously boosted back to full HP. */
@@ -1202,14 +1084,7 @@ void fkill(size_t fighter_index)
 	bIsEtherEffectActive[fighter_index] = false;
 }
 
-/*! \brief Player defeated the enemies
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * Distribute the booty!
- */
-void KqForkCombat::heroes_win(void)
+void KCombat::heroes_win()
 {
 	int tgp = 0;
 	size_t fighter_index;
@@ -1232,7 +1107,7 @@ void KqForkCombat::heroes_win(void)
 		fighter[fighter_index].fighterAttackSpriteFrame = 4;
 	}
 
-	battle_render(0, 0, 0);
+    gCombat.battle_render(0, 0, 0);
 	blit2screen(0, 0);
 	kq_wait(250);
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
@@ -1382,14 +1257,7 @@ void KqForkCombat::heroes_win(void)
 	}
 }
 
-/*! \brief Initiate fighter structs and initial vars
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * Pre-combat setup of fighter structures and initial vars.
- */
-void KqForkCombat::init_fighters(void)
+void KCombat::init_fighters()
 {
 	size_t fighter_index;
 
@@ -1413,19 +1281,7 @@ void KqForkCombat::init_fighters(void)
 	}
 }
 
-/*! \brief Attack all enemies at once
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * This is different than fight in that all enemies are attacked
- * simultaneously, once. As a note, the attackers stats are
- * always over-ridden in this function. As well, critical hits
- * are possible, but the screen doesn't flash.
- *
- * \param   attack_fighter_index Attacker
- */
-void multi_fight(size_t attack_fighter_index)
+void KCombat::multi_fight(size_t attack_fighter_index)
 {
 	size_t fighter_index;
 	size_t spell_index;
@@ -1536,14 +1392,7 @@ void multi_fight(size_t attack_fighter_index)
 	}
 }
 
-/*! \brief Choose who attacks first, speeds, etc.
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * Set up surprise vars, speeds, act vars, etc.
- */
-void KqForkCombat::roll_initiative(void)
+void KCombat::roll_initiative()
 {
 	size_t fighter_index, j;
 
@@ -1608,7 +1457,7 @@ void KqForkCombat::roll_initiative(void)
 		}
 	}
 
-	battle_render(-1, -1, 0);
+    gCombat.battle_render(-1, -1, 0);
 	blit2screen(0, 0);
 	if ((hs == 1) && (ms > 1))
 	{
@@ -1621,14 +1470,7 @@ void KqForkCombat::roll_initiative(void)
 	}
 }
 
-/*! \brief Fighter on-screen locations in battle
- * \author Josh Bolduc
- * \date Created ????????
- * \date Updated
- *
- * Calculate where the fighters should be drawn.
- */
-void KqForkCombat::snap_togrid(void)
+void KCombat::snap_togrid()
 {
 	size_t fighter_index;
 	int hf = 0;
