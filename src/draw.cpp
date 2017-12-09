@@ -337,7 +337,8 @@ Raster* copy_bitmap(Raster* target, Raster* source)
  */
 void KqFork::draw_backlayer(void)
 {
-	int dx, dy, pix, xtc, ytc;
+	int dx, dy, xtc, ytc;
+	uint16_t pix;
 	int here;
 	KBound box;
 

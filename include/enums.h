@@ -15,6 +15,8 @@ enum eMenu
 	NUM_ITEMS_PER_PAGE = 16U,
 };
 
+// These appear to be unused.
+// The values correspond in misc.png to shadows starting at y=160, left-to-right.
 enum eShadow
 {
 	SHADOW_NONE = 0,

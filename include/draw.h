@@ -8,12 +8,12 @@ class Raster;
 
 // TODO: Find out whether these values paired to any color defined within
 // PALETTE 'pal'
-#define GREY1 4
-#define GREY2 8
-#define GREY3 13
-#define WHITE 15
-#define DBLUE 3
-#define DRED 6
+constexpr uint8_t GREY1 = 4;
+constexpr uint8_t GREY2 = 8;
+constexpr uint8_t GREY3 = 13;
+constexpr uint8_t WHITE = 15;
+constexpr uint8_t DBLUE = 3;
+constexpr uint8_t DRED = 6;
 
 enum eFontColor
 {

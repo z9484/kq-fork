@@ -67,8 +67,14 @@ int vx, vy, mx, my;
 /*! What was the last direction each player moved in */
 int steps = 0;
 
+/** Tiles for the currently-loaded map. */
+Raster* map_icons[MAX_TILES];
+
+/** Current sequence position of animated tiles. */
+uint16_t tilex[MAX_TILES];
+
 /*! 23: various global bitmaps */
-Raster* double_buffer, *fx_buffer, *map_icons[MAX_TILES], *back, *tc, *tc2,
+Raster* double_buffer, *fx_buffer, *back, *tc, *tc2,
         *bub[8], *b_shield, *b_shell, *b_repulse, *b_mp,
         *cframes[NUM_FIGHTERS][MAXCFRAMES], *tcframes[NUM_FIGHTERS][MAXCFRAMES],
         *frames[MAXCHRS][MAX_PARTY_MOVEMENT_FRAMES], *eframes[TOTAL_MAP_NPC_ENTITIES][MAX_NPC_MOVEMENT_FRAMES], *pgb[9],
@@ -147,9 +153,6 @@ uint8_t skip_intro = 0;
 
 /*! Graphics mode settings */
 uint8_t wait_retrace = 1, windowed = 1, stretch_view = 1, cpu_usage = 1;
-
-/*! Current sequence position of animated tiles */
-uint16_t tilex[MAX_TILES];
 
 /*! Current 'time' for animated tiles. When this increments to adata[].delay,
  * the next tile is shown */

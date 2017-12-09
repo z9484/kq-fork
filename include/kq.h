@@ -99,7 +99,23 @@ protected:
 extern int vx, vy, mx, my, steps, lastm[MAX_PARTY_SIZE];
 
 extern Raster* double_buffer, *fx_buffer;
+
+/**
+ * Each map specifies the name of its .png file within the maps/*.tsx files.
+ * Each tile is stored in an individual Raster.
+ */
 extern Raster* map_icons[MAX_TILES];
+
+/**
+ * Used for animations within tilesets (animation tiles must be sequential).
+ * 
+ * The current tile to be drawn to double_buffer is defined as map_icons[tilex[???]].
+ * tilex[] is simply a 0-based value ranging from 0..MAX_TILES.
+ *
+ * Another array, such as map_seg[idx], b_seg[idx], f_seg[idx], etc., populates '???'
+ * and may update the tile with value 'idx' to the next value in the animation set.
+ */
+extern uint16_t tilex[MAX_TILES];
 
 extern Raster* back, *tc, *tc2, *bub[8], *b_shield, *b_shell, *b_repulse, *b_mp;
 extern Raster* cframes[NUM_FIGHTERS][MAXCFRAMES], *tcframes[NUM_FIGHTERS][MAXCFRAMES], *frames[MAXCHRS][MAX_PARTY_MOVEMENT_FRAMES];
@@ -123,7 +139,7 @@ extern ePIDX pidx[MAXCHRS];
 extern uint8_t autoparty, alldead, is_sound, deadeffect, vfollow, use_sstone, sound_avail;
 extern const uint8_t kq_version;
 extern uint8_t hold_fade, cansave, skip_intro, wait_retrace, windowed, stretch_view, cpu_usage;
-extern uint16_t tilex[MAX_TILES], adelay[MAX_ANIM];
+extern uint16_t adelay[MAX_ANIM];
 extern char* strbuf, *savedir;
 extern s_player party[MAXCHRS];
 extern s_heroinfo players[MAXCHRS];
