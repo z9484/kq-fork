@@ -735,14 +735,14 @@ void KqFork::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, 
 	/* Draw a maybe-translucent background */
 	if (bg == BLUE)
 	{
-		drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
+		drawing_mode(DRAW_MODE_TRANS, nullptr, 0, 0);
 	}
 	else
 	{
 		bg = (bg == DARKBLUE) ? DBLUE : DRED;
 	}
 	rectfill(where, x1 + 2, y1 + 2, x2 - 3, y2 - 3, bg);
-	drawing_mode(DRAW_MODE_SOLID, NULL, 0, 0);
+	drawing_mode(DRAW_MODE_SOLID, nullptr, 0, 0);
 	/* Now the border */
 	switch (bstyle)
 	{
@@ -1261,7 +1261,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 	blit(double_buffer, back, x_m, y_m, 0, 0, SCREEN_W2, SCREEN_H2);
 
 	/* Loop for each box full of text... */
-	while (s != NULL)
+	while (s != nullptr)
 	{
 		s = KqFork::relay(s);
 		/* Calculate the box size */
@@ -1318,7 +1318,7 @@ const char* KqFork::parse_string(const char* the_string)
 	char* bp = nullptr;
 	char* name = nullptr;
 
-	name = NULL;
+	name = nullptr;
 	memset(strbuf, 0, sizeof(strbuf));
 	bp = strbuf;
 	for (ap = the_string; *ap; ++ap)
@@ -1342,7 +1342,7 @@ const char* KqFork::parse_string(const char* the_string)
 			}
 		}
 	}
-	return name == NULL ? the_string : strbuf;
+	return name == nullptr ? the_string : strbuf;
 }
 
 /*! \brief Decode String
@@ -1379,7 +1379,7 @@ const char* KqFork::decode_utf8(const char* inputString, uint32_t* cp)
 		}
 		else
 		{
-			inputString = NULL;
+			inputString = nullptr;
 		}
 	}
 	else if ((ch & 0xf0) == 0xe0)
@@ -1400,12 +1400,12 @@ const char* KqFork::decode_utf8(const char* inputString, uint32_t* cp)
 			}
 			else
 			{
-				inputString = NULL;
+				inputString = nullptr;
 			}
 		}
 		else
 		{
-			inputString = NULL;
+			inputString = nullptr;
 		}
 	}
 	else if ((ch & 0xf8) == 0xe0)
@@ -1431,25 +1431,25 @@ const char* KqFork::decode_utf8(const char* inputString, uint32_t* cp)
 				}
 				else
 				{
-					inputString = NULL;
+					inputString = nullptr;
 				}
 			}
 			else
 			{
-				inputString = NULL;
+				inputString = nullptr;
 			}
 		}
 		else
 		{
-			inputString = NULL;
+			inputString = nullptr;
 		}
 	}
 	else
 	{
-		inputString = NULL;
+		inputString = nullptr;
 	}
 
-	if (inputString == NULL)
+	if (inputString == nullptr)
 	{
 		Game.program_death(_("UTF-8 decode error"));
 	}
@@ -1900,7 +1900,7 @@ const char* KqFork::relay(const char* buf)
 			break;
 
 		case KqFork::M_END:
-			return NULL;
+			return nullptr;
 			break;
 
 		default:

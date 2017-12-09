@@ -14,9 +14,9 @@
 #include <stdint.h>
 #include <string>
 
-constexpr uint8_t BATTLE_INC = 20;
-#define ROUND_MAX 400
-#define DMG_RND_MIN 2
+constexpr uint16_t BATTLE_INC = 20;
+constexpr uint16_t ROUND_MAX = 400;
+constexpr uint16_t DMG_RND_MIN = 2;
 
 enum ECombatEnd
 {
@@ -34,19 +34,21 @@ public:
     KCombat();
     ~KCombat();
 
-    /*! \brief Main combat function
+    /**
+     * Main combat function
      *
      * The big one... I say that because the game is mostly combat :p
-     * First, check to see if a random encounter has occured. The check is skipped
+     * First, check to see if a random encounter has occurred. The check is skipped
      * if it's a scripted battle.  Then call all the helper and setup functions
      * and start the combat by calling do_round.
      *
-     * \param   bno Combat identifier (index into battles[])
+     * \param   battleIdentifier Combat identifier (index into battles[])
      * \returns 0 if no combat, 1 otherwise
      */
-    int combat(size_t bno);
+    int combat(size_t battleIdentifier);
 
-    /*! \brief Draw the battle screen
+    /**
+     * Draw the battle screen
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated 20020914 - 16:16 (RB)
@@ -60,7 +62,8 @@ public:
      */
     void battle_render(signed int plyr, size_t hl, int sall);
 
-    /*! \brief Display one fighter on the screen
+    /**
+     * Display one fighter on the screen
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated 20020914 - 16:37 (RB)
@@ -73,7 +76,8 @@ public:
      */
     void draw_fighter(size_t fighter_index, size_t dcur);
 
-    /*! \brief Main fighting routine
+    /**
+     * Main fighting routine
      *
      * I don't really need to describe this :p
      *
@@ -88,7 +92,8 @@ public:
      */
     int fight(size_t attack_fighter_index, size_t defend_fighter_index, int sk);
 
-    /*! \brief Attack all enemies at once
+    /**
+     * Attack all enemies at once
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated
@@ -102,7 +107,8 @@ public:
      */
     void multi_fight(size_t attack_fighter_index);
 
-    /*! \brief Kill a fighter
+    /**
+     * Kill a fighter
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated 20020917 (PH) -- added cheat mode
@@ -121,7 +127,7 @@ public:
     uint32_t num_enemies;
     int ta[NUM_FIGHTERS];
     int deffect[NUM_FIGHTERS];
-    int rcount;
+    uint16_t rcount;
     uint8_t vspell;
     uint8_t ms;
     Raster* backart;
@@ -134,7 +140,8 @@ private:
         ATTACK_CRITICAL
     };
 
-    /*! \brief Attack all enemies at once
+    /**
+     * Attack all enemies at once
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated
@@ -150,19 +157,17 @@ private:
      */
     eAttackResult attack_result(int ar, int dr);
 
-    /*! \brief Check if all heroes/enemies dead.
-     * \author Josh Bolduc
-     * \date Created ????????
-     * \date Updated
+    /**
+     * Check whether all heroes or enemies are dead.
      *
-     * Just check to see if all the enemies or heroes are dead.
+     * A battle is over when either all heroes or all enemies are defeated.
      *
-     * \returns 1 if the battle ended (either the heroes or the enemies won),
-     *          0 otherwise.
+     * @return true if the battle ended (either heroes/enemies won), false otherwise.
      */
-    int check_end();
+    bool hasBattleEnded();
 
-    /*! \brief Choose an action
+    /**
+     * Choose an action
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated
@@ -171,14 +176,16 @@ private:
      */
     void do_action(size_t fighter_index);
 
-    /*! \brief Really do combat once fighters have been inited
+    /**
+     * Really do combat once fighters have been inited
      *
      * \param   bno Combat identifier (index into battles[])
      * \returns 1 if battle occurred
      */
     int KCombat::do_combat(size_t bno);
 
-    /*! \brief Really do combat once fighters have been inited
+    /**
+     * Really do combat once fighters have been inited
      *
      * \param   backgroundImageName Background image
      * \param   mus Music
@@ -187,7 +194,8 @@ private:
      */
     int do_combat(const std::string& backgroundImageName, char* mus, int is_rnd);
 
-    /*! \brief Battle gauge, action controls
+    /**
+     * Battle gauge, action controls
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated 20020914 - 16:16 (RB)
@@ -198,7 +206,8 @@ private:
      */
     void do_round();
 
-    /*! \brief Enemies defeated the player
+    /**
+     * Enemies defeated the player
      * \author Josh Bolduc
      * \date created ????????
      * \date updated
@@ -206,9 +215,10 @@ private:
      * Play some sad music and set the dead flag so that the game
      * will return to the main menu.
      */
-    void enemies_win();
+    void enemies_win() const;
 
-    /*! \brief Player defeated the enemies
+    /**
+     * Player defeated the enemies
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated
@@ -217,7 +227,8 @@ private:
      */
     void heroes_win();
 
-    /*! \brief Initiate fighter structs and initial vars
+    /**
+     * Initiate fighter structs and initial vars
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated
@@ -226,7 +237,8 @@ private:
      */
     void init_fighters();
 
-    /*! \brief Choose who attacks first, speeds, etc.
+    /**
+     * Choose who attacks first, speeds, etc.
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated
@@ -235,7 +247,8 @@ private:
      */
     void roll_initiative();
 
-    /*! \brief Fighter on-screen locations in battle
+    /**
+     * Fighter on-screen locations in battle
      * \author Josh Bolduc
      * \date Created ????????
      * \date Updated

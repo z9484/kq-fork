@@ -149,10 +149,10 @@ static void copy_map(int* map)
  */
 int find_path(size_t entity_id, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, char* buffer, uint32_t size)
 {
-	int* map = NULL;
+	int* map = nullptr;
 	uint32_t result = 0;
 
-	if (buffer == NULL || size == 0)
+	if (buffer == nullptr || size == 0)
 	{
 		return 3;
 	}
@@ -162,7 +162,7 @@ int find_path(size_t entity_id, uint32_t source_x, uint32_t source_y, uint32_t t
 	/*  TODO: Allocate memory once instead of every call  */
 	result = g_map.xsize * g_map.ysize * sizeof(int);
 	map = (int*)malloc(result);
-	if (map == NULL)
+	if (map == nullptr)
 	{
 		return 3;
 	}
@@ -264,7 +264,7 @@ static int search_paths(uint32_t entity_id, int* map, uint32_t step, uint32_t so
 
 	index = source_y * limit_x + source_x;
 	value = map[index];
-	if ((value != -1) && (value == 0 || value > (int)step) && (step == 1 || !entityat(source_x, source_y, entity_id)))
+	if ((value != -1) && (value == 0 || value > (int)step) && (step == 1 || !kEntity.entityat(source_x, source_y, entity_id)))
 	{
 		map[index] = step;
 

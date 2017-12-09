@@ -89,7 +89,8 @@ int spell_setup(int, int);
  * -# imb[1] (?)
  */
 
-/*! \brief Array of enemy 'fighters'  */
+/**
+ * Array of enemy 'fighters'  */
 namespace KqFork
 {
 namespace EnemyC
@@ -98,7 +99,8 @@ std::vector<KFighter*> enemy_fighters;
 } // namespace EnemyC
 } // namespace KqFork
 
-/*! \brief Melee attack
+/**
+ * Melee attack
  *
  * Do an enemy melee attack.  Enemies only defend if they are in critical
  * status.  This could use a little more smarts, so that more-intelligent
@@ -166,7 +168,8 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
 	gCombat.bIsEtherEffectActive[target_fighter_index] = false;
 }
 
-/*! \brief Check if enemy can cast this spell
+/**
+ * Check if enemy can cast this spell
  *
  * This function is fairly specific in that it will only
  * return 1 if the enemy has the spell in its list of spells,
@@ -205,7 +208,8 @@ int KqFork::EnemyC::enemy_cancast(size_t target_fighter_index, size_t sp)
 	return 1;
 }
 
-/*! \brief Action for confused enemy
+/**
+ * Action for confused enemy
  *
  * Enemy actions are chosen differently if they are confused.  Confused
  * fighters either attack the enemy, an ally, or do nothing.  Confused
@@ -250,7 +254,8 @@ void enemy_charmaction(size_t fighter_index)
 	KqFork::EnemyC::enemy_attack(fighter_index);
 }
 
-/*! \brief Choose action for enemy
+/**
+ * Choose action for enemy
  *
  * There is the beginning of some intelligence to this... however, the
  * magic checking and skill checking functions aren't very smart yet :)
@@ -326,7 +331,8 @@ void enemy_chooseaction(size_t fighter_index)
 	gCombat.bIsEtherEffectActive[fighter_index] = false;
 }
 
-/*! \brief Use cure spell
+/**
+ * Use cure spell
  *
  * If the caster has a cure/drain spell, use it to cure itself.
  *
@@ -366,7 +372,8 @@ void KqFork::EnemyC::enemy_curecheck(int w)
 	}
 }
 
-/*! \brief Initialize enemy & sprites for combat
+/**
+ * Initialize enemy & sprites for combat
  *
  * If required, load the all the enemies, then
  * init the ones that are going into battle, by calling make_enemy() and
@@ -413,7 +420,8 @@ void enemy_init(void)
 	}
 }
 
-/*! \brief Check skills
+/**
+ * Check skills
  *
  * Very simple... see if the skill that was selected can be used.
  *
@@ -449,7 +457,8 @@ void KqFork::EnemyC::enemy_skillcheck(size_t fighterIndex, size_t skillNumber)
 	}
 }
 
-/*! \brief Check selected spell
+/**
+ * Check selected spell
  *
  * This function looks at the enemy's selected spell and tries to
  * determine whether to bother casting it or not.
@@ -628,7 +637,8 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 	}
 }
 
-/*! \brief Check status
+/**
+ * Check status
  *
  * Checks a passed status condition to see if anybody is affected by it and
  * determines whether it should be cast or not
@@ -681,7 +691,8 @@ int KqFork::EnemyC::enemy_stscheck(int ws, int s)
 //	save_fighters("save-f.xml", tmp.get(), KqFork::EnemyC::enemies_n);
 //}
 
-/*! \brief Load all enemies from disk
+/**
+ * Load all enemies from disk
  *
  * Loads up enemies from the *.mon files and fills the enemies[] array.
  * \author PH
@@ -853,7 +864,8 @@ void KqFork::EnemyC::load_enemies(void)
 	//dump_en();
 }
 
-/*! \brief Prepare an enemy for battle
+/**
+ * Prepare an enemy for battle
  *
  * Fills out a supplied KFighter structure with the default,
  * starting values for an enemy.
@@ -879,7 +891,8 @@ KFighter* KqFork::EnemyC::make_enemy(size_t enemyFighterIndex, KFighter* en)
 	}
 }
 
-/*! \brief Enemy initialization
+/**
+ * Enemy initialization
  *
  * This is the main enemy initialization routine.  This function sets up
  * the enemy types and then loads each one in.  It also calls a helper
@@ -894,10 +907,12 @@ KFighter* KqFork::EnemyC::make_enemy(size_t enemyFighterIndex, KFighter* en)
  *          otherwise select row etid.
  * \returns number of random encounter
  */
-int select_encounter(int en, int etid)
+size_t select_encounter(int en, int etid)
 {
 	size_t i, p, j;
-	int stop = 0, where = 0, entry = -1;
+    int stop = 0, where = 0;
+    bool entryFound = false;
+    size_t entry = 0;
 
 	while (!stop)
 	{
@@ -918,11 +933,12 @@ int select_encounter(int en, int etid)
 	if (etid == 99)
 	{
 		i = kqrandom->random_range_exclusive(1, 101);
-		while (entry < 0)
+		while (!entryFound)
 		{
 			if (i <= erows[where].per)
 			{
 				entry = where;
+                entryFound = true;
 			}
 			else
 			{
@@ -960,7 +976,8 @@ int select_encounter(int en, int etid)
 	return entry;
 }
 
-/*! \brief Set up skill targets
+/**
+ * Set up skill targets
  *
  * This is just for aiding in skill setup... choosing skill targets.
  *
@@ -1000,7 +1017,8 @@ int KqFork::EnemyC::skill_setup(size_t fighterIndex, size_t skillNumber)
 	return 0;
 }
 
-/*! \brief Helper for casting
+/**
+ * Helper for casting
  *
  * This is just a helper function for setting up the casting of a spell
  * by an enemy.

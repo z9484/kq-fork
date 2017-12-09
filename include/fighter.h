@@ -17,6 +17,28 @@ class KFighter
 {
 public:
 	KFighter();
+    ~KFighter();
+
+    /** 
+     * Determine whether the fighter's health is at-or-below a critical threshold.
+     * 
+     * @return true if fighter's health is severely low, false otherwise.
+     */
+    bool isFighterHealthCritical() const;
+
+    /** 
+     * Determine whether the fighter's magic is at-or-below a critical threshold.
+     * 
+     * @return true if fighter's magic is severely low, false otherwise.
+     */
+    bool isFighterMagicCritical() const;
+
+private:
+    int fighterHealthCriticalWarning;
+    int fighterMagicCriticalWarning;
+
+public:
+
 
 	/** Name */
 	std::string fighterName;

@@ -266,7 +266,7 @@ void config_menu(void)
 				if (p == 1)
 				{
 					windowed = !windowed;
-					set_config_int(NULL, "windowed", windowed);
+					set_config_int(nullptr, "windowed", windowed);
 					set_graphics_mode();
 				}
 				break;
@@ -286,17 +286,17 @@ void config_menu(void)
 				if (p == 1)
 				{
 					stretch_view = !stretch_view;
-					set_config_int(NULL, "stretch_view", stretch_view);
+					set_config_int(nullptr, "stretch_view", stretch_view);
 					set_graphics_mode();
 				}
 				break;
 			case 2:
 				show_frate = !show_frate;
-				set_config_int(NULL, "show_frate", show_frate);
+				set_config_int(nullptr, "show_frate", show_frate);
 				break;
 			case 3:
 				wait_retrace = !wait_retrace;
-				set_config_int(NULL, "wait_retrace", wait_retrace);
+				set_config_int(nullptr, "wait_retrace", wait_retrace);
 				break;
 			case 4:
 				while ((temp_key = getakey()) == 0)
@@ -305,7 +305,7 @@ void config_menu(void)
 				PlayerInput.kup = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kup", PlayerInput.kup);
+				set_config_int(nullptr, "kup", PlayerInput.kup);
 				break;
 			case 5:
 				while ((temp_key = getakey()) == 0)
@@ -314,7 +314,7 @@ void config_menu(void)
 				PlayerInput.kdown = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kdown", PlayerInput.kdown);
+				set_config_int(nullptr, "kdown", PlayerInput.kdown);
 				break;
 			case 6:
 				while ((temp_key = getakey()) == 0)
@@ -323,7 +323,7 @@ void config_menu(void)
 				PlayerInput.kleft = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kleft", PlayerInput.kleft);
+				set_config_int(nullptr, "kleft", PlayerInput.kleft);
 				break;
 			case 7:
 				while ((temp_key = getakey()) == 0)
@@ -332,7 +332,7 @@ void config_menu(void)
 				PlayerInput.kright = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kright", PlayerInput.kright);
+				set_config_int(nullptr, "kright", PlayerInput.kright);
 				break;
 			case 8:
 				while ((temp_key = getakey()) == 0)
@@ -341,7 +341,7 @@ void config_menu(void)
 				PlayerInput.kalt = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kalt", PlayerInput.kalt);
+				set_config_int(nullptr, "kalt", PlayerInput.kalt);
 				break;
 			case 9:
 				while ((temp_key = getakey()) == 0)
@@ -350,7 +350,7 @@ void config_menu(void)
 				PlayerInput.kctrl = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kctrl", PlayerInput.kctrl);
+				set_config_int(nullptr, "kctrl", PlayerInput.kctrl);
 				break;
 			case 10:
 				while ((temp_key = getakey()) == 0)
@@ -359,7 +359,7 @@ void config_menu(void)
 				PlayerInput.kenter = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kenter", PlayerInput.kenter);
+				set_config_int(nullptr, "kenter", PlayerInput.kenter);
 				break;
 			case 11:
 				while ((temp_key = getakey()) == 0)
@@ -368,7 +368,7 @@ void config_menu(void)
 				PlayerInput.kesc = temp_key;
 				Game.unpress();
 				temp_key = 0;
-				set_config_int(NULL, "kesc", PlayerInput.kesc);
+				set_config_int(nullptr, "kesc", PlayerInput.kesc);
 				break;
 			case 12:
 				if (is_sound == 2)
@@ -386,7 +386,7 @@ void config_menu(void)
 						Music.play_music(g_map.song_file, 0);
 					}
 				}
-				set_config_int(NULL, "is_sound", is_sound != 0);
+				set_config_int(nullptr, "is_sound", is_sound != 0);
 				break;
 			case 13:
 				if (is_sound == 2)
@@ -399,7 +399,7 @@ void config_menu(void)
 
 					/* make sure to set it no matter what */
 					set_volume(gsvol, 0);
-					set_config_int(NULL, "gsvol", gsvol);
+					set_config_int(nullptr, "gsvol", gsvol);
 				}
 				else
 					/* Not as daft as it seems, SND_BAD also wobbles the screen */
@@ -418,7 +418,7 @@ void config_menu(void)
 
 					/* make sure to set it no matter what */
 					Music.set_music_volume(gmvol / 250.0);
-					set_config_int(NULL, "gmvol", gmvol);
+					set_config_int(nullptr, "gmvol", gmvol);
 				}
 				else
 				{
@@ -428,7 +428,7 @@ void config_menu(void)
 			case 15:
 				/* TT: toggle slow_computer */
 				slow_computer = !slow_computer;
-				set_config_int(NULL, "slow_computer", slow_computer);
+				set_config_int(nullptr, "slow_computer", slow_computer);
 				break;
 			case 16:
 				/* TT: Adjust the CPU usage:yield_timeslice() or rest() */
@@ -657,7 +657,7 @@ static int load_samples(void)
 	for (index = 0; index < MAX_SAMPLES; index++)
 	{
 		sfx[index] = load_datafile_object(sound_datafile.c_str(), sndfiles[index]);
-		if (sfx[index] == NULL)
+		if (sfx[index] == nullptr)
 		{
 			sprintf(strbuf, _("Error loading .WAV file: %s.\n"), sndfiles[index]);
 			Game.klog(strbuf);
@@ -686,26 +686,26 @@ static void parse_allegro_setup(void)
 		push_config_state();
 		set_config_file(kqres(SETTINGS_DIR, "kq.cfg").c_str());
 
-		set_config_int(NULL, "skip_intro", skip_intro);
-		set_config_int(NULL, "windowed", windowed);
+		set_config_int(nullptr, "skip_intro", skip_intro);
+		set_config_int(nullptr, "windowed", windowed);
 
-		set_config_int(NULL, "stretch_view", stretch_view);
-		set_config_int(NULL, "show_frate", show_frate);
-		set_config_int(NULL, "is_sound", is_sound);
-		set_config_int(NULL, "use_joy", use_joy);
-		set_config_int(NULL, "slow_computer", slow_computer);
+		set_config_int(nullptr, "stretch_view", stretch_view);
+		set_config_int(nullptr, "show_frate", show_frate);
+		set_config_int(nullptr, "is_sound", is_sound);
+		set_config_int(nullptr, "use_joy", use_joy);
+		set_config_int(nullptr, "slow_computer", slow_computer);
 
-		set_config_int(NULL, "kup", PlayerInput.kup);
-		set_config_int(NULL, "kdown", PlayerInput.kdown);
-		set_config_int(NULL, "kleft", PlayerInput.kleft);
-		set_config_int(NULL, "kright", PlayerInput.kright);
-		set_config_int(NULL, "kesc", PlayerInput.kesc);
-		set_config_int(NULL, "kalt", PlayerInput.kalt);
-		set_config_int(NULL, "kctrl", PlayerInput.kctrl);
-		set_config_int(NULL, "kenter", PlayerInput.kenter);
+		set_config_int(nullptr, "kup", PlayerInput.kup);
+		set_config_int(nullptr, "kdown", PlayerInput.kdown);
+		set_config_int(nullptr, "kleft", PlayerInput.kleft);
+		set_config_int(nullptr, "kright", PlayerInput.kright);
+		set_config_int(nullptr, "kesc", PlayerInput.kesc);
+		set_config_int(nullptr, "kalt", PlayerInput.kalt);
+		set_config_int(nullptr, "kctrl", PlayerInput.kctrl);
+		set_config_int(nullptr, "kenter", PlayerInput.kenter);
 
 #ifdef DEBUGMODE
-		set_config_int(NULL, "debugging", debugging);
+		set_config_int(nullptr, "debugging", debugging);
 #endif
 
 		pop_config_state();
@@ -715,35 +715,35 @@ static void parse_allegro_setup(void)
 	set_config_file(cfg.c_str());
 
 	/* NB. JB's config file uses intro=yes --> skip_intro=0 */
-	skip_intro = get_config_int(NULL, "skip_intro", 0);
-	windowed = get_config_int(NULL, "windowed", 1);
-	stretch_view = get_config_int(NULL, "stretch_view", 1);
-	wait_retrace = get_config_int(NULL, "wait_retrace", 1);
-	show_frate = get_config_int(NULL, "show_frate", 0);
-	is_sound = get_config_int(NULL, "is_sound", 1);
-	gmvol = get_config_int(NULL, "gmvol", 250);
-	gsvol = get_config_int(NULL, "gsvol", 250);
-	use_joy = get_config_int(NULL, "use_joy", 0);
-	slow_computer = get_config_int(NULL, "slow_computer", 0);
-	cpu_usage = get_config_int(NULL, "cpu_usage", 2);
+	skip_intro = get_config_int(nullptr, "skip_intro", 0);
+	windowed = get_config_int(nullptr, "windowed", 1);
+	stretch_view = get_config_int(nullptr, "stretch_view", 1);
+	wait_retrace = get_config_int(nullptr, "wait_retrace", 1);
+	show_frate = get_config_int(nullptr, "show_frate", 0);
+	is_sound = get_config_int(nullptr, "is_sound", 1);
+	gmvol = get_config_int(nullptr, "gmvol", 250);
+	gsvol = get_config_int(nullptr, "gsvol", 250);
+	use_joy = get_config_int(nullptr, "use_joy", 0);
+	slow_computer = get_config_int(nullptr, "slow_computer", 0);
+	cpu_usage = get_config_int(nullptr, "cpu_usage", 2);
 #ifdef KQ_CHEATS
-	hasCheatEnabled = (get_config_int(NULL, "cheat", 0) != 0);
-	no_random_encounters = get_config_int(NULL, "no_random_encounters", 0);
-	no_monsters = get_config_int(NULL, "no_monsters", 0);
-	every_hit_999 = get_config_int(NULL, "every_hit_999", 0);
+	hasCheatEnabled = (get_config_int(nullptr, "cheat", 0) != 0);
+	no_random_encounters = get_config_int(nullptr, "no_random_encounters", 0);
+	no_monsters = get_config_int(nullptr, "no_monsters", 0);
+	every_hit_999 = get_config_int(nullptr, "every_hit_999", 0);
 #endif
 #ifdef DEBUGMODE
-	debugging = get_config_int(NULL, "debugging", 0);
+	debugging = get_config_int(nullptr, "debugging", 0);
 #endif
 
-	PlayerInput.kup = get_config_int(NULL, "kup", KEY_UP);
-	PlayerInput.kdown = get_config_int(NULL, "kdown", KEY_DOWN);
-	PlayerInput.kleft = get_config_int(NULL, "kleft", KEY_LEFT);
-	PlayerInput.kright = get_config_int(NULL, "kright", KEY_RIGHT);
-	PlayerInput.kesc = get_config_int(NULL, "kesc", KEY_ESC);
-	PlayerInput.kalt = get_config_int(NULL, "kalt", KEY_ALT);
-	PlayerInput.kctrl = get_config_int(NULL, "kctrl", KEY_LCONTROL);
-	PlayerInput.kenter = get_config_int(NULL, "kenter", KEY_ENTER);
+	PlayerInput.kup = get_config_int(nullptr, "kup", KEY_UP);
+	PlayerInput.kdown = get_config_int(nullptr, "kdown", KEY_DOWN);
+	PlayerInput.kleft = get_config_int(nullptr, "kleft", KEY_LEFT);
+	PlayerInput.kright = get_config_int(nullptr, "kright", KEY_RIGHT);
+	PlayerInput.kesc = get_config_int(nullptr, "kesc", KEY_ESC);
+	PlayerInput.kalt = get_config_int(nullptr, "kalt", KEY_ALT);
+	PlayerInput.kctrl = get_config_int(nullptr, "kctrl", KEY_LCONTROL);
+	PlayerInput.kenter = get_config_int(nullptr, "kenter", KEY_ENTER);
 	pop_config_state();
 }
 
@@ -934,7 +934,7 @@ void play_effect(int efc, int panning)
 	}
 	else
 	{
-		samp = NULL; /* PH not strictly needed but I added it */
+		samp = nullptr; /* PH not strictly needed but I added it */
 	}
 
 	switch (efc)

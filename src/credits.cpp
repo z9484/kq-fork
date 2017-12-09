@@ -34,12 +34,12 @@ static const char* credits[] = {
 	"WinterKnight",
 	"Edgar Alberto Molina",
 	"Steven Fullmer (OnlineCop)",
-	NULL
+	nullptr
 };
 
 static const int NUM_EASE_VALUES = 32;
 
-static const char** cc = NULL;
+static const char** cc = nullptr;
 static short int ease_table[NUM_EASE_VALUES];
 static Raster* wk = nullptr;
 
@@ -76,7 +76,7 @@ void allocate_credits(void)
 void deallocate_credits(void)
 {
 	delete (wk);
-	wk = NULL;
+	wk = nullptr;
 }
 
 void display_credits(Raster* double_buffer)
@@ -92,7 +92,7 @@ void display_credits(Raster* double_buffer)
 		/* After each 'max_ticks' number of ticks, increment the current line of
 		 * credits displayed, looping back to the beginning as needed.
 		 */
-		if (*(++cc) == NULL)
+		if (*(++cc) == nullptr)
 		{
 			cc = credits;
 		}

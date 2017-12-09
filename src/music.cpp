@@ -37,8 +37,8 @@ void KMusic::init_music(void)
 	current_music_player = MAX_MUSIC_PLAYERS;
 	while (current_music_player--)
 	{
-		mod_song[current_music_player] = NULL;
-		mod_player[current_music_player] = NULL;
+		mod_song[current_music_player] = nullptr;
+		mod_player[current_music_player] = nullptr;
 	}
 	current_music_player = 0;
 }
@@ -97,48 +97,50 @@ void KMusic::poll_music(void)
  */
 void KMusic::play_music(const std::string& music_name, long position)
 {
-	if (is_sound != 0)
+    if (is_sound == 0)
+    {
+        return;
+    }
+
+    std::string fstr = kqres(MUSIC_DIR, music_name);
+
+	stop_music();
+	if (exists(fstr.c_str()))
 	{
-		std::string fstr = kqres(MUSIC_DIR, music_name);
-
-		stop_music();
-		if (exists(fstr.c_str()))
+		if (strstr(fstr.c_str(), ".mod"))
 		{
-			if (strstr(fstr.c_str(), ".mod"))
-			{
-				mod_song[current_music_player] = dumb_load_mod(fstr.c_str());
-			}
+			mod_song[current_music_player] = dumb_load_mod(fstr.c_str());
+		}
 
-			else if (strstr(fstr.c_str(), ".xm"))
-			{
-				mod_song[current_music_player] = dumb_load_xm(fstr.c_str());
-			}
+		else if (strstr(fstr.c_str(), ".xm"))
+		{
+			mod_song[current_music_player] = dumb_load_xm(fstr.c_str());
+		}
 
-			else if (strstr(fstr.c_str(), ".s3m"))
-			{
-				mod_song[current_music_player] = dumb_load_s3m(fstr.c_str());
-			}
+		else if (strstr(fstr.c_str(), ".s3m"))
+		{
+			mod_song[current_music_player] = dumb_load_s3m(fstr.c_str());
+		}
 
-			else
-			{
-				mod_song[current_music_player] = NULL;
-			}
-			if (mod_song[current_music_player])
-			{
-				/* ML: we should (?) adjust the buffer size after everything is running
-				 * smooth */
-				float vol = float(gmvol) / 250.0f;
-				mod_player[current_music_player] = al_start_duh(mod_song[current_music_player], 2, position, vol, 4096 * 4, 44100);
-			}
-			else
-			{
-				TRACE(_("Could not load %s!\n"), fstr.c_str());
-			}
+		else
+		{
+			mod_song[current_music_player] = nullptr;
+		}
+		if (mod_song[current_music_player])
+		{
+			/* ML: we should (?) adjust the buffer size after everything is running
+				* smooth */
+			float vol = float(gmvol) / 250.0f;
+			mod_player[current_music_player] = al_start_duh(mod_song[current_music_player], 2, position, vol, 4096 * 4, 44100);
 		}
 		else
 		{
-			mod_song[current_music_player] = NULL;
+			TRACE(_("Could not load %s!\n"), fstr.c_str());
 		}
+	}
+	else
+	{
+		mod_song[current_music_player] = nullptr;
 	}
 }
 
@@ -154,8 +156,8 @@ void KMusic::stop_music(void)
 	{
 		al_stop_duh(mod_player[current_music_player]);
 		unload_duh(mod_song[current_music_player]);
-		mod_player[current_music_player] = NULL;
-		mod_song[current_music_player] = NULL;
+		mod_player[current_music_player] = nullptr;
+		mod_song[current_music_player] = nullptr;
 	}
 }
 

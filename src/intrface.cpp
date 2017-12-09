@@ -504,7 +504,7 @@ static const struct luaL_Reg lrs[] =
 	{ "wait", KQ_wait },
 	{ "warp", KQ_warp },
 	/*   { "get_tile_all", KQ_get_tile_all }, */
-	{ NULL, NULL } /* Must always be the LAST entry */
+	{ nullptr, nullptr } /* Must always be the LAST entry */
 };
 
 /*! \brief Maps a text field name to an identifier */
@@ -690,14 +690,14 @@ void do_luainit(const char* fname, int global)
 {
 	int oldtop;
 	const struct luaL_Reg* rg = lrs;
-	if (theL != NULL)
+	if (theL != nullptr)
 	{
 		do_luakill();
 	}
 	/* In Lua 5.1, this is a compatibility #define to luaL_newstate */
 	/* In Lua 5.2, this #define doesn't exist anymode. Switching to luaL_newstate */
 	theL = luaL_newstate();
-	if (theL == NULL)
+	if (theL == nullptr)
 	{
 		Game.program_death(_("Could not initialize scripting engine"));
 	}
@@ -741,7 +741,7 @@ void do_luakill(void)
 	if (theL)
 	{
 		lua_close(theL);
-		theL = NULL;
+		theL = nullptr;
 	}
 }
 
@@ -892,14 +892,14 @@ const char* KqFork::stringreader(lua_State* /*L*/, void* data, size_t* size)
 	char** f = (char**)data;
 	char* ans = *f;
 
-	if (ans == NULL)
+	if (ans == nullptr)
 	{
 		*size = 0;
 	}
 	else
 	{
 		*size = strlen(ans);
-		*f = NULL;
+		*f = nullptr;
 	}
 	return ans;
 }
@@ -2562,7 +2562,7 @@ static int KQ_move_entity(lua_State* L)
 		strcat(buffer, "K");
 	}
 
-	set_script(entity_id, buffer);
+    kEntity.set_script(entity_id, buffer);
 	return 0;
 }
 
@@ -2658,7 +2658,7 @@ static int KQ_place_ent(lua_State* L)
 		y = (int)lua_tonumber(L, 3);
 	}
 
-	place_ent(a, x, y);
+    kEntity.place_ent(a, x, y);
 	return 0;
 }
 
@@ -3087,7 +3087,7 @@ static int KQ_set_ent_script(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
 
-	set_script(a, lua_tostring(L, 2));
+    kEntity.set_script(a, lua_tostring(L, 2));
 	return 0;
 }
 
@@ -4029,12 +4029,12 @@ int KqFork::lua_dofile(lua_State* L, const char* filename)
 	r->in = fopen(filename, "rb");
 	int ret = 0;
 
-	if (r->in == NULL)
+	if (r->in == nullptr)
 	{
 		TRACE("Could not open script %s!\n", filename);
 		Game.program_death("Error opening script file");
 	}
-	ret = lua_load(L, KqFork::filereader, r.get(), filename, NULL);
+	ret = lua_load(L, KqFork::filereader, r.get(), filename, nullptr);
 	fclose(r->in);
 	if (ret != 0)
 	{
@@ -4067,7 +4067,7 @@ static int kq_dostring(lua_State* L, const char* cmd)
 
 	top = lua_gettop(L);
 	/* Parse the command into an anonymous function on the stack */
-	retval = lua_load(L, (lua_Reader)KqFork::stringreader, &cmd, "<console>", NULL);
+	retval = lua_load(L, (lua_Reader)KqFork::stringreader, &cmd, "<console>", nullptr);
 	if (retval != 0)
 	{
 		scroll_console("Parse error");
@@ -4125,7 +4125,7 @@ static int kq_dostring(lua_State* L, const char* cmd)
  */
 void do_console_command(const char* cmd)
 {
-	if (theL != NULL)
+	if (theL != nullptr)
 	{
 		kq_dostring(theL, cmd);
 	}

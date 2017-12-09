@@ -47,7 +47,7 @@ void init_console(void)
 	g_console.on = 0;
 	for (console_line = 0; console_line < CONSOLE_LINES; ++console_line)
 	{
-		g_console.lines[console_line] = NULL;
+		g_console.lines[console_line] = nullptr;
 	}
 }
 
@@ -96,7 +96,7 @@ void scroll_console(const char* l)
 {
 	int i;
 
-	if (l == NULL)
+	if (l == nullptr)
 	{
 		return;
 	}

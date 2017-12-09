@@ -46,7 +46,7 @@ void kq_wait(long ms)
 			timeout.tv_usec = ms * 1000;
 			ms = 0;
 		}
-		select(0, NULL, NULL, NULL, &timeout);
+		select(0, nullptr, nullptr, nullptr, &timeout);
 
 		poll_music();
 	}
@@ -80,7 +80,7 @@ int limit_frame_rate(int fps)
 	}
 	else
 	{
-		select(0, NULL, NULL, NULL, &timeout);
+		select(0, nullptr, nullptr, nullptr, &timeout);
 		last_exec.tv_usec += (1000000 / fps);
 		if (last_exec.tv_usec > 1000000)
 		{

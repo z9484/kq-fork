@@ -247,16 +247,17 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 	}
 
 	ta[dr] = 0 - dmg;
-	return crit_hit == 1 ? ATTACK_CRITICAL : ATTACK_SUCCESS;
+	return crit_hit == 1
+        ? ATTACK_CRITICAL
+        : ATTACK_SUCCESS;
 }
 
 void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 {
 	int a = 0;
 	int b = 0;
-	int sz;
-	int t;
-	size_t z;
+	int sz = 0;
+	int t = 0;
 	size_t current_fighter_index = 0;
 	size_t fighter_index = 0;
 
@@ -284,45 +285,47 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			current_fighter_index = plyr - 1;
 			t = fighterImageDatafileX + (curw / 2);
 			t -= (fighter[current_fighter_index].fighterName.length() * 4);
-			z = (fighter[current_fighter_index].fighterImageDatafileY < 32
-			     ? fighter[current_fighter_index].fighterImageDatafileY + fighter[current_fighter_index].fighterImageDatafileHeight
-			     : fighter[current_fighter_index].fighterImageDatafileY - 32);
+            int fighterIDy = fighter[current_fighter_index].fighterImageDatafileY;
+            int datafileCoords = (fighterIDy < 32
+			     ? fighterIDy + fighter[current_fighter_index].fighterImageDatafileHeight
+			     : fighterIDy - 32);
 
-			menubox(double_buffer, t - 8, z, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
-			print_font(double_buffer, t, z + 8, fighter[current_fighter_index].fighterName.c_str(), FNORMAL);
+			menubox(double_buffer, t - 8, datafileCoords, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
+			print_font(double_buffer, t, datafileCoords + 8, fighter[current_fighter_index].fighterName.c_str(), FNORMAL);
 		}
 	}
 
 	auto x_offset = 216;
-	for (z = 0; z < numchrs; z++)
+	for (size_t currentFighterIndex = 0; currentFighterIndex < numchrs; currentFighterIndex++)
 	{
-		b = z * x_offset;
+		b = currentFighterIndex * x_offset;
+        KFighter curFighter = fighter[currentFighterIndex];
 
-		if (fighter[z].fighterSpellEffectStats[S_DEAD] == 0)
+		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
 		{
-			draw_fighter(z, (sall == 1));
+			draw_fighter(currentFighterIndex, (sall == 1));
 		}
 		else
 		{
-			fighter[z].fighterAttackSpriteFrame = 3;
-			draw_fighter(z, 0);
+            curFighter.fighterAttackSpriteFrame = 3;
+			draw_fighter(currentFighterIndex, 0);
 		}
 
 		menubox(double_buffer, b, 184, 11, 5, BLUE);
-		if (fighter[z].fighterSpellEffectStats[S_DEAD] == 0)
+		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
 		{
-			sz = bspeed[z] * 88 / ROUND_MAX;
+			sz = bspeed[currentFighterIndex] * 88 / ROUND_MAX;
 			if (sz > 88)
 			{
 				sz = 88;
 			}
 
 			a = 116;
-			if (fighter[z].fighterSpellEffectStats[S_TIME] == 1)
+			if (curFighter.fighterSpellEffectStats[S_TIME] == 1)
 			{
 				a = 83;
 			}
-			else if (fighter[z].fighterSpellEffectStats[S_TIME] == 2)
+			else if (curFighter.fighterSpellEffectStats[S_TIME] == 2)
 			{
 				a = 36;
 			}
@@ -333,9 +336,11 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			hline(double_buffer, b + 8, 231, b + sz + 8, a - 1);
 		}
 
-		print_font(double_buffer, b + 8, 192, fighter[z].fighterName.c_str(), (hl == z + 1) ? FGOLD : FNORMAL);
+        eFontColor nameTextColor = (hl == currentFighterIndex + 1)
+            ? FGOLD : FNORMAL;
+        print_font(double_buffer, b + 8, 192, curFighter.fighterName.c_str(), nameTextColor);
 
-		sprintf(strbuf, _("HP: %3d/%3d"), fighter[z].fighterHealth, fighter[z].fighterMaxHealth);
+		sprintf(strbuf, _("HP: %3d/%3d"), curFighter.fighterHealth, curFighter.fighterMaxHealth);
 		/*  RB IDEA: If the character has less than 1/5 of his/her max    */
 		/*           health points, it shows the amount with red (the     */
 		/*           character is in danger). I suggest setting that '5'  */
@@ -347,20 +352,28 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		/*           to warn the player, it's much more eye-pleasing than */
 		/*           just a solid color (and not too hard to implement).  */
 
-		print_font(double_buffer, b + 8, 208, strbuf, (fighter[z].fighterHealth < (fighter[z].fighterMaxHealth / 5)) ? FRED : FNORMAL);
+        eFontColor healthTextColor = curFighter.isFighterHealthCritical()
+            ? FRED : FNORMAL;
+		print_font(double_buffer, b + 8, 208, strbuf, healthTextColor);
 
 		hline(double_buffer, b + 8, 216, b + 95, 21);
-		sz = (fighter[z].fighterHealth > 0) ? fighter[z].fighterHealth * 88 / fighter[z].fighterMaxHealth : 88;
+		sz = (curFighter.fighterHealth > 0)
+            ? curFighter.fighterHealth * 88 / curFighter.fighterMaxHealth
+            : 88;
 
 		hline(double_buffer, b + 8, 216, b + 8 + sz, 12);
-		sprintf(strbuf, _("MP: %3d/%3d"), fighter[z].fighterMagic, fighter[z].fighterMaxMagic);
+		sprintf(strbuf, _("MP: %3d/%3d"), curFighter.fighterMagic, curFighter.fighterMaxMagic);
 
-		/*  RB IDEA: Same suggestion as with health, just above.  */
-		print_font(double_buffer, b + 8, 218, strbuf, (fighter[z].fighterMagic < (fighter[z].fighterMaxMagic / 5)) ? FRED : FNORMAL);
+		/*  RB IDEA: Same suggestion as with health, just above. */
+        eFontColor magicTextColor = curFighter.isFighterMagicCritical()
+            ? FRED : FNORMAL;
+		print_font(double_buffer, b + 8, 218, strbuf, magicTextColor);
 		hline(double_buffer, b + 8, 226, b + 95, 21);
-		sz = (fighter[z].fighterMagic > 0) ? fighter[z].fighterMagic * 88 / fighter[z].fighterMaxMagic : 88;
+		sz = (curFighter.fighterMagic > 0)
+            ? curFighter.fighterMagic * 88 / curFighter.fighterMaxMagic
+            : 88;
 		hline(double_buffer, b + 8, 226, b + 8 + sz, 12);
-		draw_stsicon(double_buffer, 1, z, 17, b + 8, 200);
+		draw_stsicon(double_buffer, 1, currentFighterIndex, 17, b + 8, 200);
 	}
 
 	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
@@ -379,50 +392,50 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	}
 }
 
-int KCombat::check_end()
+bool KCombat::hasBattleEnded()
 {
-	size_t fighter_index;
-	int alive = 0;
-
-	/*  RB: count the number of heroes alive. If there is none, the enemies won the battle.  */
-	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
+	// If any players are still alive, enemies have not won.
+    bool anyHeroesAlive = false;
+	for (size_t fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
-		{
-			alive++;
-		}
+        if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+        {
+            anyHeroesAlive = true;
+            // No need to continue checking if any are still alive.
+            break;
+        }
 	}
 
-	if (alive == 0)
-	{
-		enemies_win();
-		return 1;
-	}
+    if (!anyHeroesAlive)
+    {
+        enemies_win();
+        return true;
+    }
 
-	/*  RB: count the number of enemies alive. If there is none, the heroes won the battle.  */
-	alive = 0;
-	for (fighter_index = 0; fighter_index < num_enemies; fighter_index++)
+    // If any enemies are still alive, players have not won.
+    bool anyEnemiesAlive = false;
+	for (size_t fighter_index = 0; fighter_index < num_enemies; fighter_index++)
 	{
 		if (fighter[fighter_index + PSIZE].fighterSpellEffectStats[S_DEAD] == 0)
 		{
-			alive++;
+            anyEnemiesAlive = true;
+            // No need to continue checking if any are still alive.
+            break;
 		}
 	}
 
-	if (alive == 0)
+	if (!anyEnemiesAlive)
 	{
 		heroes_win();
-		return 1;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-int KCombat::combat(size_t bno)
+int KCombat::combat(size_t battleIdentifier)
 {
-	int hero_level;
-	int encounter;
-	int lc;
+	int lc = 0;
 
 #ifdef KQ_CHEATS
 	if (hasCheatEnabled && no_monsters)
@@ -432,9 +445,9 @@ int KCombat::combat(size_t bno)
 #endif
 
 	/* PH: some checking! */
-	if (bno >= NUM_BATTLES)
+	if (battleIdentifier >= NUM_BATTLES)
 	{
-		sprintf(strbuf, _("Combat: battle %ld does not exist."), bno);
+		sprintf(strbuf, _("Combat: battle %ld does not exist."), battleIdentifier);
 		return 1;
 		// program_death(strbuf);
 	}
@@ -445,11 +458,11 @@ int KCombat::combat(size_t bno)
 		return 0;
 	}
 
-	hero_level = party[pidx[0]].lvl;
-	encounter = select_encounter(battles[bno].etnum, battles[bno].eidx);
+	int hero_level = party[pidx[0]].lvl;
+	size_t encounter = select_encounter(battles[battleIdentifier].etnum, battles[battleIdentifier].eidx);
 
 	/*  RB: check if we had had a random encounter  */
-	if (battles[bno].enc > 1)
+	if (battles[battleIdentifier].enc > 1)
 	{
 #ifdef KQ_CHEATS
 		/* skip battle if no_random_encouters cheat is set */
@@ -461,7 +474,7 @@ int KCombat::combat(size_t bno)
 
 		/* skip battle if haven't moved enough steps since last battle,
 		 * or if it's just not time for one yet */
-		if ((steps < STEPS_NEEDED) || (kqrandom->random_range_exclusive(0, battles[bno].enc) > 0))
+		if ((steps < STEPS_NEEDED) || (kqrandom->random_range_exclusive(0, battles[battleIdentifier].enc) > 0))
 		{
 			return 0;
 		}
@@ -483,7 +496,7 @@ int KCombat::combat(size_t bno)
 		}
 	}
 
-	if (hero_level >= erows[encounter].lvl + 5 && battles[bno].eidx == 99)
+	if (hero_level >= erows[encounter].lvl + 5 && battles[battleIdentifier].eidx == 99)
 	{
 		lc = (hero_level - erows[encounter].lvl) * 5;
 
@@ -500,7 +513,7 @@ int KCombat::combat(size_t bno)
 
 	steps = 0;
     init_fighters();
-    return do_combat(bno);
+    return do_combat(battleIdentifier);
 }
 
 void KCombat::do_action(size_t fighter_index)
@@ -560,7 +573,7 @@ void KCombat::do_action(size_t fighter_index)
 	}
 
 	bIsEtherEffectActive[fighter_index] = false;
-	if (check_end() == 1)
+	if (hasBattleEnded())
 	{
 		combatend = EVERYONE_DEFEATED;
 	}
@@ -665,7 +678,6 @@ int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is
 
 void KCombat::do_round()
 {
-	size_t a;
 	size_t fighter_index;
 
 	timer_count = 0;
@@ -682,130 +694,129 @@ void KCombat::do_round()
 
 			for (fighter_index = 0; fighter_index < PSIZE + num_enemies; fighter_index++)
 			{
-				if ((fighter_index < numchrs) || (fighter_index >= PSIZE))
+				if (fighter_index >= numchrs && fighter_index < PSIZE)
+                {
+                    bIsEtherEffectActive[fighter_index] = false;
+                    continue;
+                }
+
+				if (((fighter[fighter_index].fighterSpellEffectStats[S_POISON] - 1) == rcount) && fighter[fighter_index].fighterHealth > 1)
 				{
-					if (((fighter[fighter_index].fighterSpellEffectStats[S_POISON] - 1) == rcount) && fighter[fighter_index].fighterHealth > 1)
+                    int whereAllIsThisUsed = kqrandom->random_range_exclusive(0, fighter[fighter_index].fighterMaxHealth / 20) + 1;
+
+					if (whereAllIsThisUsed < 2)
 					{
-						a = kqrandom->random_range_exclusive(0, fighter[fighter_index].fighterMaxHealth / 20) + 1;
-
-						if (a < 2)
-						{
-							a = 2;
-						}
-
-						if ((fighter[fighter_index].fighterHealth - a) < 1)
-						{
-							a = fighter[fighter_index].fighterHealth - 1;
-						}
-
-						ta[fighter_index] = a;
-						display_amount(fighter_index, FONT_WHITE, 0);
-						fighter[fighter_index].fighterHealth -= a;
+						whereAllIsThisUsed = 2;
 					}
 
-					/*  RB: the character is regenerating? when needed, get a random value (never lower than 5), and increase the character's health by that amount.  */
-					if ((fighter[fighter_index].fighterSpellEffectStats[S_REGEN] - 1) == rcount)
+					if ((fighter[fighter_index].fighterHealth - whereAllIsThisUsed) < 1)
 					{
-						a = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].fighterMaxHealth / 10);
-
-						if (a < 5)
-						{
-							a = 5;
-						}
-
-						ta[fighter_index] = a;
-						display_amount(fighter_index, FONT_YELLOW, 0);
-						adjust_hp(fighter_index, a);
+						whereAllIsThisUsed = fighter[fighter_index].fighterHealth - 1;
 					}
 
-					/*  RB: the character has ether active?  */
-					bIsEtherEffectActive[fighter_index] = true;
-					if ((fighter[fighter_index].fighterSpellEffectStats[S_ETHER] > 0) && (rcount == 0))
+					ta[fighter_index] = whereAllIsThisUsed;
+					display_amount(fighter_index, FONT_WHITE, 0);
+					fighter[fighter_index].fighterHealth -= whereAllIsThisUsed;
+				}
+
+				/*  RB: the character is regenerating? when needed, get a random value (never lower than 5), and increase the character's health by that amount.  */
+				if ((fighter[fighter_index].fighterSpellEffectStats[S_REGEN] - 1) == rcount)
+				{
+                    int whereAllIsThisUsed = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].fighterMaxHealth / 10);
+
+					if (whereAllIsThisUsed < 5)
 					{
-						fighter[fighter_index].fighterSpellEffectStats[S_ETHER]--;
+						whereAllIsThisUsed = 5;
 					}
 
-					/*  RB: the character is stopped?  */
-					if (fighter[fighter_index].fighterSpellEffectStats[S_STOP] > 0)
+					ta[fighter_index] = whereAllIsThisUsed;
+					display_amount(fighter_index, FONT_YELLOW, 0);
+					adjust_hp(fighter_index, whereAllIsThisUsed);
+				}
+
+				/*  RB: the character has ether active?  */
+				bIsEtherEffectActive[fighter_index] = true;
+				if ((fighter[fighter_index].fighterSpellEffectStats[S_ETHER] > 0) && (rcount == 0))
+				{
+					fighter[fighter_index].fighterSpellEffectStats[S_ETHER]--;
+				}
+
+				/*  RB: the character is stopped?  */
+				if (fighter[fighter_index].fighterSpellEffectStats[S_STOP] > 0)
+				{
+					if (pidx[fighter_index] == TEMMIN)
 					{
-						if (pidx[fighter_index] == TEMMIN)
-						{
-							fighter[fighter_index].aux = 0;
-						}
-
-						if (rcount == 0)
-						{
-							fighter[fighter_index].fighterSpellEffectStats[S_STOP]--;
-						}
-
-						bIsEtherEffectActive[fighter_index] = false;
+						fighter[fighter_index].aux = 0;
 					}
 
-					/*  RB: the character is sleeping?  */
-					if (fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] > 0)
+					if (rcount == 0)
 					{
-						if (pidx[fighter_index] == TEMMIN)
-						{
-							fighter[fighter_index].aux = 0;
-						}
-
-						if (rcount == 0)
-						{
-							fighter[fighter_index].fighterSpellEffectStats[S_SLEEP]--;
-						}
-
-						bIsEtherEffectActive[fighter_index] = false;
+						fighter[fighter_index].fighterSpellEffectStats[S_STOP]--;
 					}
 
-					/*  RB: the character is petrified?  */
-					if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] > 0)
+					bIsEtherEffectActive[fighter_index] = false;
+				}
+
+				/*  RB: the character is sleeping?  */
+				if (fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] > 0)
+				{
+					if (pidx[fighter_index] == TEMMIN)
 					{
-						if (pidx[fighter_index] == TEMMIN)
-						{
-							fighter[fighter_index].aux = 0;
-						}
-
-						if (rcount == 0)
-						{
-							fighter[fighter_index].fighterSpellEffectStats[S_STONE]--;
-						}
-
-						bIsEtherEffectActive[fighter_index] = false;
+						fighter[fighter_index].aux = 0;
 					}
 
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0)
+					if (rcount == 0)
 					{
-						if (pidx[fighter_index] == TEMMIN)
-						{
-							fighter[fighter_index].aux = 0;
-						}
-
-						bspeed[fighter_index] = 0;
-						bIsEtherEffectActive[fighter_index] = false;
+						fighter[fighter_index].fighterSpellEffectStats[S_SLEEP]--;
 					}
 
-					if (bIsEtherEffectActive[fighter_index])
+					bIsEtherEffectActive[fighter_index] = false;
+				}
+
+				/*  RB: the character is petrified?  */
+				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] > 0)
+				{
+					if (pidx[fighter_index] == TEMMIN)
 					{
-						if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 0)
+						fighter[fighter_index].aux = 0;
+					}
+
+					if (rcount == 0)
+					{
+						fighter[fighter_index].fighterSpellEffectStats[S_STONE]--;
+					}
+
+					bIsEtherEffectActive[fighter_index] = false;
+				}
+
+				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0)
+				{
+					if (pidx[fighter_index] == TEMMIN)
+					{
+						fighter[fighter_index].aux = 0;
+					}
+
+					bspeed[fighter_index] = 0;
+					bIsEtherEffectActive[fighter_index] = false;
+				}
+
+				if (bIsEtherEffectActive[fighter_index])
+				{
+					if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 0)
+					{
+						bspeed[fighter_index] += nspeed[fighter_index];
+					}
+					else
+					{
+						if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 1)
 						{
-							bspeed[fighter_index] += nspeed[fighter_index];
+							bspeed[fighter_index] += (nspeed[fighter_index] / 2 + 1);
 						}
 						else
 						{
-							if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 1)
-							{
-								bspeed[fighter_index] += (nspeed[fighter_index] / 2 + 1);
-							}
-							else
-							{
-								bspeed[fighter_index] += (nspeed[fighter_index] * 2);
-							}
+							bspeed[fighter_index] += (nspeed[fighter_index] * 2);
 						}
 					}
-				}
-				else
-				{
-					bIsEtherEffectActive[fighter_index] = false;
 				}
 			}
 
@@ -851,7 +862,9 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 	xx = fr->fighterImageDatafileX;
 	yy = fr->fighterImageDatafileY;
 
-	ff = (!fr->fighterAttackSpriteFrame) ? fr->fighterSpriteFacing : fr->fighterAttackSpriteFrame;
+	ff = (!fr->fighterAttackSpriteFrame)
+        ? fr->fighterSpriteFacing
+        : fr->fighterAttackSpriteFrame;
 
 	if (fr->fighterSpellEffectStats[S_STONE] > 0)
 	{
@@ -920,7 +933,7 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 	}
 }
 
-void KCombat::enemies_win()
+void KCombat::enemies_win() const
 {
 	Music.play_music("rain.s3m", 0);
     gCombat.battle_render(0, 0, 0);
@@ -1090,7 +1103,6 @@ void KCombat::heroes_win()
 	size_t fighter_index;
 	int b;
 	size_t pidx_index;
-	int z;
 	int nc = 0;
 	int txp = 0;
 	int found_item = 0;
@@ -1215,7 +1227,7 @@ void KCombat::heroes_win()
 				sprintf(strbuf, "%3d", t2.fighterMaxMagic);
 				print_font(double_buffer, b + 128, 64, strbuf, FGREEN);
 
-				for (z = 0; z < 5; z++)
+				for (int z = 0; z < 5; z++)
 				{
 					sprintf(strbuf, "%3d>", t1.fighterStats[z]);
 					print_font(double_buffer, b + 96, z * 8 + 72, strbuf, FNORMAL);

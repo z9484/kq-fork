@@ -21,164 +21,23 @@
 #include "random.h"
 #include "setup.h"
 
-/*  internal functions  */
-namespace KqFork
+KEntity kEntity;
+
+KEntity::KEntity()
 {
-/**
- * Chase player
- *
- * Chase after the main player #0, if he/she is near. Speed up until at maximum. If the
- * player goes out of range, wander for a bit.
- *
- * @param target_entity Index of entity
- */
-void ChaseAfterMainPlayer(t_entity target_entity);
-
-/**
- * Check proximity
- *
- * Check to see if the target is within "rad" squares.
- * Test area is a square box rather than a circle
- * target entity needs to be within the view area
- * to be visible
- * (PH) this implementation is really odd :?
- *
- * @param eno Entity under consideration
- * @param tgt Entity to test
- * @param rad Radius to test within
- * @return 1 if near, 0 otherwise
- */
-int entity_near(t_entity eno, t_entity tgt, int rad);
-
-/**
- * Run script
- *
- * This executes script commands.  This is from Verge1.
- *
- * @param target_entity Entity to process
- */
-void entscript(t_entity target_entity);
-
-/**
- * Party following leader
- *
- * This makes any characters (after the first) follow the leader.
- */
-void follow(int tile_x, int tile_y);
-
-/**
- * Read a command and parameter from a script
- *
- * This processes entity commands from the movement script.
- * This is from Verge1.
- *
- * Script commands are:
- * - U,R,D,L + param:  move up, right, down, left by param spaces
- * - W+param: wait param frames
- * - B: start script again
- * - X+param: move to x-coord param
- * - Y+param: move to y-coord param
- * - F+param: face direction param (0=S, 1=N, 2=W, 3=E)
- * - K: kill (remove) entity
- *
- * @param target_entity Entity to process
- */
-void getcommand(t_entity target_entity);
-
-/**
- * Generic movement
- *
- * Set up the entity vars to move in the given direction
- *
- * @param target_entity Index of entity to move
- * @param dx tiles to move in x direction
- * @param dy tiles to move in y direction
- */
-int move(t_entity target_entity, int dx, int dy);
-
-/**
- * Check for obstruction
- *
- * Check for any map-based obstructions in the specified co-ordinates.
- *
- * @param origin_x Original x-coord position
- * @param origin_y Original y-coord position
- * @param move_x Amount to move -1..+1
- * @param move_y Amount to move -1..+1
- * @param check_entity Whether to return 1 if an entity is at the target
- * @return 1 if path is obstructed, 0 otherwise
- */
-int obstruction(int origin_x, int origin_y, int move_x, int move_y, int check_entity);
-
-/**
- * Read an int from a script
- *
- * This parses the movement script for a value that relates
- * to a command.  This is from Verge1.
- *
- * @param target_entity Entity to process
- */
-void parsems(t_entity target_entity);
-
-/**
- * Process movement for player
- *
- * This is the replacement for process_controls that used to be in kq.c
- * I realized that all the work in process_controls was already being
- * done in process_entity... I just had to make this exception for the
- * player-controlled dude.
- */
-void player_move(void);
-
-/**
- * Actions for one entity
- *
- * Process an individual active entity. If the entity in question is #0 (main character)
- * and the party is not automated, then allow for player input.
- *
- * @param target_entity Index of entity
- */
-void process_entity(t_entity target_entity);
-
-/**
- * Adjust movement speed
- *
- * This has to adjust for each entity's speed.
- * 'Normal' speed appears to be 4.
- *
- * @param target_entity Index of entity
- */
-void speed_adjust(t_entity target_entity);
-
-/**
- * Move entity towards target
- *
- * When entity is in target mode (MM_TARGET) move towards the goal.  This is
- * fairly simple; it doesn't do clever obstacle avoidance.  It simply moves
- * either horizontally or vertically, preferring the _closer_ one. In other
- * words, it will try to get on a vertical or horizontal line with its target.
- *
- * @param target_entity Index of entity
- */
-void target(t_entity target_entity);
-
-/**
- * Move randomly
- *
- * Choose a random direction for the entity to walk in and set up the vars to do so.
- *
- * @param target_entity Index of entity to move
- */
-void wander(t_entity target_entity);
 }
 
-void KqFork::ChaseAfterMainPlayer(t_entity target_entity)
+KEntity::~KEntity()
+{
+}
+
+void KEntity::ChaseAfterMainPlayer(t_entity target_entity)
 {
 	int emoved = 0;
 
 	if (g_ent[target_entity].chasing == 0)
 	{
-		if (KqFork::entity_near(target_entity, 0, 3) == 1 && kqrandom->random_range_exclusive(0, 100) <= g_ent[target_entity].extra)
+		if (entity_near(target_entity, 0, 3) == 1 && kqrandom->random_range_exclusive(0, 100) <= g_ent[target_entity].extra)
 		{
 			g_ent[target_entity].chasing = 1;
 			if (g_ent[target_entity].speed < 7)
@@ -189,32 +48,32 @@ void KqFork::ChaseAfterMainPlayer(t_entity target_entity)
 		}
 		else
 		{
-			KqFork::wander(target_entity);
+			wander(target_entity);
 		}
 	}
 	if (g_ent[target_entity].chasing == 1)
 	{
-		if (KqFork::entity_near(target_entity, 0, 4) == 1)
+		if (entity_near(target_entity, 0, 4) == 1)
 		{
 			if (g_ent[0].tilex > g_ent[target_entity].tilex)
 			{
-				emoved = KqFork::move(target_entity, 1, 0);
+				emoved = move(target_entity, 1, 0);
 			}
 			if (g_ent[0].tilex < g_ent[target_entity].tilex && !emoved)
 			{
-				emoved = KqFork::move(target_entity, -1, 0);
+				emoved = move(target_entity, -1, 0);
 			}
 			if (g_ent[0].tiley > g_ent[target_entity].tiley && !emoved)
 			{
-				emoved = KqFork::move(target_entity, 0, 1);
+				emoved = move(target_entity, 0, 1);
 			}
 			if (g_ent[0].tiley < g_ent[target_entity].tiley && !emoved)
 			{
-				emoved = KqFork::move(target_entity, 0, -1);
+				emoved = move(target_entity, 0, -1);
 			}
 			if (!emoved)
 			{
-				KqFork::wander(target_entity);
+				wander(target_entity);
 			}
 		}
 		else
@@ -225,24 +84,15 @@ void KqFork::ChaseAfterMainPlayer(t_entity target_entity)
 				g_ent[target_entity].speed--;
 			}
 			g_ent[target_entity].delay = kqrandom->random_range_exclusive(25, 50);
-			KqFork::wander(target_entity);
+			wander(target_entity);
 		}
 	}
 }
 
-/**
- * Count active entities
- *
- * Force calculation of the 'noe' variable.
- * This actually calculates the last index of any active entity plus one,
- * so if there are entities present, but not active, they may be counted.
- */
-void count_entities(void)
+void KEntity::count_entities() const
 {
-	size_t entity_index;
-
 	noe = 0;
-	for (entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
+	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
 	{
 		if (g_ent[entity_index].active == 1)
 		{
@@ -251,7 +101,7 @@ void count_entities(void)
 	}
 }
 
-int KqFork::entity_near(t_entity eno, t_entity tgt, int rad)
+int KEntity::entity_near(t_entity eno, t_entity tgt, int rad)
 {
 	int ax, ay, ex, ey, b;
 
@@ -274,7 +124,7 @@ int KqFork::entity_near(t_entity eno, t_entity tgt, int rad)
 	return 0;
 }
 
-int entityat(int ox, int oy, t_entity who)
+int KEntity::entityat(int ox, int oy, t_entity who)
 {
 	for (t_entity i = 0; i < MAX_ENTITIES; i++)
 	{
@@ -312,7 +162,7 @@ int entityat(int ox, int oy, t_entity who)
 	return 0;
 }
 
-void KqFork::entscript(t_entity target_entity)
+void KEntity::entscript(t_entity target_entity)
 {
 	if (g_ent[target_entity].active == 0)
 	{
@@ -320,72 +170,72 @@ void KqFork::entscript(t_entity target_entity)
 	}
 	if (g_ent[target_entity].cmd == 0)
 	{
-		KqFork::getcommand(target_entity);
+        getcommand(target_entity);
 	}
 	switch (g_ent[target_entity].cmd)
 	{
-	case COMMAND_MOVE_UP:
-		if (KqFork::move(target_entity, 0, -1))
+    case eCommands::COMMAND_MOVE_UP:
+		if (move(target_entity, 0, -1))
 		{
 			g_ent[target_entity].cmdnum--;
 		}
 		break;
-	case COMMAND_MOVE_DOWN:
-		if (KqFork::move(target_entity, 0, 1))
+	case eCommands::COMMAND_MOVE_DOWN:
+		if (move(target_entity, 0, 1))
 		{
 			g_ent[target_entity].cmdnum--;
 		}
 		break;
-	case COMMAND_MOVE_LEFT:
-		if (KqFork::move(target_entity, -1, 0))
+	case eCommands::COMMAND_MOVE_LEFT:
+		if (move(target_entity, -1, 0))
 		{
 			g_ent[target_entity].cmdnum--;
 		}
 		break;
-	case COMMAND_MOVE_RIGHT:
-		if (KqFork::move(target_entity, 1, 0))
+	case eCommands::COMMAND_MOVE_RIGHT:
+		if (move(target_entity, 1, 0))
 		{
 			g_ent[target_entity].cmdnum--;
 		}
 		break;
-	case COMMAND_WAIT:
+	case eCommands::COMMAND_WAIT:
 		g_ent[target_entity].cmdnum--;
 		break;
-	case COMMAND_FINISH_COMMANDS:
+	case eCommands::COMMAND_FINISH_COMMANDS:
 		return;
-	case COMMAND_REPEAT:
+	case eCommands::COMMAND_REPEAT:
 		g_ent[target_entity].sidx = 0;
 		g_ent[target_entity].cmdnum = 0;
 		break;
-	case COMMAND_MOVETO_X:
+	case eCommands::COMMAND_MOVETO_X:
 		if (g_ent[target_entity].tilex < g_ent[target_entity].cmdnum)
 		{
-			KqFork::move(target_entity, 1, 0);
+			move(target_entity, 1, 0);
 		}
 		if (g_ent[target_entity].tilex > g_ent[target_entity].cmdnum)
 		{
-			KqFork::move(target_entity, -1, 0);
+			move(target_entity, -1, 0);
 		}
 		if (g_ent[target_entity].tilex == g_ent[target_entity].cmdnum)
 		{
 			g_ent[target_entity].cmdnum = 0;
 		}
 		break;
-	case COMMAND_MOVETO_Y:
+	case eCommands::COMMAND_MOVETO_Y:
 		if (g_ent[target_entity].tiley < g_ent[target_entity].cmdnum)
 		{
-			KqFork::move(target_entity, 0, 1);
+			move(target_entity, 0, 1);
 		}
 		if (g_ent[target_entity].tiley > g_ent[target_entity].cmdnum)
 		{
-			KqFork::move(target_entity, 0, -1);
+			move(target_entity, 0, -1);
 		}
 		if (g_ent[target_entity].tiley == g_ent[target_entity].cmdnum)
 		{
 			g_ent[target_entity].cmdnum = 0;
 		}
 		break;
-	case COMMAND_FACE:
+	case eCommands::COMMAND_FACE:
 		g_ent[target_entity].facing = g_ent[target_entity].cmdnum;
 		g_ent[target_entity].cmdnum = 0;
 		break;
@@ -396,7 +246,7 @@ void KqFork::entscript(t_entity target_entity)
 	}
 }
 
-void KqFork::follow(int tile_x, int tile_y)
+void KEntity::follow(int tile_x, int tile_y)
 {
 	t_entity i;
 
@@ -408,16 +258,16 @@ void KqFork::follow(int tile_x, int tile_y)
 	{
 		if (i == 1)
 		{
-			KqFork::move(i, tile_x - g_ent[i].tilex, tile_y - g_ent[i].tiley);
+			move(i, tile_x - g_ent[i].tilex, tile_y - g_ent[i].tiley);
 		}
 		else
 		{
-			KqFork::move(i, g_ent[i - 1].tilex - g_ent[i].tilex, g_ent[i - 1].tiley - g_ent[i].tiley);
+			move(i, g_ent[i - 1].tilex - g_ent[i].tilex, g_ent[i - 1].tiley - g_ent[i].tiley);
 		}
 	}
 }
 
-void KqFork::getcommand(t_entity target_entity)
+void KEntity::getcommand(t_entity target_entity)
 {
 	char s;
 
@@ -434,58 +284,58 @@ void KqFork::getcommand(t_entity target_entity)
 	{
 	case 'u':
 	case 'U':
-		g_ent[target_entity].cmd = COMMAND_MOVE_UP;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_UP;
+		parsems(target_entity);
 		break;
 	case 'd':
 	case 'D':
-		g_ent[target_entity].cmd = COMMAND_MOVE_DOWN;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_DOWN;
+		parsems(target_entity);
 		break;
 	case 'l':
 	case 'L':
-		g_ent[target_entity].cmd = COMMAND_MOVE_LEFT;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_LEFT;
+		parsems(target_entity);
 		break;
 	case 'r':
 	case 'R':
-		g_ent[target_entity].cmd = COMMAND_MOVE_RIGHT;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_RIGHT;
+		parsems(target_entity);
 		break;
 	case 'w':
 	case 'W':
-		g_ent[target_entity].cmd = COMMAND_WAIT;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_WAIT;
+		parsems(target_entity);
 		break;
 	case '\0':
-		g_ent[target_entity].cmd = COMMAND_FINISH_COMMANDS;
+		g_ent[target_entity].cmd = eCommands::COMMAND_FINISH_COMMANDS;
 		g_ent[target_entity].movemode = MM_STAND;
 		g_ent[target_entity].cmdnum = 0;
 		g_ent[target_entity].sidx = 0;
 		break;
 	case 'b':
 	case 'B':
-		g_ent[target_entity].cmd = COMMAND_REPEAT;
+		g_ent[target_entity].cmd = eCommands::COMMAND_REPEAT;
 		break;
 	case 'x':
 	case 'X':
-		g_ent[target_entity].cmd = COMMAND_MOVETO_X;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_MOVETO_X;
+		parsems(target_entity);
 		break;
 	case 'y':
 	case 'Y':
-		g_ent[target_entity].cmd = COMMAND_MOVETO_Y;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_MOVETO_Y;
+		parsems(target_entity);
 		break;
 	case 'f':
 	case 'F':
-		g_ent[target_entity].cmd = COMMAND_FACE;
-		KqFork::parsems(target_entity);
+		g_ent[target_entity].cmd = eCommands::COMMAND_FACE;
+		parsems(target_entity);
 		break;
 	case 'k':
 	case 'K':
 		/* PH add: command K makes the ent disappear */
-		g_ent[target_entity].cmd = COMMAND_KILL;
+		g_ent[target_entity].cmd = eCommands::COMMAND_KILL;
 		g_ent[target_entity].active = 0;
 		break;
 	default:
@@ -500,7 +350,7 @@ void KqFork::getcommand(t_entity target_entity)
 	}
 }
 
-int KqFork::move(t_entity target_entity, int dx, int dy)
+int KEntity::move(t_entity target_entity, int dx, int dy)
 {
 	int tile_x, tile_y, source_tile, oldfacing;
 	KQEntity* ent = &g_ent[target_entity];
@@ -537,17 +387,17 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 	if (ent->obsmode == 1)
 	{
 		// Try to automatically walk/run around obstacle.
-		if (dx && KqFork::obstruction(tile_x, tile_y, dx, 0, FALSE))
+		if (dx && obstruction(tile_x, tile_y, dx, 0, FALSE))
 		{
 			if (dy != -1 && oldfacing == ent->facing &&
-				!KqFork::obstruction(tile_x, tile_y + 1, dx, 0, TRUE) &&
-				!KqFork::obstruction(tile_x, tile_y, 0, 1, TRUE))
+				!obstruction(tile_x, tile_y + 1, dx, 0, TRUE) &&
+				!obstruction(tile_x, tile_y, 0, 1, TRUE))
 			{
 				dy = 1;
 			}
 			else if (dy != 1 && oldfacing == ent->facing &&
-				!KqFork::obstruction(tile_x, tile_y - 1, dx, 0, TRUE) &&
-				!KqFork::obstruction(tile_x, tile_y, 0, -1, TRUE))
+				!obstruction(tile_x, tile_y - 1, dx, 0, TRUE) &&
+				!obstruction(tile_x, tile_y, 0, -1, TRUE))
 			{
 				dy = -1;
 			}
@@ -556,17 +406,17 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 				dx = 0;
 			}
 		}
-		if (dy && KqFork::obstruction(tile_x, tile_y, 0, dy, FALSE))
+		if (dy && obstruction(tile_x, tile_y, 0, dy, FALSE))
 		{
 			if (dx != -1 && oldfacing == ent->facing &&
-				!KqFork::obstruction(tile_x + 1, tile_y, 0, dy, TRUE) &&
-				!KqFork::obstruction(tile_x, tile_y, 1, 0, TRUE))
+				!obstruction(tile_x + 1, tile_y, 0, dy, TRUE) &&
+				!obstruction(tile_x, tile_y, 1, 0, TRUE))
 			{
 				dx = 1;
 			}
 			else if (dx != 1 && oldfacing == ent->facing &&
-				!KqFork::obstruction(tile_x - 1, tile_y, 0, dy, TRUE) &&
-				!KqFork::obstruction(tile_x, tile_y, -1, 0, TRUE))
+				!obstruction(tile_x - 1, tile_y, 0, dy, TRUE) &&
+				!obstruction(tile_x, tile_y, -1, 0, TRUE))
 			{
 				dx = -1;
 			}
@@ -575,7 +425,7 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 				dy = 0;
 			}
 		}
-		if ((dx || dy) && KqFork::obstruction(tile_x, tile_y, dx, dy, FALSE))
+		if ((dx || dy) && obstruction(tile_x, tile_y, dx, dy, FALSE))
 		{
 			dx = dy = 0;
 		}
@@ -600,7 +450,7 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 		{
 			if (ent->facing == FACE_LEFT || ent->facing == FACE_RIGHT)
 			{
-				if (!KqFork::obstruction(tile_x, tile_y, dx, 0, TRUE))
+				if (!obstruction(tile_x, tile_y, dx, 0, TRUE))
 				{
 					dy = 0;
 				}
@@ -611,7 +461,7 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 			}
 			else   // They are facing up or down.
 			{
-				if (!KqFork::obstruction(tile_x, tile_y, 0, dy, TRUE))
+				if (!obstruction(tile_x, tile_y, 0, dy, TRUE))
 				{
 					dx = 0;
 				}
@@ -626,8 +476,8 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 	// Make sure player can't walk diagonally between active entities.
 	if (dx && dy)
 	{
-		if (KqFork::obstruction(tile_x, tile_y, dx, 0, TRUE) &&
-			KqFork::obstruction(tile_x, tile_y, 0, dy, TRUE))
+		if (obstruction(tile_x, tile_y, dx, 0, TRUE) &&
+			obstruction(tile_x, tile_y, 0, dy, TRUE))
 		{
 			return 0;
 		}
@@ -642,7 +492,7 @@ int KqFork::move(t_entity target_entity, int dx, int dy)
 	return 1;
 }
 
-int KqFork::obstruction(int origin_x, int origin_y, int move_x, int move_y, int check_entity)
+int KEntity::obstruction(int origin_x, int origin_y, int move_x, int move_y, int check_entity)
 {
 	int current_tile; // obstrution for current tile
 	int target_tile;  // obstruction for destination tile
@@ -718,7 +568,7 @@ int KqFork::obstruction(int origin_x, int origin_y, int move_x, int move_y, int 
 	return 0;
 }
 
-void KqFork::parsems(t_entity target_entity)
+void KEntity::parsems(t_entity target_entity)
 {
 	uint32_t p = 0;
 	char tok[10];
@@ -739,16 +589,7 @@ void KqFork::parsems(t_entity target_entity)
 	g_ent[target_entity].cmdnum = atoi(tok);
 }
 
-/**
- * Set position
- *
- * Position an entity manually.
- *
- * @param en Entity to position
- * @param ex x-coord
- * @param ey y-coord
- */
-void place_ent(t_entity en, int ex, int ey)
+void KEntity::place_ent(t_entity en, int ex, int ey)
 {
 	g_ent[en].tilex = ex;
 	g_ent[en].tiley = ey;
@@ -756,7 +597,7 @@ void place_ent(t_entity en, int ex, int ey)
 	g_ent[en].y = g_ent[en].tiley * TILE_H;
 }
 
-void KqFork::player_move(void)
+void KEntity::player_move(void)
 {
 	int oldx = g_ent[0].tilex;
 	int oldy = g_ent[0].tiley;
@@ -778,26 +619,20 @@ void KqFork::player_move(void)
 	}
 #endif
 
-	KqFork::move(0, PlayerInput.right ? 1 : PlayerInput.left ? -1 : 0, PlayerInput.down ? 1 : PlayerInput.up ? -1 : 0);
+	move(0, PlayerInput.right ? 1 : PlayerInput.left ? -1 : 0, PlayerInput.down ? 1 : PlayerInput.up ? -1 : 0);
 	if (g_ent[0].moving)
 	{
-		KqFork::follow(oldx, oldy);
+		follow(oldx, oldy);
 	}
 }
 
-/**
- * Main entity routine
- *
- * The main routine that loops through the entity list and processes each
- * one.
- */
-void process_entities(void)
+void KEntity::process_entities()
 {
 	for (t_entity i = 0; i < MAX_ENTITIES; i++)
 	{
 		if (g_ent[i].active == 1)
 		{
-			KqFork::speed_adjust(i);
+			speed_adjust(i);
 		}
 	}
 
@@ -809,7 +644,7 @@ void process_entities(void)
 	}
 }
 
-void KqFork::process_entity(t_entity target_entity)
+void KEntity::process_entity(t_entity target_entity)
 {
 	KQEntity* ent = &g_ent[target_entity];
 	s_player* player = 0;
@@ -825,7 +660,7 @@ void KqFork::process_entity(t_entity target_entity)
 	{
 		if (target_entity == 0 && !autoparty)
 		{
-			KqFork::player_move();
+			player_move();
 			if (ent->moving && display_desc == 1)
 			{
 				display_desc = 0;
@@ -837,16 +672,16 @@ void KqFork::process_entity(t_entity target_entity)
 		case MM_STAND:
 			return;
 		case MM_WANDER:
-			KqFork::wander(target_entity);
+			wander(target_entity);
 			break;
 		case MM_SCRIPT:
-			KqFork::entscript(target_entity);
+			entscript(target_entity);
 			break;
 		case MM_CHASE:
-			KqFork::ChaseAfterMainPlayer(target_entity);
+			ChaseAfterMainPlayer(target_entity);
 			break;
 		case MM_TARGET:
-			KqFork::target(target_entity);
+			target(target_entity);
 			break;
 		}
 	}
@@ -918,27 +753,18 @@ void KqFork::process_entity(t_entity target_entity)
 	}
 }
 
-/**
- * Initialize script
- *
- * This is used to set up an entity with a movement script so that
- * it can be automatically controlled.
- *
- * @param target_entity Entity to process
- * @param movestring The script
- */
-void set_script(t_entity target_entity, const char* movestring)
+void KEntity::set_script(t_entity target_entity, const char* movestring)
 {
 	g_ent[target_entity].moving = 0; // Stop entity from moving
 	g_ent[target_entity].movcnt = 0; // Reset the move counter to 0
-	g_ent[target_entity].cmd = COMMAND_NONE;
+	g_ent[target_entity].cmd = eCommands::COMMAND_NONE;
 	g_ent[target_entity].sidx = 0;   // Reset script command index
 	g_ent[target_entity].cmdnum = 0; // There are no scripted commands
 	g_ent[target_entity].movemode = MM_SCRIPT; // Force the entity to follow the script
 	strncpy(g_ent[target_entity].script, movestring, sizeof(g_ent[target_entity].script));
 }
 
-void KqFork::speed_adjust(t_entity target_entity)
+void KEntity::speed_adjust(t_entity target_entity)
 {
 	if (g_ent[target_entity].speed < 4)
 	{
@@ -969,34 +795,34 @@ void KqFork::speed_adjust(t_entity target_entity)
 	}
 	if (g_ent[target_entity].speed < 5)
 	{
-		KqFork::process_entity(target_entity);
+		process_entity(target_entity);
 	}
 	switch (g_ent[target_entity].speed)
 	{
 	case 5:
-		KqFork::process_entity(target_entity);
-		KqFork::process_entity(target_entity);
+		process_entity(target_entity);
+		process_entity(target_entity);
 		break;
 	case 6:
-		KqFork::process_entity(target_entity);
-		KqFork::process_entity(target_entity);
-		KqFork::process_entity(target_entity);
+		process_entity(target_entity);
+		process_entity(target_entity);
+		process_entity(target_entity);
 		break;
 	case 7:
-		KqFork::process_entity(target_entity);
-		KqFork::process_entity(target_entity);
-		KqFork::process_entity(target_entity);
-		KqFork::process_entity(target_entity);
+		process_entity(target_entity);
+		process_entity(target_entity);
+		process_entity(target_entity);
+		process_entity(target_entity);
 		break;
 	}
 	/* TT: This is to see if the player is "running" */
 	if (key[PlayerInput.kctrl] && target_entity < PSIZE)
 	{
-		KqFork::process_entity(target_entity);
+		process_entity(target_entity);
 	}
 }
 
-void KqFork::target(t_entity target_entity)
+void KEntity::target(t_entity target_entity)
 {
 	int dx, dy, ax, ay, emoved = 0;
 	KQEntity* ent = &g_ent[target_entity];
@@ -1016,22 +842,22 @@ void KqFork::target(t_entity target_entity)
 		/* Try to move horizontally */
 		if (dx < 0)
 		{
-			emoved = KqFork::move(target_entity, -1, 0);
+			emoved = move(target_entity, -1, 0);
 		}
 		if (dx > 0)
 		{
-			emoved = KqFork::move(target_entity, 1, 0);
+			emoved = move(target_entity, 1, 0);
 		}
 		/* Didn't move so try vertically */
 		if (!emoved)
 		{
 			if (dy < 0)
 			{
-				KqFork::move(target_entity, 0, -1);
+				move(target_entity, 0, -1);
 			}
 			if (dy > 0)
 			{
-				KqFork::move(target_entity, 0, 1);
+				move(target_entity, 0, 1);
 			}
 		}
 	}
@@ -1040,22 +866,22 @@ void KqFork::target(t_entity target_entity)
 		/* Try to move vertically */
 		if (dy < 0)
 		{
-			emoved = KqFork::move(target_entity, 0, -1);
+			emoved = move(target_entity, 0, -1);
 		}
 		if (dy > 0)
 		{
-			emoved = KqFork::move(target_entity, 0, 1);
+			emoved = move(target_entity, 0, 1);
 		}
 		/* Didn't move so try horizontally */
 		if (!emoved)
 		{
 			if (dx < 0)
 			{
-				KqFork::move(target_entity, -1, 0);
+				move(target_entity, -1, 0);
 			}
 			if (dx > 0)
 			{
-				KqFork::move(target_entity, 1, 0);
+				move(target_entity, 1, 0);
 			}
 		}
 	}
@@ -1066,7 +892,7 @@ void KqFork::target(t_entity target_entity)
 	}
 }
 
-void KqFork::wander(t_entity target_entity)
+void KEntity::wander(t_entity target_entity)
 {
 	if (g_ent[target_entity].delayctr < g_ent[target_entity].delay)
 	{
@@ -1077,16 +903,16 @@ void KqFork::wander(t_entity target_entity)
 	switch (kqrandom->random_range_exclusive(0, 8))
 	{
 	case 0:
-		KqFork::move(target_entity, 0, -1);
+		move(target_entity, 0, -1);
 		break;
 	case 1:
-		KqFork::move(target_entity, 0, 1);
+		move(target_entity, 0, 1);
 		break;
 	case 2:
-		KqFork::move(target_entity, -1, 0);
+		move(target_entity, -1, 0);
 		break;
 	case 3:
-		KqFork::move(target_entity, 1, 0);
+		move(target_entity, 1, 0);
 		break;
 	}
 }

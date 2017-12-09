@@ -1,38 +1,45 @@
 #include "fighter.h"
 
+// TODO(onlinecop): Make these values user-configurable in settings somewhere.
+
+constexpr int CRITICAL_HEALTH_WARNING = 5;
+constexpr int CRITICAL_MAGIC_WARNING = 5;
+
 KFighter::KFighter()
-	: fighterName("")
-	, fighterExperience(0)
-	, fighterMoney(0)
-	, fighterLevel(0)
-	, fighterImageDatafileX(0)
-	, fighterImageDatafileY(0)
-	, fighterImageDatafileWidth(0)
-	, fighterImageDatafileHeight(0)
-	, fighterHealth(0)
-	, fighterMaxHealth(0)
-	, fighterMagic(0)
-	, fighterMaxMagic(0)
-	, fighterDefeatItemProbability(0)
-	, fighterDefeatItemCommon(0)
-	, fighterDefeatItemRare(0)
-	, fighterStealItemCommon(0)
-	, fighterStealItemRare(0)
-	, fighterSpriteFacing(0)
-	, fighterAttackSpriteFrame(0)
-	, fighterCanCriticalHit(0)
-	, fighterWillDefend(0)
-	, csmem(0)
-	, ctmem(0)
-	, current_weapon_type(0)
-	, welem(0)
-	, unl(0)
-	, aux(0)
-	, bonus(0)
-	, bstat(0)
-	, mrp(0)
-	, imb_s(0)
-	, imb_a(0)
+    : fighterHealthCriticalWarning(CRITICAL_HEALTH_WARNING)
+    , fighterMagicCriticalWarning(CRITICAL_MAGIC_WARNING)
+	, fighterName()
+	, fighterExperience()
+	, fighterMoney()
+	, fighterLevel()
+	, fighterImageDatafileX()
+	, fighterImageDatafileY()
+	, fighterImageDatafileWidth()
+	, fighterImageDatafileHeight()
+	, fighterHealth()
+	, fighterMaxHealth()
+	, fighterMagic()
+	, fighterMaxMagic()
+	, fighterDefeatItemProbability()
+	, fighterDefeatItemCommon()
+	, fighterDefeatItemRare()
+	, fighterStealItemCommon()
+	, fighterStealItemRare()
+	, fighterSpriteFacing()
+	, fighterAttackSpriteFrame()
+	, fighterCanCriticalHit()
+	, fighterWillDefend()
+	, csmem()
+	, ctmem()
+	, current_weapon_type()
+	, welem()
+	, unl()
+	, aux()
+	, bonus()
+	, bstat()
+	, mrp()
+	, imb_s()
+	, imb_a()
 	, img(nullptr)
 {
 	for (size_t i = 0; i < NUM_STATS; i++)
@@ -63,6 +70,28 @@ KFighter::KFighter()
 	{
 		imb[i] = 0;
 	}
+}
+
+KFighter::~KFighter()
+{
+}
+
+bool KFighter::isFighterHealthCritical() const
+{
+    if (fighterHealthCriticalWarning > 0)
+    {
+        return fighterHealth < (fighterMaxHealth / fighterHealthCriticalWarning);
+    }
+    return true;
+}
+
+bool KFighter::isFighterMagicCritical() const
+{
+    if (fighterMagicCriticalWarning > 0)
+    {
+        return fighterMagic < (fighterMaxMagic / 5);
+    }
+    return true;
 }
 
 /*! Characters when they are in combat */
