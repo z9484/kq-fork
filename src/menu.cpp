@@ -100,26 +100,26 @@ void draw_mainmenu(int swho)
 	timer_count = 0;
 	for (fighter_index = 0; fighter_index < MAX_PARTY_SIZE; fighter_index++)
 	{
-		menubox(double_buffer, 44 + xofs, fighter_index * 64 + 64 + yofs, 18, 6, (size_t)swho == fighter_index ? DARKBLUE : BLUE);
+		kDraw.menubox(double_buffer, 44 + xofs, fighter_index * 64 + 64 + yofs, 18, 6, (size_t)swho == fighter_index ? DARKBLUE : BLUE);
 	}
-	menubox(double_buffer, 204 + xofs, 64 + yofs, 7, 6, BLUE);
-	menubox(double_buffer, 204 + xofs, 128 + yofs, 7, 6, BLUE);
-	print_font(double_buffer, 220 + xofs, 72 + yofs, _("Items"), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 220 + xofs, 80 + yofs, _("Magic"), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 220 + xofs, 88 + yofs, _("Equip"), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 220 + xofs, 96 + yofs, _("Spec."), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 220 + xofs, 104 + yofs, _("Stats"), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 220 + xofs, 112 + yofs, _("Quest"), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 212 + xofs, 136 + yofs, _("Time:"), eFontColor::FONTCOLOR_GOLD);
-	print_font(double_buffer, 212 + xofs, 164 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.menubox(double_buffer, 204 + xofs, 64 + yofs, 7, 6, BLUE);
+	kDraw.menubox(double_buffer, 204 + xofs, 128 + yofs, 7, 6, BLUE);
+	kDraw.print_font(double_buffer, 220 + xofs, 72 + yofs, _("Items"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 220 + xofs, 80 + yofs, _("Magic"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 220 + xofs, 88 + yofs, _("Equip"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 220 + xofs, 96 + yofs, _("Spec."), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 220 + xofs, 104 + yofs, _("Stats"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 220 + xofs, 112 + yofs, _("Quest"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 212 + xofs, 136 + yofs, _("Time:"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(double_buffer, 212 + xofs, 164 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
 	/* PH: print time as h:mm */
 	sprintf(strbuf, "%d:%02d", khr, kmin);
-	print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 144 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 144 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, "%d", gp);
-	print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 172 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 268 - (strlen(strbuf) * 8) + xofs, 172 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	if (swho != -1)
 	{
-		menubox(double_buffer, 44 + xofs, swho * 64 + 64 + yofs, 18, 6, DARKBLUE);
+		kDraw.menubox(double_buffer, 44 + xofs, swho * 64 + 64 + yofs, 18, 6, DARKBLUE);
 	}
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
@@ -139,27 +139,27 @@ void draw_playerstat(Raster* where, int player_index_in_party, int dx, int dy)
 {
 	int j;
 	players[player_index_in_party].portrait->maskedBlitTo(where, dx, dy);
-	print_font(where, dx + 48, dy, party[player_index_in_party].playerName, eFontColor::FONTCOLOR_NORMAL);
-	draw_stsicon(where, 0, player_index_in_party, 8, dx + 48, dy + 8);
-	print_font(where, dx + 48, dy + 16, _("LV"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(where, dx + 48, dy, party[player_index_in_party].playerName, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.draw_stsicon(where, 0, player_index_in_party, 8, dx + 48, dy + 8);
+	kDraw.print_font(where, dx + 48, dy + 16, _("LV"), eFontColor::FONTCOLOR_GOLD);
 	sprintf(strbuf, "%d", party[player_index_in_party].lvl);
-	print_font(where, dx + 104 - (strlen(strbuf) * 8), dy + 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
-	print_font(where, dx + 48, dy + 24, _("HP"), eFontColor::FONTCOLOR_GOLD);
-	print_font(where, dx + 104, dy + 24, "/", eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 104 - (strlen(strbuf) * 8), dy + 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 48, dy + 24, _("HP"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(where, dx + 104, dy + 24, "/", eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, "%d", party[player_index_in_party].hp);
 	j = strlen(strbuf) * 8;
-	print_font(where, dx + 104 - j, dy + 24, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 104 - j, dy + 24, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, "%d", party[player_index_in_party].mhp);
 	j = strlen(strbuf) * 8;
-	print_font(where, dx + 144 - j, dy + 24, strbuf, eFontColor::FONTCOLOR_NORMAL);
-	print_font(where, dx + 48, dy + 32, _("MP"), eFontColor::FONTCOLOR_GOLD);
-	print_font(where, dx + 104, dy + 32, "/", eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 144 - j, dy + 24, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 48, dy + 32, _("MP"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.print_font(where, dx + 104, dy + 32, "/", eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, "%d", party[player_index_in_party].mp);
 	j = strlen(strbuf) * 8;
-	print_font(where, dx + 104 - j, dy + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 104 - j, dy + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, "%d", party[player_index_in_party].mmp);
 	j = strlen(strbuf) * 8;
-	print_font(where, dx + 144 - j, dy + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 144 - j, dy + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
 }
 
 /*! \brief Add experience to stats
@@ -265,10 +265,10 @@ void menu(void)
 	while (!stop)
 	{
 		Game.do_check_animation();
-		drawmap();
+		kDraw.drawmap();
 		draw_mainmenu(-1);
 		draw_sprite(double_buffer, menuptr, 204 + xofs, ptr * 8 + 73 + yofs);
-		blit2screen(xofs, yofs);
+		kDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
 		{
@@ -580,23 +580,23 @@ void KqFork::quest_info(void)
 	while (1)
 	{
 		timer_count = 0;
-		drawmap();
+		kDraw.drawmap();
 		base = ii - ii % 10;
-		menubox(double_buffer, 88 + xofs, 92 + yofs, 18, 10, BLUE);
-		menubox(double_buffer, 88 + xofs, 188 + yofs, 18, 3, BLUE);
+		kDraw.menubox(double_buffer, 88 + xofs, 92 + yofs, 18, 10, BLUE);
+		kDraw.menubox(double_buffer, 88 + xofs, 188 + yofs, 18, 3, BLUE);
 		for (i = 0; i < 10; ++i)
 		{
 			if (i + base < KqFork::quest_list.count)
 			{
-				print_font(double_buffer, 104 + xofs, 100 + 8 * i + yofs, KqFork::quest_list.root[i + base].key, eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, 104 + xofs, 100 + 8 * i + yofs, KqFork::quest_list.root[i + base].key, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 		draw_sprite(double_buffer, menuptr, 88 + xofs, 100 + 8 * (ii - base) + yofs);
 		if (ii < KqFork::quest_list.count)
 		{
-			print_font(double_buffer, 96 + xofs, 196 + yofs, KqFork::quest_list.root[ii].text, eFontColor::FONTCOLOR_NORMAL);
+			kDraw.print_font(double_buffer, 96 + xofs, 196 + yofs, KqFork::quest_list.root[ii].text, eFontColor::FONTCOLOR_NORMAL);
 		}
-		blit2screen(xofs, yofs);
+		kDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
 		{
@@ -720,25 +720,25 @@ void spec_items(void)
 	while (!stop)
 	{
 		Game.do_check_animation();
-		drawmap();
-		menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, BLUE);
-		print_font(double_buffer, 108 + xofs, 20 + yofs, _("Special Items"), eFontColor::FONTCOLOR_GOLD);
-		menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 19, BLUE);
+		kDraw.drawmap();
+		kDraw.menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, BLUE);
+		kDraw.print_font(double_buffer, 108 + xofs, 20 + yofs, _("Special Items"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 19, BLUE);
 		for (a = 0; a < num_items; a++)
 		{
-			draw_icon(double_buffer, special_items[list_item_which[a]].icon, 88 + xofs, a * 8 + 44 + yofs);
-			print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs, special_items[list_item_which[a]].specialItemName, eFontColor::FONTCOLOR_NORMAL);
+			kDraw.draw_icon(double_buffer, special_items[list_item_which[a]].icon, 88 + xofs, a * 8 + 44 + yofs);
+			kDraw.print_font(double_buffer, 96 + xofs, a * 8 + 44 + yofs, special_items[list_item_which[a]].specialItemName, eFontColor::FONTCOLOR_NORMAL);
 			if (list_item_quantity[a] > 1)
 			{
 				sprintf(strbuf, "^%d", list_item_quantity[a]);
-				print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, 224 + xofs, a * 8 + 44 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
-		menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
+		kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
 		a = strlen(special_items[list_item_which[ptr]].description) * 4;
-		print_font(double_buffer, 160 - a + xofs, 212 + yofs, special_items[list_item_which[ptr]].description, eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 160 - a + xofs, 212 + yofs, special_items[list_item_which[ptr]].description, eFontColor::FONTCOLOR_NORMAL);
 		draw_sprite(double_buffer, menuptr, 72 + xofs, ptr * 8 + 44 + yofs);
-		blit2screen(xofs, yofs);
+		kDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 
 		if (PlayerInput.down)
@@ -780,18 +780,18 @@ void KqFork::status_screen(size_t fighter_index)
 	{
 		Game.do_check_animation();
 		// Redraw the map, clearing any menus under this new window
-		drawmap();
+		kDraw.drawmap();
 
 		// Box around top-left square
-		menubox(double_buffer, xofs, 16 + yofs, 18, 5, BLUE);
+		kDraw.menubox(double_buffer, xofs, 16 + yofs, 18, 5, BLUE);
 		draw_playerstat(double_buffer, pidx_index, 8 + xofs, 24 + yofs);
 
 		// Box around bottom-left square
-		menubox(double_buffer, xofs, 72 + yofs, 18, 17, BLUE);
-		print_font(double_buffer, 8 + xofs, 80 + yofs, _("Exp:"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.menubox(double_buffer, xofs, 72 + yofs, 18, 17, BLUE);
+		kDraw.print_font(double_buffer, 8 + xofs, 80 + yofs, _("Exp:"), eFontColor::FONTCOLOR_GOLD);
 		sprintf(strbuf, "%d", party[pidx_index].xp);
-		print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 80 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 8 + xofs, 88 + yofs, _("Next:"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 80 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 8 + xofs, 88 + yofs, _("Next:"), eFontColor::FONTCOLOR_GOLD);
 		// TT: Does this mean we can only level up to 50?
 		if (party[pidx_index].lvl < 50)
 		{
@@ -801,21 +801,21 @@ void KqFork::status_screen(size_t fighter_index)
 		{
 			sprintf(strbuf, "%d", 0);
 		}
-		print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 88 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 8 + xofs, 104 + yofs, _("Strength"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 112 + yofs, _("Agility"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 120 + yofs, _("Vitality"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 128 + yofs, _("Intellect"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 136 + yofs, _("Sagacity"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 144 + yofs, _("Speed"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 152 + yofs, _("Aura"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 160 + yofs, _("Spirit"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, 88 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 8 + xofs, 104 + yofs, _("Strength"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 112 + yofs, _("Agility"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 120 + yofs, _("Vitality"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 128 + yofs, _("Intellect"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 136 + yofs, _("Sagacity"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 144 + yofs, _("Speed"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 152 + yofs, _("Aura"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 160 + yofs, _("Spirit"), eFontColor::FONTCOLOR_GOLD);
 		// Blank space on display of 16 pixels
-		print_font(double_buffer, 8 + xofs, 176 + yofs, _("Attack"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 184 + yofs, _("Hit"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 192 + yofs, _("Defense"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 200 + yofs, _("Evade"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 8 + xofs, 208 + yofs, _("Mag.Def"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 176 + yofs, _("Attack"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 184 + yofs, _("Hit"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 192 + yofs, _("Defense"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 200 + yofs, _("Evade"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 8 + xofs, 208 + yofs, _("Mag.Def"), eFontColor::FONTCOLOR_GOLD);
 		for (stats_index = 0; stats_index < NUM_STATS; stats_index++)
 		{
 			// Coordinates of stats on display
@@ -825,28 +825,28 @@ void KqFork::status_screen(size_t fighter_index)
 			{
 				stats_y += 8;
 			}
-			print_font(double_buffer, 96 + xofs, stats_y + yofs, "$", eFontColor::FONTCOLOR_GOLD);
+			kDraw.print_font(double_buffer, 96 + xofs, stats_y + yofs, "$", eFontColor::FONTCOLOR_GOLD);
 			sprintf(strbuf, "%d", fighter[fighter_index].fighterStats[stats_index]);
-			print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, stats_y + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+			kDraw.print_font(double_buffer, 152 - (strlen(strbuf) * 8) + xofs, stats_y + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		}
 
-		menubox(double_buffer, 160 + xofs, 16 + yofs, 18, 16, BLUE);
-		print_font(double_buffer, 168 + xofs, 24 + yofs, _("Earth"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 32 + yofs, _("Black"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 40 + yofs, _("Fire"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 48 + yofs, _("Thunder"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 56 + yofs, _("Air"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 64 + yofs, _("White"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 72 + yofs, _("Water"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 80 + yofs, _("Ice"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 88 + yofs, _("Poison"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 96 + yofs, _("Blind"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 104 + yofs, _("Charm"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 112 + yofs, _("Paralyze"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 120 + yofs, _("Petrify"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 128 + yofs, _("Silence"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 136 + yofs, _("Sleep"), eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 168 + xofs, 144 + yofs, _("Time"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.menubox(double_buffer, 160 + xofs, 16 + yofs, 18, 16, BLUE);
+		kDraw.print_font(double_buffer, 168 + xofs, 24 + yofs, _("Earth"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 32 + yofs, _("Black"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 40 + yofs, _("Fire"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 48 + yofs, _("Thunder"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 56 + yofs, _("Air"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 64 + yofs, _("White"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 72 + yofs, _("Water"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 80 + yofs, _("Ice"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 88 + yofs, _("Poison"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 96 + yofs, _("Blind"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 104 + yofs, _("Charm"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 112 + yofs, _("Paralyze"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 120 + yofs, _("Petrify"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 128 + yofs, _("Silence"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 136 + yofs, _("Sleep"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 168 + xofs, 144 + yofs, _("Time"), eFontColor::FONTCOLOR_NORMAL);
 
 		for (res_index = 0; res_index < R_TOTAL_RES; res_index++)
 		{
@@ -875,13 +875,13 @@ void KqFork::status_screen(size_t fighter_index)
 				}
 			}
 		}
-		menubox(double_buffer, 160 + xofs, 160 + yofs, 18, 6, BLUE);
+		kDraw.menubox(double_buffer, 160 + xofs, 160 + yofs, 18, 6, BLUE);
 		for (equipment_index = 0; equipment_index < NUM_EQUIPMENT; equipment_index++)
 		{
-			draw_icon(double_buffer, items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs, equipment_index * 8 + 168 + yofs);
-			print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].itemName, eFontColor::FONTCOLOR_NORMAL);
+			kDraw.draw_icon(double_buffer, items[party[pidx_index].eqp[equipment_index]].icon, 168 + xofs, equipment_index * 8 + 168 + yofs);
+			kDraw.print_font(double_buffer, 176 + xofs, equipment_index * 8 + 168 + yofs, items[party[pidx_index].eqp[equipment_index]].itemName, eFontColor::FONTCOLOR_NORMAL);
 		}
-		blit2screen(xofs, yofs);
+		kDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 
 		if (PlayerInput.left && fighter_index > 0)

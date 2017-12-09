@@ -674,7 +674,7 @@ void do_luacheat(void)
 #endif
 	lua_settop(theL, oldtop);
 	KQ_check_map_change();
-	message(_("Cheating complete."), 255, 50, xofs, yofs);
+	kDraw.message(_("Cheating complete."), 255, 50, xofs, yofs);
 }
 #endif
 
@@ -1163,7 +1163,7 @@ static int KQ_bubble_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	text_ex(eBubbleStyle::BUBBLE_TEXT, entity, msg);
+	kDraw.text_ex(eBubbleStyle::BUBBLE_TEXT, entity, msg);
 	return 0;
 }
 
@@ -1175,7 +1175,7 @@ static int KQ_portbubble_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	porttext_ex(eBubbleStyle::BUBBLE_TEXT, entity, msg);
+	kDraw.porttext_ex(eBubbleStyle::BUBBLE_TEXT, entity, msg);
 	return 0;
 }
 
@@ -1486,7 +1486,7 @@ static int KQ_chest(lua_State* L)
 		gp += amt;
 		sprintf(strbuf, _("Found %d gp!"), (int)amt);
 		play_effect(SND_MONEY, 128);
-		message(strbuf, 255, 0, xofs, yofs);
+		kDraw.message(strbuf, 255, 0, xofs, yofs);
 		if (tno > -1)
 		{
 			treasure[tno] = 1;
@@ -1534,7 +1534,7 @@ static int KQ_chest(lua_State* L)
 			sprintf(strbuf, _("%s ^%d procured!"), items[ino].itemName, (int)amt);
 		}
 		play_effect(SND_UNEQUIP, 128);
-		message(strbuf, items[ino].icon, 0, xofs, yofs);
+		kDraw.message(strbuf, items[ino].icon, 0, xofs, yofs);
 		if (tno > -1)
 		{
 			treasure[tno] = 1;
@@ -1549,7 +1549,7 @@ static int KQ_chest(lua_State* L)
 	{
 		sprintf(strbuf, _("%s ^%d not taken!"), items[ino].itemName, (int)amt);
 	}
-	message(strbuf, items[ino].icon, 0, xofs, yofs);
+	kDraw.message(strbuf, items[ino].icon, 0, xofs, yofs);
 	return 0;
 }
 
@@ -1621,7 +1621,7 @@ static int KQ_copy_tile_all(lua_State* L)
 
 static int KQ_dark_mbox(lua_State* L)
 {
-	menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), DARKBLUE);
+	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), DARKBLUE);
 	return 0;
 }
 
@@ -1672,8 +1672,8 @@ static int KQ_door_in(lua_State* L)
 		set_btile(hx, hy, db + 3);
 	}
 	play_effect(25, 128);
-	drawmap();
-	blit2screen(xofs, yofs);
+	kDraw.drawmap();
+	kDraw.blit2screen(xofs, yofs);
 	kq_wait(50);
 
 	if (lua_type(L, 1) == LUA_TSTRING)
@@ -1764,7 +1764,7 @@ static int KQ_drawframe(lua_State* L)
 static int KQ_drawmap(lua_State* L)
 {
 	(void)L;
-	drawmap();
+	kDraw.drawmap();
 	return 0;
 }
 
@@ -2366,7 +2366,7 @@ static int KQ_in_forest(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
 
-	lua_pushnumber(L, is_forestsquare(g_ent[a].tilex, g_ent[a].tiley));
+	lua_pushnumber(L, kDraw.is_forestsquare(g_ent[a].tilex, g_ent[a].tiley));
 	return 1;
 }
 
@@ -2412,7 +2412,7 @@ static int KQ_krnd(lua_State* L)
 
 static int KQ_light_mbox(lua_State* L)
 {
-	menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), DARKRED);
+	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), DARKRED);
 	return 0;
 }
 
@@ -2450,7 +2450,7 @@ static int KQ_marker(lua_State* L)
 
 static int KQ_mbox(lua_State* L)
 {
-	menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), BLUE);
+	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), BLUE);
 	return 0;
 }
 
@@ -2506,8 +2506,8 @@ static int KQ_move_camera(lua_State* L)
 			}
 		}
 		Game.do_check_animation();
-		drawmap();
-		blit2screen(xofs, yofs);
+		kDraw.drawmap();
+		kDraw.blit2screen(xofs, yofs);
 		Music.poll_music();
 	}
 
@@ -2584,7 +2584,7 @@ static int KQ_msg(lua_State* L)
 {
 	int icn = (lua_isnumber(L, 2) ? (int)lua_tonumber(L, 2) : 255);
 
-	message(lua_tostring(L, 1), icn, (int)lua_tonumber(L, 3), xofs, yofs);
+	kDraw.message(lua_tostring(L, 1), icn, (int)lua_tonumber(L, 3), xofs, yofs);
 	return 0;
 }
 
@@ -2680,7 +2680,7 @@ static int KQ_pnum(lua_State* L)
 	auto a = (int)lua_tointeger(L, 3);
 
 	sprintf(strbuf, "%d", a);
-	print_font(double_buffer, lua_tointeger(L, 1) + xofs, lua_tointeger(L, 2) + yofs, strbuf, (eFontColor)lua_tointeger(L, 4));
+	kDraw.print_font(double_buffer, lua_tointeger(L, 1) + xofs, lua_tointeger(L, 2) + yofs, strbuf, (eFontColor)lua_tointeger(L, 4));
 	return 0;
 }
 
@@ -2734,12 +2734,12 @@ static int KQ_prompt(lua_State* L)
 			}
 			strcat(pbuf, txt[a]);
 		}
-		lua_pushnumber(L, prompt_ex(b, pbuf, &txt[nonblank - nopts], nopts));
+		lua_pushnumber(L, kDraw.prompt_ex(b, pbuf, &txt[nonblank - nopts], nopts));
 	}
 	else
 	{
 		/* User asked for all the lines to be options */
-		lua_pushnumber(L, prompt_ex(b, _("Choose one"), txt, nopts));
+		lua_pushnumber(L, kDraw.prompt_ex(b, _("Choose one"), txt, nopts));
 	}
 
 	return 1;
@@ -2747,7 +2747,7 @@ static int KQ_prompt(lua_State* L)
 
 static int KQ_ptext(lua_State* L)
 {
-	print_font(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, lua_tostring(L, 3), (eFontColor)lua_tointeger(L, 4));
+	kDraw.print_font(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, lua_tostring(L, 3), (eFontColor)lua_tointeger(L, 4));
 	return 0;
 }
 
@@ -2858,7 +2858,7 @@ static int KQ_rest(lua_State* L)
 static int KQ_screen_dump(lua_State* L)
 {
 	(void)L;
-	blit2screen(xofs, yofs);
+	kDraw.blit2screen(xofs, yofs);
 	return 0;
 }
 
@@ -3870,7 +3870,7 @@ static int KQ_thought_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	text_ex(eBubbleStyle::BUBBLE_THOUGHT, entity, msg);
+	kDraw.text_ex(eBubbleStyle::BUBBLE_THOUGHT, entity, msg);
 	return 0;
 }
 
@@ -3879,7 +3879,7 @@ static int KQ_portthought_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	porttext_ex(eBubbleStyle::BUBBLE_THOUGHT, entity, msg);
+	kDraw.porttext_ex(eBubbleStyle::BUBBLE_THOUGHT, entity, msg);
 	return 0;
 }
 
@@ -3913,7 +3913,7 @@ static int KQ_traceback(lua_State* theL)
 		printf(_("#%d Line %d in (%s %s) %s\n"), level, ar.currentline, ar.what, ar.namewhat, ar.name);
 		++level;
 	}
-	message(_("Script error. If KQ was compiled with DEBUGMODE, see allegro.log"), 255, 0, xofs, yofs);
+	kDraw.message(_("Script error. If KQ was compiled with DEBUGMODE, see allegro.log"), 255, 0, xofs, yofs);
 	return 1;
 }
 
@@ -3940,7 +3940,7 @@ static int KQ_view_range(lua_State* L)
 	{
 		b[a] = (int)lua_tonumber(L, a + 1);
 	}
-	set_view(b[0], b[1], b[2], b[3], b[4]);
+	kDraw.set_view(b[0], b[1], b[2], b[3], b[4]);
 	return 0;
 }
 

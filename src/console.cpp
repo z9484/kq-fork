@@ -77,12 +77,12 @@ void display_console(uint32_t xofs, uint32_t yofs)
 	{
 		if (g_console.lines[i])
 		{
-			print_font(double_buffer, xofs, y, g_console.lines[i], eFontColor::FONTCOLOR_GREEN);
+			kDraw.print_font(double_buffer, xofs, y, g_console.lines[i], eFontColor::FONTCOLOR_GREEN);
 		}
 		y -= text_height(font);
 		--i;
 	}
-	print_font(double_buffer, xofs, yofs + 240 - 8, g_console.inputline, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, xofs, yofs + 240 - 8, g_console.inputline, eFontColor::FONTCOLOR_NORMAL);
 	rectfill(double_buffer, xofs + text_length(font, g_console.inputline), yofs + 238, xofs + text_length(font, g_console.inputline) + text_length(font, "_"), yofs + 240, makecol(192, 192, 192));
 }
 
@@ -141,7 +141,7 @@ void run_console(void)
 		while (!keypressed())
 		{
 			Game.do_check_animation();
-			blit2screen(xofs, yofs);
+			kDraw.blit2screen(xofs, yofs);
 			Music.poll_music();
 			Game.kq_yield();
 		}

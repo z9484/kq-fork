@@ -420,23 +420,23 @@ void reveal(int tgt)
 	char resistance;
 
 	do_transition(TRANS_FADE_OUT, 4);
-	menubox(double_buffer, 84, 56, 17, 13, BLUE);
+	kDraw.menubox(double_buffer, 84, 56, 17, 13, BLUE);
 	sprintf(strbuf, _("Name: %s"), fighter[tgt].fighterName.c_str());
-	print_font(double_buffer, 92, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("Level: %d"), fighter[tgt].fighterLevel);
-	print_font(double_buffer, 92, 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].fighterHealth, fighter[tgt].fighterMaxHealth);
-	print_font(double_buffer, 92, 80, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 80, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("MP: %d/%d"), fighter[tgt].fighterMagic, fighter[tgt].fighterMaxMagic);
-	print_font(double_buffer, 92, 88, strbuf, eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 96, _("Earth"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 104, _("Black"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 112, _("Fire"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 120, _("Thunder"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 128, _("Air"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 136, _("White"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 144, _("Water"), eFontColor::FONTCOLOR_NORMAL);
-	print_font(double_buffer, 92, 152, _("Ice"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 88, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 96, _("Earth"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 104, _("Black"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 112, _("Fire"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 120, _("Thunder"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 128, _("Air"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 136, _("White"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 144, _("Water"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 92, 152, _("Ice"), eFontColor::FONTCOLOR_NORMAL);
 	for (c = 0; c < 8; c++)
 	{
 		draw_x = 156;
@@ -471,7 +471,7 @@ void reveal(int tgt)
 			}
 		}
 	}
-	blit2screen(0, 0);
+	kDraw.blit2screen(0, 0);
 	do_transition(TRANS_FADE_IN, 4);
 	Game.wait_enter();
 }
@@ -502,7 +502,7 @@ int skill_use(size_t attack_fighter_index)
 		enemy_index = (unsigned int)tgt;
 		temp = std::unique_ptr<Raster>(new Raster(320, 240));
 		blit(gCombat.backart, temp.get(), 0, 0, 0, 0, 320, 240);
-		color_scale(temp.get(), gCombat.backart, 16, 31);
+		kDraw.color_scale(temp.get(), gCombat.backart, 16, 31);
 		b = fighter[attack_fighter_index].fighterMaxHealth / 20;
 		strcpy(attack_string, _("Rage"));
 		display_attack_string = true;
@@ -552,7 +552,7 @@ int skill_use(size_t attack_fighter_index)
 		gCombat.fighterImageDatafileX = -1;
 		gCombat.fighterImageDatafileY = -1;
 		gCombat.battle_render(0, 0, 0);
-		blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 		kq_wait(150);
         gCombat.multi_fight(attack_fighter_index);
 		display_attack_string = false;
@@ -568,7 +568,7 @@ int skill_use(size_t attack_fighter_index)
 			gCombat.fighterImageDatafileX = -1;
 			gCombat.fighterImageDatafileY = -1;
 			play_effect(22, 128);
-			convert_cframes(attack_fighter_index,
+			kDraw.convert_cframes(attack_fighter_index,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor - 3,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor + 3, 0);
             gCombat.battle_render(0, 0, 0);
@@ -588,14 +588,14 @@ int skill_use(size_t attack_fighter_index)
 						circlefill(double_buffer, tx, ty, 15 - a, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
                         gCombat.draw_fighter(attack_fighter_index, 0);
 					}
-					blit2screen(0, 0);
+					kDraw.blit2screen(0, 0);
 					kq_wait(50);
 					fullblit(back, double_buffer);
 				}
 			}
-			revert_cframes(attack_fighter_index, 0);
+			kDraw.revert_cframes(attack_fighter_index, 0);
 			gCombat.battle_render(0, 0, 0);
-			blit2screen(0, 0);
+			kDraw.blit2screen(0, 0);
 			infusion(attack_fighter_index, fighter[attack_fighter_index].csmem);
 			c = mp_needed(attack_fighter_index, fighter[attack_fighter_index].csmem);
 			if (c < 1)
@@ -624,7 +624,7 @@ int skill_use(size_t attack_fighter_index)
 			fullblit(double_buffer, back);
 			for (a = 0; a < 14; a++)
 			{
-				convert_cframes(MAX_PARTY_SIZE, 1 + a, 15, 1);
+				kDraw.convert_cframes(MAX_PARTY_SIZE, 1 + a, 15, 1);
 				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (is_active(fighter_index))
@@ -632,11 +632,11 @@ int skill_use(size_t attack_fighter_index)
                         gCombat.draw_fighter(fighter_index, 0);
 					}
 				}
-				blit2screen(0, 0);
+				kDraw.blit2screen(0, 0);
 				kq_wait(50);
 				fullblit(back, double_buffer);
 			}
-			revert_cframes(MAX_PARTY_SIZE, 1);
+			kDraw.revert_cframes(MAX_PARTY_SIZE, 1);
 			display_attack_string = false;
 			b = fighter[attack_fighter_index].fighterLevel * 15;
 			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
@@ -764,7 +764,7 @@ int skill_use(size_t attack_fighter_index)
 		strcpy(attack_string, _("Steal"));
 		display_attack_string = true;
 		gCombat.battle_render(0, attack_fighter_index + 1, 0);
-		blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 		kq_wait(100);
 		play_effect(SND_MENU, 128);
 		kq_wait(500);
@@ -791,7 +791,7 @@ int skill_use(size_t attack_fighter_index)
 				if (check_inventory(found_item, 1) != 0)
 				{
 					sprintf(strbuf, _("%s taken!"), items[found_item].itemName);
-					message(strbuf, items[found_item].icon, 0, 0, 0);
+					kDraw.message(strbuf, items[found_item].icon, 0, 0, 0);
 				}
 			}
 			else
@@ -799,11 +799,11 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[enemy_index].fighterStealItemCommon == 0 &&
 					fighter[enemy_index].fighterStealItemRare == 0)
 				{
-					message(_("Nothing to steal!"), 255, 0, 0, 0);
+					kDraw.message(_("Nothing to steal!"), 255, 0, 0, 0);
 				}
 				else
 				{
-					message(_("Couldn't steal!"), 255, 0, 0, 0);
+					kDraw.message(_("Couldn't steal!"), 255, 0, 0, 0);
 				}
 			}
 		}
@@ -832,7 +832,7 @@ int skill_use(size_t attack_fighter_index)
 				if (check_inventory(found_item, 1) != 0)
 				{
 					sprintf(strbuf, _("%s taken!"), items[found_item].itemName);
-					message(strbuf, items[found_item].icon, 0, 0, 0);
+					kDraw.message(strbuf, items[found_item].icon, 0, 0, 0);
 				}
 			}
 			else
@@ -840,17 +840,17 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[enemy_index].fighterStealItemCommon == 0 &&
 					fighter[enemy_index].fighterStealItemRare == 0)
 				{
-					message(_("Nothing to steal!"), 255, 0, 0, 0);
+					kDraw.message(_("Nothing to steal!"), 255, 0, 0, 0);
 				}
 				else
 				{
-					message(_("Couldn't steal!"), 255, 0, 0, 0);
+					kDraw.message(_("Couldn't steal!"), 255, 0, 0, 0);
 				}
 			}
 		}
 		else
 		{
-			message(_("Couldn't steal!"), 255, 0, 0, 0);
+			kDraw.message(_("Couldn't steal!"), 255, 0, 0, 0);
 		}
 #endif
 		fighter[attack_fighter_index].fighterImageDatafileX = tx;
@@ -858,7 +858,7 @@ int skill_use(size_t attack_fighter_index)
 		display_attack_string = false;
 		fighter[attack_fighter_index].fighterSpriteFacing = 0;
 		gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
-		blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 		break;
 
 	case NOSLOM:

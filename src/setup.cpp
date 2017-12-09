@@ -63,8 +63,8 @@ static void music_feedback(int val)
  */
 static void citem(int y, const char* caption, const char* value, eFontColor color)
 {
-	print_font(double_buffer, 48 + xofs, y + yofs, caption, color);
-	print_font(double_buffer, SCREEN_H2 - 8 * strlen(value) + xofs, y + yofs, value, color);
+	kDraw.print_font(double_buffer, 48 + xofs, y + yofs, caption, color);
+	kDraw.print_font(double_buffer, SCREEN_H2 - 8 * strlen(value) + xofs, y + yofs, value, color);
 }
 
 /*! \brief Display configuration menu
@@ -135,10 +135,10 @@ void config_menu(void)
 	while (!stop)
 	{
 		Game.do_check_animation();
-		drawmap();
-		menubox(double_buffer, 88 + xofs, yofs, 16, 1, BLUE);
-		print_font(double_buffer, 96 + xofs, 8 + yofs, _("KQ Configuration"), eFontColor::FONTCOLOR_GOLD);
-		menubox(double_buffer, 32 + xofs, 24 + yofs, 30, MENU_SIZE + 3, BLUE);
+		kDraw.drawmap();
+		kDraw.menubox(double_buffer, 88 + xofs, yofs, 16, 1, BLUE);
+		kDraw.print_font(double_buffer, 96 + xofs, 8 + yofs, _("KQ Configuration"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, MENU_SIZE + 3, BLUE);
 
 		citem(row[0], _("Windowed mode:"), windowed == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
 		citem(row[1], _("Stretch Display:"), stretch_view == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
@@ -204,9 +204,9 @@ void config_menu(void)
 		draw_sprite(double_buffer, menuptr, 32 + xofs, p * 8 + 32 + yofs);
 
 		/* This is the bottom window, where the description goes */
-		menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
-		print_font(double_buffer, 8 + xofs, 224 + yofs, dc[ptr], eFontColor::FONTCOLOR_NORMAL);
-		blit2screen(xofs, yofs);
+		kDraw.menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
+		kDraw.print_font(double_buffer, 8 + xofs, 224 + yofs, dc[ptr], eFontColor::FONTCOLOR_NORMAL);
+		kDraw.blit2screen(xofs, yofs);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
@@ -251,7 +251,7 @@ void config_menu(void)
 			switch (ptr)
 			{
 			case 0:
-				text_ex(eBubbleStyle::BUBBLE_TEXT, 255, _("Changing the display mode to or from windowed "
+                kDraw.text_ex(eBubbleStyle::BUBBLE_TEXT, 255, _("Changing the display mode to or from windowed "
 				                       "view could have serious ramifications. It is "
 				                       "advised that you save first."));
 				if (windowed == 0)
@@ -262,7 +262,7 @@ void config_menu(void)
 				{
 					sprintf(strbuf, _("Switch to full screen?"));
 				}
-				p = prompt(255, 2, eBubbleStyle::BUBBLE_TEXT, strbuf, _("  no"), _("  yes"), "");
+				p = kDraw.prompt(255, 2, eBubbleStyle::BUBBLE_TEXT, strbuf, _("  no"), _("  yes"), "");
 				if (p == 1)
 				{
 					windowed = !windowed;
@@ -271,7 +271,7 @@ void config_menu(void)
 				}
 				break;
 			case 1:
-				text_ex(eBubbleStyle::BUBBLE_TEXT, 255, _("Changing the stretched view option could have "
+                kDraw.text_ex(eBubbleStyle::BUBBLE_TEXT, 255, _("Changing the stretched view option could have "
 				                       "serious ramifications. It is advised that you "
 				                       "save your game before trying this."));
 				if (stretch_view == 0)
@@ -282,7 +282,7 @@ void config_menu(void)
 				{
 					sprintf(strbuf, _("Switch to unstretched display?"));
 				}
-				p = prompt(255, 2, eBubbleStyle::BUBBLE_TEXT, strbuf, _("  no"), _("  yes"), "");
+				p = kDraw.prompt(255, 2, eBubbleStyle::BUBBLE_TEXT, strbuf, _("  no"), _("  yes"), "");
 				if (p == 1)
 				{
 					stretch_view = !stretch_view;
@@ -380,8 +380,8 @@ void config_menu(void)
 					if (is_sound == 0)
 					{
 						is_sound = 1;
-						print_font(double_buffer, 92 + 2 + xofs, 204 + yofs, _("...please wait..."), eFontColor::FONTCOLOR_NORMAL);
-						blit2screen(xofs, yofs);
+						kDraw.print_font(double_buffer, 92 + 2 + xofs, 204 + yofs, _("...please wait..."), eFontColor::FONTCOLOR_NORMAL);
+						kDraw.blit2screen(xofs, yofs);
 						sound_init();
 						Music.play_music(g_map.song_file, 0);
 					}
@@ -495,9 +495,9 @@ static int getakey(void)
 	int a;
 
 	clear_keybuf();
-	menubox(double_buffer, 108 + xofs, 108 + yofs, 11, 1, DARKBLUE);
-	print_font(double_buffer, 116 + xofs, 116 + yofs, _("Press a key"), eFontColor::FONTCOLOR_NORMAL);
-	blit2screen(xofs, yofs);
+	kDraw.menubox(double_buffer, 108 + xofs, 108 + yofs, 11, 1, DARKBLUE);
+	kDraw.print_font(double_buffer, 116 + xofs, 116 + yofs, _("Press a key"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.blit2screen(xofs, yofs);
 
 	while (1)
 	{
@@ -538,10 +538,10 @@ static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp, void
 	while (!stop)
 	{
 		Game.do_check_animation();
-		menubox(double_buffer, 148 - (maxu * 4) + xofs, 100 + yofs, maxu + 1, 3, DARKBLUE);
-		print_font(double_buffer, 160 - (strlen(capt) * 4) + xofs, 108 + yofs, capt, eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 152 - (maxu * 4) + xofs, 116 + yofs, "<", eFontColor::FONTCOLOR_NORMAL);
-		print_font(double_buffer, 160 + (maxu * 4) + xofs, 116 + yofs, ">", eFontColor::FONTCOLOR_NORMAL);
+		kDraw.menubox(double_buffer, 148 - (maxu * 4) + xofs, 100 + yofs, maxu + 1, 3, DARKBLUE);
+		kDraw.print_font(double_buffer, 160 - (strlen(capt) * 4) + xofs, 108 + yofs, capt, eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 152 - (maxu * 4) + xofs, 116 + yofs, "<", eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 160 + (maxu * 4) + xofs, 116 + yofs, ">", eFontColor::FONTCOLOR_NORMAL);
 		int b = 160 - (maxu * 4) + xofs;
 		for (int a = 0; a < cv; a++)
 		{
@@ -557,8 +557,8 @@ static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp, void
 		{
 			sprintf(strbuf, "%d", cv);
 		}
-		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 124 + yofs, strbuf, eFontColor::FONTCOLOR_GOLD);
-		blit2screen(xofs, yofs);
+		kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 124 + yofs, strbuf, eFontColor::FONTCOLOR_GOLD);
+		kDraw.blit2screen(xofs, yofs);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.left)
@@ -963,7 +963,7 @@ void play_effect(int efc, int panning)
 
 		for (a = 0; a < 8; a++)
 		{
-			blit2screen(xo + bx[a], yo + by[a]);
+            kDraw.blit2screen(xo + bx[a], yo + by[a]);
 			kq_wait(10);
 		}
 		fullblit(fx_buffer, double_buffer);
@@ -995,7 +995,7 @@ void play_effect(int efc, int panning)
 
 			for (a = 0; a < 8; a++)
 			{
-				blit2screen(xofs + bx[a] * sc[s], yofs + by[a] * sc[s]);
+                kDraw.blit2screen(xofs + bx[a] * sc[s], yofs + by[a] * sc[s]);
 				kq_wait(10);
 			}
 		}
@@ -1044,11 +1044,11 @@ void set_graphics_mode(void)
  */
 void show_help(void)
 {
-	menubox(double_buffer, 116 + xofs, yofs, 9, 1, BLUE);
-	print_font(double_buffer, 132 + xofs, 8 + yofs, _("KQ Help"), eFontColor::FONTCOLOR_GOLD);
-	menubox(double_buffer, 32 + xofs, 32 + yofs, 30, 20, BLUE);
-	menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
-	print_font(double_buffer, 16 + xofs, 224 + yofs, _("Press CONFIRM to exit this screen"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.menubox(double_buffer, 116 + xofs, yofs, 9, 1, BLUE);
+	kDraw.print_font(double_buffer, 132 + xofs, 8 + yofs, _("KQ Help"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.menubox(double_buffer, 32 + xofs, 32 + yofs, 30, 20, BLUE);
+	kDraw.menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
+	kDraw.print_font(double_buffer, 16 + xofs, 224 + yofs, _("Press CONFIRM to exit this screen"), eFontColor::FONTCOLOR_NORMAL);
 	citem(72, _("Up Key:"), kq_keyname(PlayerInput.kup), eFontColor::FONTCOLOR_NORMAL);
 	citem(80, _("Down Key:"), kq_keyname(PlayerInput.kdown), eFontColor::FONTCOLOR_NORMAL);
 	citem(88, _("Left Key:"), kq_keyname(PlayerInput.kleft), eFontColor::FONTCOLOR_NORMAL);
@@ -1059,7 +1059,7 @@ void show_help(void)
 	citem(128, _("System Menu Key:"), kq_keyname(PlayerInput.kesc), eFontColor::FONTCOLOR_NORMAL);
 	do
 	{
-		blit2screen(xofs, yofs);
+        kDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 	}
 	while (!PlayerInput.balt && !PlayerInput.bctrl);

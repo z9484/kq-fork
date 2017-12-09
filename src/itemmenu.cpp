@@ -47,9 +47,9 @@ void camp_item_menu(void)
 	while (!stop)
 	{
 		Game.do_check_animation();
-		drawmap();
+		kDraw.drawmap();
 		draw_itemmenu(ptr, pptr, sel);
-		blit2screen(xofs, yofs);
+		kDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 
 		if (sel == 0)
@@ -156,11 +156,11 @@ void camp_item_menu(void)
 							while (!stop2)
 							{
 								Game.do_check_animation();
-								drawmap();
+								kDraw.drawmap();
 								draw_itemmenu(ptr, pptr, sel);
-								menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, DARKBLUE);
-								print_font(double_buffer, 104 + xofs, 212 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
-								blit2screen(xofs, yofs);
+								kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, DARKBLUE);
+								kDraw.print_font(double_buffer, 104 + xofs, 212 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
+								kDraw.blit2screen(xofs, yofs);
 								PlayerInput.readcontrols();
 
 								if (PlayerInput.balt)
@@ -320,33 +320,33 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 	size_t k;
 	size_t item_quantity;
 
-	menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, BLUE);
-	print_font(double_buffer, 140 + xofs, 20 + yofs, _("Items"), eFontColor::FONTCOLOR_GOLD);
-	menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 1, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, BLUE);
+	kDraw.print_font(double_buffer, 140 + xofs, 20 + yofs, _("Items"), eFontColor::FONTCOLOR_GOLD);
+	kDraw.menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 1, BLUE);
 	if (sl == 1)
 	{
-		menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1, DARKBLUE);
-		print_font(double_buffer, 92 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
-		print_font(double_buffer, 144 + xofs, 44 + yofs, _("Sort   Drop"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1, DARKBLUE);
+		kDraw.print_font(double_buffer, 92 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.print_font(double_buffer, 144 + xofs, 44 + yofs, _("Sort   Drop"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else
 	{
 		if (item_act == 0)
 		{
-			print_font(double_buffer, 148 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
+			kDraw.print_font(double_buffer, 148 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
 		}
 		else
 		{
-			print_font(double_buffer, 144 + xofs, 44 + yofs, _("Drop"), eFontColor::FONTCOLOR_GOLD);
+			kDraw.print_font(double_buffer, 144 + xofs, 44 + yofs, _("Drop"), eFontColor::FONTCOLOR_GOLD);
 		}
 	}
-	menubox(double_buffer, 72 + xofs, 60 + yofs, 20, 16, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 60 + yofs, 20, 16, BLUE);
 	for (k = 0; k < 16; k++)
 	{
 		// item_index == item index #
 		item_index = g_inv[pg * 16 + k].item;
 		item_quantity = g_inv[pg * 16 + k].quantity;
-		draw_icon(double_buffer, items[item_index].icon, 88 + xofs, k * 8 + 68 + yofs);
+		kDraw.draw_icon(double_buffer, items[item_index].icon, 88 + xofs, k * 8 + 68 + yofs);
 		if (items[item_index].use >= USE_ANY_ONCE && items[item_index].use <= USE_CAMP_INF)
 		{
 			palette_color = eFontColor::FONTCOLOR_NORMAL;
@@ -359,18 +359,18 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 		{
 			palette_color = eFontColor::FONTCOLOR_DARK;
 		}
-		print_font(double_buffer, 96 + xofs, k * 8 + 68 + yofs, items[item_index].itemName, palette_color);
+		kDraw.print_font(double_buffer, 96 + xofs, k * 8 + 68 + yofs, items[item_index].itemName, palette_color);
 		if (item_quantity > 1)
 		{
 			sprintf(strbuf, "^%u", (uint32_t)item_quantity);
-			print_font(double_buffer, 224 + xofs, k * 8 + 68 + yofs, strbuf, palette_color);
+			kDraw.print_font(double_buffer, 224 + xofs, k * 8 + 68 + yofs, strbuf, palette_color);
 		}
 	}
-	menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
 	if (sl == 0)
 	{
 		item_name_length = strlen(items[g_inv[pg * 16 + ptr].item].desc) * 4;
-		print_font(double_buffer, 160 - item_name_length + xofs, 212 + yofs, items[g_inv[pg * 16 + ptr].item].desc, eFontColor::FONTCOLOR_NORMAL);
+		kDraw.print_font(double_buffer, 160 - item_name_length + xofs, 212 + yofs, items[g_inv[pg * 16 + ptr].item].desc, eFontColor::FONTCOLOR_NORMAL);
 		draw_sprite(double_buffer, menuptr, 72 + xofs, ptr * 8 + 68 + yofs);
 	}
 	draw_sprite(double_buffer, pgb[pg], 238 + xofs, 194 + yofs);
@@ -631,19 +631,19 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		switch (z)
 		{
 		case 0:
-			message(_("Strength up!"), 255, 0, xofs, yofs);
+			kDraw.message(_("Strength up!"), 255, 0, xofs, yofs);
 			break;
 		case 1:
-			message(_("Agility up!"), 255, 0, xofs, yofs);
+			kDraw.message(_("Agility up!"), 255, 0, xofs, yofs);
 			break;
 		case 2:
-			message(_("Vitality up!"), 255, 0, xofs, yofs);
+			kDraw.message(_("Vitality up!"), 255, 0, xofs, yofs);
 			break;
 		case 3:
-			message(_("Intellect up!"), 255, 0, xofs, yofs);
+			kDraw.message(_("Intellect up!"), 255, 0, xofs, yofs);
 			break;
 		case 4:
-			message(_("Wisdom up!"), 255, 0, xofs, yofs);
+			kDraw.message(_("Wisdom up!"), 255, 0, xofs, yofs);
 			break;
 		}
 		return ITEM_EFFECT_SUCCESS_MULTIPLE;
@@ -685,7 +685,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		}
 		sprintf(strbuf, _("%s learned!"), magic[tmp].spellName);
 		play_effect(SND_TWINKLE, 128);
-		message(strbuf, magic[tmp].icon, 0, xofs, yofs);
+		kDraw.message(strbuf, magic[tmp].icon, 0, xofs, yofs);
 		return ITEM_EFFECT_SUCCESS_MULTIPLE;
 	}
 	if (ti == I_HPUP)

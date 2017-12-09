@@ -139,7 +139,7 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
         gCombat.vspell = 1;
 		do_transition(TRANS_FADE_OUT, 2);
         gCombat.battle_render(0, 0, 0);
-		blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 		do_transition(TRANS_FADE_IN, 2);
 		break;
 	case M_MALISON:
@@ -1507,7 +1507,7 @@ static void special_spells(size_t caster_fighter_index, size_t spell_number)
 		do_transition(TRANS_FADE_OUT, 2);
 		gCombat.vspell = 1;
 		gCombat.battle_render(0, 0, 0);
-		blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 		do_transition(TRANS_FADE_IN, 2);
 		break;
 	case M_WARP:
@@ -1515,8 +1515,8 @@ static void special_spells(size_t caster_fighter_index, size_t spell_number)
 		{
 			do_transition(TRANS_FADE_OUT, 2);
 			revert_equipstats();
-			drawmap();
-			blit2screen(xofs, yofs);
+			kDraw.drawmap();
+			kDraw.blit2screen(xofs, yofs);
 			do_transition(TRANS_FADE_IN, 2);
             gCombat.combatend = ESCAPED_COMBAT;
 		}

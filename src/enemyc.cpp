@@ -415,7 +415,7 @@ void enemy_init(void)
 			/* and create a new one */
 			cframes[fighter_index + MAX_PARTY_SIZE][frame_index] = new Raster(f->img->width, f->img->height);
 			blit(f->img, cframes[fighter_index + MAX_PARTY_SIZE][frame_index], 0, 0, 0, 0, f->img->width, f->img->height);
-			tcframes[fighter_index + MAX_PARTY_SIZE][frame_index] = copy_bitmap(tcframes[fighter_index + MAX_PARTY_SIZE][frame_index], f->img);
+			tcframes[fighter_index + MAX_PARTY_SIZE][frame_index] = kDraw.copy_bitmap(tcframes[fighter_index + MAX_PARTY_SIZE][frame_index], f->img);
 		}
 	}
 }

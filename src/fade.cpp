@@ -61,7 +61,7 @@ static void _fade_from_range(AL_CONST PALETTE source, AL_CONST PALETTE dest,
 			set_palette_range(temp, from, to, TRUE);
 			if (_color_depth > 8)
 			{
-				blit2screen(xofs, yofs);
+				kDraw.blit2screen(xofs, yofs);
 			}
 			last = c;
 		}

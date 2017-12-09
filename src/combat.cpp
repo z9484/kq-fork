@@ -30,25 +30,25 @@ KCombat gCombat;
 
 
 KCombat::KCombat()
-    : combatend(ECombatEnd::NOT_IN_COMBAT)
-    , fighterImageDatafileX()
-    , fighterImageDatafileY()
-    , num_enemies()
-    , rcount()
-    , vspell()
-    , ms()
-    , backart(nullptr)
-    , curw()
-    , hs()
+	: combatend(ECombatEnd::NOT_IN_COMBAT)
+	, fighterImageDatafileX()
+	, fighterImageDatafileY()
+	, num_enemies()
+	, rcount()
+	, vspell()
+	, ms()
+	, backart(nullptr)
+	, curw()
+	, hs()
 {
-    for (size_t i = 0; i < NUM_FIGHTERS; ++i)
-    {
-        bIsEtherEffectActive[i] = false;
-        ta[i] = 0;
-        deffect[i] = 0;
-        nspeed[i] = 0;
-        bspeed[i] = 0;
-    }
+	for (size_t i = 0; i < NUM_FIGHTERS; ++i)
+	{
+		bIsEtherEffectActive[i] = false;
+		ta[i] = 0;
+		deffect[i] = 0;
+		nspeed[i] = 0;
+		bspeed[i] = 0;
+	}
 }
 
 KCombat::~KCombat()
@@ -178,49 +178,49 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 
 		// Depending on what element the attacker had on the weapon (or its main attack),
 		// the defender may take damage, get an effect set on them (sleep, blind, etc.).
-        eResistance defenderRes = static_cast<eResistance>(attacker_weapon_element - 1);
-        switch (defenderRes)
-        {
-        case R_EARTH:
-        case R_BLACK:
-        case R_FIRE:
-        case R_THUNDER:
-        case R_AIR:
-        case R_WHITE:
-        case R_WATER:
-        case R_ICE:
-        {
-            base = res_adjust(dr, defenderRes, base);
-            break;
-        }
-        case R_POISON:
-        case R_BLIND:
-        case R_CHARM:
-        case R_PARALYZE:
-        case R_PETRIFY:
-        case R_SILENCE:
-        case R_SLEEP:
-        {
-            uint8_t spellEffectStatIndex = defenderRes - R_POISON;
-            if ((res_throw(dr, defenderRes) == 0) && (fighter[dr].fighterSpellEffectStats[spellEffectStatIndex] == 0))
-            {
-                if (non_dmg_save(dr, 50) == 0)
-                {
-                    if ((defenderRes == R_POISON) || (defenderRes == R_PETRIFY) || (defenderRes == R_SILENCE))
-                    {
-                        tempd.fighterSpellEffectStats[spellEffectStatIndex] = 1;
-                    }
-                    else
-                    {
-                        tempd.fighterSpellEffectStats[spellEffectStatIndex] = kqrandom->random_range_exclusive(2, 5);
-                    }
-                }
-            }
-            break;
-        }
-        default:
-            break;
-        }
+		eResistance defenderRes = static_cast<eResistance>(attacker_weapon_element - 1);
+		switch (defenderRes)
+		{
+		case R_EARTH:
+		case R_BLACK:
+		case R_FIRE:
+		case R_THUNDER:
+		case R_AIR:
+		case R_WHITE:
+		case R_WATER:
+		case R_ICE:
+		{
+			base = res_adjust(dr, defenderRes, base);
+			break;
+		}
+		case R_POISON:
+		case R_BLIND:
+		case R_CHARM:
+		case R_PARALYZE:
+		case R_PETRIFY:
+		case R_SILENCE:
+		case R_SLEEP:
+		{
+			uint8_t spellEffectStatIndex = defenderRes - R_POISON;
+			if ((res_throw(dr, defenderRes) == 0) && (fighter[dr].fighterSpellEffectStats[spellEffectStatIndex] == 0))
+			{
+				if (non_dmg_save(dr, 50) == 0)
+				{
+					if ((defenderRes == R_POISON) || (defenderRes == R_PETRIFY) || (defenderRes == R_SILENCE))
+					{
+						tempd.fighterSpellEffectStats[spellEffectStatIndex] = 1;
+					}
+					else
+					{
+						tempd.fighterSpellEffectStats[spellEffectStatIndex] = kqrandom->random_range_exclusive(2, 5);
+					}
+				}
+			}
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	/*  JB: Apply the damage multiplier  */
@@ -248,8 +248,8 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 
 	ta[dr] = 0 - dmg;
 	return crit_hit == 1
-        ? ATTACK_CRITICAL
-        : ATTACK_SUCCESS;
+		? ATTACK_CRITICAL
+		: ATTACK_SUCCESS;
 }
 
 void KCombat::battle_render(signed int plyr, size_t hl, int sall)
@@ -264,7 +264,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	if (plyr > 0)
 	{
 		current_fighter_index = plyr - 1;
-        curw = fighter[current_fighter_index].fighterImageDatafileWidth;
+		curw = fighter[current_fighter_index].fighterImageDatafileWidth;
 		fighterImageDatafileX = fighter[current_fighter_index].fighterImageDatafileX;
 		fighterImageDatafileY = fighter[current_fighter_index].fighterImageDatafileY;
 	}
@@ -285,13 +285,13 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			current_fighter_index = plyr - 1;
 			t = fighterImageDatafileX + (curw / 2);
 			t -= (fighter[current_fighter_index].fighterName.length() * 4);
-            int fighterIDy = fighter[current_fighter_index].fighterImageDatafileY;
-            int datafileCoords = (fighterIDy < 32
-			     ? fighterIDy + fighter[current_fighter_index].fighterImageDatafileHeight
-			     : fighterIDy - 32);
+			int fighterIDy = fighter[current_fighter_index].fighterImageDatafileY;
+			int datafileCoords = (fighterIDy < 32
+				 ? fighterIDy + fighter[current_fighter_index].fighterImageDatafileHeight
+				 : fighterIDy - 32);
 
-			menubox(double_buffer, t - 8, datafileCoords, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
-			print_font(double_buffer, t, datafileCoords + 8, fighter[current_fighter_index].fighterName.c_str(), eFontColor::FONTCOLOR_NORMAL);
+			kDraw.menubox(double_buffer, t - 8, datafileCoords, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
+			kDraw.print_font(double_buffer, t, datafileCoords + 8, fighter[current_fighter_index].fighterName.c_str(), eFontColor::FONTCOLOR_NORMAL);
 		}
 	}
 
@@ -299,7 +299,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	for (size_t currentFighterIndex = 0; currentFighterIndex < numchrs; currentFighterIndex++)
 	{
 		b = currentFighterIndex * x_offset;
-        KFighter curFighter = fighter[currentFighterIndex];
+		KFighter curFighter = fighter[currentFighterIndex];
 
 		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -307,11 +307,11 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		}
 		else
 		{
-            curFighter.fighterAttackSpriteFrame = 3;
+			curFighter.fighterAttackSpriteFrame = 3;
 			draw_fighter(currentFighterIndex, 0);
 		}
 
-		menubox(double_buffer, b, 184, 11, 5, BLUE);
+		kDraw.menubox(double_buffer, b, 184, 11, 5, BLUE);
 		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
 		{
 			sz = bspeed[currentFighterIndex] * 88 / ROUND_MAX;
@@ -336,9 +336,9 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			hline(double_buffer, b + 8, 231, b + sz + 8, a - 1);
 		}
 
-        eFontColor nameTextColor = (hl == currentFighterIndex + 1)
-            ? eFontColor::FONTCOLOR_GOLD : eFontColor::FONTCOLOR_NORMAL;
-        print_font(double_buffer, b + 8, 192, curFighter.fighterName.c_str(), nameTextColor);
+		eFontColor nameTextColor = (hl == currentFighterIndex + 1)
+			? eFontColor::FONTCOLOR_GOLD : eFontColor::FONTCOLOR_NORMAL;
+		kDraw.print_font(double_buffer, b + 8, 192, curFighter.fighterName.c_str(), nameTextColor);
 
 		sprintf(strbuf, _("HP: %3d/%3d"), curFighter.fighterHealth, curFighter.fighterMaxHealth);
 		/*  RB IDEA: If the character has less than 1/5 of his/her max    */
@@ -352,28 +352,28 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		/*           to warn the player, it's much more eye-pleasing than */
 		/*           just a solid color (and not too hard to implement).  */
 
-        eFontColor healthTextColor = curFighter.isFighterHealthCritical()
-            ? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
-		print_font(double_buffer, b + 8, 208, strbuf, healthTextColor);
+		eFontColor healthTextColor = curFighter.isFighterHealthCritical()
+			? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
+		kDraw.print_font(double_buffer, b + 8, 208, strbuf, healthTextColor);
 
 		hline(double_buffer, b + 8, 216, b + 95, 21);
 		sz = (curFighter.fighterHealth > 0)
-            ? curFighter.fighterHealth * 88 / curFighter.fighterMaxHealth
-            : 88;
+			? curFighter.fighterHealth * 88 / curFighter.fighterMaxHealth
+			: 88;
 
 		hline(double_buffer, b + 8, 216, b + 8 + sz, 12);
 		sprintf(strbuf, _("MP: %3d/%3d"), curFighter.fighterMagic, curFighter.fighterMaxMagic);
 
 		/*  RB IDEA: Same suggestion as with health, just above. */
-        eFontColor magicTextColor = curFighter.isFighterMagicCritical()
-            ? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
-		print_font(double_buffer, b + 8, 218, strbuf, magicTextColor);
+		eFontColor magicTextColor = curFighter.isFighterMagicCritical()
+			? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
+		kDraw.print_font(double_buffer, b + 8, 218, strbuf, magicTextColor);
 		hline(double_buffer, b + 8, 226, b + 95, 21);
 		sz = (curFighter.fighterMagic > 0)
-            ? curFighter.fighterMagic * 88 / curFighter.fighterMaxMagic
-            : 88;
+			? curFighter.fighterMagic * 88 / curFighter.fighterMaxMagic
+			: 88;
 		hline(double_buffer, b + 8, 226, b + 8 + sz, 12);
-		draw_stsicon(double_buffer, 1, currentFighterIndex, 17, b + 8, 200);
+		kDraw.draw_stsicon(double_buffer, 1, currentFighterIndex, 17, b + 8, 200);
 	}
 
 	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
@@ -387,40 +387,40 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	if (display_attack_string == 1)
 	{
 		size_t ctext_length = strlen(attack_string) * 4;
-		menubox(double_buffer, 152 - ctext_length, 8, strlen(attack_string), 1, BLUE);
-		print_font(double_buffer, 160 - ctext_length, 16, attack_string, eFontColor::FONTCOLOR_NORMAL);
+		kDraw.menubox(double_buffer, 152 - ctext_length, 8, strlen(attack_string), 1, BLUE);
+		kDraw.print_font(double_buffer, 160 - ctext_length, 16, attack_string, eFontColor::FONTCOLOR_NORMAL);
 	}
 }
 
 bool KCombat::hasBattleEnded()
 {
 	// If any players are still alive, enemies have not won.
-    bool anyHeroesAlive = false;
+	bool anyHeroesAlive = false;
 	for (size_t fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-        if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
-        {
-            anyHeroesAlive = true;
-            // No need to continue checking if any are still alive.
-            break;
-        }
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		{
+			anyHeroesAlive = true;
+			// No need to continue checking if any are still alive.
+			break;
+		}
 	}
 
-    if (!anyHeroesAlive)
-    {
-        enemies_win();
-        return true;
-    }
+	if (!anyHeroesAlive)
+	{
+		enemies_win();
+		return true;
+	}
 
-    // If any enemies are still alive, players have not won.
-    bool anyEnemiesAlive = false;
+	// If any enemies are still alive, players have not won.
+	bool anyEnemiesAlive = false;
 	for (size_t fighter_index = 0; fighter_index < num_enemies; fighter_index++)
 	{
 		if (fighter[fighter_index + MAX_PARTY_SIZE].fighterSpellEffectStats[S_DEAD] == 0)
 		{
-            anyEnemiesAlive = true;
-            // No need to continue checking if any are still alive.
-            break;
+			anyEnemiesAlive = true;
+			// No need to continue checking if any are still alive.
+			break;
 		}
 	}
 
@@ -512,8 +512,8 @@ int KCombat::combat(size_t battleIdentifier)
 	/* Player is about to do battle. */
 
 	steps = 0;
-    init_fighters();
-    return do_combat(battleIdentifier);
+	init_fighters();
+	return do_combat(battleIdentifier);
 }
 
 void KCombat::do_action(size_t fighter_index)
@@ -558,7 +558,7 @@ void KCombat::do_action(size_t fighter_index)
 
 	if (bIsEtherEffectActive[fighter_index])
 	{
-		revert_cframes(fighter_index, 0);
+		kDraw.revert_cframes(fighter_index, 0);
 		if (fighter_index < MAX_PARTY_SIZE)
 		{
 			if (spell_type_status == 0)
@@ -581,11 +581,11 @@ void KCombat::do_action(size_t fighter_index)
 
 int KCombat::do_combat(size_t bno)
 {
-    if (bno < NUM_BATTLES)
-    {
-        return do_combat(battles[bno].backimg, battles[bno].bmusic, battles[bno].eidx == 99);
-    }
-    return 0;
+	if (bno < NUM_BATTLES)
+	{
+		return do_combat(battles[bno].backimg, battles[bno].bmusic, battles[bno].eidx == 99);
+	}
+	return 0;
 }
 
 int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is_rnd)
@@ -633,24 +633,24 @@ int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is
 	}
 	else
 	{
-        static const uint8_t NUM_ZOOM_STEPS = 8;
+		static const uint8_t NUM_ZOOM_STEPS = 8;
 		/* TT TODO:
 		 * Change this so when we zoom into the battle, it won't just zoom into the
 		 * middle of the screen.  Instead, it's going to zoom into the location where the
 		 * player is, so if he's on the side of the map somewhere...
 		 */
-		std::unique_ptr<Raster> temp(copy_bitmap(nullptr, double_buffer));
+		std::unique_ptr<Raster> temp(kDraw.copy_bitmap(nullptr, double_buffer));
 		for (zoom_step = 0; zoom_step <= NUM_ZOOM_STEPS; zoom_step++)
 		{
 			Music.poll_music();
 			stretch_blit(temp.get(), double_buffer,
-			             zoom_step * (KQ_SCREEN_W / 20) + xofs,
-			             zoom_step * (KQ_SCREEN_H / 20) + yofs,
-			             KQ_SCREEN_W - (zoom_step * (KQ_SCREEN_W / 10)),
-			             KQ_SCREEN_H - (zoom_step * (KQ_SCREEN_H / 10)),
-			             0, 0,
-			             KQ_SCREEN_W, KQ_SCREEN_H);
-			blit2screen(xofs, yofs);
+						 zoom_step * (KQ_SCREEN_W / 20) + xofs,
+						 zoom_step * (KQ_SCREEN_H / 20) + yofs,
+						 KQ_SCREEN_W - (zoom_step * (KQ_SCREEN_W / 10)),
+						 KQ_SCREEN_H - (zoom_step * (KQ_SCREEN_H / 10)),
+						 0, 0,
+						 KQ_SCREEN_W, KQ_SCREEN_H);
+			kDraw.blit2screen(xofs, yofs);
 		}
 	}
 
@@ -695,14 +695,14 @@ void KCombat::do_round()
 			for (fighter_index = 0; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 			{
 				if (fighter_index >= numchrs && fighter_index < MAX_PARTY_SIZE)
-                {
-                    bIsEtherEffectActive[fighter_index] = false;
-                    continue;
-                }
+				{
+					bIsEtherEffectActive[fighter_index] = false;
+					continue;
+				}
 
 				if (((fighter[fighter_index].fighterSpellEffectStats[S_POISON] - 1) == rcount) && fighter[fighter_index].fighterHealth > 1)
 				{
-                    int whereAllIsThisUsed = kqrandom->random_range_exclusive(0, fighter[fighter_index].fighterMaxHealth / 20) + 1;
+					int whereAllIsThisUsed = kqrandom->random_range_exclusive(0, fighter[fighter_index].fighterMaxHealth / 20) + 1;
 
 					if (whereAllIsThisUsed < 2)
 					{
@@ -722,7 +722,7 @@ void KCombat::do_round()
 				/*  RB: the character is regenerating? when needed, get a random value (never lower than 5), and increase the character's health by that amount.  */
 				if ((fighter[fighter_index].fighterSpellEffectStats[S_REGEN] - 1) == rcount)
 				{
-                    int whereAllIsThisUsed = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].fighterMaxHealth / 10);
+					int whereAllIsThisUsed = kqrandom->random_range_exclusive(0, 5) + (fighter[fighter_index].fighterMaxHealth / 10);
 
 					if (whereAllIsThisUsed < 5)
 					{
@@ -821,8 +821,8 @@ void KCombat::do_round()
 			}
 
 			PlayerInput.readcontrols();
-            gCombat.battle_render(0, 0, 0);
-			blit2screen(0, 0);
+			gCombat.battle_render(0, 0, 0);
+			kDraw.blit2screen(0, 0);
 
 			for (fighter_index = 0; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
 			{
@@ -863,12 +863,12 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 	yy = fr->fighterImageDatafileY;
 
 	ff = (!fr->fighterAttackSpriteFrame)
-        ? fr->fighterSpriteFacing
-        : fr->fighterAttackSpriteFrame;
+		? fr->fighterSpriteFacing
+		: fr->fighterAttackSpriteFrame;
 
 	if (fr->fighterSpellEffectStats[S_STONE] > 0)
 	{
-		convert_cframes(fighter_index, 2, 12, 0);
+		kDraw.convert_cframes(fighter_index, 2, 12, 0);
 	}
 
 	if (fr->fighterSpellEffectStats[S_ETHER] > 0)
@@ -936,14 +936,14 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 void KCombat::enemies_win() const
 {
 	Music.play_music("rain.s3m", 0);
-    gCombat.battle_render(0, 0, 0);
+	gCombat.battle_render(0, 0, 0);
 	/*  RB FIXME: rest()?  */
-	blit2screen(0, 0);
+	kDraw.blit2screen(0, 0);
 	kq_wait(1000);
 	sprintf(strbuf, _("%s was defeated!"), party[pidx[0]].playerName);
-	menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, BLUE);
-	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
-	blit2screen(0, 0);
+	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, BLUE);
+	kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.blit2screen(0, 0);
 	Game.wait_enter();
 	do_transition(TRANS_FADE_OUT, 4);
 	alldead = 1;
@@ -986,10 +986,10 @@ int KCombat::fight(size_t attack_fighter_index, size_t defend_fighter_index, int
 		for (f = 0; f < 3; f++)
 		{
 			battle_render(defend_fighter_index + 1, 0, 0);
-			blit2screen(0, 0);
+			kDraw.blit2screen(0, 0);
 			kq_wait(20);
 			rectfill(double_buffer, 0, 0, KQ_SCREEN_W, KQ_SCREEN_H, 15);
-			blit2screen(0, 0);
+			kDraw.blit2screen(0, 0);
 			kq_wait(20);
 		}
 	}
@@ -1119,8 +1119,8 @@ void KCombat::heroes_win()
 		fighter[fighter_index].fighterAttackSpriteFrame = 4;
 	}
 
-    gCombat.battle_render(0, 0, 0);
-	blit2screen(0, 0);
+	gCombat.battle_render(0, 0, 0);
+	kDraw.blit2screen(0, 0);
 	kq_wait(250);
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
@@ -1154,9 +1154,9 @@ void KCombat::heroes_win()
 		sprintf(strbuf, _("Gained %d xp."), txp);
 	}
 
-	menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, BLUE);
-	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
-	blit2screen(0, 0);
+	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, BLUE);
+	kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.blit2screen(0, 0);
 	fullblit(double_buffer, back);
 	for (fighter_index = 0; fighter_index < num_enemies; fighter_index++)
 	{
@@ -1183,9 +1183,9 @@ void KCombat::heroes_win()
 				if (check_inventory(found_item, 1) != 0)
 				{
 					sprintf(strbuf, _("%s found!"), items[found_item].itemName);
-					menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
-					draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
-					print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
+					kDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
+					kDraw.draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
+					kDraw.print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					nr++;
 				}
 			}
@@ -1194,7 +1194,7 @@ void KCombat::heroes_win()
 
 	if (nr > 0)
 	{
-		blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 		Game.wait_enter();
 		fullblit(back, double_buffer);
 	}
@@ -1208,37 +1208,37 @@ void KCombat::heroes_win()
 			player2fighter(pidx[pidx_index], t1);
 			if (give_xp(pidx[pidx_index], txp, 0) == 1)
 			{
-				menubox(double_buffer, b, 40, 18, 9, BLUE);
+				kDraw.menubox(double_buffer, b, 40, 18, 9, BLUE);
 				player2fighter(pidx[pidx_index], t2);
-				print_font(double_buffer, b + 8, 48, _("Level up!"), eFontColor::FONTCOLOR_GOLD);
-				print_font(double_buffer, b + 8, 56, _("Max HP"), eFontColor::FONTCOLOR_NORMAL);
-				print_font(double_buffer, b + 8, 64, _("Max MP"), eFontColor::FONTCOLOR_NORMAL);
-				print_font(double_buffer, b + 8, 72, _("Strength"), eFontColor::FONTCOLOR_NORMAL);
-				print_font(double_buffer, b + 8, 80, _("Agility"), eFontColor::FONTCOLOR_NORMAL);
-				print_font(double_buffer, b + 8, 88, _("Vitality"), eFontColor::FONTCOLOR_NORMAL);
-				print_font(double_buffer, b + 8, 96, _("Intellect"), eFontColor::FONTCOLOR_NORMAL);
-				print_font(double_buffer, b + 8, 104, _("Sagacity"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 48, _("Level up!"), eFontColor::FONTCOLOR_GOLD);
+				kDraw.print_font(double_buffer, b + 8, 56, _("Max HP"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 64, _("Max MP"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 72, _("Strength"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 80, _("Agility"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 88, _("Vitality"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 96, _("Intellect"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 8, 104, _("Sagacity"), eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, "%3d>", t1.fighterMaxHealth);
-				print_font(double_buffer, b + 96, 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 96, 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, "%3d", t2.fighterMaxHealth);
-				print_font(double_buffer, b + 128, 56, strbuf, eFontColor::FONTCOLOR_GREEN);
+				kDraw.print_font(double_buffer, b + 128, 56, strbuf, eFontColor::FONTCOLOR_GREEN);
 				sprintf(strbuf, "%3d>", t1.fighterMaxMagic);
-				print_font(double_buffer, b + 96, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, b + 96, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, "%3d", t2.fighterMaxMagic);
-				print_font(double_buffer, b + 128, 64, strbuf, eFontColor::FONTCOLOR_GREEN);
+				kDraw.print_font(double_buffer, b + 128, 64, strbuf, eFontColor::FONTCOLOR_GREEN);
 
 				for (int z = 0; z < 5; z++)
 				{
 					sprintf(strbuf, "%3d>", t1.fighterStats[z]);
-					print_font(double_buffer, b + 96, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
+					kDraw.print_font(double_buffer, b + 96, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					sprintf(strbuf, "%3d", t2.fighterStats[z]);
 					if (t2.fighterStats[z] > t1.fighterStats[z])
 					{
-						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_GREEN);
+						kDraw.print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_GREEN);
 					}
 					else
 					{
-						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
+						kDraw.print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					}
 				}
 
@@ -1246,15 +1246,15 @@ void KCombat::heroes_win()
 			}
 			else
 			{
-				menubox(double_buffer, b, 104, 18, 1, BLUE);
+				kDraw.menubox(double_buffer, b, 104, 18, 1, BLUE);
 			}
 
 			sprintf(strbuf, _("Next level %7d"), party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);
-			print_font(double_buffer, b + 8, 112, strbuf, eFontColor::FONTCOLOR_GOLD);
+			kDraw.print_font(double_buffer, b + 8, 112, strbuf, eFontColor::FONTCOLOR_GOLD);
 		}
 	}
 
-	blit2screen(0, 0);
+	kDraw.blit2screen(0, 0);
 	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
 		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == 0)
@@ -1469,16 +1469,16 @@ void KCombat::roll_initiative()
 		}
 	}
 
-    gCombat.battle_render(-1, -1, 0);
-	blit2screen(0, 0);
+	gCombat.battle_render(-1, -1, 0);
+	kDraw.blit2screen(0, 0);
 	if ((hs == 1) && (ms > 1))
 	{
-		message(_("You have been ambushed!"), 255, 1500, 0, 0);
+		kDraw.message(_("You have been ambushed!"), 255, 1500, 0, 0);
 	}
 
 	if ((hs > 1) && (ms == 1))
 	{
-		message(_("You've surprised the enemy!"), 255, 1500, 0, 0);
+		kDraw.message(_("You've surprised the enemy!"), 255, 1500, 0, 0);
 	}
 }
 

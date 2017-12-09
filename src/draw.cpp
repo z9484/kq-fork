@@ -33,44 +33,20 @@
 char msgbuf[MSG_ROWS][MSG_COLS];
 int gbx, gby, gbbx, gbby, gbbw, gbbh, gbbs;
 eBubbleStemStyle bubble_stem_style;
-uint8_t BLUE = 2, DARKBLUE = 0, DARKRED = 4;
 
 namespace KqFork
 {
-/*  Internal prototypes  */
-void border(Raster*, int, int, int, int);
-void draw_backlayer(void);
-void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, int bstyle);
-void draw_char(int, int);
-void draw_forelayer(void);
-void draw_midlayer(void);
-void draw_playerbound(void);
-void draw_shadows(void);
-void draw_textbox(int);
-void draw_porttextbox(int, int);
-void generic_text(int, int, int);
-const char* decode_utf8(const char* inputString, uint32_t* cp);
-
-/*! \brief Insert character names
- *
- * This checks a string for $0, or $1 and replaces with player names.
- *
- * PH 20030107 Increased limit on length of the_string.
- * NB. Values for $ other than $0 or $1 will cause errors.
- *
- * \param   the_string Input string
- * \returns processed string, in a static buffer strbuf or the_string, if it had no replacement chars.
- */
-const char* parse_string(const char* the_string);
-const char* relay(const char*);
-void set_textpos(uint32_t);
-int get_glyph_index(uint32_t);
-
 /*! \brief The internal processing modes during text reformatting
  *
  * \sa relay()
  */
-enum m_mode { M_UNDEF, M_SPACE, M_NONSPACE, M_END };
+enum m_mode
+{
+    M_UNDEF,
+    M_SPACE,
+    M_NONSPACE,
+    M_END
+};
 
 /*! \brief glyph look up table
  *
@@ -95,29 +71,9 @@ const uint32_t glyph_lookup[][2] =
 	{ 0, 0 },
 };
 
-/*! \brief Get glyph index
- *
- * Convert a unicode char to a glyph index.
- * \param cp unicode character
- * \return glyph index
- * \author PH
- * \date 20071116
- * \note uses inefficient linear search for now.
- */
-int get_glyph_index(uint32_t cp);
 } // namespace KqFork
 
-/*! \brief Blit from double buffer to the screen
- *
- * This does the copy from the double_buffer to the screen... for the
- * longest time I called blit in every location (over 80 places) instead
- * of having a central function... am I a moron or what?
- * Handles frame-rate display, stretching and vsync waiting.
- *
- * \param   xw x-coord in double_buffer of the top-left of the screen
- * \param   yw y-coord in double_buffer of the top-left of the screen
- */
-void blit2screen(int xw, int yw)
+void KDraw::blit2screen(int xw, int yw)
 {
 	static int frate = limit_frame_rate(25);
 
@@ -161,20 +117,7 @@ void blit2screen(int xw, int yw)
 	frate = limit_frame_rate(25);
 }
 
-/*! \brief Draw border box
- *
- * Draw the fancy-pants border that I use.  I hard-draw the border instead
- * of using bitmaps, because that's just the way I am.  It doesn't degrade
- * performance, so who cares :)
- * Border is about 4 pixels thick, fitting inside (x,y)-(x2,y2)
- *
- * \param   where Bitmap to draw to
- * \param   left Top-left x-coord
- * \param   top Top-left y-coord
- * \param   right Bottom-right x-coord
- * \param   bottom Bottom-right y-coord
- */
-void KqFork::border(Raster* where, int left, int top, int right, int bottom)
+void KDraw::border(Raster* where, int left, int top, int right, int bottom)
 {
 	vline(where, left + 1, top + 3, bottom - 3, GREY2);
 	vline(where, left + 2, top + 3, bottom - 3, GREY3);
@@ -206,24 +149,7 @@ void KqFork::border(Raster* where, int left, int top, int right, int bottom)
 	putpixel(where, right - 4, bottom - 4, WHITE);
 }
 
-/*! \brief Scale colors
- *
- * This takes a bitmap and scales it to fit in the color range specified.
- * Output goes to a new bitmap.
- * This is used to make a monochrome version of a bitmap, for example to
- * display a green, poisoned character, or the red 'rage' effect for
- * Sensar. This relies on the palette having continuous lightness ranges
- * of one color (as the KQ palette does!).
- * An alternative would be to use makecol(), though this would incur
- * a speed penalty.
- * Another alternative would be to precalculate some maps for each case.
- *
- * \param   src Source bitmap
- * \param   dest Destination bitmap
- * \param   output_range_start Start of output color range
- * \param   output_range_end End of output color range
- */
-void color_scale(Raster* src, Raster* dest, int output_range_start, int output_range_end)
+void KDraw::color_scale(Raster* src, Raster* dest, int output_range_start, int output_range_end)
 {
 	if (src == nullptr || dest == nullptr)
 	{
@@ -249,17 +175,7 @@ void color_scale(Raster* src, Raster* dest, int output_range_start, int output_r
 	}
 }
 
-/*! \brief Convert multiple frames
- *
- * This is used to color_scale one or more fighter frames.
- *
- * \param   fighter_index Character to convert
- * \param   output_range_start Start of output range
- * \param   output_range_end End of output range
- * \param   convert_heroes If ==1 then \cframe_index fighter_index<PSIZE means
- * convert all heroes, otherwise all enemies
- */
-void convert_cframes(size_t fighter_index, int output_range_start, int output_range_end, int convert_heroes)
+void KDraw::convert_cframes(size_t fighter_index, int output_range_start, int output_range_end, int convert_heroes)
 {
     uint32_t start_fighter_index = 0;
     uint32_t end_fighter_index = 0;
@@ -294,17 +210,7 @@ void convert_cframes(size_t fighter_index, int output_range_start, int output_ra
 	}
 }
 
-/*! \brief Make a copy of a bitmap
- *
- * Take a source bitmap and a target. If the target is NULL
- * or too small, re-allocate it.
- * Then blit it.
- *
- * \param   target Bitmap to copy to or NULL
- * \param   source Bitmap to copy from
- * \returns target or a new bitmap.
- */
-Raster* copy_bitmap(Raster* target, Raster* source)
+Raster* KDraw::copy_bitmap(Raster* target, Raster* source)
 {
     if (source == nullptr)
     {
@@ -330,12 +236,7 @@ Raster* copy_bitmap(Raster* target, Raster* source)
 	return target;
 }
 
-/*! \brief Draw background
- *
- * Draw the background layer.  Accounts for parallaxing.
- * Parallax is on for modes 2 & 3
- */
-void KqFork::draw_backlayer(void)
+void KDraw::draw_backlayer()
 {
 	int dx, dy, xtc, ytc;
 	uint16_t pix;
@@ -393,18 +294,7 @@ void KqFork::draw_backlayer(void)
 	}
 }
 
-/*! \brief Draw heroes on map
- *
- * Draw the heroes on the map.  It's kind of clunky, but this is also where
- * it takes care of walking in forests and only showing a disembodied head.
- * Does not seem to do any parallaxing. (?)
- * PH modified 20030309 Simplified this a bit, removed one blit() that wasn't
- * neeeded.
- *
- * \param   xw x-offset - always ==16
- * \param   yw y-offset - always ==16
- */
-void KqFork::draw_char(int xw, int yw)
+void KDraw::draw_char(int xw, int yw)
 {
 	signed int dx, dy;
 	int f;
@@ -586,12 +476,7 @@ void KqFork::draw_char(int xw, int yw)
 	}
 }
 
-/*! \brief Draw foreground
- *
- * Draw the foreground layer.  Accounts for parallaxing.
- * Parallax is on for modes 4 & 5.
- */
-void KqFork::draw_forelayer(void)
+void KDraw::draw_forelayer()
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -696,60 +581,32 @@ void KqFork::draw_forelayer(void)
 	}
 }
 
-/*! \brief Draw small icon
- *
- * Just a helper function... reduces the number of places that 'sicons'
- * has to be referenced.
- * Icons are 8x8 sub-bitmaps of sicons, representing items (sword, etc.)
- *
- * \param   where Bitmap to draw to
- * \param   ino Icon to draw
- * \param   icx x-coord
- * \param   icy y-coord
- */
-void draw_icon(Raster* where, int ino, int icx, int icy)
+void KDraw::draw_icon(Raster* where, int ino, int icx, int icy)
 {
 	masked_blit(sicons, where, 0, ino * 8, icx, icy, 8, 8);
 }
 
-/*! \brief Draw  box, with different backgrounds and borders
- *
- * Draw the box as described. This was suggested by CB as
- * a better alternative to the old create bitmap/blit trans/destroy bitmap
- * method.
- *
- * \author PH
- * \date 20030616
- *
- * \param   where Bitmap to draw to
- * \param   x1 x-coord of top left
- * \param   y1 y-coord of top left
- * \param   x2 x-coord of bottom right
- * \param   y2 y-coord of bottom right
- * \param   bg Color/style of background
- * \param   bstyle Style of border
- */
-void KqFork::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, int bstyle)
+void KDraw::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bgColor, eBubbleStyle bstyle)
 {
 	int a;
 
 	/* Draw a maybe-translucent background */
-	if (bg == BLUE)
+	if (bgColor == BLUE)
 	{
 		drawing_mode(DRAW_MODE_TRANS, nullptr, 0, 0);
 	}
 	else
 	{
-		bg = (bg == DARKBLUE) ? DBLUE : DRED;
+		bgColor = (bgColor == DARKBLUE) ? DBLUE : DRED;
 	}
-	rectfill(where, x1 + 2, y1 + 2, x2 - 3, y2 - 3, bg);
+	rectfill(where, x1 + 2, y1 + 2, x2 - 3, y2 - 3, bgColor);
 	drawing_mode(DRAW_MODE_SOLID, nullptr, 0, 0);
 	/* Now the border */
 	switch (bstyle)
 	{
 	case eBubbleStyle::BUBBLE_TEXT:
 	case eBubbleStyle::BUBBLE_MESSAGE:
-		KqFork::border(where, x1, y1, x2 - 1, y2 - 1);
+		border(where, x1, y1, x2 - 1, y2 - 1);
 		break;
 
 	case eBubbleStyle::BUBBLE_THOUGHT:
@@ -777,12 +634,7 @@ void KqFork::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, 
 	}
 }
 
-/*! \brief Draw middle layer
- *
- * Draw the middle layer.  Accounts for parallaxing.
- * Parallax is on for modes 3 & 4
- */
-void KqFork::draw_midlayer(void)
+void KDraw::draw_midlayer()
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -837,12 +689,7 @@ void KqFork::draw_midlayer(void)
 	}
 }
 
-/* Check whether the player is standing inside a bounding area. If so,
- * update the view_area coordinates before drawing to the map.
- *
- * \param   map - The map containing the bounded area data
- */
-void KqFork::draw_playerbound(void)
+void KDraw::draw_playerbound()
 {
 	int dx, dy, xtc, ytc;
 	std::shared_ptr<KBound> found = nullptr;
@@ -903,13 +750,7 @@ void KqFork::draw_playerbound(void)
 	}
 }
 
-/*! \brief Draw shadows
- *
- * Draw the shadow layer... this beats making extra tiles.  This may be
- * moved in the future to fall between the background and foreground layers.
- * Shadows are never parallaxed.
- */
-void KqFork::draw_shadows(void)
+void KDraw::draw_shadows()
 {
 	int dx, dy, pix, xtc, ytc;
 	int here;
@@ -948,22 +789,7 @@ void KqFork::draw_shadows(void)
 	}
 }
 
-/*! \brief Draw status icon
- *
- * Just a helper function... reduces the number of places that 'stspics'
- * has to be referenced.
- * Status icons are 8x8 sub-bitmaps of \p stspics, representing poisoned, etc.
- *
- * \param   where Bitmap to draw to
- * \param   cc Non-zero if in combat mode (draw
- *          using info  \p fighter[] rather than \p party[] )
- * \param   who Character to draw status for
- * \param   inum The maximum number of status icons to draw.
- *          \p inum ==17 when in combat, ==8 otherwise.
- * \param   icx x-coord to draw to
- * \param   icy y-coord to draw to
- */
-void draw_stsicon(Raster* where, int cc, int who, int inum, int icx, int icy)
+void KDraw::draw_stsicon(Raster* where, int cc, int who, int inum, int icx, int icy)
 {
 	int j, st = 0, s;
 
@@ -989,14 +815,7 @@ void draw_stsicon(Raster* where, int cc, int who, int inum, int icx, int icy)
 	}
 }
 
-/*! \brief Draw text box
- *
- * Hmm... I think this function draws the textbox :p
- *
- * \date 20030417 PH This now draws the text as well as just the box
- * \param   bstyle Style (B_TEXT or B_THOUGHT or B_MESSAGE)
- */
-void KqFork::draw_textbox(int bstyle)
+void KDraw::draw_textbox(eBubbleStyle bstyle)
 {
 	int wid, hgt, a;
 	Raster* stem = nullptr;
@@ -1004,7 +823,7 @@ void KqFork::draw_textbox(int bstyle)
 	wid = gbbw * 8 + 16;
 	hgt = gbbh * 12 + 16;
 
-	KqFork::draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
+	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 	if (bubble_stem_style != eBubbleStemStyle::STEM_UNDEFINED)
 	{
 		/* select the correct stem-thingy that comes out of the speech bubble */
@@ -1019,16 +838,7 @@ void KqFork::draw_textbox(int bstyle)
 	}
 }
 
-/*! \brief Draw text box with portrait
- *
- *  Shows the player's portrait and name with the text.
- *
- * \date 20081218 Z9484
- * \param   bstyle Style (B_TEXT or B_THOUGHT or B_MESSAGE)
- * \param   chr (what chr is talking)
- */
-
-void KqFork::draw_porttextbox(int bstyle, int chr)
+void KDraw::draw_porttextbox(eBubbleStyle bstyle, int chr)
 {
 	int wid, hgt, a;
 	int linexofs;
@@ -1037,7 +847,7 @@ void KqFork::draw_porttextbox(int bstyle, int chr)
 	hgt = gbbh * 12 + 16;
 	chr = chr - MAX_PARTY_SIZE;
 
-	KqFork::draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
+	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 
 	for (a = 0; a < gbbh; a++)
 	{
@@ -1054,24 +864,7 @@ void KqFork::draw_porttextbox(int bstyle, int chr)
 	print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName, eFontColor::FONTCOLOR_NORMAL);
 }
 
-/*! \brief Draw the map
- *
- * Umm... yeah.
- * Draws the background, character, middle, foreground and shadow layers.
- * The order, and the parallaxing, is specified by the mode.
- * There are 6 modes, as set in the .map file
- *  - 0 Order BMCFS,
- *  - 1 Order BCMFS,
- *  - 2 Order BMCFS, Background parallax
- *  - 3 Order BCMFS, Background & middle parallax
- *  - 4 Order BMCFS, Middle & foreground parallax
- *  - 5 Order BCMFS, Foreground parallax
- *
- * In current KQ maps, only modes 0..2 are used, with the majority being 0.
- * Also handles the Repulse indicator and the map description display.
- * \bug PH: Shadows are never drawn with parallax (is this a bug?)
- */
-void drawmap(void)
+void KDraw::drawmap()
 {
 	if (g_map.xsize <= 0)
 	{
@@ -1081,26 +874,26 @@ void drawmap(void)
 	clear_bitmap(double_buffer);
 	if (draw_background)
 	{
-		KqFork::draw_backlayer();
+		draw_backlayer();
 	}
 	if (g_map.map_mode == 1 || g_map.map_mode == 3 || g_map.map_mode == 5)
 	{
-		KqFork::draw_char(16, 16);
+		draw_char(16, 16);
 	}
 	if (draw_middle)
 	{
-		KqFork::draw_midlayer();
+		draw_midlayer();
 	}
 	if (g_map.map_mode == 0 || g_map.map_mode == 2 || g_map.map_mode == 4)
 	{
-		KqFork::draw_char(16, 16);
+		draw_char(16, 16);
 	}
 	if (draw_foreground)
 	{
-		KqFork::draw_forelayer();
+		draw_forelayer();
 	}
-	KqFork::draw_shadows();
-	KqFork::draw_playerbound();
+	draw_shadows();
+	draw_playerbound();
 
 	/*  This is an obvious hack here.  When I first started, xofs and yofs could
 	 *  have values of anywhere between 0 and 15.  Therefore, I had to use these
@@ -1124,15 +917,7 @@ void drawmap(void)
 	}
 }
 
-/*! \brief Text box drawing
- *
- * Generic routine to actually display a text box and wait for a keypress.
- *
- * \param   who Character that is speaking/thinking (ignored for B_MESSAGE
- * style)
- * \param   box_style Style (B_TEXT or B_THOUGHT or B_MESSAGE)
- */
-void KqFork::generic_text(int who, int box_style, int isPort)
+void KDraw::generic_text(int who, eBubbleStyle box_style, int isPort)
 {
 	int a, stop = 0;
 	int len;
@@ -1153,7 +938,7 @@ void KqFork::generic_text(int who, int box_style, int isPort)
 			}
 		}
 	}
-	KqFork::set_textpos((box_style == eBubbleStyle::BUBBLE_MESSAGE) ? -1 : (isPort == 0) ? who : 255);
+	set_textpos((box_style == eBubbleStyle::BUBBLE_MESSAGE) ? -1 : (isPort == 0) ? who : 255);
 	if (gbbw == -1 || gbbh == -1)
 	{
 		return;
@@ -1166,11 +951,11 @@ void KqFork::generic_text(int who, int box_style, int isPort)
 		drawmap();
 		if (isPort == 0)
 		{
-			KqFork::draw_textbox(box_style);
+			draw_textbox(box_style);
 		}
 		else
 		{
-			KqFork::draw_porttextbox(box_style, who);
+			draw_porttextbox(box_style, who);
 		}
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
@@ -1183,19 +968,7 @@ void KqFork::generic_text(int who, int box_style, int isPort)
 	timer_count = 0;
 }
 
-/*! \brief Check for forest square
- *
- * Helper function for the draw_char() routine.  Just returns whether or not
- * the tile at the specified co-ordinates is a forest tile.  This could be
- * a headache if the tileset changes!
- * Looks in the \p map_seg[] array
- * PH modified 20030309 added check for map (only main map has forest)
- *
- * \param   fx x-coord to check
- * \param   fy y-coord to check
- * \returns 1 if it is a forest square, 0 otherwise
- */
-int is_forestsquare(int fx, int fy)
+int KDraw::is_forestsquare(int fx, int fy)
 {
 	if (!Game.IsOverworldMap())
 	{
@@ -1219,35 +992,12 @@ int is_forestsquare(int fx, int fy)
 	}
 }
 
-/*! \brief Draw menu box
- *
- * Draw a menubox.  This is kinda hacked because of translucency, but it
- * works.  I use the DARKBLUE define to draw a non-translucent box.
- *
- * \param   where Bitmap to draw to
- * \param   x x-coord
- * \param   y y-coord
- * \param   w Width
- * \param   h Height
- * \param   c Color (see note above)
- */
-void menubox(Raster* where, int x, int y, int w, int h, int c)
+void KDraw::menubox(Raster* where, int x, int y, int w, int h, int bgColor)
 {
-	KqFork::draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, c, eBubbleStyle::BUBBLE_TEXT);
+	draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, bgColor, eBubbleStyle::BUBBLE_TEXT);
 }
 
-/*! \brief Alert player
- *
- * Draw a single-line message in the center of the screen and wait for
- * the confirm key to be pressed or for a specific amount of time.
- *
- * \param   m Message text
- * \param   icn Icon to display or 255 for none
- * \param   delay Time to wait (milliseconds?)
- * \param   x_m X-coord of top-left (like xofs)
- * \param   y_m Y-coord of top-left
- */
-void message(const char* m, int icn, int delay, int x_m, int y_m)
+void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 {
 	char msg[1024];
 	const char* s = nullptr;
@@ -1255,7 +1005,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 
 	/* Do the $0 replacement stuff */
 	memset(msg, 0, sizeof(msg));
-	strncpy(msg, KqFork::parse_string(m), sizeof(msg) - 1);
+	strncpy(msg, parse_string(m), sizeof(msg) - 1);
 	s = msg;
 
 	/* Save a copy of the screen */
@@ -1264,7 +1014,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 	/* Loop for each box full of text... */
 	while (s != nullptr)
 	{
-		s = KqFork::relay(s);
+		s = relay(s);
 		/* Calculate the box size */
 		num_lines = max_len = 0;
 		for (i = 0; i < MSG_ROWS; ++i)
@@ -1312,7 +1062,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 	}
 }
 
-const char* KqFork::parse_string(const char* the_string)
+const char* KDraw::parse_string(const char* the_string)
 {
 	static char strbuf[1024];
 	const char* ap = nullptr;
@@ -1346,17 +1096,7 @@ const char* KqFork::parse_string(const char* the_string)
 	return name == nullptr ? the_string : strbuf;
 }
 
-/*! \brief Decode String
- *
- * Extract the next unicode char from a UTF-8 string
- *
- * \param string Text to decode
- * \param cp The next character
- * \return Pointer to after the next character
- * \author PH
- * \date 20071116
- */
-const char* KqFork::decode_utf8(const char* inputString, uint32_t* cp)
+const char* KDraw::decode_utf8(const char* inputString, uint32_t* cp)
 {
 	char ch = *inputString;
 
@@ -1457,7 +1197,7 @@ const char* KqFork::decode_utf8(const char* inputString, uint32_t* cp)
 	return inputString;
 }
 
-int KqFork::get_glyph_index(uint32_t cp)
+int KDraw::get_glyph_index(uint32_t cp)
 {
 	int i;
 
@@ -1483,17 +1223,7 @@ int KqFork::get_glyph_index(uint32_t cp)
 	return 0;
 }
 
-/*! \brief Display string
- *
- * Display a string in a particular font on a bitmap at the specified coordinates.
- *
- * \param   where Bitmap to draw to
- * \param   sx x-coord
- * \param   sy y-coord
- * \param   msg String to draw
- * \param   font_index Font index (0..6)
- */
-void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_index)
+void KDraw::print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_index)
 {
 	int z = 0;
 	int hgt = 8;//MagicNumber: font height for NORMAL text
@@ -1511,31 +1241,18 @@ void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_
 	}
 	while (1)
 	{
-		msg = KqFork::decode_utf8(msg, &cc);
+		msg = decode_utf8(msg, &cc);
 		if (cc == 0)
 		{
 			break;
 		}
-		cc = KqFork::get_glyph_index(cc);
+		cc = get_glyph_index(cc);
 		masked_blit(kfonts, where, cc * 8, font_index * 8, z + sx, sy, 8, hgt);
 		z += 8;
 	}
 }
 
-/*! \brief Display number
- *
- * Display a number using the small font on a bitmap at the specified
- * co-ordinates and using the specified color.  This still expects the
- * number to be in a string... the function's real purpose is to use
- * a different font for numerical display in combat.
- *
- * \param   where Bitmap to draw to
- * \param   sx x-coord
- * \param   sy y-coord
- * \param   msg String to draw
- * \param   font_index Font index (0..4)
- */
-void print_num(Raster* where, int sx, int sy, const std::string& msg, eFont font_index)
+void KDraw::print_num(Raster* where, int sx, int sy, const std::string& msg, eFont font_index)
 {
 	assert(where && "where == NULL");
 	// Check ought not to be necessary if using the enum correctly.
@@ -1556,21 +1273,7 @@ void print_num(Raster* where, int sx, int sy, const std::string& msg, eFont font
 	}
 }
 
-/*! \brief Do user prompt
- *
- * Draw a text box and wait for a response.  It is possible to offer up to four
- * choices in a prompt box.
- *
- * \param   who Entity that is speaking
- * \param   numopt Number of choices
- * \param   bstyle Textbox style (B_TEXT or B_THOUGHT)
- * \param   sp1 Line 1 of text
- * \param   sp2 Line 2 of text
- * \param   sp3 Line 3 of text
- * \param   sp4 Line 4 of text
- * \returns index of option chosen (0..numopt-1)
- */
-int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, const char* sp3, const char* sp4)
+int KDraw::prompt(int who, int numopt, eBubbleStyle bstyle, const char* sp1, const char* sp2, const char* sp3, const char* sp4)
 {
 	int ly, stop = 0, ptr = 0, a;
 	uint32_t str_len;
@@ -1578,10 +1281,10 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 	gbbw = 1;
 	gbbh = 0;
 	gbbs = 0;
-	strcpy(msgbuf[0], KqFork::parse_string(sp1));
-	strcpy(msgbuf[1], KqFork::parse_string(sp2));
-	strcpy(msgbuf[2], KqFork::parse_string(sp3));
-	strcpy(msgbuf[3], KqFork::parse_string(sp4));
+	strcpy(msgbuf[0], parse_string(sp1));
+	strcpy(msgbuf[1], parse_string(sp2));
+	strcpy(msgbuf[2], parse_string(sp3));
+	strcpy(msgbuf[3], parse_string(sp4));
 	Game.unpress();
 	for (a = 0; a < 4; a++)
 	{
@@ -1595,7 +1298,7 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 			}
 		}
 	}
-	KqFork::set_textpos(who);
+	set_textpos(who);
 	if (gbbw == -1 || gbbh == -1)
 	{
 		return -1;
@@ -1605,7 +1308,7 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 	{
 		Game.do_check_animation();
 		drawmap();
-		KqFork::draw_textbox(bstyle);
+		draw_textbox(bstyle);
 
 		draw_sprite(double_buffer, menuptr, gbbx + xofs + 8, ptr * 12 + ly + yofs);
 		blit2screen(xofs, yofs);
@@ -1640,28 +1343,7 @@ int prompt(int who, int numopt, int bstyle, const char* sp1, const char* sp2, co
 	return ptr;
 }
 
-/*! \brief prompt for user input
- *
- * Present the user with a prompt and a list of options to select from.
- * The prompt is shown, as per text_ex(), and the choices shown in
- * a separate window at the bottom. If the prompt is longer than one
- * box-full, it is shown box-by-box, until the last one, when the choices are
- * shown.
- * If there are more choices than will fit into the box at the bottom, arrows
- * are shown
- * to indicate more pages.
- * Press ALT to select; CTRL does nothing.
- *
- * \author PH
- * \date 20030417
- *
- * \param   who Which character is ASKING the question
- * \param   ptext The prompt test
- * \param   opt An array of options, null terminated
- * \param   n_opt The number of options
- * \return  option selected, 0= first option etc.
- */
-int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
+int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 {
 	int curopt = 0;
 	int topopt = 0;
@@ -1670,16 +1352,16 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 	int winx, winy;
 	int i, w, running;
 
-	ptext = KqFork::parse_string(ptext);
+	ptext = parse_string(ptext);
 	while (1)
 	{
 		gbbw = 1;
 		gbbs = 0;
-		ptext = KqFork::relay(ptext);
+		ptext = relay(ptext);
 		if (ptext)
 		{
 			/* print prompt pages prior to the last one */
-			KqFork::generic_text(who, eBubbleStyle::BUBBLE_TEXT, 0);
+			generic_text(who, eBubbleStyle::BUBBLE_TEXT, 0);
 		}
 		else
 		{
@@ -1723,10 +1405,10 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				Game.do_check_animation();
 				drawmap();
 				/* Draw the prompt text */
-				KqFork::set_textpos(who);
-				KqFork::draw_textbox(eBubbleStyle::BUBBLE_TEXT);
+				set_textpos(who);
+				draw_textbox(eBubbleStyle::BUBBLE_TEXT);
 				/* Draw the  options text */
-				KqFork::draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, eBubbleStyle::BUBBLE_TEXT);
+				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, eBubbleStyle::BUBBLE_TEXT);
 				for (i = 0; i < winheight; ++i)
 				{
 					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], eFontColor::FONTCOLOR_BIG);
@@ -1787,19 +1469,7 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 	}
 }
 
-/*! \brief Split text into lines
- * \author PH
- * \date 20021220
- *
- *
- * Takes a string and re-formats it to fit into the msgbuf text buffer,
- * for displaying with generic_text().  Processes as much as it can to
- * fit in one box, and returns a pointer to the next unprocessed character
- *
- * \param   buf The string to reformat
- * \returns the rest of the string that has not been processed, or NULL if it has all been processed.
- */
-const char* KqFork::relay(const char* buf)
+const char* KDraw::relay(const char* buf)
 {
 	int lasts, lastc, i, cr, cc;
 	char tc;
@@ -1910,15 +1580,7 @@ const char* KqFork::relay(const char* buf)
 	}
 }
 
-/*! \brief Restore colors
- *
- * Restore specified fighter frames to normal color. This is done
- * by blitting the 'master copy' from tcframes.
- *
- * \param   fighter_index Character to restore
- * \param   revert_heroes If ==1 then convert all heroes if fighter_index < PSIZE, otherwise convert all enemies
- */
-void revert_cframes(size_t fighter_index, int revert_heroes)
+void KDraw::revert_cframes(size_t fighter_index, int revert_heroes)
 {
 	size_t start_fighter_index, end_fighter_index;
 	size_t cframe_index;
@@ -1953,15 +1615,7 @@ void revert_cframes(size_t fighter_index, int revert_heroes)
 	}
 }
 
-/*! \brief Calculate bubble position
- *
- * The purpose of this function is to calculate where a text bubble
- * should go in relation to the entity who is speaking.
- *
- * \param   entity_index If value is between 0..MAX_ENTITIES (exclusive),
- *              character that is speaking, otherwise 'general'.
- */
-void KqFork::set_textpos(uint32_t entity_index)
+void KDraw::set_textpos(uint32_t entity_index)
 {
 	if (entity_index < MAX_ENTITIES)
 	{
@@ -2047,21 +1701,7 @@ void KqFork::set_textpos(uint32_t entity_index)
 	}
 }
 
-/*! \brief Adjust view
- *
- * This merely sets the view variables for use in
- * other functions that rely on the view.
- * The view defines a subset of the map,
- * for example when you move to a house in a town,
- * the view contracts to display only the interior.
- *
- * \param   vw Non-zero to enable view, otherwise show the whole map
- * \param   x1 Top-left of view
- * \param   y1 Top-left of view
- * \param   x2 Bottom-right of view
- * \param   y2 Bottom-right of view
- */
-void set_view(int vw, int x1, int y1, int x2, int y2)
+void KDraw::set_view(int vw, int x1, int y1, int x2, int y2)
 {
 	view_on = vw;
 	if (view_on)
@@ -2080,36 +1720,26 @@ void set_view(int vw, int x1, int y1, int x2, int y2)
 	}
 }
 
-/*! \brief Display speech/thought bubble
- * \author PH
- * \date 20021220
- *
- * Displays text, like bubble_text, but passing the args
- * through the relay function first
- * \date updated 20030401 merged thought and speech
- * \sa bubble_text()
- * \param   fmt Format, B_TEXT or B_THOUGHT
- * \param   who Character that is speaking
- * \param   s The text to display
- */
-void text_ex(int fmt, int who, const char* s)
+void KDraw::text_ex(eBubbleStyle fmt, int who, const char* s)
 {
-	s = KqFork::parse_string(s);
+	s = parse_string(s);
 
 	while (s)
 	{
-		s = KqFork::relay(s);
-		KqFork::generic_text(who, fmt, 0);
+		s = relay(s);
+		generic_text(who, fmt, 0);
 	}
 }
 
-void porttext_ex(eBubbleStyle fmt, int who, const char* s)
+void KDraw::porttext_ex(eBubbleStyle fmt, int who, const char* s)
 {
-	s = KqFork::parse_string(s);
+	s = parse_string(s);
 
 	while (s)
 	{
-		s = KqFork::relay(s);
-		KqFork::generic_text(who, fmt, 1);
+		s = relay(s);
+		generic_text(who, fmt, 1);
 	}
 }
+
+KDraw kDraw;
