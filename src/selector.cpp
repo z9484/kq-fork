@@ -198,9 +198,9 @@ static eMiniMenu mini_menu(int omask)
 	{
 		Game.do_check_animation();
 		menubox(double_buffer, mini_menu_x - 13, mini_menu_y - 8, 6, 3, DARKBLUE);
-		print_font(double_buffer, mini_menu_x, mini_menu_y, _("Join"), (omask & MM_JOIN) ? FNORMAL : FDARK);
-		print_font(double_buffer, mini_menu_x, mini_menu_y + 8, _("Leave"), (omask & MM_LEAVE) ? FNORMAL : FDARK);
-		print_font(double_buffer, mini_menu_x, mini_menu_y + 16, _("Lead"), (omask & MM_LEAD) ? FNORMAL : FDARK);
+		print_font(double_buffer, mini_menu_x, mini_menu_y, _("Join"), (omask & MM_JOIN) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK);
+		print_font(double_buffer, mini_menu_x, mini_menu_y + 8, _("Leave"), (omask & MM_LEAVE) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK);
+		print_font(double_buffer, mini_menu_x, mini_menu_y + 16, _("Lead"), (omask & MM_LEAD) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK);
 		draw_sprite(double_buffer, menuptr, mini_menu_x - 13, mini_menu_y + 8 * cp);
 		blit2screen(xofs, yofs);
 
@@ -374,7 +374,7 @@ ePIDX select_any_player(eTarget csa, unsigned int icn, const char* msg)
 		{
 			menubox(double_buffer, 152 - ((strlen(msg) + 1) * 4) + xofs, 8 + yofs, strlen(msg) + 1, 1, BLUE);
 			draw_icon(double_buffer, icn, 160 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs);
-			print_font(double_buffer, 168 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs, msg, FNORMAL);
+			print_font(double_buffer, 168 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs, msg, eFontColor::FONTCOLOR_NORMAL);
 		}
 		for (unsigned int k = 0; k < numchrs; k++)
 		{
@@ -713,8 +713,8 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 	}
 
 	menubox(double_buffer, 16 + xofs, 24 + yofs, 34, 12, BLUE);
-	print_font(double_buffer, 24 + xofs, 32 + yofs, _("Available:"), FGOLD);
-	print_font(double_buffer, 24 + xofs, 80 + yofs, _("In party:"), FGOLD);
+	print_font(double_buffer, 24 + xofs, 32 + yofs, _("Available:"), eFontColor::FONTCOLOR_GOLD);
+	print_font(double_buffer, 24 + xofs, 80 + yofs, _("In party:"), eFontColor::FONTCOLOR_GOLD);
 	while (running)
 	{
 		Game.do_check_animation();
@@ -744,7 +744,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		}
 		/* Draw the 'Exit' button */
 		menubox(double_buffer, x, y, 4, 1, (cur == MAX_PARTY_SIZE + MAXCHRS ? DARKRED : DARKBLUE));
-		print_font(double_buffer, x + 8, y + 8, _("Exit"), FNORMAL);
+		print_font(double_buffer, x + 8, y + 8, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
 		/* See which hero is selected and draw his/her stats */
 		if (cur < n_avail)
 		{

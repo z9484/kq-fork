@@ -17,13 +17,13 @@ constexpr uint8_t DRED = 6;
 
 enum eFontColor
 {
-	FNORMAL = 0,
-	FRED = 1,
-	FYELLOW = 2,
-	FGREEN = 3,
-	FDARK = 4,
-	FGOLD = 5,
-	FBIG = 6,
+	FONTCOLOR_NORMAL = 0,
+	FONTCOLOR_RED = 1,
+	FONTCOLOR_YELLOW = 2,
+	FONTCOLOR_GREEN = 3,
+	FONTCOLOR_DARK = 4,
+	FONTCOLOR_GOLD = 5,
+	FONTCOLOR_BIG = 6,
 
 	NUM_FONT_COLORS // always last
 };
@@ -42,9 +42,9 @@ enum eFont
 
 enum eBubbleStyle
 {
-	B_TEXT = 0,
-	B_THOUGHT = 1,
-	B_MESSAGE = 2,
+	BUBBLE_TEXT = 0,
+	BUBBLE_THOUGHT = 1,
+	BUBBLE_MESSAGE = 2,
 
 	NUM_BUBBLE_STYLES // always last
 };

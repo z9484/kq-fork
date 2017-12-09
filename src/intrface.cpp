@@ -1163,7 +1163,7 @@ static int KQ_bubble_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	text_ex(B_TEXT, entity, msg);
+	text_ex(eBubbleStyle::BUBBLE_TEXT, entity, msg);
 	return 0;
 }
 
@@ -1175,7 +1175,7 @@ static int KQ_portbubble_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	porttext_ex(B_TEXT, entity, msg);
+	porttext_ex(eBubbleStyle::BUBBLE_TEXT, entity, msg);
 	return 0;
 }
 
@@ -3870,7 +3870,7 @@ static int KQ_thought_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	text_ex(B_THOUGHT, entity, msg);
+	text_ex(eBubbleStyle::BUBBLE_THOUGHT, entity, msg);
 	return 0;
 }
 
@@ -3879,7 +3879,7 @@ static int KQ_portthought_ex(lua_State* L)
 	int entity = KqFork::real_entity_num(L, 1);
 	const char* msg = lua_tostring(L, 2);
 
-	porttext_ex(B_THOUGHT, entity, msg);
+	porttext_ex(eBubbleStyle::BUBBLE_THOUGHT, entity, msg);
 	return 0;
 }
 

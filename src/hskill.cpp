@@ -422,21 +422,21 @@ void reveal(int tgt)
 	do_transition(TRANS_FADE_OUT, 4);
 	menubox(double_buffer, 84, 56, 17, 13, BLUE);
 	sprintf(strbuf, _("Name: %s"), fighter[tgt].fighterName.c_str());
-	print_font(double_buffer, 92, 64, strbuf, FNORMAL);
+	print_font(double_buffer, 92, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("Level: %d"), fighter[tgt].fighterLevel);
-	print_font(double_buffer, 92, 72, strbuf, FNORMAL);
+	print_font(double_buffer, 92, 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("HP: %d/%d"), fighter[tgt].fighterHealth, fighter[tgt].fighterMaxHealth);
-	print_font(double_buffer, 92, 80, strbuf, FNORMAL);
+	print_font(double_buffer, 92, 80, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("MP: %d/%d"), fighter[tgt].fighterMagic, fighter[tgt].fighterMaxMagic);
-	print_font(double_buffer, 92, 88, strbuf, FNORMAL);
-	print_font(double_buffer, 92, 96, _("Earth"), FNORMAL);
-	print_font(double_buffer, 92, 104, _("Black"), FNORMAL);
-	print_font(double_buffer, 92, 112, _("Fire"), FNORMAL);
-	print_font(double_buffer, 92, 120, _("Thunder"), FNORMAL);
-	print_font(double_buffer, 92, 128, _("Air"), FNORMAL);
-	print_font(double_buffer, 92, 136, _("White"), FNORMAL);
-	print_font(double_buffer, 92, 144, _("Water"), FNORMAL);
-	print_font(double_buffer, 92, 152, _("Ice"), FNORMAL);
+	print_font(double_buffer, 92, 88, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 96, _("Earth"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 104, _("Black"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 112, _("Fire"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 120, _("Thunder"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 128, _("Air"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 136, _("White"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 144, _("Water"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 92, 152, _("Ice"), eFontColor::FONTCOLOR_NORMAL);
 	for (c = 0; c < 8; c++)
 	{
 		draw_x = 156;
@@ -535,7 +535,7 @@ int skill_use(size_t attack_fighter_index)
         gCombat.ta[attack_fighter_index] = (b * 2);
 		display_attack_string = false;
 		blit(temp.get(), gCombat.backart, 0, 0, 0, 0, 320, 240);
-		display_amount(attack_fighter_index, FONT_DECIDE, 0);
+		display_amount(attack_fighter_index, eFont::FONT_DECIDE, 0);
 		if (fighter[attack_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0)
 		{
             gCombat.fkill(attack_fighter_index);
@@ -708,7 +708,7 @@ int skill_use(size_t attack_fighter_index)
 					gCombat.ta[fighter_index] = do_shell_check(fighter_index, gCombat.ta[fighter_index]);
 				}
 			}
-			display_amount(0, FONT_YELLOW, 1);
+			display_amount(0, eFont::FONT_YELLOW, 1);
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&

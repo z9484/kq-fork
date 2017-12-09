@@ -72,7 +72,7 @@ static void buy_item(int how_many, int item_no)
 		Game.do_check_animation();
 		blit(back, double_buffer, 0, 0, xofs, 192 + yofs, KQ_SCREEN_W, 48);
 		menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
-		print_font(double_buffer, 104 + xofs, 176 + yofs, _("Confirm/Cancel"), FNORMAL);
+		print_font(double_buffer, 104 + xofs, 176 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
 		draw_sideshot(shops[shop_no].items[item_no]);
 		blit2screen(xofs, yofs);
 
@@ -134,10 +134,10 @@ static void buy_menu(void)
 		Game.do_check_animation();
 		drawmap();
 		menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, BLUE);
-		print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), FGOLD);
+		print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), eFontColor::FONTCOLOR_GOLD);
 
 		menubox(double_buffer, xofs, 208 + yofs, 7, 2, BLUE);
-		print_font(double_buffer, 24 + xofs, 220 + yofs, _("Buy"), FGOLD);
+		print_font(double_buffer, 24 + xofs, 220 + yofs, _("Buy"), eFontColor::FONTCOLOR_GOLD);
 
 		menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 16, BLUE);
 		menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, BLUE);
@@ -152,7 +152,7 @@ static void buy_menu(void)
 			}
 			draw_icon(double_buffer, items[item_index].icon, 48 + xofs, shop_item_index * 8 + 32 + yofs);
 			int cost = max * items[item_index].price;
-			eFontColor font_color = cost <= gp ? FNORMAL : FDARK;
+			eFontColor font_color = cost <= gp ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK;
 			print_font(double_buffer, 56 + xofs, shop_item_index * 8 + 32 + yofs, items[item_index].itemName, font_color);
 			if (max > 1)
 			{
@@ -171,7 +171,7 @@ static void buy_menu(void)
 		}
 
 		unsigned short item_no = shops[shop_no].items[yptr];
-		print_font(double_buffer, 160 - (strlen(items[item_no].desc) * 4) + xofs, 176 + yofs, items[item_no].desc, FNORMAL);
+		print_font(double_buffer, 160 - (strlen(items[item_no].desc) * 4) + xofs, 176 + yofs, items[item_no].desc, eFontColor::FONTCOLOR_NORMAL);
 		draw_sideshot(item_no);
 		draw_sprite(double_buffer, menuptr, 32 + xofs, yptr * 8 + 32 + yofs);
 		blit2screen(xofs, yofs);
@@ -275,9 +275,9 @@ void do_inn_effects(int do_delay)
 void draw_shopgold(void)
 {
 	menubox(double_buffer, 248 + xofs, 208 + yofs, 7, 2, BLUE);
-	print_font(double_buffer, 256 + xofs, 216 + yofs, _("Gold:"), FGOLD);
+	print_font(double_buffer, 256 + xofs, 216 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
 	sprintf(strbuf, "%d", gp);
-	print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 224 + yofs, strbuf, FNORMAL);
+	print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 }
 
 /*! \brief Show status info
@@ -338,45 +338,45 @@ static void draw_sideshot(int selected_item)
 			if (slot == 0)
 			{
 				draw_icon(double_buffer, 3, wx + 16, wy);
-				print_font(double_buffer, wx + 16, wy + 8, "%", FNORMAL);
+				print_font(double_buffer, wx + 16, wy + 8, "%", eFontColor::FONTCOLOR_NORMAL);
 				for (cs_index = 0; cs_index < 2; cs_index++)
 				{
 					if (cs[cs_index + 8] < 0)
 					{
 						sprintf(strbuf, "%-4d", cs[cs_index + 8]);
-						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, FRED);
+						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_RED);
 					}
 					else if (cs[cs_index + 8] > 0)
 					{
 						sprintf(strbuf, "+%-3d", cs[cs_index + 8]);
-						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, FGREEN);
+						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_GREEN);
 					}
 					else if (cs[cs_index + 8] == 0)
 					{
-						print_font(double_buffer, wx + 24, cs_index * 8 + wy, "=", FNORMAL);
+						print_font(double_buffer, wx + 24, cs_index * 8 + wy, "=", eFontColor::FONTCOLOR_NORMAL);
 					}
 				}
 			}
 			else
 			{
 				draw_icon(double_buffer, 9, wx + 16, wy);
-				print_font(double_buffer, wx + 16, wy + 8, "%", FNORMAL);
+				print_font(double_buffer, wx + 16, wy + 8, "%", eFontColor::FONTCOLOR_NORMAL);
 				draw_icon(double_buffer, 47, wx + 16, wy + 16);
 				for (cs_index = 0; cs_index < 3; cs_index++)
 				{
 					if (cs[cs_index + 10] < 0)
 					{
 						sprintf(strbuf, "%-4d", cs[cs_index + 10]);
-						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, FRED);
+						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_RED);
 					}
 					else if (cs[cs_index + 10] > 0)
 					{
 						sprintf(strbuf, "+%-3d", cs[cs_index + 10]);
-						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, FGREEN);
+						print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_GREEN);
 					}
 					else if (cs[cs_index + 10] == 0)
 					{
-						print_font(double_buffer, wx + 24, cs_index * 8 + wy, "=", FNORMAL);
+						print_font(double_buffer, wx + 24, cs_index * 8 + wy, "=", eFontColor::FONTCOLOR_NORMAL);
 					}
 				}
 			}
@@ -407,11 +407,11 @@ static void draw_sideshot(int selected_item)
 		}
 	}
 	sprintf(strbuf, _("Own: %d"), ownd);
-	print_font(double_buffer, 88 + xofs, 224 + yofs, strbuf, FNORMAL);
+	print_font(double_buffer, 88 + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	if (slot < 6)
 	{
 		sprintf(strbuf, _("Eqp: %d"), equipped_items);
-		print_font(double_buffer, 160 + xofs, 224 + yofs, strbuf, FNORMAL);
+		print_font(double_buffer, 160 + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	}
 }
 
@@ -442,7 +442,7 @@ void inn(const char* iname, uint32_t gold_per_character, int pay)
 	Game.unpress();
 	drawmap();
 	menubox(double_buffer, 152 - (strlen(iname) * 4) + xofs, yofs, strlen(iname), 1, BLUE);
-	print_font(double_buffer, 160 - (strlen(iname) * 4) + xofs, 8 + yofs, iname, FGOLD);
+	print_font(double_buffer, 160 - (strlen(iname) * 4) + xofs, 8 + yofs, iname, eFontColor::FONTCOLOR_GOLD);
 	total_gold_cost = gold_per_character;
 	for (party_index = 0; party_index < numchrs; party_index++)
 	{
@@ -472,28 +472,28 @@ void inn(const char* iname, uint32_t gold_per_character, int pay)
 
 		sprintf(strbuf, _("The cost is %u gp for the night."), total_gold_cost);
 		menubox(double_buffer, 152 - (strlen(strbuf) * 4) + xofs, 48 + yofs, strlen(strbuf), 1, BLUE);
-		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 56 + yofs, strbuf, FNORMAL);
+		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 56 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		menubox(double_buffer, 248 + xofs, 168 + yofs, 7, 2, BLUE);
-		print_font(double_buffer, 256 + xofs, 176 + yofs, _("Gold:"), FGOLD);
+		print_font(double_buffer, 256 + xofs, 176 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
 		sprintf(strbuf, "%d", gp);
-		print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 184 + yofs, strbuf, FNORMAL);
+		print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 184 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		if ((uint32_t)gp >= total_gold_cost)
 		{
 			menubox(double_buffer, 52 + xofs, 96 + yofs, 25, 2, BLUE);
-			print_font(double_buffer, 60 + xofs, 108 + yofs, _("Do you wish to stay?"), FNORMAL);
+			print_font(double_buffer, 60 + xofs, 108 + yofs, _("Do you wish to stay?"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		else
 		{
 			menubox(double_buffer, 32 + xofs, 96 + yofs, 30, 2, BLUE);
-			print_font(double_buffer, 40 + xofs, 108 + yofs, _("You can't afford to stay here."), FNORMAL);
+			print_font(double_buffer, 40 + xofs, 108 + yofs, _("You can't afford to stay here."), eFontColor::FONTCOLOR_NORMAL);
 			blit2screen(xofs, yofs);
 			Game.wait_enter();
 			return;
 		}
 
 		menubox(double_buffer, 220 + xofs, 96 + yofs, 4, 2, DARKBLUE);
-		print_font(double_buffer, 236 + xofs, 104 + yofs, _("yes"), FNORMAL);
-		print_font(double_buffer, 236 + xofs, 112 + yofs, _("no"), FNORMAL);
+		print_font(double_buffer, 236 + xofs, 104 + yofs, _("yes"), eFontColor::FONTCOLOR_NORMAL);
+		print_font(double_buffer, 236 + xofs, 112 + yofs, _("no"), eFontColor::FONTCOLOR_NORMAL);
 		draw_sprite(double_buffer, menuptr, 220 + xofs, my * 8 + 104 + yofs);
 		blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
@@ -567,7 +567,7 @@ static void sell_howmany(int item_no, size_t inv_page)
 	{
 		menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
 		sprintf(strbuf, _("Sell for %d gp?"), prc * 50 / 100);
-		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, FNORMAL);
+		print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		sell_item(inv_page * NUM_ITEMS_PER_PAGE + item_no, 1);
 		stop = 1;
 	}
@@ -576,12 +576,12 @@ static void sell_howmany(int item_no, size_t inv_page)
 		Game.do_check_animation();
 		drawmap();
 		menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
-		print_font(double_buffer, 124 + xofs, 176 + yofs, _("How many?"), FNORMAL);
+		print_font(double_buffer, 124 + xofs, 176 + yofs, _("How many?"), eFontColor::FONTCOLOR_NORMAL);
 		menubox(double_buffer, 32 + xofs, item_no * 8 + 24 + yofs, 30, 1, DARKBLUE);
 		draw_icon(double_buffer, items[l].icon, 48 + xofs, item_no * 8 + 32 + yofs);
-		print_font(double_buffer, 56 + xofs, item_no * 8 + 32 + yofs, items[l].itemName, FNORMAL);
+		print_font(double_buffer, 56 + xofs, item_no * 8 + 32 + yofs, items[l].itemName, eFontColor::FONTCOLOR_NORMAL);
 		sprintf(strbuf, _("%d of %d"), my, max_items);
-		print_font(double_buffer, 280 - (strlen(strbuf) * 8) + xofs, item_no * 8 + 32 + yofs, strbuf, FNORMAL);
+		print_font(double_buffer, 280 - (strlen(strbuf) * 8) + xofs, item_no * 8 + 32 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		blit2screen(xofs, yofs);
 
 		PlayerInput.readcontrols();
@@ -616,7 +616,7 @@ static void sell_howmany(int item_no, size_t inv_page)
 			Game.unpress();
 			menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
 			sprintf(strbuf, _("Sell for %d gp?"), (prc * 50 / 100) * my);
-			print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, FNORMAL);
+			print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			sell_item(inv_page * NUM_ITEMS_PER_PAGE + item_no, my);
 			stop = 1;
 		}
@@ -643,7 +643,7 @@ static void sell_item(int itno, int ni)
 	l = g_inv[itno].item;
 	sp = (items[l].price * 50 / 100) * ni;
 	menubox(double_buffer, 96 + xofs, 192 + yofs, 14, 1, DARKBLUE);
-	print_font(double_buffer, 104 + xofs, 200 + yofs, _("Confirm/Cancel"), FNORMAL);
+	print_font(double_buffer, 104 + xofs, 200 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
 	blit2screen(xofs, yofs);
 	while (!stop)
 	{
@@ -692,9 +692,9 @@ static void sell_menu(void)
 		Game.do_check_animation();
 		drawmap();
 		menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, BLUE);
-		print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), FGOLD);
+		print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), eFontColor::FONTCOLOR_GOLD);
 		menubox(double_buffer, xofs, 208 + yofs, 7, 2, BLUE);
-		print_font(double_buffer, 20 + xofs, 220 + yofs, _("Sell"), FGOLD);
+		print_font(double_buffer, 20 + xofs, 220 + yofs, _("Sell"), eFontColor::FONTCOLOR_GOLD);
 		menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 16, BLUE);
 		menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, BLUE);
 		draw_shopgold();
@@ -703,11 +703,11 @@ static void sell_menu(void)
 			int inventory_item_index = g_inv[inv_page * NUM_ITEMS_PER_PAGE + p].item;
 			if (items[inventory_item_index].price == 0)
 			{
-				k = FDARK;
+				k = eFontColor::FONTCOLOR_DARK;
 			}
 			else
 			{
-				k = FNORMAL;
+				k = eFontColor::FONTCOLOR_NORMAL;
 			}
 			draw_icon(double_buffer, items[inventory_item_index].icon, 48 + xofs, p * 8 + 32 + yofs);
 			print_font(double_buffer, 56 + xofs, p * 8 + 32 + yofs, items[inventory_item_index].itemName, k);
@@ -727,20 +727,20 @@ static void sell_menu(void)
 			{
 				// Check if there is more than one item
 				sprintf(strbuf, _("%d gp for each one."), sp);
-				print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, FNORMAL);
+				print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 			else
 			{
 				// There is only one of this item
 				sprintf(strbuf, _("That's worth %d gp."), sp);
-				print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, FNORMAL);
+				print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 		else
 		{
 			if (inv.item > 0)
 			{
-				print_font(double_buffer, 76 + xofs, 192 + yofs, _("That cannot be sold!"), FNORMAL);
+				print_font(double_buffer, 76 + xofs, 192 + yofs, _("That cannot be sold!"), eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 		draw_sprite(double_buffer, menuptr, 32 + xofs, yptr * 8 + 32 + yofs);
@@ -868,12 +868,12 @@ int shop(int shop_num)
 		Game.do_check_animation();
 		drawmap();
 		menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, BLUE);
-		print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), FGOLD);
+		print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), eFontColor::FONTCOLOR_GOLD);
 		menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 1, BLUE);
 		menubox(double_buffer, ptr * 80 + 32 + xofs, 24 + yofs, 10, 1, DARKBLUE);
-		print_font(double_buffer, 68 + xofs, 32 + yofs, _("Buy"), FGOLD);
-		print_font(double_buffer, 144 + xofs, 32 + yofs, _("Sell"), FGOLD);
-		print_font(double_buffer, 224 + xofs, 32 + yofs, _("Exit"), FGOLD);
+		print_font(double_buffer, 68 + xofs, 32 + yofs, _("Buy"), eFontColor::FONTCOLOR_GOLD);
+		print_font(double_buffer, 144 + xofs, 32 + yofs, _("Sell"), eFontColor::FONTCOLOR_GOLD);
+		print_font(double_buffer, 224 + xofs, 32 + yofs, _("Exit"), eFontColor::FONTCOLOR_GOLD);
 		draw_sideshot(-1);
 		draw_shopgold();
 		blit2screen(xofs, yofs);

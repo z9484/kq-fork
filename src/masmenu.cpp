@@ -72,17 +72,17 @@ static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
 	pidx_index = pidx[caster_fighter_index];
 	first_spell_index = party[pidx_index].spells[spell_page * NUM_SPELLS_PER_PAGE + spell_page_cursor];
 	menubox(double_buffer, 80 + xofs, 12 + yofs, 18, 1, BLUE);
-	print_font(double_buffer, 140 + xofs, 20 + yofs, _("Magic"), FGOLD);
+	print_font(double_buffer, 140 + xofs, 20 + yofs, _("Magic"), eFontColor::FONTCOLOR_GOLD);
 	menubox(double_buffer, 80 + xofs, 36 + yofs, 18, 5, BLUE);
 	draw_playerstat(double_buffer, pidx_index, 88 + xofs, 44 + yofs);
 	menubox(double_buffer, 80 + xofs, 92 + yofs, 18, 12, BLUE);
 	for (current_spell = 0; current_spell < NUM_SPELLS_PER_PAGE; current_spell++)
 	{
 		spell_index = party[pidx_index].spells[spell_page * NUM_SPELLS_PER_PAGE + current_spell];
-		text_color = FDARK;
+		text_color = eFontColor::FONTCOLOR_DARK;
 		if (camp_castable(caster_fighter_index, spell_index) == 1)
 		{
-			text_color = FNORMAL;
+			text_color = eFontColor::FONTCOLOR_NORMAL;
 		}
 		if (spell_index > 0)
 		{
@@ -93,7 +93,7 @@ static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
 		}
 	}
 	menubox(double_buffer, 40 + xofs, 204 + yofs, 28, 1, BLUE);
-	print_font(double_buffer, (160 - (strlen(magic[first_spell_index].desc) * 4)) + xofs, 212 + yofs, magic[first_spell_index].desc, FNORMAL);
+	print_font(double_buffer, (160 - (strlen(magic[first_spell_index].desc) * 4)) + xofs, 212 + yofs, magic[first_spell_index].desc, eFontColor::FONTCOLOR_NORMAL);
 	draw_sprite(double_buffer, pgb[spell_page], 230 + xofs, 194 + yofs);
 }
 
@@ -358,7 +358,7 @@ int learn_new_spells(int who)
 					fullblit(back, double_buffer);
 					menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152, strlen(strbuf) + 1, 1, BLUE);
 					draw_icon(double_buffer, magic[a].icon, 156 - (strlen(strbuf) * 4), 160);
-					print_font(double_buffer, 164 - (strlen(strbuf) * 4), 160, strbuf, FNORMAL);
+					print_font(double_buffer, 164 - (strlen(strbuf) * 4), 160, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					blit2screen(0, 0);
 					Game.wait_enter();
 					g++;

@@ -58,7 +58,7 @@ int KSaveGame::confirm_action(void)
 	}
 	fullblit(double_buffer, back);
 	menubox(double_buffer, 128, pointer_offset + 12, 14, 1, DARKBLUE);
-	print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), FNORMAL);
+	print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
 	blit2screen(0, 0);
 	fullblit(back, double_buffer);
 	while (!stop)
@@ -114,7 +114,7 @@ void KSaveGame::delete_game(void)
 	if (remove_result == 0)
 	{
 		menubox(double_buffer, 128, pointer_offset + 12, 12, 1, DARKBLUE);
-		print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), FNORMAL);
+		print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), eFontColor::FONTCOLOR_NORMAL);
 
 		s_sgstats& stats = savegame[save_ptr];
 		stats.num_characters = 0;
@@ -124,7 +124,7 @@ void KSaveGame::delete_game(void)
 	else
 	{
 		menubox(double_buffer, 128, pointer_offset + 12, 16, 1, DARKBLUE);
-		print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), FNORMAL);
+		print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), eFontColor::FONTCOLOR_NORMAL);
 	}
 	blit2screen(0, 0);
 	fullblit(back, double_buffer);
@@ -374,17 +374,17 @@ void KSaveGame::show_sgstats(int saving)
 	if (saving == 0)
 	{
 		menubox(double_buffer, 0, pointer_offset + 12, 7, 1, BLUE);
-		print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), FGOLD);
+		print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 1)
 	{
 		menubox(double_buffer, 8, pointer_offset + 12, 6, 1, BLUE);
-		print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), FGOLD);
+		print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 2 || saving == 3)
 	{
 		menubox(double_buffer, 8, pointer_offset + 12, 6, 1, BLUE);
-		print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), FRED);
+		print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), eFontColor::FONTCOLOR_RED);
 	}
 
 	if (top_pointer > 0)
@@ -411,13 +411,13 @@ void KSaveGame::show_sgstats(int saving)
 
 		if (savegame[sg].num_characters == -1)
 		{
-			print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), FNORMAL);
+			print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		else
 		{
 			if (stats.num_characters == 0)
 			{
-				print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), FNORMAL);
+				print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), eFontColor::FONTCOLOR_NORMAL);
 			}
 			else
 			{
@@ -428,9 +428,9 @@ void KSaveGame::show_sgstats(int saving)
 					hy = pointer_offset + 12;
 					draw_sprite(double_buffer, frames[chr.id][1], hx, hy + 4);
 					sprintf(strbuf, _("L: %02d"), chr.level);
-					print_font(double_buffer, hx + 16, hy, strbuf, FNORMAL);
-					print_font(double_buffer, hx + 16, hy + 8, _("H:"), FNORMAL);
-					print_font(double_buffer, hx + 16, hy + 16, _("M:"), FNORMAL);
+					print_font(double_buffer, hx + 16, hy, strbuf, eFontColor::FONTCOLOR_NORMAL);
+					print_font(double_buffer, hx + 16, hy + 8, _("H:"), eFontColor::FONTCOLOR_NORMAL);
+					print_font(double_buffer, hx + 16, hy + 16, _("M:"), eFontColor::FONTCOLOR_NORMAL);
 					rectfill(double_buffer, hx + 33, hy + 9, hx + 65, hy + 15, 2);
 					rectfill(double_buffer, hx + 32, hy + 8, hx + 64, hy + 14, 35);
 					rectfill(double_buffer, hx + 33, hy + 17, hx + 65, hy + 23, 2);
@@ -441,9 +441,9 @@ void KSaveGame::show_sgstats(int saving)
 					rectfill(double_buffer, hx + 32, hy + 17, hx + 32 + b, hy + 21, 25);
 				}
 				sprintf(strbuf, _("T %u:%02u"), stats.time / 60, stats.time % 60);
-				print_font(double_buffer, 236, pointer_offset + 12, strbuf, FNORMAL);
+				print_font(double_buffer, 236, pointer_offset + 12, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, _("G %u"), stats.gold);
-				print_font(double_buffer, 236, pointer_offset + 28, strbuf, FNORMAL);
+				print_font(double_buffer, 236, pointer_offset + 28, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 	}
@@ -542,10 +542,10 @@ int KSaveGame::start_menu(int skip_splash)
 			clear_bitmap(double_buffer);
 			masked_blit(title, double_buffer, 0, 0, 0, 0, KQ_SCREEN_W, 124);
 			menubox(double_buffer, 112, 116, 10, 4, BLUE);
-			print_font(double_buffer, 128, 124, _("Continue"), FNORMAL);
-			print_font(double_buffer, 128, 132, _("New Game"), FNORMAL);
-			print_font(double_buffer, 136, 140, _("Config"), FNORMAL);
-			print_font(double_buffer, 144, 148, _("Exit"), FNORMAL);
+			print_font(double_buffer, 128, 124, _("Continue"), eFontColor::FONTCOLOR_NORMAL);
+			print_font(double_buffer, 128, 132, _("New Game"), eFontColor::FONTCOLOR_NORMAL);
+			print_font(double_buffer, 136, 140, _("Config"), eFontColor::FONTCOLOR_NORMAL);
+			print_font(double_buffer, 144, 148, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
 			draw_sprite(double_buffer, menuptr, 112, ptr * 8 + 124);
 			redraw = 0;
 		}
@@ -652,18 +652,18 @@ int KSaveGame::system_menu(void)
 {
 	int stop = 0, ptr = 0;
 	char save_str[10];
-	eFontColor text_color = FNORMAL;
+	eFontColor text_color = eFontColor::FONTCOLOR_NORMAL;
 
 	strcpy(save_str, _("Save  "));
 
 	if (cansave == 0)
 	{
-		text_color = FDARK;
+		text_color = eFontColor::FONTCOLOR_DARK;
 #ifdef KQ_CHEATS
 		if (hasCheatEnabled)
 		{
 			strcpy(save_str, _("[Save]"));
-			text_color = FNORMAL;
+			text_color = eFontColor::FONTCOLOR_NORMAL;
 		}
 #endif /* KQ_CHEATS */
 	}
@@ -675,9 +675,9 @@ int KSaveGame::system_menu(void)
 		menubox(double_buffer, xofs, yofs, 8, 4, BLUE);
 
 		print_font(double_buffer, 16 + xofs, 8 + yofs, save_str, text_color);
-		print_font(double_buffer, 16 + xofs, 16 + yofs, _("Load"), FNORMAL);
-		print_font(double_buffer, 16 + xofs, 24 + yofs, _("Config"), FNORMAL);
-		print_font(double_buffer, 16 + xofs, 32 + yofs, _("Exit"), FNORMAL);
+		print_font(double_buffer, 16 + xofs, 16 + yofs, _("Load"), eFontColor::FONTCOLOR_NORMAL);
+		print_font(double_buffer, 16 + xofs, 24 + yofs, _("Config"), eFontColor::FONTCOLOR_NORMAL);
+		print_font(double_buffer, 16 + xofs, 32 + yofs, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
 
 		draw_sprite(double_buffer, menuptr, 0 + xofs, ptr * 8 + 8 + yofs);
 		blit2screen(xofs, yofs);

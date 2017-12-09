@@ -246,37 +246,37 @@ static void draw_equipmenu(int c, int sel)
 	if (sel == 1)
 	{
 		menubox(double_buffer, eqp_act * 72 + 12 + xofs, 4 + yofs, 8, 1, DARKBLUE);
-		print_font(double_buffer, 32 + xofs, 12 + yofs, _("Equip"), FGOLD);
-		print_font(double_buffer, 92 + xofs, 12 + yofs, _("Optimize"), FGOLD);
-		print_font(double_buffer, 172 + xofs, 12 + yofs, _("Remove"), FGOLD);
-		print_font(double_buffer, 248 + xofs, 12 + yofs, _("Empty"), FGOLD);
+		print_font(double_buffer, 32 + xofs, 12 + yofs, _("Equip"), eFontColor::FONTCOLOR_GOLD);
+		print_font(double_buffer, 92 + xofs, 12 + yofs, _("Optimize"), eFontColor::FONTCOLOR_GOLD);
+		print_font(double_buffer, 172 + xofs, 12 + yofs, _("Remove"), eFontColor::FONTCOLOR_GOLD);
+		print_font(double_buffer, 248 + xofs, 12 + yofs, _("Empty"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else
 	{
 		if (eqp_act == 0)
 		{
-			print_font(double_buffer, 140 + xofs, 12 + yofs, _("Equip"), FGOLD);
+			print_font(double_buffer, 140 + xofs, 12 + yofs, _("Equip"), eFontColor::FONTCOLOR_GOLD);
 		}
 		if (eqp_act == 2)
 		{
-			print_font(double_buffer, 136 + xofs, 12 + yofs, _("Remove"), FGOLD);
+			print_font(double_buffer, 136 + xofs, 12 + yofs, _("Remove"), eFontColor::FONTCOLOR_GOLD);
 		}
 	}
 	menubox(double_buffer, 12 + xofs, 28 + yofs, 25, 6, BLUE);
 	menubox(double_buffer, 228 + xofs, 28 + yofs, 8, 6, BLUE);
 	draw_sprite(double_buffer, players[l].portrait, 248 + xofs, 36 + yofs);
-	print_font(double_buffer, 268 - (strlen(party[l].playerName) * 4) + xofs, 76 + yofs, party[l].playerName, FNORMAL);
-	print_font(double_buffer, 28 + xofs, 36 + yofs, _("Hand1:"), FGOLD);
-	print_font(double_buffer, 28 + xofs, 44 + yofs, _("Hand2:"), FGOLD);
-	print_font(double_buffer, 28 + xofs, 52 + yofs, _("Head:"), FGOLD);
-	print_font(double_buffer, 28 + xofs, 60 + yofs, _("Body:"), FGOLD);
-	print_font(double_buffer, 28 + xofs, 68 + yofs, _("Arms:"), FGOLD);
-	print_font(double_buffer, 28 + xofs, 76 + yofs, _("Other:"), FGOLD);
+	print_font(double_buffer, 268 - (strlen(party[l].playerName) * 4) + xofs, 76 + yofs, party[l].playerName, eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 28 + xofs, 36 + yofs, _("Hand1:"), eFontColor::FONTCOLOR_GOLD);
+	print_font(double_buffer, 28 + xofs, 44 + yofs, _("Hand2:"), eFontColor::FONTCOLOR_GOLD);
+	print_font(double_buffer, 28 + xofs, 52 + yofs, _("Head:"), eFontColor::FONTCOLOR_GOLD);
+	print_font(double_buffer, 28 + xofs, 60 + yofs, _("Body:"), eFontColor::FONTCOLOR_GOLD);
+	print_font(double_buffer, 28 + xofs, 68 + yofs, _("Arms:"), eFontColor::FONTCOLOR_GOLD);
+	print_font(double_buffer, 28 + xofs, 76 + yofs, _("Other:"), eFontColor::FONTCOLOR_GOLD);
 	for (k = 0; k < NUM_EQUIPMENT; k++)
 	{
 		j = party[l].eqp[k];
 		draw_icon(double_buffer, items[j].icon, 84 + xofs, k * 8 + 36 + yofs);
-		print_font(double_buffer, 92 + xofs, k * 8 + 36 + yofs, items[j].itemName, FNORMAL);
+		print_font(double_buffer, 92 + xofs, k * 8 + 36 + yofs, items[j].itemName, eFontColor::FONTCOLOR_NORMAL);
 	}
 }
 
@@ -318,11 +318,11 @@ static void draw_equippable(uint32_t c, uint32_t slot, uint32_t pptr)
 		// z == number of items
 		z = g_inv[t_inv[pptr + k]].quantity;
 		draw_icon(double_buffer, items[j].icon, 28 + xofs, k * 8 + 100 + yofs);
-		print_font(double_buffer, 36 + xofs, k * 8 + 100 + yofs, items[j].itemName, FNORMAL);
+		print_font(double_buffer, 36 + xofs, k * 8 + 100 + yofs, items[j].itemName, eFontColor::FONTCOLOR_NORMAL);
 		if (z > 1)
 		{
 			sprintf(strbuf, "^%d", z);
-			print_font(double_buffer, 164 + xofs, k * 8 + 100 + yofs, strbuf, FNORMAL);
+			print_font(double_buffer, 164 + xofs, k * 8 + 100 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		}
 	}
 	if (pptr > 0)
@@ -361,40 +361,40 @@ static void draw_equippreview(int ch, int ptr, int pp)
 		update_equipstats();
 	}
 	menubox(double_buffer, 188 + xofs, 92 + yofs, 13, 13, BLUE);
-	print_font(double_buffer, 196 + xofs, 100 + yofs, _("Str:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 108 + yofs, _("Agi:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 116 + yofs, _("Vit:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 124 + yofs, _("Int:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 132 + yofs, _("Sag:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 140 + yofs, _("Spd:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 148 + yofs, _("Aur:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 156 + yofs, _("Spi:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 164 + yofs, _("Att:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 172 + yofs, _("Hit:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 180 + yofs, _("Def:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 188 + yofs, _("Evd:"), FNORMAL);
-	print_font(double_buffer, 196 + xofs, 196 + yofs, _("Mdf:"), FNORMAL);
+	print_font(double_buffer, 196 + xofs, 100 + yofs, _("Str:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 108 + yofs, _("Agi:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 116 + yofs, _("Vit:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 124 + yofs, _("Int:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 132 + yofs, _("Sag:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 140 + yofs, _("Spd:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 148 + yofs, _("Aur:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 156 + yofs, _("Spi:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 164 + yofs, _("Att:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 172 + yofs, _("Hit:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 180 + yofs, _("Def:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 188 + yofs, _("Evd:"), eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 196 + xofs, 196 + yofs, _("Mdf:"), eFontColor::FONTCOLOR_NORMAL);
 	for (z = 0; z < 13; z++)
 	{
 		c1 = fighter[ch].fighterStats[z];
 		c2 = tstats[z];
 		sprintf(strbuf, "%d", c1);
-		print_font(double_buffer, 252 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FNORMAL);
-		print_font(double_buffer, 260 + xofs, z * 8 + 100 + yofs, ">", FNORMAL);
+		print_font(double_buffer, 252 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		print_font(double_buffer, 260 + xofs, z * 8 + 100 + yofs, ">", eFontColor::FONTCOLOR_NORMAL);
 		if (ptr >= 0)
 		{
 			sprintf(strbuf, "%d", c2);
 			if (c1 < c2)
 			{
-				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FGREEN);
+				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, eFontColor::FONTCOLOR_GREEN);
 			}
 			if (c2 < c1)
 			{
-				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FRED);
+				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, eFontColor::FONTCOLOR_RED);
 			}
 			if (c1 == c2)
 			{
-				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, FNORMAL);
+				print_font(double_buffer, 300 - (strlen(strbuf) * 8) + xofs, z * 8 + 100 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 	}
@@ -410,11 +410,11 @@ static void draw_equippreview(int ch, int ptr, int pp)
 		}
 		if (c1 < c2)
 		{
-			print_font(double_buffer, 212 + xofs, 220 + yofs, _("Resist up"), FNORMAL);
+			print_font(double_buffer, 212 + xofs, 220 + yofs, _("Resist up"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		if (c1 > c2)
 		{
-			print_font(double_buffer, 204 + xofs, 220 + yofs, _("Resist down"), FNORMAL);
+			print_font(double_buffer, 204 + xofs, 220 + yofs, _("Resist down"), eFontColor::FONTCOLOR_NORMAL);
 		}
 	}
 }

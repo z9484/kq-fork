@@ -657,16 +657,16 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 		{
 			if (gCombat.ta[tgt] <= 0)
 			{
-				display_amount(tgt, FONT_RED, 0);
+				display_amount(tgt, eFont::FONT_RED, 0);
 				adjust_mp(tgt, gCombat.ta[tgt]);
-				display_amount(caster_fighter_index, FONT_GREEN, 0);
+				display_amount(caster_fighter_index, eFont::FONT_GREEN, 0);
 				adjust_mp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
 			}
 			else
 			{
-				display_amount(caster_fighter_index, FONT_RED, 0);
+				display_amount(caster_fighter_index, eFont::FONT_RED, 0);
 				adjust_mp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
-				display_amount(tgt, FONT_GREEN, 0);
+				display_amount(tgt, eFont::FONT_GREEN, 0);
 				adjust_mp(tgt, gCombat.ta[tgt]);
 			}
 		}
@@ -674,16 +674,16 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 		{
 			if (gCombat.ta[tgt] <= 0)
 			{
-				display_amount(tgt, FONT_WHITE, 0);
+				display_amount(tgt, eFont::FONT_WHITE, 0);
 				adjust_hp(tgt, gCombat.ta[tgt]);
-				display_amount(caster_fighter_index, FONT_YELLOW, 0);
+				display_amount(caster_fighter_index, eFont::FONT_YELLOW, 0);
 				adjust_hp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
 			}
 			else
 			{
-				display_amount(caster_fighter_index, FONT_WHITE, 0);
+				display_amount(caster_fighter_index, eFont::FONT_WHITE, 0);
 				adjust_hp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
-				display_amount(tgt, FONT_YELLOW, 0);
+				display_amount(tgt, eFont::FONT_YELLOW, 0);
 				adjust_hp(tgt, gCombat.ta[tgt]);
 			}
 		}
@@ -702,12 +702,12 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 			}
 			if (b > 0)
 			{
-				display_amount(start_fighter_index, FONT_WHITE, tall);
+				display_amount(start_fighter_index, eFont::FONT_WHITE, tall);
 			}
 		}
 		else
 		{
-			display_amount(start_fighter_index, FONT_DECIDE, tall);
+			display_amount(start_fighter_index, eFont::FONT_DECIDE, tall);
 			for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 			{
 				adjust_hp(fighter_index, gCombat.ta[fighter_index]);
@@ -1459,7 +1459,7 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
 			gCombat.ta[fighter_index] = 0;
 		}
 	}
-	display_amount(first_target, FONT_DECIDE, multiple_targets);
+	display_amount(first_target, eFont::FONT_DECIDE, multiple_targets);
 	for (fighter_index = first_target; fighter_index < first_target + last_target; fighter_index++)
 	{
 		if (gCombat.ta[fighter_index] != MISS)

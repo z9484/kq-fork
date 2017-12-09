@@ -127,7 +127,7 @@ void blit2screen(int xw, int yw)
 
 		sprintf(fbuf, "%3d", frate);
 		double_buffer->fill(xw, yw, xw + 24, yw + 8, 0);
-		print_font(double_buffer, xw, yw, fbuf, FNORMAL);
+		print_font(double_buffer, xw, yw, fbuf, eFontColor::FONTCOLOR_NORMAL);
 	}
 #ifdef DEBUGMODE
 	display_console(xw, yw);
@@ -661,7 +661,7 @@ void KqFork::draw_forelayer(void)
 							char buf[8];
 							sprintf(buf, "%d", z_seg[here]);
 							size_t l = strlen(buf) * 8;
-							print_num(double_buffer, dx * 16 + 8 + xofs - l / 2, dy * 16 + 4 + yofs, buf, FONT_WHITE);
+							print_num(double_buffer, dx * 16 + 8 + xofs - l / 2, dy * 16 + 4 + yofs, buf, eFont::FONT_WHITE);
 						}
 #else
 						if (z_seg[here] == 0)
@@ -747,12 +747,12 @@ void KqFork::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bg, 
 	/* Now the border */
 	switch (bstyle)
 	{
-	case B_TEXT:
-	case B_MESSAGE:
+	case eBubbleStyle::BUBBLE_TEXT:
+	case eBubbleStyle::BUBBLE_MESSAGE:
 		KqFork::border(where, x1, y1, x2 - 1, y2 - 1);
 		break;
 
-	case B_THOUGHT:
+	case eBubbleStyle::BUBBLE_THOUGHT:
 		/* top and bottom */
 		for (a = x1 + 8; a < x2 - 8; a += 8)
 		{
@@ -1005,17 +1005,17 @@ void KqFork::draw_textbox(int bstyle)
 	hgt = gbbh * 12 + 16;
 
 	KqFork::draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
-	if (bubble_stem_style != STEM_UNDEFINED)
+	if (bubble_stem_style != eBubbleStemStyle::STEM_UNDEFINED)
 	{
 		/* select the correct stem-thingy that comes out of the speech bubble */
-		stem = bub[bubble_stem_style + (bstyle == B_THOUGHT ? NUM_BUBBLE_STEMS : 0)];
+		stem = bub[bubble_stem_style + (bstyle == eBubbleStyle::BUBBLE_THOUGHT ? eBubbleStemStyle::NUM_BUBBLE_STEMS : 0)];
 		/* and draw it */
 		draw_sprite(double_buffer, stem, gbx + xofs, gby + yofs);
 	}
 
 	for (a = 0; a < gbbh; a++)
 	{
-		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], FBIG);
+		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], eFontColor::FONTCOLOR_BIG);
 	}
 }
 
@@ -1041,7 +1041,7 @@ void KqFork::draw_porttextbox(int bstyle, int chr)
 
 	for (a = 0; a < gbbh; a++)
 	{
-		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], FBIG);
+		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], eFontColor::FONTCOLOR_BIG);
 	}
 
 	a--;
@@ -1051,7 +1051,7 @@ void KqFork::draw_porttextbox(int bstyle, int chr)
 	menubox(double_buffer, 66, 196 - linexofs, strlen(party[chr].playerName), 1, BLUE);
 
 	draw_sprite(double_buffer, players[chr].portrait, 24, 177 - linexofs);
-	print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName, FNORMAL);
+	print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName, eFontColor::FONTCOLOR_NORMAL);
 }
 
 /*! \brief Draw the map
@@ -1120,7 +1120,7 @@ void drawmap(void)
 	if (display_desc == 1)
 	{
 		menubox(double_buffer, 152 - (g_map.map_desc.length() * 4) + xofs, 8 + yofs, g_map.map_desc.length(), 1, BLUE);
-		print_font(double_buffer, 160 - (g_map.map_desc.length() * 4) + xofs, 16 + yofs, g_map.map_desc.c_str(), FNORMAL);
+		print_font(double_buffer, 160 - (g_map.map_desc.length() * 4) + xofs, 16 + yofs, g_map.map_desc.c_str(), eFontColor::FONTCOLOR_NORMAL);
 	}
 }
 
@@ -1153,7 +1153,7 @@ void KqFork::generic_text(int who, int box_style, int isPort)
 			}
 		}
 	}
-	KqFork::set_textpos((box_style == B_MESSAGE) ? -1 : (isPort == 0) ? who : 255);
+	KqFork::set_textpos((box_style == eBubbleStyle::BUBBLE_MESSAGE) ? -1 : (isPort == 0) ? who : 255);
 	if (gbbw == -1 || gbbh == -1)
 	{
 		return;
@@ -1233,7 +1233,7 @@ int is_forestsquare(int fx, int fy)
  */
 void menubox(Raster* where, int x, int y, int w, int h, int c)
 {
-	KqFork::draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, c, B_TEXT);
+	KqFork::draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, c, eBubbleStyle::BUBBLE_TEXT);
 }
 
 /*! \brief Alert player
@@ -1295,7 +1295,7 @@ void message(const char* m, int icn, int delay, int x_m, int y_m)
 		/* Draw the text */
 		for (i = 0; i < num_lines; ++i)
 		{
-			print_font(double_buffer, 160 - (max_len * 4) + x_m, 116 + 8 * i + y_m, msgbuf[i], FNORMAL);
+			print_font(double_buffer, 160 - (max_len * 4) + x_m, 116 + 8 * i + y_m, msgbuf[i], eFontColor::FONTCOLOR_NORMAL);
 		}
 		/* Show it */
 		blit2screen(x_m, y_m);
@@ -1499,13 +1499,13 @@ void print_font(Raster* where, int sx, int sy, const char* msg, eFontColor font_
 	int hgt = 8;//MagicNumber: font height for NORMAL text
 	uint32_t cc = 0;
 
-	if (font_index < 0 || font_index >= NUM_FONT_COLORS)
+	if (font_index < 0 || font_index >= eFontColor::NUM_FONT_COLORS)
 	{
 		sprintf(strbuf, _("print_font: Bad font index, %d"), (int)font_index);
 		Game.klog(strbuf);
 		return;
 	}
-	if (font_index == FBIG)
+	if (font_index == eFontColor::FONTCOLOR_BIG)
 	{
 		hgt = 12;//MagicNumber: font height for BIG text
 	}
@@ -1539,7 +1539,7 @@ void print_num(Raster* where, int sx, int sy, const std::string& msg, eFont font
 {
 	assert(where && "where == NULL");
 	// Check ought not to be necessary if using the enum correctly.
-	if (font_index >= NUM_FONTS)
+	if (font_index >= eFont::NUM_FONTS)
 	{
 		sprintf(strbuf, _("print_num: Bad font index, %d"), (int)font_index);
 		Game.klog(strbuf);
@@ -1679,7 +1679,7 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 		if (ptext)
 		{
 			/* print prompt pages prior to the last one */
-			KqFork::generic_text(who, B_TEXT, 0);
+			KqFork::generic_text(who, eBubbleStyle::BUBBLE_TEXT, 0);
 		}
 		else
 		{
@@ -1724,12 +1724,12 @@ int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				drawmap();
 				/* Draw the prompt text */
 				KqFork::set_textpos(who);
-				KqFork::draw_textbox(B_TEXT);
+				KqFork::draw_textbox(eBubbleStyle::BUBBLE_TEXT);
 				/* Draw the  options text */
-				KqFork::draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, B_TEXT);
+				KqFork::draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, eBubbleStyle::BUBBLE_TEXT);
 				for (i = 0; i < winheight; ++i)
 				{
-					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], FBIG);
+					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], eFontColor::FONTCOLOR_BIG);
 				}
 				draw_sprite(double_buffer, menuptr, winx + 8 - menuptr->width, (curopt - topopt) * 12 + winy + 4);
 				/* Draw the 'up' and 'down' markers if there are more options than will
@@ -2015,12 +2015,12 @@ void KqFork::set_textpos(uint32_t entity_index)
 		if (gbby > gby)
 		{
 			gby += 20;
-			bubble_stem_style = (gbx < 152 ? STEM_TOP_LEFT : STEM_TOP_RIGHT);
+			bubble_stem_style = (gbx < 152 ? eBubbleStemStyle::STEM_TOP_LEFT : eBubbleStemStyle::STEM_TOP_RIGHT);
 		}
 		else
 		{
 			gby -= 20;
-			bubble_stem_style = (gbx < 152 ? STEM_BOTTOM_LEFT : STEM_BOTTOM_RIGHT);
+			bubble_stem_style = (gbx < 152 ? eBubbleStemStyle::STEM_BOTTOM_LEFT : eBubbleStemStyle::STEM_BOTTOM_RIGHT);
 		}
 		if (gbx < gbbx + 8)
 		{
@@ -2043,7 +2043,7 @@ void KqFork::set_textpos(uint32_t entity_index)
 	{
 		gbby = 216 - (gbbh * 12);
 		gbbx = 152 - (gbbw * 4);
-		bubble_stem_style = STEM_UNDEFINED;
+		bubble_stem_style = eBubbleStemStyle::STEM_UNDEFINED;
 	}
 }
 

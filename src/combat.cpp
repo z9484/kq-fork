@@ -291,7 +291,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			     : fighterIDy - 32);
 
 			menubox(double_buffer, t - 8, datafileCoords, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
-			print_font(double_buffer, t, datafileCoords + 8, fighter[current_fighter_index].fighterName.c_str(), FNORMAL);
+			print_font(double_buffer, t, datafileCoords + 8, fighter[current_fighter_index].fighterName.c_str(), eFontColor::FONTCOLOR_NORMAL);
 		}
 	}
 
@@ -337,7 +337,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		}
 
         eFontColor nameTextColor = (hl == currentFighterIndex + 1)
-            ? FGOLD : FNORMAL;
+            ? eFontColor::FONTCOLOR_GOLD : eFontColor::FONTCOLOR_NORMAL;
         print_font(double_buffer, b + 8, 192, curFighter.fighterName.c_str(), nameTextColor);
 
 		sprintf(strbuf, _("HP: %3d/%3d"), curFighter.fighterHealth, curFighter.fighterMaxHealth);
@@ -353,7 +353,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		/*           just a solid color (and not too hard to implement).  */
 
         eFontColor healthTextColor = curFighter.isFighterHealthCritical()
-            ? FRED : FNORMAL;
+            ? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
 		print_font(double_buffer, b + 8, 208, strbuf, healthTextColor);
 
 		hline(double_buffer, b + 8, 216, b + 95, 21);
@@ -366,7 +366,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 
 		/*  RB IDEA: Same suggestion as with health, just above. */
         eFontColor magicTextColor = curFighter.isFighterMagicCritical()
-            ? FRED : FNORMAL;
+            ? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
 		print_font(double_buffer, b + 8, 218, strbuf, magicTextColor);
 		hline(double_buffer, b + 8, 226, b + 95, 21);
 		sz = (curFighter.fighterMagic > 0)
@@ -388,7 +388,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	{
 		size_t ctext_length = strlen(attack_string) * 4;
 		menubox(double_buffer, 152 - ctext_length, 8, strlen(attack_string), 1, BLUE);
-		print_font(double_buffer, 160 - ctext_length, 16, attack_string, FNORMAL);
+		print_font(double_buffer, 160 - ctext_length, 16, attack_string, eFontColor::FONTCOLOR_NORMAL);
 	}
 }
 
@@ -715,7 +715,7 @@ void KCombat::do_round()
 					}
 
 					ta[fighter_index] = whereAllIsThisUsed;
-					display_amount(fighter_index, FONT_WHITE, 0);
+					display_amount(fighter_index, eFont::FONT_WHITE, 0);
 					fighter[fighter_index].fighterHealth -= whereAllIsThisUsed;
 				}
 
@@ -730,7 +730,7 @@ void KCombat::do_round()
 					}
 
 					ta[fighter_index] = whereAllIsThisUsed;
-					display_amount(fighter_index, FONT_YELLOW, 0);
+					display_amount(fighter_index, eFont::FONT_YELLOW, 0);
 					adjust_hp(fighter_index, whereAllIsThisUsed);
 				}
 
@@ -942,7 +942,7 @@ void KCombat::enemies_win() const
 	kq_wait(1000);
 	sprintf(strbuf, _("%s was defeated!"), party[pidx[0]].playerName);
 	menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, BLUE);
-	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, FNORMAL);
+	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	blit2screen(0, 0);
 	Game.wait_enter();
 	do_transition(TRANS_FADE_OUT, 4);
@@ -1034,7 +1034,7 @@ int KCombat::fight(size_t attack_fighter_index, size_t defend_fighter_index, int
 		ta[defend_fighter_index] = do_shield_check(defend_fighter_index, ta[defend_fighter_index]);
 	}
 
-	display_amount(defend_fighter_index, FONT_DECIDE, 0);
+	display_amount(defend_fighter_index, eFont::FONT_DECIDE, 0);
 	if (ta[defend_fighter_index] != MISS)
 	{
 		fighter[defend_fighter_index].fighterHealth += ta[defend_fighter_index];
@@ -1155,7 +1155,7 @@ void KCombat::heroes_win()
 	}
 
 	menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, BLUE);
-	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, FNORMAL);
+	print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	blit2screen(0, 0);
 	fullblit(double_buffer, back);
 	for (fighter_index = 0; fighter_index < num_enemies; fighter_index++)
@@ -1185,7 +1185,7 @@ void KCombat::heroes_win()
 					sprintf(strbuf, _("%s found!"), items[found_item].itemName);
 					menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
 					draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
-					print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, FNORMAL);
+					print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					nr++;
 				}
 			}
@@ -1210,35 +1210,35 @@ void KCombat::heroes_win()
 			{
 				menubox(double_buffer, b, 40, 18, 9, BLUE);
 				player2fighter(pidx[pidx_index], t2);
-				print_font(double_buffer, b + 8, 48, _("Level up!"), FGOLD);
-				print_font(double_buffer, b + 8, 56, _("Max HP"), FNORMAL);
-				print_font(double_buffer, b + 8, 64, _("Max MP"), FNORMAL);
-				print_font(double_buffer, b + 8, 72, _("Strength"), FNORMAL);
-				print_font(double_buffer, b + 8, 80, _("Agility"), FNORMAL);
-				print_font(double_buffer, b + 8, 88, _("Vitality"), FNORMAL);
-				print_font(double_buffer, b + 8, 96, _("Intellect"), FNORMAL);
-				print_font(double_buffer, b + 8, 104, _("Sagacity"), FNORMAL);
+				print_font(double_buffer, b + 8, 48, _("Level up!"), eFontColor::FONTCOLOR_GOLD);
+				print_font(double_buffer, b + 8, 56, _("Max HP"), eFontColor::FONTCOLOR_NORMAL);
+				print_font(double_buffer, b + 8, 64, _("Max MP"), eFontColor::FONTCOLOR_NORMAL);
+				print_font(double_buffer, b + 8, 72, _("Strength"), eFontColor::FONTCOLOR_NORMAL);
+				print_font(double_buffer, b + 8, 80, _("Agility"), eFontColor::FONTCOLOR_NORMAL);
+				print_font(double_buffer, b + 8, 88, _("Vitality"), eFontColor::FONTCOLOR_NORMAL);
+				print_font(double_buffer, b + 8, 96, _("Intellect"), eFontColor::FONTCOLOR_NORMAL);
+				print_font(double_buffer, b + 8, 104, _("Sagacity"), eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, "%3d>", t1.fighterMaxHealth);
-				print_font(double_buffer, b + 96, 56, strbuf, FNORMAL);
+				print_font(double_buffer, b + 96, 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, "%3d", t2.fighterMaxHealth);
-				print_font(double_buffer, b + 128, 56, strbuf, FGREEN);
+				print_font(double_buffer, b + 128, 56, strbuf, eFontColor::FONTCOLOR_GREEN);
 				sprintf(strbuf, "%3d>", t1.fighterMaxMagic);
-				print_font(double_buffer, b + 96, 64, strbuf, FNORMAL);
+				print_font(double_buffer, b + 96, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, "%3d", t2.fighterMaxMagic);
-				print_font(double_buffer, b + 128, 64, strbuf, FGREEN);
+				print_font(double_buffer, b + 128, 64, strbuf, eFontColor::FONTCOLOR_GREEN);
 
 				for (int z = 0; z < 5; z++)
 				{
 					sprintf(strbuf, "%3d>", t1.fighterStats[z]);
-					print_font(double_buffer, b + 96, z * 8 + 72, strbuf, FNORMAL);
+					print_font(double_buffer, b + 96, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					sprintf(strbuf, "%3d", t2.fighterStats[z]);
 					if (t2.fighterStats[z] > t1.fighterStats[z])
 					{
-						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FGREEN);
+						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_GREEN);
 					}
 					else
 					{
-						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, FNORMAL);
+						print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					}
 				}
 
@@ -1250,7 +1250,7 @@ void KCombat::heroes_win()
 			}
 
 			sprintf(strbuf, _("Next level %7d"), party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);
-			print_font(double_buffer, b + 8, 112, strbuf, FGOLD);
+			print_font(double_buffer, b + 8, 112, strbuf, eFontColor::FONTCOLOR_GOLD);
 		}
 	}
 
@@ -1388,7 +1388,7 @@ void KCombat::multi_fight(size_t attack_fighter_index)
 		fighter[attack_fighter_index].fighterImageDatafileY -= 10;
 	}
 
-	display_amount(start_fighter_index, FONT_DECIDE, 1);
+	display_amount(start_fighter_index, eFont::FONT_DECIDE, 1);
 	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 	{
 		if (killed_warrior[fighter_index] != 0)

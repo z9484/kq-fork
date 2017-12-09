@@ -159,7 +159,7 @@ void camp_item_menu(void)
 								drawmap();
 								draw_itemmenu(ptr, pptr, sel);
 								menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, DARKBLUE);
-								print_font(double_buffer, 104 + xofs, 212 + yofs, _("Confirm/Cancel"), FNORMAL);
+								print_font(double_buffer, 104 + xofs, 212 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
 								blit2screen(xofs, yofs);
 								PlayerInput.readcontrols();
 
@@ -321,23 +321,23 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 	size_t item_quantity;
 
 	menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, BLUE);
-	print_font(double_buffer, 140 + xofs, 20 + yofs, _("Items"), FGOLD);
+	print_font(double_buffer, 140 + xofs, 20 + yofs, _("Items"), eFontColor::FONTCOLOR_GOLD);
 	menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 1, BLUE);
 	if (sl == 1)
 	{
 		menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1, DARKBLUE);
-		print_font(double_buffer, 92 + xofs, 44 + yofs, _("Use"), FGOLD);
-		print_font(double_buffer, 144 + xofs, 44 + yofs, _("Sort   Drop"), FGOLD);
+		print_font(double_buffer, 92 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
+		print_font(double_buffer, 144 + xofs, 44 + yofs, _("Sort   Drop"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else
 	{
 		if (item_act == 0)
 		{
-			print_font(double_buffer, 148 + xofs, 44 + yofs, _("Use"), FGOLD);
+			print_font(double_buffer, 148 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
 		}
 		else
 		{
-			print_font(double_buffer, 144 + xofs, 44 + yofs, _("Drop"), FGOLD);
+			print_font(double_buffer, 144 + xofs, 44 + yofs, _("Drop"), eFontColor::FONTCOLOR_GOLD);
 		}
 	}
 	menubox(double_buffer, 72 + xofs, 60 + yofs, 20, 16, BLUE);
@@ -349,15 +349,15 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 		draw_icon(double_buffer, items[item_index].icon, 88 + xofs, k * 8 + 68 + yofs);
 		if (items[item_index].use >= USE_ANY_ONCE && items[item_index].use <= USE_CAMP_INF)
 		{
-			palette_color = FNORMAL;
+			palette_color = eFontColor::FONTCOLOR_NORMAL;
 		}
 		else
 		{
-			palette_color = FDARK;
+			palette_color = eFontColor::FONTCOLOR_DARK;
 		}
 		if (item_index == I_SSTONE && use_sstone == 0)
 		{
-			palette_color = FDARK;
+			palette_color = eFontColor::FONTCOLOR_DARK;
 		}
 		print_font(double_buffer, 96 + xofs, k * 8 + 68 + yofs, items[item_index].itemName, palette_color);
 		if (item_quantity > 1)
@@ -370,7 +370,7 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 	if (sl == 0)
 	{
 		item_name_length = strlen(items[g_inv[pg * 16 + ptr].item].desc) * 4;
-		print_font(double_buffer, 160 - item_name_length + xofs, 212 + yofs, items[g_inv[pg * 16 + ptr].item].desc, FNORMAL);
+		print_font(double_buffer, 160 - item_name_length + xofs, 212 + yofs, items[g_inv[pg * 16 + ptr].item].desc, eFontColor::FONTCOLOR_NORMAL);
 		draw_sprite(double_buffer, menuptr, 72 + xofs, ptr * 8 + 68 + yofs);
 	}
 	draw_sprite(double_buffer, pgb[pg], 238 + xofs, 194 + yofs);
@@ -427,7 +427,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		{
             gCombat.ta[fighter_index] = tmp;
 			draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
-			display_amount(fighter_index, FONT_YELLOW, 0);
+			display_amount(fighter_index, eFont::FONT_YELLOW, 0);
 			adjust_hp(fighter_index, gCombat.ta[fighter_index]);
 		}
 		break;
@@ -450,7 +450,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		{
             gCombat.ta[fighter_index] = tmp;
 			draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
-			display_amount(fighter_index, FONT_GREEN, 0);
+			display_amount(fighter_index, eFont::FONT_GREEN, 0);
 			adjust_mp(fighter_index, gCombat.ta[fighter_index]);
 		}
 		break;
@@ -566,7 +566,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		if (in_combat == 1)
 		{
 			draw_spellsprite(attack_fighter_index, 1, items[ti].eff, 1);
-			display_amount(attack_fighter_index, FONT_YELLOW, 1);
+			display_amount(attack_fighter_index, eFont::FONT_YELLOW, 1);
 			for (fighter_index = attack_fighter_index; fighter_index < attack_fighter_index + san; fighter_index++)
 			{
 				adjust_hp(fighter_index, gCombat.ta[fighter_index]);

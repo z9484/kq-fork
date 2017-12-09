@@ -193,11 +193,11 @@ void KHero::combat_draw_items(int pg)
 		draw_icon(double_buffer, items[b].icon, 88, a * 8 + 16);
 		if (combat_item_usable(b) == 1)
 		{
-			k = FNORMAL;
+			k = eFontColor::FONTCOLOR_NORMAL;
 		}
 		else
 		{
-			k = FDARK;
+			k = eFontColor::FONTCOLOR_DARK;
 		}
 		print_font(double_buffer, 96, a * 8 + 16, items[b].itemName, k);
 		if (c > 1)
@@ -222,15 +222,15 @@ void KHero::combat_draw_spell_menu(int c, int ptr, int pg)
 			draw_icon(double_buffer, magic[z].icon, 96, j * 8 + 32);
 			if (combat_castable(c, pg * NUM_SPELLS_PER_PAGE + j) == 1)
 			{
-				print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, FNORMAL);
+				print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, eFontColor::FONTCOLOR_NORMAL);
 			}
 			else
 			{
-				print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, FDARK);
+				print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, eFontColor::FONTCOLOR_DARK);
 			}
 			b = mp_needed(c, z);
 			sprintf(strbuf, "%d", b);
-			print_font(double_buffer, 222 - (strlen(strbuf) * 8), j * 8 + 32, strbuf, FNORMAL);
+			print_font(double_buffer, 222 - (strlen(strbuf) * 8), j * 8 + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			draw_sprite(double_buffer, b_mp, 222, j * 8 + 32);
 		}
 	}
@@ -269,7 +269,7 @@ int KHero::combat_item(int ss, int t1, int tg)
 			tt = gCombat.num_enemies;
 		}
 	}
-	display_amount(st, FONT_DECIDE, tl);
+	display_amount(st, eFont::FONT_DECIDE, tl);
 	for (a = st; a < st + tt; a++)
 	{
 		adjust_hp(a, gCombat.ta[a]);
@@ -307,7 +307,7 @@ int KHero::combat_item_menu(int whom)
 		draw_sprite(double_buffer, menuptr, 72, ptr * 8 + 16);
 		/* put description of selected item */
 		menubox(double_buffer, 72, 152, 20, 1, BLUE);
-		print_font(double_buffer, 80, 160, items[g_inv[ptr + pptr * 16].item].desc, FNORMAL);
+		print_font(double_buffer, 80, 160, items[g_inv[ptr + pptr * 16].item].desc, eFontColor::FONTCOLOR_NORMAL);
 		blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
@@ -549,7 +549,7 @@ void KHero::draw_invokable(int dud)
 	for (a = 0; a < NUM_EQUIPMENT; a++)
 	{
 		tt = party[dud].eqp[a];
-		grd = can_invoke_item(tt) ? FNORMAL : FDARK;
+		grd = can_invoke_item(tt) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK;
 		draw_icon(double_buffer, items[tt].icon, 88, a * 8 + 88);
 		print_font(double_buffer, 96, a * 8 + 88, items[tt].itemName, grd);
 	}
@@ -672,7 +672,7 @@ void KHero::hero_choose_action(size_t fighter_index)
 		menubox(double_buffer, 120, amy, 8, my, BLUE);
 		for (ca_index = 0; ca_index < my; ca_index++)
 		{
-			print_font(double_buffer, 136, ca_index * 8 + amy + 8, ca[ca_index], FNORMAL);
+			print_font(double_buffer, 136, ca_index * 8 + amy + 8, ca[ca_index], eFontColor::FONTCOLOR_NORMAL);
 		}
 		if (sptr == 1)
 		{
@@ -681,12 +681,12 @@ void KHero::hero_choose_action(size_t fighter_index)
 		if (sptr == 0)
 		{
 			menubox(double_buffer, 64, amy, 6, 1, BLUE);
-			print_font(double_buffer, 72, amy + 8, _("Defend"), FNORMAL);
+			print_font(double_buffer, 72, amy + 8, _("Defend"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		if (sptr == 2)
 		{
 			menubox(double_buffer, 192, amy, 3, 1, BLUE);
-			print_font(double_buffer, 200, amy + 8, _("Run"), FNORMAL);
+			print_font(double_buffer, 200, amy + 8, _("Run"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		blit2screen(0, 0);
 
@@ -1090,7 +1090,7 @@ void KHero::hero_run(void)
 	else
 	{
 		menubox(double_buffer, 84, 32, 17, 1, BLUE);
-		print_font(double_buffer, 92, 40, _("Could not escape!"), FNORMAL);
+		print_font(double_buffer, 92, 40, _("Could not escape!"), eFontColor::FONTCOLOR_NORMAL);
 		blit2screen(0, 0);
 		Game.wait_enter();
 		return;
@@ -1121,7 +1121,7 @@ void KHero::hero_run(void)
 		{
 			clear_bitmap(double_buffer);
 			menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, BLUE);
-			print_font(double_buffer, 160 - g, 40, strbuf, FNORMAL);
+			print_font(double_buffer, 160 - g, 40, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{
 				fx = fighter[fighter_index].fighterImageDatafileX;

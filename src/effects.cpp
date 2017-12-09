@@ -162,9 +162,9 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 					}
 					string_length = strlen(strbuf) * 3;
 					eFont new_font_color = font_color;
-					if (font_color == FONT_DECIDE)
+					if (font_color == eFont::FONT_DECIDE)
 					{
-						new_font_color = (gCombat.ta[fighter_index] > 0 ? FONT_YELLOW : FONT_WHITE);
+						new_font_color = (gCombat.ta[fighter_index] > 0 ? eFont::FONT_YELLOW : eFont::FONT_WHITE);
 					}
 					gCombat.draw_fighter(fighter_index, 0);
 
