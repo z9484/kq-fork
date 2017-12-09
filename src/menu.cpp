@@ -98,7 +98,7 @@ void draw_mainmenu(int swho)
 	size_t fighter_index;
 
 	timer_count = 0;
-	for (fighter_index = 0; fighter_index < PSIZE; fighter_index++)
+	for (fighter_index = 0; fighter_index < MAX_PARTY_SIZE; fighter_index++)
 	{
 		menubox(double_buffer, 44 + xofs, fighter_index * 64 + 64 + yofs, 18, 6, (size_t)swho == fighter_index ? DARKBLUE : BLUE);
 	}
@@ -648,9 +648,9 @@ void revert_equipstats(void)
 	size_t pidx_index;
 	size_t stats_index;
 
-	if (numchrs > PSIZE)
+	if (numchrs > MAX_PARTY_SIZE)
 	{
-		end_fighter_index = PSIZE;
+		end_fighter_index = MAX_PARTY_SIZE;
 	}
 	else
 	{

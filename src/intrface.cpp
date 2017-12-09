@@ -630,11 +630,11 @@ void do_entity(int en_num)
 #ifdef DEBUGMODE
 	lua_pushcfunction(theL, KQ_traceback);
 	lua_getglobal(theL, "entity_handler");
-	lua_pushnumber(theL, en_num - PSIZE);
+	lua_pushnumber(theL, en_num - MAX_PARTY_SIZE);
 	lua_pcall(theL, 1, 0, oldtop + 1);
 #else
 	lua_getglobal(theL, "entity_handler");
-	lua_pushnumber(theL, en_num - PSIZE);
+	lua_pushnumber(theL, en_num - MAX_PARTY_SIZE);
 	lua_call(theL, 1, 0);
 #endif
 	lua_settop(theL, oldtop);
@@ -1022,13 +1022,13 @@ void KqFork::init_obj(lua_State* L)
 	/* entity[] array */
 	lua_newtable(L);
 	/* ents */
-	for (i = 0; i < noe; ++i)
+	for (i = 0; i < kEntity.getNumberOfMapEntities(); ++i)
 	{
 		lua_newtable(L);
 		lua_pushvalue(L, -2);
 		lua_setmetatable(L, -2);
 		lua_pushstring(L, LUA_ENT_KEY);
-		lua_pushlightuserdata(L, &g_ent[i + PSIZE]);
+		lua_pushlightuserdata(L, &g_ent[i + MAX_PARTY_SIZE]);
 		lua_rawset(L, -3);
 		lua_rawseti(L, -2, i);
 	}
@@ -1036,7 +1036,7 @@ void KqFork::init_obj(lua_State* L)
 	for (i = 0; i < numchrs; ++i)
 	{
 		lua_getglobal(L, party[pidx[i]].playerName);
-		lua_rawseti(L, -2, i + noe);
+		lua_rawseti(L, -2, i + kEntity.getNumberOfMapEntities());
 	}
 	lua_setglobal(L, "entity");
 }
@@ -1045,7 +1045,7 @@ static int KQ_add_chr(lua_State* L)
 {
 	ePIDX a = (ePIDX) static_cast<int>(lua_tointeger(L, 1));
 
-	if (numchrs < PSIZE)
+	if (numchrs < MAX_PARTY_SIZE)
 	{
 		pidx[numchrs] = a;
 		g_ent[numchrs].active = 1;
@@ -2029,7 +2029,7 @@ static int KQ_get_marker_tiley(lua_State* L)
 
 static int KQ_get_noe(lua_State* L)
 {
-	lua_pushnumber(L, noe);
+	lua_pushnumber(L, kEntity.getNumberOfMapEntities());
 	return 1;
 }
 
@@ -2832,9 +2832,9 @@ static int KQ_remove_chr(lua_State* L)
 		{
 			pidx[party_index] = PIDX_UNDEFINED;
 			numchrs--;
-			if (party_index != PSIZE - 1)
+			if (party_index != MAX_PARTY_SIZE - 1)
 			{
-				for (party_member_index = 0; party_member_index < PSIZE - 1; party_member_index++)
+				for (party_member_index = 0; party_member_index < MAX_PARTY_SIZE - 1; party_member_index++)
 				{
 					if (pidx[party_member_index] == PIDX_UNDEFINED)
 					{
@@ -3300,11 +3300,11 @@ static int KQ_set_mtile(lua_State* L)
 
 static int KQ_set_noe(lua_State* L)
 {
-	uint32_t a = (uint32_t)lua_tonumber(L, 1);
+	uint32_t a = (size_t)lua_tonumber(L, 1);
 
-	if (a <= MAX_ENTITIES_PER_MAP + PSIZE)
+	if (a <= MAX_ENTITIES_PER_MAP + MAX_PARTY_SIZE)
 	{
-		noe = a;
+		kEntity.setNumberOfMapEntities(a);
 	}
 	return 0;
 }
@@ -4183,7 +4183,7 @@ static int KQ_party_setter(lua_State* L)
 {
 	size_t which = (size_t)lua_tonumber(L, 2);
 
-	if (which < PSIZE)
+	if (which < MAX_PARTY_SIZE)
 	{
 		/* check if it is a valid hero object */
 		if (lua_isnil(L, 3))
@@ -4196,7 +4196,7 @@ static int KQ_party_setter(lua_State* L)
 				return 0;
 			}
 			/* it was nil, erase a character */
-			for (i = which; i < (PSIZE - 1); ++i)
+			for (i = which; i < (MAX_PARTY_SIZE - 1); ++i)
 			{
 				pidx[i] = pidx[i + 1];
 				memcpy(&g_ent[i], &g_ent[i + 1], sizeof(KQEntity));
@@ -4352,7 +4352,7 @@ int KqFork::real_entity_num(lua_State* L, int pos)
 			return 255;
 
 		default:
-			return ee + PSIZE;
+			return ee + MAX_PARTY_SIZE;
 		}
 	}
 	if (lua_istable(L, pos))

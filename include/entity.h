@@ -59,13 +59,22 @@ public:
     void place_ent(t_entity en, int ex, int ey);
 
     /**
-     * Count active entities
+     * Recalculate number of active entities on the map.
      *
-     * Force calculation of the 'noe' variable.
      * This actually calculates the last index of any active entity plus one,
      * so if there are entities present, but not active, they may be counted.
      */
-    void count_entities() const;
+    void recalculateNumberOfActiveMapEntities();
+
+    /**
+     * Update the total number of entities found on the map: NPCs+players.
+     */
+    void setNumberOfMapEntities(size_t numEntities);
+
+    /**
+     * Get the total number of entities found on the map: NPCs+players.
+     */
+    size_t getNumberOfMapEntities() const;
 
 private:
 
@@ -236,6 +245,9 @@ private:
      * @param target_entity Index of entity to move
      */
     void wander(t_entity target_entity);
+
+private:
+    int noe;
 };
 
 extern KEntity kEntity;

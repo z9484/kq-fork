@@ -65,7 +65,7 @@ int hero_skillcheck(size_t fighter_index)
 			return 0;
 		}
 		// See whether any enemies CAN be turned to stone.
-		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + gCombat.num_enemies; target_fighter_index++)
+		for (target_fighter_index = MAX_PARTY_SIZE; target_fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
@@ -110,7 +110,7 @@ int hero_skillcheck(size_t fighter_index)
 		{
 			return 0;
 		}
-		for (target_fighter_index = PSIZE; target_fighter_index < PSIZE + gCombat.num_enemies; target_fighter_index++)
+		for (target_fighter_index = MAX_PARTY_SIZE; target_fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[target_fighter_index].unl > 0)
 			{
@@ -516,7 +516,7 @@ int skill_use(size_t attack_fighter_index)
         gCombat.fight(attack_fighter_index, enemy_index, 1);
 		if (fighter[enemy_index].fighterSpellEffectStats[S_DEAD] == 1)
 		{
-			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -624,8 +624,8 @@ int skill_use(size_t attack_fighter_index)
 			fullblit(double_buffer, back);
 			for (a = 0; a < 14; a++)
 			{
-				convert_cframes(PSIZE, 1 + a, 15, 1);
-				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+				convert_cframes(MAX_PARTY_SIZE, 1 + a, 15, 1);
+				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (is_active(fighter_index))
 					{
@@ -636,10 +636,10 @@ int skill_use(size_t attack_fighter_index)
 				kq_wait(50);
 				fullblit(back, double_buffer);
 			}
-			revert_cframes(PSIZE, 1);
+			revert_cframes(MAX_PARTY_SIZE, 1);
 			display_attack_string = false;
 			b = fighter[attack_fighter_index].fighterLevel * 15;
-			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0)
 				{
@@ -671,7 +671,7 @@ int skill_use(size_t attack_fighter_index)
 					}
 				}
 			}
-			death_animation(PSIZE, 1);
+			death_animation(MAX_PARTY_SIZE, 1);
 			gCombat.fighterImageDatafileX = -1;
 			gCombat.fighterImageDatafileY = -1;
 			gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);

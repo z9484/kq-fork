@@ -96,7 +96,7 @@ protected:
 	std::string m_curmap;
 };
 
-extern int vx, vy, mx, my, steps, lastm[PSIZE];
+extern int vx, vy, mx, my, steps, lastm[MAX_PARTY_SIZE];
 
 extern Raster* double_buffer, *fx_buffer;
 extern Raster* map_icons[MAX_TILES];
@@ -119,7 +119,6 @@ extern s_anim tanim[MAX_TILESETS][MAX_ANIM];
 extern s_anim adata[MAX_ANIM];
 extern uint32_t numchrs;
 extern int gp, xofs, yofs, gsvol, gmvol;
-extern uint32_t noe;
 extern ePIDX pidx[MAXCHRS];
 extern uint8_t autoparty, alldead, is_sound, deadeffect, vfollow, use_sstone, sound_avail;
 extern const uint8_t kq_version;

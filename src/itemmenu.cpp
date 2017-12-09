@@ -396,7 +396,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 	if (attack_fighter_index == 0)
 	{
 		san = numchrs;
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 		sen = gCombat.num_enemies;
 	}
 	else
@@ -615,13 +615,13 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		draw_spellsprite(fighter_index, 0, items[ti].eff, 0);
 		return ITEM_EFFECT_SUCCESS_MULTIPLE;
 	}
-	if (attack_fighter_index == PSIZE || in_combat == 1)
+	if (attack_fighter_index == MAX_PARTY_SIZE || in_combat == 1)
 	{
 		return ITEM_EFFECT_SUCCESS_SINGLE;
 	}
 	if (ti >= I_STRSEED && ti <= I_WISSEED)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || in_combat == 1 || fighter_index >= PSIZE)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || in_combat == 1 || fighter_index >= MAX_PARTY_SIZE)
 		{
 			return ITEM_EFFECT_INEFFECTIVE;
 		}

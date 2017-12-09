@@ -280,7 +280,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	if ((sall == 0) && (fighterImageDatafileX > -1) && (fighterImageDatafileY > -1))
 	{
 		draw_sprite(double_buffer, bptr, fighterImageDatafileX + (curw / 2) - 8, fighterImageDatafileY - 8);
-		if (current_fighter_index >= PSIZE)
+		if (current_fighter_index >= MAX_PARTY_SIZE)
 		{
 			current_fighter_index = plyr - 1;
 			t = fighterImageDatafileX + (curw / 2);
@@ -376,7 +376,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		draw_stsicon(double_buffer, 1, currentFighterIndex, 17, b + 8, 200);
 	}
 
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -416,7 +416,7 @@ bool KCombat::hasBattleEnded()
     bool anyEnemiesAlive = false;
 	for (size_t fighter_index = 0; fighter_index < num_enemies; fighter_index++)
 	{
-		if (fighter[fighter_index + PSIZE].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index + MAX_PARTY_SIZE].fighterSpellEffectStats[S_DEAD] == 0)
 		{
             anyEnemiesAlive = true;
             // No need to continue checking if any are still alive.
@@ -546,7 +546,7 @@ void KCombat::do_action(size_t fighter_index)
 		fighter[fighter_index].fighterSpellEffectStats[S_CHARM]--;
 		spell_type_status = fighter[fighter_index].fighterSpellEffectStats[S_CHARM];
 
-		if (fighter_index < PSIZE)
+		if (fighter_index < MAX_PARTY_SIZE)
 		{
 			heroc.auto_herochooseact(fighter_index);
 		}
@@ -559,7 +559,7 @@ void KCombat::do_action(size_t fighter_index)
 	if (bIsEtherEffectActive[fighter_index])
 	{
 		revert_cframes(fighter_index, 0);
-		if (fighter_index < PSIZE)
+		if (fighter_index < MAX_PARTY_SIZE)
 		{
 			if (spell_type_status == 0)
 			{
@@ -692,9 +692,9 @@ void KCombat::do_round()
 				rcount = 0;
 			}
 
-			for (fighter_index = 0; fighter_index < PSIZE + num_enemies; fighter_index++)
+			for (fighter_index = 0; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 			{
-				if (fighter_index >= numchrs && fighter_index < PSIZE)
+				if (fighter_index >= numchrs && fighter_index < MAX_PARTY_SIZE)
                 {
                     bIsEtherEffectActive[fighter_index] = false;
                     continue;
@@ -824,7 +824,7 @@ void KCombat::do_round()
             gCombat.battle_render(0, 0, 0);
 			blit2screen(0, 0);
 
-			for (fighter_index = 0; fighter_index < (PSIZE + num_enemies); fighter_index++)
+			for (fighter_index = 0; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
 			{
 				if ((bspeed[fighter_index] >= ROUND_MAX) && (bIsEtherEffectActive[fighter_index]))
 				{
@@ -877,7 +877,7 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 	}
 	else
 	{
-		if (fighter_index < PSIZE)
+		if (fighter_index < MAX_PARTY_SIZE)
 		{
 			// Your party
 			Raster* shad = new Raster(cframes[fighter_index][ff]->width * 2 / 3, cframes[fighter_index][ff]->height / 4);
@@ -906,7 +906,7 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 		draw_sprite(double_buffer, bptr, xx + (fr->fighterImageDatafileWidth / 2) - 8, yy - 8);
 	}
 
-	if ((vspell == 1) && (fighter_index >= PSIZE))
+	if ((vspell == 1) && (fighter_index >= MAX_PARTY_SIZE))
 	{
 		ff = fr->fighterHealth * 30 / fr->fighterMaxHealth;
 		if ((fr->fighterHealth > 0) && (ff < 1))
@@ -1004,7 +1004,7 @@ int KCombat::fight(size_t attack_fighter_index, size_t defend_fighter_index, int
 		fighter[defend_fighter_index].fighterImageDatafileY = fighter[a].fighterImageDatafileY - 16;
 	}
 
-	if (attack_fighter_index < PSIZE)
+	if (attack_fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 7;
 	}
@@ -1014,7 +1014,7 @@ int KCombat::fight(size_t attack_fighter_index, size_t defend_fighter_index, int
 	}
 
 	fight_animation(defend_fighter_index, attack_fighter_index, 0);
-	if (attack_fighter_index < PSIZE)
+	if (attack_fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 0;
 	}
@@ -1074,7 +1074,7 @@ void KCombat::fkill(size_t fighter_index)
 {
 #ifdef KQ_CHEATS
 	/* PH Combat cheat: when a hero dies s/he is mysteriously boosted back to full HP. */
-	if (hasCheatEnabled && fighter_index < PSIZE)
+	if (hasCheatEnabled && fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter[fighter_index].fighterHealth = fighter[fighter_index].fighterMaxHealth;
 		return;
@@ -1088,7 +1088,7 @@ void KCombat::fkill(size_t fighter_index)
 
 	fighter[fighter_index].fighterSpellEffectStats[S_DEAD] = 1;
 	fighter[fighter_index].fighterHealth = 0;
-	if (fighter_index < PSIZE)
+	if (fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter[fighter_index].fighterDefeatItemCommon = 0;
 	}
@@ -1132,7 +1132,7 @@ void KCombat::heroes_win()
 		ta[fighter_index] = 0;
 	}
 
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
 		txp += fighter[fighter_index].fighterExperience;
 		tgp += fighter[fighter_index].fighterMoney;
@@ -1163,18 +1163,18 @@ void KCombat::heroes_win()
 		/* PH bug: (?) should found_item be reset to zero at the start of this loop?
 		 * If you defeat 2 enemies, you should (possibly) get 2 items, right?
 		 */
-		if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + PSIZE].fighterDefeatItemProbability)
+		if (kqrandom->random_range_exclusive(0, 100) < fighter[fighter_index + MAX_PARTY_SIZE].fighterDefeatItemProbability)
 		{
-			if (fighter[fighter_index + PSIZE].fighterDefeatItemCommon > 0)
+			if (fighter[fighter_index + MAX_PARTY_SIZE].fighterDefeatItemCommon > 0)
 			{
-				found_item = fighter[fighter_index + PSIZE].fighterDefeatItemCommon;
+				found_item = fighter[fighter_index + MAX_PARTY_SIZE].fighterDefeatItemCommon;
 			}
 
-			if (fighter[fighter_index + PSIZE].fighterDefeatItemRare > 0)
+			if (fighter[fighter_index + MAX_PARTY_SIZE].fighterDefeatItemRare > 0)
 			{
 				if (kqrandom->random_range_exclusive(0, 100) < 5)
 				{
-					found_item = fighter[fighter_index + PSIZE].fighterDefeatItemRare;
+					found_item = fighter[fighter_index + MAX_PARTY_SIZE].fighterDefeatItemRare;
 				}
 			}
 
@@ -1287,7 +1287,7 @@ void KCombat::init_fighters()
 	 */
 	heroc.hero_init();
 	enemy_init();
-	for (fighter_index = 0; fighter_index < (PSIZE + num_enemies); fighter_index++)
+	for (fighter_index = 0; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
 	{
 		nspeed[fighter_index] = (fighter[fighter_index].fighterStats[A_SPD] + 50) / 5;
 	}
@@ -1310,10 +1310,10 @@ void KCombat::multi_fight(size_t attack_fighter_index)
 		killed_warrior[fighter_index] = 0;
 	}
 
-	if (attack_fighter_index < PSIZE)
+	if (attack_fighter_index < MAX_PARTY_SIZE)
 	{
 		// if the attacker is you, target enemies
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 		end_fighter_index = num_enemies;
 	}
 	else
@@ -1369,7 +1369,7 @@ void KCombat::multi_fight(size_t attack_fighter_index)
 		}
 	}
 
-	if (attack_fighter_index < PSIZE)
+	if (attack_fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 7;
 	}
@@ -1379,7 +1379,7 @@ void KCombat::multi_fight(size_t attack_fighter_index)
 	}
 
 	fight_animation(start_fighter_index, attack_fighter_index, 1);
-	if (attack_fighter_index < PSIZE)
+	if (attack_fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 0;
 	}
@@ -1440,7 +1440,7 @@ void KCombat::roll_initiative()
 		}
 	}
 
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
 		if (hs == 1)
 		{
@@ -1457,7 +1457,7 @@ void KCombat::roll_initiative()
 	/* PH: This should be ok */
 	for (fighter_index = 0; fighter_index < NUM_FIGHTERS; fighter_index++)
 	{
-		if (fighter_index < numchrs || (fighter_index >= PSIZE && fighter_index < (PSIZE + num_enemies)))
+		if (fighter_index < numchrs || (fighter_index >= MAX_PARTY_SIZE && fighter_index < (MAX_PARTY_SIZE + num_enemies)))
 		{
 			for (j = 0; j < 2; j++)
 			{
@@ -1504,7 +1504,7 @@ void KCombat::snap_togrid()
 		fighter[fighter_index].fighterSpriteFacing = hf;
 	}
 
-	for (fighter_index = PSIZE; fighter_index < (PSIZE + num_enemies); fighter_index++)
+	for (fighter_index = MAX_PARTY_SIZE; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
 	{
 		fighter[fighter_index].fighterSpriteFacing = mf;
 	}
@@ -1516,11 +1516,11 @@ void KCombat::snap_togrid()
 		fighter[fighter_index].fighterImageDatafileY = 128;
 	}
 
-	a = fighter[PSIZE].fighterImageDatafileWidth + 16;
+	a = fighter[MAX_PARTY_SIZE].fighterImageDatafileWidth + 16;
 	mf = 170 - (num_enemies * a / 2);
-	for (fighter_index = PSIZE; fighter_index < PSIZE + num_enemies; fighter_index++)
+	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
-		fighter[fighter_index].fighterImageDatafileX = (fighter_index - PSIZE) * a + mf;
+		fighter[fighter_index].fighterImageDatafileX = (fighter_index - MAX_PARTY_SIZE) * a + mf;
 
 		if (fighter[fighter_index].fighterImageDatafileHeight < 104)
 		{

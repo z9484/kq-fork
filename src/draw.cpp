@@ -267,15 +267,15 @@ void convert_cframes(size_t fighter_index, int output_range_start, int output_ra
 	/* Determine the range of frames to convert */
 	if (convert_heroes == 1)
 	{
-		if (fighter_index < PSIZE)
+		if (fighter_index < MAX_PARTY_SIZE)
 		{
 			start_fighter_index = 0;
 			end_fighter_index = numchrs;
 		}
 		else
 		{
-			start_fighter_index = PSIZE;
-			end_fighter_index = PSIZE + gCombat.num_enemies;
+			start_fighter_index = MAX_PARTY_SIZE;
+			end_fighter_index = MAX_PARTY_SIZE + gCombat.num_enemies;
 		}
 	}
 	else
@@ -417,7 +417,7 @@ void KqFork::draw_char(int xw, int yw)
 	size_t fighter_frame, fighter_frame_add;
 	size_t fighter_type_id;
 
-	for (follower_fighter_index = PSIZE + noe; follower_fighter_index > 0; follower_fighter_index--)
+	for (follower_fighter_index = MAX_PARTY_SIZE + kEntity.getNumberOfMapEntities(); follower_fighter_index > 0; follower_fighter_index--)
 	{
 		fighter_index = follower_fighter_index - 1;
 		fighter_type_id = g_ent[fighter_index].eid;
@@ -432,7 +432,7 @@ void KqFork::draw_char(int xw, int yw)
 			fighter_frame_add = g_ent[fighter_index].framectr > 10 ? 1 : 0;
 			fighter_frame = g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + fighter_frame_add;
 		}
-		if (fighter_index < PSIZE && fighter_index < numchrs)
+		if (fighter_index < MAX_PARTY_SIZE && fighter_index < numchrs)
 		{
 			/* It's a hero */
 			/* Masquerade: if chrx!=0 then this hero is disguised as someone else...
@@ -1034,7 +1034,7 @@ void KqFork::draw_porttextbox(int bstyle, int chr)
 
 	wid = gbbw * 8 + 16;
 	hgt = gbbh * 12 + 16;
-	chr = chr - PSIZE;
+	chr = chr - MAX_PARTY_SIZE;
 
 	KqFork::draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
 
@@ -1925,15 +1925,15 @@ void revert_cframes(size_t fighter_index, int revert_heroes)
 	/* Determine the range of frames to revert */
 	if (revert_heroes == 1)
 	{
-		if (fighter_index < PSIZE)
+		if (fighter_index < MAX_PARTY_SIZE)
 		{
 			start_fighter_index = 0;
 			end_fighter_index = numchrs;
 		}
 		else
 		{
-			start_fighter_index = PSIZE;
-			end_fighter_index = PSIZE + gCombat.num_enemies;
+			start_fighter_index = MAX_PARTY_SIZE;
+			end_fighter_index = MAX_PARTY_SIZE + gCombat.num_enemies;
 		}
 	}
 	else

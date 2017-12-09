@@ -90,9 +90,9 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 	size_t end_fighter_index, start_fighter_index, fighter_index;
 	int sp_hit;
 
-	if (caster_fighter_index < PSIZE)
+	if (caster_fighter_index < MAX_PARTY_SIZE)
 	{
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 		end_fighter_index = gCombat.num_enemies;
 	}
 	else
@@ -469,7 +469,7 @@ int cast_spell(size_t caster_fighter_index, int is_item)
 				{
 					size_t i, end_fighter_index, start_fighter_index;
 
-					if (caster_fighter_index < PSIZE)
+					if (caster_fighter_index < MAX_PARTY_SIZE)
 					{
 						end_fighter_index = numchrs;
 						start_fighter_index = 0;
@@ -477,7 +477,7 @@ int cast_spell(size_t caster_fighter_index, int is_item)
 					else
 					{
 						end_fighter_index = gCombat.num_enemies;
-						start_fighter_index = PSIZE;
+						start_fighter_index = MAX_PARTY_SIZE;
 					}
 					for (i = start_fighter_index; i < end_fighter_index; i++)
 					{
@@ -569,7 +569,7 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 		if (tgt == SEL_ALL_ALLIES)
 		{
 			tall = 1;
-			if (caster_fighter_index < PSIZE)
+			if (caster_fighter_index < MAX_PARTY_SIZE)
 			{
 				end_fighter_index = numchrs;
 				start_fighter_index = 0;
@@ -577,7 +577,7 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 			else
 			{
 				end_fighter_index = gCombat.num_enemies;
-				start_fighter_index = PSIZE;
+				start_fighter_index = MAX_PARTY_SIZE;
 			}
 		}
 	}
@@ -586,10 +586,10 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 		if (tgt == SEL_ALL_ENEMIES)
 		{
 			tall = 1;
-			if (caster_fighter_index < PSIZE)
+			if (caster_fighter_index < MAX_PARTY_SIZE)
 			{
 				end_fighter_index = gCombat.num_enemies;
-				start_fighter_index = PSIZE;
+				start_fighter_index = MAX_PARTY_SIZE;
 			}
 			else
 			{
@@ -752,7 +752,7 @@ static void cure_oneall_allies(size_t caster_fighter_index, int tgt, size_t spel
 
 	if (tgt == SEL_ALL_ALLIES)
 	{
-		if (caster_fighter_index < PSIZE)
+		if (caster_fighter_index < MAX_PARTY_SIZE)
 		{
 			end_fighter_index = numchrs;
 			start_fighter_index = 0;
@@ -760,7 +760,7 @@ static void cure_oneall_allies(size_t caster_fighter_index, int tgt, size_t spel
 		else
 		{
 			end_fighter_index = gCombat.num_enemies;
-			start_fighter_index = PSIZE;
+			start_fighter_index = MAX_PARTY_SIZE;
 		}
 	}
 	else
@@ -826,9 +826,9 @@ static void damage_all_enemies(size_t caster_fighter_index, size_t spell_number)
 {
 	size_t end_fighter_index, start_fighter_index;
 
-	if (caster_fighter_index < PSIZE)
+	if (caster_fighter_index < MAX_PARTY_SIZE)
 	{
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 		end_fighter_index = gCombat.num_enemies;
 	}
 	else
@@ -853,10 +853,10 @@ static void damage_oneall_enemies(size_t caster_fighter_index, int tgt, size_t s
 
 	if (tgt == SEL_ALL_ENEMIES)
 	{
-		if (caster_fighter_index < PSIZE)
+		if (caster_fighter_index < MAX_PARTY_SIZE)
 		{
 			end_fighter_index = gCombat.num_enemies;
-			start_fighter_index = PSIZE;
+			start_fighter_index = MAX_PARTY_SIZE;
 		}
 		else
 		{
@@ -939,7 +939,7 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 	size_t fighter_index = 0;
 	size_t end_fighter_index, start_fighter_index;
 
-	if (caster_fighter_index < PSIZE)
+	if (caster_fighter_index < MAX_PARTY_SIZE)
 	{
 		end_fighter_index = numchrs;
 		start_fighter_index = 0;
@@ -947,7 +947,7 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 	else
 	{
 		end_fighter_index = gCombat.num_enemies;
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 	}
 	if (kqrandom->random_range_exclusive(1, 101) > fighter[caster_fighter_index].fighterStats[A_AUR + magic[spell_number].stat])
 	{
@@ -1367,12 +1367,12 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
 
 	if (target_index == SEL_ALL_ENEMIES)
 	{
-		if (caster_index < PSIZE)
+		if (caster_index < MAX_PARTY_SIZE)
 		{
 			/* Enemies are the monsters; you are attacking */
-			first_target = PSIZE;
+			first_target = MAX_PARTY_SIZE;
 			last_target = gCombat.num_enemies;
-			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -1496,7 +1496,7 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
  */
 static void special_spells(size_t caster_fighter_index, size_t spell_number)
 {
-	if (caster_fighter_index >= PSIZE)
+	if (caster_fighter_index >= MAX_PARTY_SIZE)
 	{
 		sprintf(strbuf, _("Enemy %d tried to cast %s?!"), (int)caster_fighter_index, magic[spell_number].spellName);
 		Game.klog(strbuf);
@@ -1560,9 +1560,9 @@ static void spell_damage(size_t caster_fighter_index, int spell_number, size_t s
 
 	if (end_fighter_index > 1)
 	{
-		if (caster_fighter_index < PSIZE)
+		if (caster_fighter_index < MAX_PARTY_SIZE)
 		{
-			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{

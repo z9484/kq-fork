@@ -98,9 +98,6 @@ s_map g_map;
 /*! Current entities (players+NPCs) */
 KQEntity g_ent[MAX_ENTITIES];
 
-/*! Number of enemies */
-uint32_t noe = 0;
-
 /*! Identifies characters in the party */
 ePIDX pidx[MAXCHRS];
 
@@ -400,7 +397,7 @@ void KGame::activate(void)
 
 	p = kEntity.entityat(looking_at_x, looking_at_y, 0);
 
-	if (p >= PSIZE)
+	if (p >= MAX_PARTY_SIZE)
 	{
 		tf = g_ent[p - 1].facing;
 
@@ -1361,13 +1358,12 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 		tilex[i] = (uint16_t)i;
 	}
 
-	noe = 0;
 	for (i = 0; i < (size_t)numchrs; i++)
 	{
 		g_ent[i].active = 1;
 	}
 
-    kEntity.count_entities();
+	kEntity.recalculateNumberOfActiveMapEntities();
 
 	for (i = 0; i < MAX_ENTITIES; i++)
 	{

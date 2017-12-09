@@ -38,11 +38,11 @@ enum eShadow
 
 #define MAX_TILES 1024
 #define MAXE 41
-#define PSIZE 2U
+constexpr size_t MAX_PARTY_SIZE = 2;
 #define MAXFRAMES 12
 #define MAXEFRAMES 12
-#define MAX_ENTITIES_PER_MAP 50
-#define MAX_ENTITIES (MAX_ENTITIES_PER_MAP + PSIZE)
+constexpr size_t MAX_ENTITIES_PER_MAP = 50;
+constexpr size_t MAX_ENTITIES = (MAX_ENTITIES_PER_MAP + MAX_PARTY_SIZE);
 #define ID_ENEMY 254
 #define ENT_FRAMES_PER_DIR 3
 

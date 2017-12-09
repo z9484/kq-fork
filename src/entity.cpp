@@ -89,7 +89,7 @@ void KEntity::ChaseAfterMainPlayer(t_entity target_entity)
 	}
 }
 
-void KEntity::count_entities() const
+void KEntity::recalculateNumberOfActiveMapEntities()
 {
 	noe = 0;
 	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
@@ -99,6 +99,16 @@ void KEntity::count_entities() const
 			noe = entity_index + 1;
 		}
 	}
+}
+
+void KEntity::setNumberOfMapEntities(size_t numEntities)
+{
+	noe = numEntities;
+}
+
+size_t KEntity::getNumberOfMapEntities() const
+{
+	return noe;
 }
 
 int KEntity::entity_near(t_entity eno, t_entity tgt, int rad)
@@ -130,9 +140,9 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 	{
 		if (g_ent[i].active && ox == g_ent[i].tilex && oy == g_ent[i].tiley)
 		{
-			if (who >= PSIZE)
+			if (who >= MAX_PARTY_SIZE)
 			{
-				if (g_ent[who].eid == ID_ENEMY && i < PSIZE)
+				if (g_ent[who].eid == ID_ENEMY && i < MAX_PARTY_SIZE)
 				{
 					if (gCombat.combat(0) == 1)
 					{
@@ -152,7 +162,7 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 					}
 					return 0;
 				}
-				if (i >= PSIZE)
+				if (i >= MAX_PARTY_SIZE)
 				{
 					return i + 1;
 				}
@@ -717,7 +727,7 @@ void KEntity::process_entity(t_entity target_entity)
 		if (ent->movcnt == 0)
 		{
 			ent->moving = 0;
-			if (target_entity < PSIZE)
+			if (target_entity < MAX_PARTY_SIZE)
 			{
 				player = &party[pidx[target_entity]];
 				if (steps < STEPS_NEEDED)
@@ -816,7 +826,7 @@ void KEntity::speed_adjust(t_entity target_entity)
 		break;
 	}
 	/* TT: This is to see if the player is "running" */
-	if (key[PlayerInput.kctrl] && target_entity < PSIZE)
+	if (key[PlayerInput.kctrl] && target_entity < MAX_PARTY_SIZE)
 	{
 		process_entity(target_entity);
 	}

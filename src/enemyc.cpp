@@ -145,7 +145,7 @@ void KqFork::EnemyC::enemy_attack(size_t target_fighter_index)
         gCombat.bIsEtherEffectActive[target_fighter_index] = false;
 		return;
 	}
-	if ((uint32_t)b < PSIZE && numchrs > 1)
+	if ((uint32_t)b < MAX_PARTY_SIZE && numchrs > 1)
 	{
 		c = 0;
 		for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
@@ -398,7 +398,7 @@ void enemy_init(void)
 		if (enemyFighterIndex < KqFork::EnemyC::enemy_fighters.size() && KqFork::EnemyC::enemy_fighters.size() > 0)
 		{
 			f = KqFork::EnemyC::enemy_fighters[enemyFighterIndex];
-			fighter[fighter_index + PSIZE] = *f;
+			fighter[fighter_index + MAX_PARTY_SIZE] = *f;
 		}
 		if (f == nullptr)
 		{
@@ -408,14 +408,14 @@ void enemy_init(void)
 		for (frame_index = 0; frame_index < MAXCFRAMES; ++frame_index)
 		{
 			/* If, in a previous combat, we made a bitmap, destroy it now */
-			if (cframes[fighter_index + PSIZE][frame_index])
+			if (cframes[fighter_index + MAX_PARTY_SIZE][frame_index])
 			{
-				delete (cframes[fighter_index + PSIZE][frame_index]);
+				delete (cframes[fighter_index + MAX_PARTY_SIZE][frame_index]);
 			}
 			/* and create a new one */
-			cframes[fighter_index + PSIZE][frame_index] = new Raster(f->img->width, f->img->height);
-			blit(f->img, cframes[fighter_index + PSIZE][frame_index], 0, 0, 0, 0, f->img->width, f->img->height);
-			tcframes[fighter_index + PSIZE][frame_index] = copy_bitmap(tcframes[fighter_index + PSIZE][frame_index], f->img);
+			cframes[fighter_index + MAX_PARTY_SIZE][frame_index] = new Raster(f->img->width, f->img->height);
+			blit(f->img, cframes[fighter_index + MAX_PARTY_SIZE][frame_index], 0, 0, 0, 0, f->img->width, f->img->height);
+			tcframes[fighter_index + MAX_PARTY_SIZE][frame_index] = copy_bitmap(tcframes[fighter_index + MAX_PARTY_SIZE][frame_index], f->img);
 		}
 	}
 }
@@ -481,11 +481,11 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 			{
 			case M_SHIELD:
 			case M_SHIELDALL:
-				yes = KqFork::EnemyC::enemy_stscheck(S_SHIELD, PSIZE);
+				yes = KqFork::EnemyC::enemy_stscheck(S_SHIELD, MAX_PARTY_SIZE);
 				break;
 			case M_HOLYMIGHT:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STRENGTH] < 2)
 					{
@@ -499,7 +499,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				break;
 			case M_BLESS:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_BLESS] < 3)
 					{
@@ -512,18 +512,18 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				}
 				break;
 			case M_TRUEAIM:
-				yes = KqFork::EnemyC::enemy_stscheck(S_TRUESHOT, PSIZE);
+				yes = KqFork::EnemyC::enemy_stscheck(S_TRUESHOT, MAX_PARTY_SIZE);
 				break;
 			case M_REGENERATE:
-				yes = KqFork::EnemyC::enemy_stscheck(S_REGEN, PSIZE);
+				yes = KqFork::EnemyC::enemy_stscheck(S_REGEN, MAX_PARTY_SIZE);
 				break;
 			case M_THROUGH:
-				yes = KqFork::EnemyC::enemy_stscheck(S_ETHER, PSIZE);
+				yes = KqFork::EnemyC::enemy_stscheck(S_ETHER, MAX_PARTY_SIZE);
 				break;
 			case M_HASTEN:
 			case M_QUICKEN:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 2)
 					{
@@ -537,7 +537,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				break;
 			case M_SHELL:
 			case M_WALL:
-				yes = KqFork::EnemyC::enemy_stscheck(S_RESIST, PSIZE);
+				yes = KqFork::EnemyC::enemy_stscheck(S_RESIST, MAX_PARTY_SIZE);
 				break;
 			case M_ABSORB:
 				if (fighter[attack_fighter_index].fighterHealth < fighter[attack_fighter_index].fighterMaxHealth / 2)
@@ -588,7 +588,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				break;
 			case M_DIVINEGUARD:
 				aux = 0;
-				for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 				{
 					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] == 0)
 					{
@@ -651,9 +651,9 @@ int KqFork::EnemyC::enemy_stscheck(int ws, int s)
 	uint32_t fighter_affected = 0;
 	size_t fighter_index;
 
-	if (s == PSIZE)
+	if (s == MAX_PARTY_SIZE)
 	{
-		for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+		for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 		{
 			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[ws] == 0)
 			{
@@ -1071,7 +1071,7 @@ int KqFork::EnemyC::spell_setup(int whom, int z)
 		if (z == M_CURE1 || z == M_CURE2 || z == M_CURE3 || z == M_CURE4)
 		{
 			aux = 0;
-			for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 75 / 100)
 				{

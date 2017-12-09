@@ -59,7 +59,7 @@ int auto_select_enemy(int whom, int csts)
 {
 	unsigned int i, number_enemies = 0;
 	int tmpd[NUM_FIGHTERS];
-	for (i = PSIZE; i < PSIZE + gCombat.num_enemies; i++)
+	for (i = MAX_PARTY_SIZE; i < MAX_PARTY_SIZE + gCombat.num_enemies; i++)
 	{
 		if (fighter[i].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -475,7 +475,7 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 	unsigned int cntr = 0;
 	size_t ptr;
 	int tmpd[NUM_FIGHTERS];
-	for (unsigned int fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+	for (unsigned int fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 	{
 		if (can_attack(fighter_index) == 1)
 		{
@@ -683,7 +683,7 @@ ePIDX select_hero(size_t target_fighter_index, eTarget multi_target, bool can_se
  */
 int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 {
-	static const uint32_t BTN_EXIT = (MAXCHRS + PSIZE);
+	static const uint32_t BTN_EXIT = (MAXCHRS + MAX_PARTY_SIZE);
 
 	ePIDX hero = PIDX_UNDEFINED;
 	eMiniMenu mini_menu_mask;
@@ -731,9 +731,9 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 			}
 		}
 		/* draw the party */
-		x = xofs + (KQ_SCREEN_W - 40 * PSIZE) / 2;
+		x = xofs + (KQ_SCREEN_W - 40 * MAX_PARTY_SIZE) / 2;
 		y = yofs + 88;
-		for (fighter_index = 0; fighter_index < PSIZE; ++fighter_index)
+		for (fighter_index = 0; fighter_index < MAX_PARTY_SIZE; ++fighter_index)
 		{
 			menubox(double_buffer, x, y, 2, 2, (cur == MAXCHRS + fighter_index ? DARKRED : DARKBLUE));
 			if (fighter_index < numchrs && pidx[fighter_index] != PIDX_UNDEFINED)
@@ -743,7 +743,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 			x += 40;
 		}
 		/* Draw the 'Exit' button */
-		menubox(double_buffer, x, y, 4, 1, (cur == PSIZE + MAXCHRS ? DARKRED : DARKBLUE));
+		menubox(double_buffer, x, y, 4, 1, (cur == MAX_PARTY_SIZE + MAXCHRS ? DARKRED : DARKBLUE));
 		print_font(double_buffer, x + 8, y + 8, _("Exit"), FNORMAL);
 		/* See which hero is selected and draw his/her stats */
 		if (cur < n_avail)

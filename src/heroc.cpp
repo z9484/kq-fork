@@ -258,14 +258,14 @@ int KHero::combat_item(int ss, int t1, int tg)
 	if (items[t1].tgt == TGT_ENEMY_ALL)
 	{
 		tl = 1;
-		if (ss == PSIZE)
+		if (ss == MAX_PARTY_SIZE)
 		{
 			st = 0;
 			tt = numchrs;
 		}
 		else
 		{
-			st = PSIZE;
+			st = MAX_PARTY_SIZE;
 			tt = gCombat.num_enemies;
 		}
 	}
@@ -1051,7 +1051,7 @@ void KHero::hero_run(void)
 	{
 		bt = bt / b;
 	}
-	for (fighter_index = PSIZE; fighter_index < PSIZE + gCombat.num_enemies; fighter_index++)
+	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -1079,7 +1079,7 @@ void KHero::hero_run(void)
 	{
 		if (kqrandom->random_range_exclusive(0, 100) < (100 - a))
 		{
-			g = b * fighter[PSIZE].fighterLevel * c;
+			g = b * fighter[MAX_PARTY_SIZE].fighterLevel * c;
 			if (gp < g)
 			{
 				g = gp;

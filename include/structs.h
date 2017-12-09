@@ -283,6 +283,6 @@ struct s_sgstats
 		int level;
 		int hp;
 		int mp;
-	} characters[PSIZE];
+	} characters[MAX_PARTY_SIZE];
 	static s_sgstats get_current(void);
 };

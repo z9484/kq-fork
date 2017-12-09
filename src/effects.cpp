@@ -34,13 +34,13 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 	// TT: used for the slow_computer routine
 	int count;
 
-	if (target_fighter_index < PSIZE)
+	if (target_fighter_index < MAX_PARTY_SIZE)
 	{
 		return;
 	}
 	if (target_all_flag == 1)
 	{
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 		num_targets = gCombat.num_enemies;
 	}
 	else
@@ -108,14 +108,14 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 
 	if (multiple_target == 1)
 	{
-		if (target_fighter_index < PSIZE)
+		if (target_fighter_index < MAX_PARTY_SIZE)
 		{
 			start_fighter_index = 0;
 			num_fighters = numchrs;
 		}
 		else
 		{
-			start_fighter_index = PSIZE;
+			start_fighter_index = MAX_PARTY_SIZE;
 			num_fighters = gCombat.num_enemies;
 		}
 	}
@@ -204,14 +204,14 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t 
 
 	if (multiple_target == 1)
 	{
-		if (target_fighter_index < PSIZE)
+		if (target_fighter_index < MAX_PARTY_SIZE)
 		{
 			start_fighter_index = 0;
 			num_fighters = numchrs;
 		}
 		else
 		{
-			start_fighter_index = PSIZE;
+			start_fighter_index = MAX_PARTY_SIZE;
 			num_fighters = gCombat.num_enemies;
 		}
 	}
@@ -221,7 +221,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t 
 		num_fighters = 1;
 	}
 
-	if (target_fighter_index < PSIZE)
+	if (target_fighter_index < MAX_PARTY_SIZE)
 	{
 		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 		{
@@ -274,7 +274,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t 
 		kq_wait(eff[magic_effect_index].delay);
 		fullblit(back, double_buffer);
 	}
-	if (target_fighter_index < PSIZE)
+	if (target_fighter_index < MAX_PARTY_SIZE)
 	{
 		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_fighters; fighter_index++)
 		{
@@ -341,14 +341,14 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy, size_t effect_
 	Raster* eb = get_cached_image(eff[effect_index].ename);
 
 	convert_cframes(target_fighter_index, eff[effect_index].kolor - 3, eff[effect_index].kolor + 3, 1);
-	if (target_fighter_index < PSIZE)
+	if (target_fighter_index < MAX_PARTY_SIZE)
 	{
 		start_fighter_index = 0;
 		num_fighters = numchrs;
 	}
 	else
 	{
-		start_fighter_index = PSIZE;
+		start_fighter_index = MAX_PARTY_SIZE;
 		num_fighters = gCombat.num_enemies;
 	}
 	gCombat.fighterImageDatafileX = -1;
@@ -398,14 +398,14 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target, size_t e
 	convert_cframes(target_fighter_index, eff[effect_index].kolor - 3, eff[effect_index].kolor + 3, multiple_target);
 	if (multiple_target == 1)
 	{
-		if (target_fighter_index < PSIZE)
+		if (target_fighter_index < MAX_PARTY_SIZE)
 		{
 			start_fighter_index = 0;
 			num_fighers = numchrs;
 		}
 		else
 		{
-			start_fighter_index = PSIZE;
+			start_fighter_index = MAX_PARTY_SIZE;
 			num_fighers = gCombat.num_enemies;
 		}
 	}
@@ -462,7 +462,7 @@ void fight_animation(size_t target_fighter_index, size_t fighter_index, int mult
 	size_t magic_effect_index;
 	size_t fighter_weapon_index;
 
-	if (fighter_index < PSIZE)
+	if (fighter_index < MAX_PARTY_SIZE)
 	{
 		fighter_weapon_index = party[pidx[fighter_index]].eqp[EQP_WEAPON];
 		magic_effect_index = items[fighter_weapon_index].eff;
