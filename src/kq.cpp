@@ -71,7 +71,7 @@ int steps = 0;
 Raster* double_buffer, *fx_buffer, *map_icons[MAX_TILES], *back, *tc, *tc2,
         *bub[8], *b_shield, *b_shell, *b_repulse, *b_mp,
         *cframes[NUM_FIGHTERS][MAXCFRAMES], *tcframes[NUM_FIGHTERS][MAXCFRAMES],
-        *frames[MAXCHRS][MAXFRAMES], *eframes[MAXE][MAXEFRAMES], *pgb[9],
+        *frames[MAXCHRS][MAX_PARTY_MOVEMENT_FRAMES], *eframes[TOTAL_MAP_NPC_ENTITIES][MAX_NPC_MOVEMENT_FRAMES], *pgb[9],
         *sfonts[5], *bord[8], *menuptr, *mptr, *sptr, *stspics, *sicons, *bptr,
         *missbmp, *noway, *upptr, *dnptr, *shadow[MAX_SHADOWS], *kfonts;
 
@@ -525,9 +525,9 @@ void KGame::allocate_stuff(void)
 	b_repulse = alloc_bmp(16, 166, "b_repulse");
 	b_mp = alloc_bmp(10, 8, "b_mp");
 
-	for (p = 0; p < MAXE; p++)
+	for (p = 0; p < TOTAL_MAP_NPC_ENTITIES; p++)
 	{
-		for (i = 0; i < MAXEFRAMES; i++)
+		for (i = 0; i < MAX_NPC_MOVEMENT_FRAMES; i++)
 		{
 			eframes[p][i] = alloc_bmp(16, 16, "eframes[x][x]");
 		}
@@ -535,7 +535,7 @@ void KGame::allocate_stuff(void)
 
 	for (i = 0; i < MAXCHRS; i++)
 	{
-		for (p = 0; p < MAXFRAMES; p++)
+		for (p = 0; p < MAX_PARTY_MOVEMENT_FRAMES; p++)
 		{
 			frames[i][p] = alloc_bmp(16, 16, "frames[x][x]");
 		}
@@ -820,15 +820,15 @@ void KGame::deallocate_stuff(void)
 	delete (b_repulse);
 	delete (b_mp);
 
-	for (p = 0; p < MAXE; p++)
+	for (p = 0; p < TOTAL_MAP_NPC_ENTITIES; p++)
 	{
-		for (i = 0; i < MAXEFRAMES; i++)
+		for (i = 0; i < MAX_NPC_MOVEMENT_FRAMES; i++)
 		{
 			delete (eframes[p][i]);
 		}
 	}
 
-	for (i = 0; i < MAXFRAMES; i++)
+	for (i = 0; i < MAX_PARTY_MOVEMENT_FRAMES; i++)
 	{
 		for (p = 0; p < MAXCHRS; p++)
 		{
@@ -1094,7 +1094,7 @@ void KGame::load_heroes(void)
 
 	for (int party_index = 0; party_index < MAXCHRS; party_index++)
 	{
-		for (int frame_index = 0; frame_index < MAXFRAMES; frame_index++)
+		for (int frame_index = 0; frame_index < MAX_PARTY_MOVEMENT_FRAMES; frame_index++)
 		{
 			blit(eb, frames[party_index][frame_index], frame_index * 16, party_index * 16, 0, 0, 16, 16);
 		}
@@ -1619,9 +1619,9 @@ void KGame::startup(void)
 	Raster* allfonts = get_cached_image("fonts.png");
 	allfonts->blitTo(kfonts, 0, 0, 0, 0, 1024, 60);
 	Raster* entities = get_cached_image("entities.png");
-	for (q = 0; q < MAXE; q++)
+	for (q = 0; q < TOTAL_MAP_NPC_ENTITIES; q++)
 	{
-		for (p = 0; p < MAXEFRAMES; p++)
+		for (p = 0; p < MAX_NPC_MOVEMENT_FRAMES; p++)
 		{
 			entities->blitTo(eframes[q][p], p * 16, q * 16, 0, 0, 16, 16);
 		}

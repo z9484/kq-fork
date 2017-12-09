@@ -9,9 +9,6 @@
  * \date 20100221
  */
 
-// OC: I plan to move these into enums instead of #define's since those are
-// easier for a lot of IDEs to interpret.
-
 enum eMenu
 {
 	NUM_SPELLS_PER_PAGE = 12U,
@@ -36,41 +33,50 @@ enum eShadow
 	NUM_SHADOWS // always last
 };
 
-#define MAX_TILES 1024
-#define MAXE 41
+constexpr size_t MAX_TILES = 1024;
+
+// entities.png has around 80 entities, but only 41 are used.
+// Image should be trimmed, or we should have all 80 available to use in maps.
+constexpr size_t TOTAL_MAP_NPC_ENTITIES = 41;
+
+// entities.png has 12 NPC sprites per line: 3 in each direction: S, N, W, E
+constexpr size_t MAX_NPC_MOVEMENT_FRAMES = 12;
+
+// uschrs.png has 12 party sprites per line: 3 in each direction: S, N, W, E
+constexpr size_t MAX_PARTY_MOVEMENT_FRAMES = 12;
+
 constexpr size_t MAX_PARTY_SIZE = 2;
-#define MAXFRAMES 12
-#define MAXEFRAMES 12
 constexpr size_t MAX_ENTITIES_PER_MAP = 50;
 constexpr size_t MAX_ENTITIES = (MAX_ENTITIES_PER_MAP + MAX_PARTY_SIZE);
-#define ID_ENEMY 254
-#define ENT_FRAMES_PER_DIR 3
+
+constexpr size_t ID_ENEMY = 254;
+constexpr size_t ENT_FRAMES_PER_DIR = 3;
 
 /* PH: MAXCFRAMES never seems to be used properly -
    all frames are identical for enemies?
  */
-#define MAXCFRAMES 8
-#define MAX_TILESETS 8
-#define NUM_FIGHTERS 7
-#define MAX_ANIM 5
-#define NUM_STATS 13
-#define NUM_RES 16
-#define MISS 9999
-#define NODISPLAY 9998
-#define SCANALL 9995
-#define NO_STS_CHECK 9994
-#define CURE_CHECK 9993
-#define MAX_SHADOWS 12
-#define MAX_INV 64
+constexpr size_t MAXCFRAMES = 8;
+constexpr size_t MAX_TILESETS = 8;
+constexpr size_t NUM_FIGHTERS = 7;
+constexpr size_t MAX_ANIM = 5;
+constexpr size_t NUM_STATS = 13;
+constexpr size_t NUM_RES = 16;
+constexpr size_t MISS = 9999;
+constexpr size_t NODISPLAY = 9998;
+constexpr size_t SCANALL = 9995;
+constexpr size_t NO_STS_CHECK = 9994;
+constexpr size_t CURE_CHECK = 9993;
+constexpr size_t MAX_SHADOWS = 12;
+constexpr size_t MAX_INV = 64;
 
 /* Maximum number of special items allowed in the world */
-#define MAX_SPECIAL_ITEMS 50
-#define MAX_PLAYER_SPECIAL_ITEMS 20
-#define STEPS_NEEDED 15
-#define SIZE_PROGRESS 1750
-#define SIZE_SAVE_RESERVE1 150
-#define SIZE_SAVE_SPELL 50
-#define SIZE_TREASURE 1000
+constexpr size_t MAX_SPECIAL_ITEMS = 50;
+constexpr size_t MAX_PLAYER_SPECIAL_ITEMS = 20;
+constexpr size_t STEPS_NEEDED = 15;
+constexpr size_t SIZE_PROGRESS = 1750;
+constexpr size_t SIZE_SAVE_RESERVE1 = 150;
+constexpr size_t SIZE_SAVE_SPELL = 50;
+constexpr size_t SIZE_TREASURE = 1000;
 
 /*! \name Attributes of characters */
 /*  These are the stats when you check your

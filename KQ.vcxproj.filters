@@ -41,6 +41,9 @@
       <UniqueIdentifier>{8ef03e14-6bad-44f2-8451-98d9f82d3e1c}</UniqueIdentifier>
       <Extensions>png</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Data">
+      <UniqueIdentifier>{82a043e8-fcca-45ae-b25c-1ecc410abbd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\anim_sequence.cpp">
@@ -580,6 +583,12 @@
     </None>
     <None Include="maps\village.tsx">
       <Filter>Resource Files\Maps\Tilesets</Filter>
+    </None>
+    <None Include="data\allstat.mon">
+      <Filter>Resource Files\Data</Filter>
+    </None>
+    <None Include="data\resabil.mon">
+      <Filter>Resource Files\Data</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

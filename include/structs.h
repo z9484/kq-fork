@@ -243,7 +243,7 @@ struct s_heroinfo
 	Raster* portrait;
 
 	// Frames for movement
-	Raster* frames[MAXFRAMES];
+	Raster* frames[MAX_PARTY_MOVEMENT_FRAMES];
 
 	// Frames for combat
 	Raster* cframes[MAXCFRAMES];
