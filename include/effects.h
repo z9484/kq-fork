@@ -49,7 +49,7 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color);
 /*! \brief Draw a large sprite
  *
  * This draws a large sprite, which is meant to affect an entire group.
- * Calling the function requires supplying exact co-ordinates, so there
+ * Calling the function requires supplying exact coordinates, so there
  * is no need to worry about centering here... the orient var (from the
  * effect structure) is used to determine whether to draw under or over
  * the fighters.

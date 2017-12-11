@@ -242,10 +242,10 @@ static void draw_equipmenu(int c, int sel)
 	int l, j, k;
 
 	l = pidx[c];
-	kDraw.menubox(double_buffer, 12 + xofs, 4 + yofs, 35, 1, BLUE);
+	kDraw.menubox(double_buffer, 12 + xofs, 4 + yofs, 35, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	if (sel == 1)
 	{
-		kDraw.menubox(double_buffer, eqp_act * 72 + 12 + xofs, 4 + yofs, 8, 1, DARKBLUE);
+		kDraw.menubox(double_buffer, eqp_act * 72 + 12 + xofs, 4 + yofs, 8, 1, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 32 + xofs, 12 + yofs, _("Equip"), eFontColor::FONTCOLOR_GOLD);
 		kDraw.print_font(double_buffer, 92 + xofs, 12 + yofs, _("Optimize"), eFontColor::FONTCOLOR_GOLD);
 		kDraw.print_font(double_buffer, 172 + xofs, 12 + yofs, _("Remove"), eFontColor::FONTCOLOR_GOLD);
@@ -262,8 +262,8 @@ static void draw_equipmenu(int c, int sel)
 			kDraw.print_font(double_buffer, 136 + xofs, 12 + yofs, _("Remove"), eFontColor::FONTCOLOR_GOLD);
 		}
 	}
-	kDraw.menubox(double_buffer, 12 + xofs, 28 + yofs, 25, 6, BLUE);
-	kDraw.menubox(double_buffer, 228 + xofs, 28 + yofs, 8, 6, BLUE);
+	kDraw.menubox(double_buffer, 12 + xofs, 28 + yofs, 25, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kDraw.menubox(double_buffer, 228 + xofs, 28 + yofs, 8, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	draw_sprite(double_buffer, players[l].portrait, 248 + xofs, 36 + yofs);
 	kDraw.print_font(double_buffer, 268 - (strlen(party[l].playerName) * 4) + xofs, 76 + yofs, party[l].playerName, eFontColor::FONTCOLOR_NORMAL);
 	kDraw.print_font(double_buffer, 28 + xofs, 36 + yofs, _("Hand1:"), eFontColor::FONTCOLOR_GOLD);
@@ -310,7 +310,7 @@ static void draw_equippable(uint32_t c, uint32_t slot, uint32_t pptr)
 	{
 		sm = NUM_ITEMS_PER_PAGE;
 	}
-	kDraw.menubox(double_buffer, 12 + xofs, 92 + yofs, 20, NUM_ITEMS_PER_PAGE, BLUE);
+	kDraw.menubox(double_buffer, 12 + xofs, 92 + yofs, 20, NUM_ITEMS_PER_PAGE, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (k = 0; k < sm; k++)
 	{
 		// j == item index #
@@ -360,7 +360,7 @@ static void draw_equippreview(int ch, int ptr, int pp)
 	{
 		update_equipstats();
 	}
-	kDraw.menubox(double_buffer, 188 + xofs, 92 + yofs, 13, 13, BLUE);
+	kDraw.menubox(double_buffer, 188 + xofs, 92 + yofs, 13, 13, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 196 + xofs, 100 + yofs, _("Str:"), eFontColor::FONTCOLOR_NORMAL);
 	kDraw.print_font(double_buffer, 196 + xofs, 108 + yofs, _("Agi:"), eFontColor::FONTCOLOR_NORMAL);
 	kDraw.print_font(double_buffer, 196 + xofs, 116 + yofs, _("Vit:"), eFontColor::FONTCOLOR_NORMAL);
@@ -398,7 +398,7 @@ static void draw_equippreview(int ch, int ptr, int pp)
 			}
 		}
 	}
-	kDraw.menubox(double_buffer, 188 + xofs, 212 + yofs, 13, 1, BLUE);
+	kDraw.menubox(double_buffer, 188 + xofs, 212 + yofs, 13, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	if (ptr >= 0)
 	{
 		c1 = 0;

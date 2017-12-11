@@ -119,7 +119,14 @@ void KDraw::blit2screen(int xw, int yw)
 
 void KDraw::border(Raster* where, int left, int top, int right, int bottom)
 {
-	vline(where, left + 1, top + 3, bottom - 3, GREY2);
+    // TODO: Find out whether these values paired to any color defined within
+    // PALETTE 'pal'
+    static const uint8_t GREY1 = 4;
+    static const uint8_t GREY2 = 8;
+    static const uint8_t GREY3 = 13;
+    static const uint8_t WHITE = 15;
+
+    vline(where, left + 1, top + 3, bottom - 3, GREY2);
 	vline(where, left + 2, top + 3, bottom - 3, GREY3);
 	vline(where, left + 3, top + 2, bottom - 2, GREY3);
 	vline(where, left + 3, top + 5, bottom - 5, WHITE);
@@ -586,20 +593,30 @@ void KDraw::draw_icon(Raster* where, int ino, int icx, int icy)
 	masked_blit(sicons, where, 0, ino * 8, icx, icy, 8, 8);
 }
 
-void KDraw::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bgColor, eBubbleStyle bstyle)
+void KDraw::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, eMenuBoxColor bgColor, eBubbleStyle bstyle)
 {
-	int a;
+    // This is mapped to the color palette
+    static const uint8_t DBLUE = 3;
+    static const uint8_t DRED = 6;
 
-	/* Draw a maybe-translucent background */
-	if (bgColor == BLUE)
-	{
+    int colorPaletteBgColor = 0;
+
+    switch (bgColor) {
+    case eMenuBoxColor::SEMI_TRANSPARENT_BLUE:
+        colorPaletteBgColor = bgColor;
+
+        /* Draw a maybe-translucent background */
 		drawing_mode(DRAW_MODE_TRANS, nullptr, 0, 0);
-	}
-	else
-	{
-		bgColor = (bgColor == DARKBLUE) ? DBLUE : DRED;
-	}
-	rectfill(where, x1 + 2, y1 + 2, x2 - 3, y2 - 3, bgColor);
+        break;
+    case eMenuBoxColor::DARKBLUE:
+        colorPaletteBgColor = DBLUE;
+        break;
+    default:
+        colorPaletteBgColor = DRED;
+        break;
+    }
+
+	rectfill(where, x1 + 2, y1 + 2, x2 - 3, y2 - 3, colorPaletteBgColor);
 	drawing_mode(DRAW_MODE_SOLID, nullptr, 0, 0);
 	/* Now the border */
 	switch (bstyle)
@@ -611,13 +628,13 @@ void KDraw::draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bgCol
 
 	case eBubbleStyle::BUBBLE_THOUGHT:
 		/* top and bottom */
-		for (a = x1 + 8; a < x2 - 8; a += 8)
+		for (int a = x1 + 8; a < x2 - 8; a += 8)
 		{
 			draw_sprite(where, bord[1], a, y1);
 			draw_sprite(where, bord[6], a, y2 - 8);
 		}
 		/* sides */
-		for (a = y1 + 8; a < y2 - 8; a += 12)
+		for (int a = y1 + 8; a < y2 - 8; a += 12)
 		{
 			draw_sprite(where, bord[3], x1, a);
 			draw_sprite(where, bord[4], x2 - 8, a);
@@ -823,7 +840,7 @@ void KDraw::draw_textbox(eBubbleStyle bstyle)
 	wid = gbbw * 8 + 16;
 	hgt = gbbh * 12 + 16;
 
-	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
+	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, eMenuBoxColor::SEMI_TRANSPARENT_BLUE, bstyle);
 	if (bubble_stem_style != eBubbleStemStyle::STEM_UNDEFINED)
 	{
 		/* select the correct stem-thingy that comes out of the speech bubble */
@@ -847,7 +864,7 @@ void KDraw::draw_porttextbox(eBubbleStyle bstyle, int chr)
 	hgt = gbbh * 12 + 16;
 	chr = chr - MAX_PARTY_SIZE;
 
-	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, BLUE, bstyle);
+	draw_kq_box(double_buffer, gbbx + xofs, gbby + yofs, gbbx + xofs + wid, gbby + yofs + hgt, eMenuBoxColor::SEMI_TRANSPARENT_BLUE, bstyle);
 
 	for (a = 0; a < gbbh; a++)
 	{
@@ -857,8 +874,8 @@ void KDraw::draw_porttextbox(eBubbleStyle bstyle, int chr)
 	a--;
 	linexofs = a * 12;
 
-	menubox(double_buffer, 19, 172 - linexofs, 4, 4, BLUE);
-	menubox(double_buffer, 66, 196 - linexofs, strlen(party[chr].playerName), 1, BLUE);
+	menubox(double_buffer, 19, 172 - linexofs, 4, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	menubox(double_buffer, 66, 196 - linexofs, strlen(party[chr].playerName), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 
 	draw_sprite(double_buffer, players[chr].portrait, 24, 177 - linexofs);
 	print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName, eFontColor::FONTCOLOR_NORMAL);
@@ -912,7 +929,7 @@ void KDraw::drawmap()
 	}
 	if (display_desc == 1)
 	{
-		menubox(double_buffer, 152 - (g_map.map_desc.length() * 4) + xofs, 8 + yofs, g_map.map_desc.length(), 1, BLUE);
+		menubox(double_buffer, 152 - (g_map.map_desc.length() * 4) + xofs, 8 + yofs, g_map.map_desc.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		print_font(double_buffer, 160 - (g_map.map_desc.length() * 4) + xofs, 16 + yofs, g_map.map_desc.c_str(), eFontColor::FONTCOLOR_NORMAL);
 	}
 }
@@ -992,7 +1009,7 @@ int KDraw::is_forestsquare(int fx, int fy)
 	}
 }
 
-void KDraw::menubox(Raster* where, int x, int y, int w, int h, int bgColor)
+void KDraw::menubox(Raster* where, int x, int y, int w, int h, eMenuBoxColor bgColor)
 {
 	draw_kq_box(where, x, y, x + w * 8 + TILE_W, y + h * 8 + TILE_H, bgColor, eBubbleStyle::BUBBLE_TEXT);
 }
@@ -1033,12 +1050,12 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 		if (icn == 255)
 		{
 			/* No icon */
-			menubox(double_buffer, 152 - (max_len * 4) + x_m, 108 + y_m, max_len, num_lines, DARKBLUE);
+			menubox(double_buffer, 152 - (max_len * 4) + x_m, 108 + y_m, max_len, num_lines, eMenuBoxColor::DARKBLUE);
 		}
 		else
 		{
 			/* There is an icon; make the box a little bit bigger to the left */
-			menubox(double_buffer, 144 - (max_len * 4) + x_m, 108 + y_m, max_len + 1, num_lines, DARKBLUE);
+			menubox(double_buffer, 144 - (max_len * 4) + x_m, 108 + y_m, max_len + 1, num_lines, eMenuBoxColor::DARKBLUE);
 			draw_icon(double_buffer, icn, 152 - (max_len * 4) + x_m, 116 + y_m);
 		}
 
@@ -1408,7 +1425,7 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				set_textpos(who);
 				draw_textbox(eBubbleStyle::BUBBLE_TEXT);
 				/* Draw the  options text */
-				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, BLUE, eBubbleStyle::BUBBLE_TEXT);
+				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, eMenuBoxColor::SEMI_TRANSPARENT_BLUE, eBubbleStyle::BUBBLE_TEXT);
 				for (i = 0; i < winheight; ++i)
 				{
 					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], eFontColor::FONTCOLOR_BIG);

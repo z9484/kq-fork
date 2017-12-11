@@ -57,7 +57,7 @@ int KSaveGame::confirm_action(void)
 		return 1;
 	}
 	fullblit(double_buffer, back);
-    kDraw.menubox(double_buffer, 128, pointer_offset + 12, 14, 1, DARKBLUE);
+    kDraw.menubox(double_buffer, 128, pointer_offset + 12, 14, 1, eMenuBoxColor::DARKBLUE);
     kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
     kDraw.blit2screen(0, 0);
 	fullblit(back, double_buffer);
@@ -113,7 +113,7 @@ void KSaveGame::delete_game(void)
 	remove_result = remove(kqres(SAVE_DIR, strbuf).c_str());
 	if (remove_result == 0)
 	{
-        kDraw.menubox(double_buffer, 128, pointer_offset + 12, 12, 1, DARKBLUE);
+        kDraw.menubox(double_buffer, 128, pointer_offset + 12, 12, 1, eMenuBoxColor::DARKBLUE);
         kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), eFontColor::FONTCOLOR_NORMAL);
 
 		s_sgstats& stats = savegame[save_ptr];
@@ -123,7 +123,7 @@ void KSaveGame::delete_game(void)
 	}
 	else
 	{
-        kDraw.menubox(double_buffer, 128, pointer_offset + 12, 16, 1, DARKBLUE);
+        kDraw.menubox(double_buffer, 128, pointer_offset + 12, 16, 1, eMenuBoxColor::DARKBLUE);
         kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), eFontColor::FONTCOLOR_NORMAL);
 	}
     kDraw.blit2screen(0, 0);
@@ -373,17 +373,17 @@ void KSaveGame::show_sgstats(int saving)
 	pointer_offset = (save_ptr - top_pointer) * 48;
 	if (saving == 0)
 	{
-        kDraw.menubox(double_buffer, 0, pointer_offset + 12, 7, 1, BLUE);
+        kDraw.menubox(double_buffer, 0, pointer_offset + 12, 7, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
         kDraw.print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 1)
 	{
-        kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, BLUE);
+        kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
         kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 2 || saving == 3)
 	{
-        kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, BLUE);
+        kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
         kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), eFontColor::FONTCOLOR_RED);
 	}
 
@@ -402,11 +402,11 @@ void KSaveGame::show_sgstats(int saving)
 		pointer_offset = (sg - top_pointer) * 48;
 		if (sg == save_ptr)
 		{
-            kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, DARKBLUE);
+            kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::DARKBLUE);
 		}
 		else
 		{
-            kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, BLUE);
+            kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		}
 
 		if (savegame[sg].num_characters == -1)
@@ -541,7 +541,7 @@ int KSaveGame::start_menu(int skip_splash)
 		{
 			clear_bitmap(double_buffer);
 			masked_blit(title, double_buffer, 0, 0, 0, 0, KQ_SCREEN_W, 124);
-			kDraw.menubox(double_buffer, 112, 116, 10, 4, BLUE);
+			kDraw.menubox(double_buffer, 112, 116, 10, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, 128, 124, _("Continue"), eFontColor::FONTCOLOR_NORMAL);
 			kDraw.print_font(double_buffer, 128, 132, _("New Game"), eFontColor::FONTCOLOR_NORMAL);
 			kDraw.print_font(double_buffer, 136, 140, _("Config"), eFontColor::FONTCOLOR_NORMAL);
@@ -672,7 +672,7 @@ int KSaveGame::system_menu(void)
 	{
 		Game.do_check_animation();
 		kDraw.drawmap();
-		kDraw.menubox(double_buffer, xofs, yofs, 8, 4, BLUE);
+		kDraw.menubox(double_buffer, xofs, yofs, 8, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 
 		kDraw.print_font(double_buffer, 16 + xofs, 8 + yofs, save_str, text_color);
 		kDraw.print_font(double_buffer, 16 + xofs, 16 + yofs, _("Load"), eFontColor::FONTCOLOR_NORMAL);

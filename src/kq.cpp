@@ -1800,9 +1800,9 @@ void KGame::wait_for_entity(size_t first_entity_index, size_t last_entity_index)
 /**
  * Move player(s) to new coordinates
  *
- * Fade out... change co-ordinates... fade in.
- * The wtx/wty co-ordinates indicate where to put the player.
- * The wvx/wvy co-ordinates indicate where to put the camera.
+ * Fade out... change coordinates... fade in.
+ * The wtx/wty coordinates indicate where to put the player.
+ * The wvx/wvy coordinates indicate where to put the camera.
  *
  * \param   wtx New x-coord
  * \param   wty New y-coord
@@ -1854,7 +1854,7 @@ void KGame::warp(int wtx, int wty, int fspeed)
  *
  * This routine is called after every final step onto
  * a new tile (not after warps or such things).  It
- * just checks if the zone value for this co-ordinate is
+ * just checks if the zone value for this coordinate is
  * not zero and then it calls the event handler.  However,
  * there is a member of the map structure called zero_zone
  * that let's you call the event handler on 0 zones if you

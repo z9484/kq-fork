@@ -1621,7 +1621,7 @@ static int KQ_copy_tile_all(lua_State* L)
 
 static int KQ_dark_mbox(lua_State* L)
 {
-	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), DARKBLUE);
+	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), eMenuBoxColor::DARKBLUE);
 	return 0;
 }
 
@@ -2412,7 +2412,7 @@ static int KQ_krnd(lua_State* L)
 
 static int KQ_light_mbox(lua_State* L)
 {
-	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), DARKRED);
+	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), eMenuBoxColor::DARKRED);
 	return 0;
 }
 
@@ -2450,7 +2450,7 @@ static int KQ_marker(lua_State* L)
 
 static int KQ_mbox(lua_State* L)
 {
-	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), BLUE);
+	kDraw.menubox(double_buffer, (int)lua_tonumber(L, 1) + xofs, (int)lua_tonumber(L, 2) + yofs, (int)lua_tonumber(L, 3), (int)lua_tonumber(L, 4), eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	return 0;
 }
 

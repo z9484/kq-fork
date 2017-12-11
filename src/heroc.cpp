@@ -183,7 +183,7 @@ void KHero::combat_draw_items(int pg)
 	int a, b, c;
 	eFontColor k;
 
-	kDraw.menubox(double_buffer, 72, 8, 20, 16, BLUE);
+	kDraw.menubox(double_buffer, 72, 8, 20, 16, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (a = 0; a < 16; a++)
 	{
 		// b == item index #
@@ -213,7 +213,7 @@ void KHero::combat_draw_spell_menu(int c, int ptr, int pg)
 {
 	int z, j, b;
 
-	kDraw.menubox(double_buffer, 80, 24, 18, 12, BLUE);
+	kDraw.menubox(double_buffer, 80, 24, 18, 12, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (j = 0; j < NUM_SPELLS_PER_PAGE; j++)
 	{
 		z = party[pidx[c]].spells[pg * NUM_SPELLS_PER_PAGE + j];
@@ -306,7 +306,7 @@ int KHero::combat_item_menu(int whom)
 		combat_draw_items(pptr);
 		draw_sprite(double_buffer, menuptr, 72, ptr * 8 + 16);
 		/* put description of selected item */
-		kDraw.menubox(double_buffer, 72, 152, 20, 1, BLUE);
+		kDraw.menubox(double_buffer, 72, 152, 20, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 80, 160, items[g_inv[ptr + pptr * 16].item].desc, eFontColor::FONTCOLOR_NORMAL);
 		kDraw.blit2screen(0, 0);
 
@@ -545,7 +545,7 @@ void KHero::draw_invokable(int dud)
 	int a, tt;
 	eFontColor grd;
 
-	kDraw.menubox(double_buffer, 72, 80, 20, 6, BLUE);
+	kDraw.menubox(double_buffer, 72, 80, 20, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (a = 0; a < NUM_EQUIPMENT; a++)
 	{
 		tt = party[dud].eqp[a];
@@ -669,7 +669,7 @@ void KHero::hero_choose_action(size_t fighter_index)
 		{
 			amy = 184;
 		}
-		kDraw.menubox(double_buffer, 120, amy, 8, my, BLUE);
+		kDraw.menubox(double_buffer, 120, amy, 8, my, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		for (ca_index = 0; ca_index < my; ca_index++)
 		{
 			kDraw.print_font(double_buffer, 136, ca_index * 8 + amy + 8, ca[ca_index], eFontColor::FONTCOLOR_NORMAL);
@@ -680,12 +680,12 @@ void KHero::hero_choose_action(size_t fighter_index)
 		}
 		if (sptr == 0)
 		{
-			kDraw.menubox(double_buffer, 64, amy, 6, 1, BLUE);
+			kDraw.menubox(double_buffer, 64, amy, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, 72, amy + 8, _("Defend"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		if (sptr == 2)
 		{
-			kDraw.menubox(double_buffer, 192, amy, 3, 1, BLUE);
+			kDraw.menubox(double_buffer, 192, amy, 3, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, 200, amy + 8, _("Run"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		kDraw.blit2screen(0, 0);
@@ -1089,7 +1089,7 @@ void KHero::hero_run(void)
 	}
 	else
 	{
-		kDraw.menubox(double_buffer, 84, 32, 17, 1, BLUE);
+		kDraw.menubox(double_buffer, 84, 32, 17, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 92, 40, _("Could not escape!"), eFontColor::FONTCOLOR_NORMAL);
 		kDraw.blit2screen(0, 0);
 		Game.wait_enter();
@@ -1120,7 +1120,7 @@ void KHero::hero_run(void)
 		for (a = 0; a < count; a++)
 		{
 			clear_bitmap(double_buffer);
-			kDraw.menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, BLUE);
+			kDraw.menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, 160 - g, 40, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{

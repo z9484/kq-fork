@@ -71,11 +71,11 @@ static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
 
 	pidx_index = pidx[caster_fighter_index];
 	first_spell_index = party[pidx_index].spells[spell_page * NUM_SPELLS_PER_PAGE + spell_page_cursor];
-	kDraw.menubox(double_buffer, 80 + xofs, 12 + yofs, 18, 1, BLUE);
+	kDraw.menubox(double_buffer, 80 + xofs, 12 + yofs, 18, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 140 + xofs, 20 + yofs, _("Magic"), eFontColor::FONTCOLOR_GOLD);
-	kDraw.menubox(double_buffer, 80 + xofs, 36 + yofs, 18, 5, BLUE);
+	kDraw.menubox(double_buffer, 80 + xofs, 36 + yofs, 18, 5, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	draw_playerstat(double_buffer, pidx_index, 88 + xofs, 44 + yofs);
-	kDraw.menubox(double_buffer, 80 + xofs, 92 + yofs, 18, 12, BLUE);
+	kDraw.menubox(double_buffer, 80 + xofs, 92 + yofs, 18, 12, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (current_spell = 0; current_spell < NUM_SPELLS_PER_PAGE; current_spell++)
 	{
 		spell_index = party[pidx_index].spells[spell_page * NUM_SPELLS_PER_PAGE + current_spell];
@@ -92,7 +92,7 @@ static void camp_draw_spell_menu(size_t caster_fighter_index, size_t spell_page,
 			kDraw.print_font(double_buffer, 232 - (strlen(strbuf) * 8) + xofs, current_spell * 8 + 100 + yofs, strbuf, text_color);
 		}
 	}
-	kDraw.menubox(double_buffer, 40 + xofs, 204 + yofs, 28, 1, BLUE);
+	kDraw.menubox(double_buffer, 40 + xofs, 204 + yofs, 28, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, (160 - (strlen(magic[first_spell_index].desc) * 4)) + xofs, 212 + yofs, magic[first_spell_index].desc, eFontColor::FONTCOLOR_NORMAL);
 	draw_sprite(double_buffer, pgb[spell_page], 230 + xofs, 194 + yofs);
 }
@@ -356,7 +356,7 @@ int learn_new_spells(int who)
 				{
 					sprintf(strbuf, _("%s learned %s"), party[who].playerName, magic[a].spellName);
 					fullblit(back, double_buffer);
-					kDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152, strlen(strbuf) + 1, 1, BLUE);
+					kDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152, strlen(strbuf) + 1, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 					kDraw.draw_icon(double_buffer, magic[a].icon, 156 - (strlen(strbuf) * 4), 160);
 					kDraw.print_font(double_buffer, 164 - (strlen(strbuf) * 4), 160, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					kDraw.blit2screen(0, 0);

@@ -6,17 +6,12 @@
 
 class Raster;
 
-// TODO: Find out whether these values paired to any color defined within
-// PALETTE 'pal'
-constexpr uint8_t GREY1 = 4;
-constexpr uint8_t GREY2 = 8;
-constexpr uint8_t GREY3 = 13;
-constexpr uint8_t WHITE = 15;
-constexpr uint8_t DBLUE = 3;
-constexpr uint8_t DRED = 6;
-constexpr uint8_t BLUE = 2;
-constexpr uint8_t DARKBLUE = 0;
-constexpr uint8_t DARKRED = 4;
+enum eMenuBoxColor
+{
+    DARKBLUE = 0,
+    SEMI_TRANSPARENT_BLUE = 2,
+    DARKRED = 4
+};
 
 enum eFontColor
 {
@@ -156,7 +151,7 @@ public:
     /*! \brief Check for forest square
      *
      * Helper function for the draw_char() routine.  Just returns whether or not
-     * the tile at the specified co-ordinates is a forest tile.  This could be
+     * the tile at the specified coordinate is a forest tile.  This could be
      * a headache if the tileset changes!
      * Looks in the \p map_seg[] array
      * PH modified 20030309 added check for map (only main map has forest)
@@ -198,7 +193,7 @@ public:
      * \param   h Height
      * \param   bgColor Color (see note above)
      */
-    void menubox(Raster* where, int x, int y, int w, int h, int bgColor);
+    void menubox(Raster* where, int x, int y, int w, int h, eMenuBoxColor bgColor);
 
     /*! \brief Display string
      *
@@ -215,7 +210,7 @@ public:
     /*! \brief Display number
      *
      * Display a number using the small font on a bitmap at the specified
-     * co-ordinates and using the specified color.  This still expects the
+     * coordinates and using the specified color.  This still expects the
      * number to be in a string... the function's real purpose is to use
      * a different font for numerical display in combat.
      *
@@ -387,7 +382,7 @@ private:
      * \param   bg Color/style of background
      * \param   bstyle Style of border
      */
-    void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, int bgColor, eBubbleStyle bstyle);
+    void draw_kq_box(Raster* where, int x1, int y1, int x2, int y2, eMenuBoxColor bgColor, eBubbleStyle bstyle);
 
     /*! \brief Draw heroes on map
      *

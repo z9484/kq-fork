@@ -290,7 +290,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 				 ? fighterIDy + fighter[current_fighter_index].fighterImageDatafileHeight
 				 : fighterIDy - 32);
 
-			kDraw.menubox(double_buffer, t - 8, datafileCoords, fighter[current_fighter_index].fighterName.length(), 1, BLUE);
+			kDraw.menubox(double_buffer, t - 8, datafileCoords, fighter[current_fighter_index].fighterName.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, t, datafileCoords + 8, fighter[current_fighter_index].fighterName.c_str(), eFontColor::FONTCOLOR_NORMAL);
 		}
 	}
@@ -311,7 +311,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			draw_fighter(currentFighterIndex, 0);
 		}
 
-		kDraw.menubox(double_buffer, b, 184, 11, 5, BLUE);
+		kDraw.menubox(double_buffer, b, 184, 11, 5, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
 		{
 			sz = bspeed[currentFighterIndex] * 88 / ROUND_MAX;
@@ -387,7 +387,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 	if (display_attack_string == 1)
 	{
 		size_t ctext_length = strlen(attack_string) * 4;
-		kDraw.menubox(double_buffer, 152 - ctext_length, 8, strlen(attack_string), 1, BLUE);
+		kDraw.menubox(double_buffer, 152 - ctext_length, 8, strlen(attack_string), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 160 - ctext_length, 16, attack_string, eFontColor::FONTCOLOR_NORMAL);
 	}
 }
@@ -941,7 +941,7 @@ void KCombat::enemies_win() const
 	kDraw.blit2screen(0, 0);
 	kq_wait(1000);
 	sprintf(strbuf, _("%s was defeated!"), party[pidx[0]].playerName);
-	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, BLUE);
+	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	kDraw.blit2screen(0, 0);
 	Game.wait_enter();
@@ -1154,7 +1154,7 @@ void KCombat::heroes_win()
 		sprintf(strbuf, _("Gained %d xp."), txp);
 	}
 
-	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, BLUE);
+	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	kDraw.blit2screen(0, 0);
 	fullblit(double_buffer, back);
@@ -1183,7 +1183,7 @@ void KCombat::heroes_win()
 				if (check_inventory(found_item, 1) != 0)
 				{
 					sprintf(strbuf, _("%s found!"), items[found_item].itemName);
-					kDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, BLUE);
+					kDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 					kDraw.draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
 					kDraw.print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 					nr++;
@@ -1208,7 +1208,7 @@ void KCombat::heroes_win()
 			player2fighter(pidx[pidx_index], t1);
 			if (give_xp(pidx[pidx_index], txp, 0) == 1)
 			{
-				kDraw.menubox(double_buffer, b, 40, 18, 9, BLUE);
+				kDraw.menubox(double_buffer, b, 40, 18, 9, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 				player2fighter(pidx[pidx_index], t2);
 				kDraw.print_font(double_buffer, b + 8, 48, _("Level up!"), eFontColor::FONTCOLOR_GOLD);
 				kDraw.print_font(double_buffer, b + 8, 56, _("Max HP"), eFontColor::FONTCOLOR_NORMAL);
@@ -1246,7 +1246,7 @@ void KCombat::heroes_win()
 			}
 			else
 			{
-				kDraw.menubox(double_buffer, b, 104, 18, 1, BLUE);
+				kDraw.menubox(double_buffer, b, 104, 18, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			}
 
 			sprintf(strbuf, _("Next level %7d"), party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);

@@ -420,7 +420,7 @@ void reveal(int tgt)
 	char resistance;
 
 	do_transition(TRANS_FADE_OUT, 4);
-	kDraw.menubox(double_buffer, 84, 56, 17, 13, BLUE);
+	kDraw.menubox(double_buffer, 84, 56, 17, 13, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	sprintf(strbuf, _("Name: %s"), fighter[tgt].fighterName.c_str());
 	kDraw.print_font(double_buffer, 92, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	sprintf(strbuf, _("Level: %d"), fighter[tgt].fighterLevel);

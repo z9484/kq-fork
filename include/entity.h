@@ -174,7 +174,7 @@ private:
     /**
      * Check for obstruction
      *
-     * Check for any map-based obstructions in the specified co-ordinates.
+     * Check for any map-based obstructions in the specified coordinates.
      *
      * @param origin_x Original x-coord position
      * @param origin_y Original y-coord position

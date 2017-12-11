@@ -136,9 +136,9 @@ void config_menu(void)
 	{
 		Game.do_check_animation();
 		kDraw.drawmap();
-		kDraw.menubox(double_buffer, 88 + xofs, yofs, 16, 1, BLUE);
+		kDraw.menubox(double_buffer, 88 + xofs, yofs, 16, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 96 + xofs, 8 + yofs, _("KQ Configuration"), eFontColor::FONTCOLOR_GOLD);
-		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, MENU_SIZE + 3, BLUE);
+		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, MENU_SIZE + 3, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 
 		citem(row[0], _("Windowed mode:"), windowed == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
 		citem(row[1], _("Stretch Display:"), stretch_view == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
@@ -204,7 +204,7 @@ void config_menu(void)
 		draw_sprite(double_buffer, menuptr, 32 + xofs, p * 8 + 32 + yofs);
 
 		/* This is the bottom window, where the description goes */
-		kDraw.menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
+		kDraw.menubox(double_buffer, xofs, 216 + yofs, 38, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 8 + xofs, 224 + yofs, dc[ptr], eFontColor::FONTCOLOR_NORMAL);
 		kDraw.blit2screen(xofs, yofs);
 
@@ -495,7 +495,7 @@ static int getakey(void)
 	int a;
 
 	clear_keybuf();
-	kDraw.menubox(double_buffer, 108 + xofs, 108 + yofs, 11, 1, DARKBLUE);
+	kDraw.menubox(double_buffer, 108 + xofs, 108 + yofs, 11, 1, eMenuBoxColor::DARKBLUE);
 	kDraw.print_font(double_buffer, 116 + xofs, 116 + yofs, _("Press a key"), eFontColor::FONTCOLOR_NORMAL);
 	kDraw.blit2screen(xofs, yofs);
 
@@ -538,7 +538,7 @@ static int getavalue(const char* capt, int minu, int maxu, int cv, bool sp, void
 	while (!stop)
 	{
 		Game.do_check_animation();
-		kDraw.menubox(double_buffer, 148 - (maxu * 4) + xofs, 100 + yofs, maxu + 1, 3, DARKBLUE);
+		kDraw.menubox(double_buffer, 148 - (maxu * 4) + xofs, 100 + yofs, maxu + 1, 3, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 160 - (strlen(capt) * 4) + xofs, 108 + yofs, capt, eFontColor::FONTCOLOR_GOLD);
 		kDraw.print_font(double_buffer, 152 - (maxu * 4) + xofs, 116 + yofs, "<", eFontColor::FONTCOLOR_NORMAL);
 		kDraw.print_font(double_buffer, 160 + (maxu * 4) + xofs, 116 + yofs, ">", eFontColor::FONTCOLOR_NORMAL);
@@ -1044,10 +1044,10 @@ void set_graphics_mode(void)
  */
 void show_help(void)
 {
-	kDraw.menubox(double_buffer, 116 + xofs, yofs, 9, 1, BLUE);
+	kDraw.menubox(double_buffer, 116 + xofs, yofs, 9, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 132 + xofs, 8 + yofs, _("KQ Help"), eFontColor::FONTCOLOR_GOLD);
-	kDraw.menubox(double_buffer, 32 + xofs, 32 + yofs, 30, 20, BLUE);
-	kDraw.menubox(double_buffer, xofs, 216 + yofs, 38, 1, BLUE);
+	kDraw.menubox(double_buffer, 32 + xofs, 32 + yofs, 30, 20, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kDraw.menubox(double_buffer, xofs, 216 + yofs, 38, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 16 + xofs, 224 + yofs, _("Press CONFIRM to exit this screen"), eFontColor::FONTCOLOR_NORMAL);
 	citem(72, _("Up Key:"), kq_keyname(PlayerInput.kup), eFontColor::FONTCOLOR_NORMAL);
 	citem(80, _("Down Key:"), kq_keyname(PlayerInput.kdown), eFontColor::FONTCOLOR_NORMAL);

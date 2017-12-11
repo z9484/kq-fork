@@ -71,7 +71,7 @@ static void buy_item(int how_many, int item_no)
 	{
 		Game.do_check_animation();
 		blit(back, double_buffer, 0, 0, xofs, 192 + yofs, KQ_SCREEN_W, 48);
-		kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
+		kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 104 + xofs, 176 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
 		draw_sideshot(shops[shop_no].items[item_no]);
         kDraw.blit2screen(xofs, yofs);
@@ -133,14 +133,14 @@ static void buy_menu(void)
 	{
 		Game.do_check_animation();
         kDraw.drawmap();
-        kDraw.menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, BLUE);
+        kDraw.menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
         kDraw.print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), eFontColor::FONTCOLOR_GOLD);
 
-        kDraw.menubox(double_buffer, xofs, 208 + yofs, 7, 2, BLUE);
+        kDraw.menubox(double_buffer, xofs, 208 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
         kDraw.print_font(double_buffer, 24 + xofs, 220 + yofs, _("Buy"), eFontColor::FONTCOLOR_GOLD);
 
-        kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 16, BLUE);
-        kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, BLUE);
+        kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 16, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+        kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		draw_shopgold();
 		for (unsigned int shop_item_index = 0; shop_item_index < num_shop_items; shop_item_index++)
 		{
@@ -274,7 +274,7 @@ void do_inn_effects(int do_delay)
  */
 void draw_shopgold(void)
 {
-	kDraw.menubox(double_buffer, 248 + xofs, 208 + yofs, 7, 2, BLUE);
+	kDraw.menubox(double_buffer, 248 + xofs, 208 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 256 + xofs, 216 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
 	sprintf(strbuf, "%d", gp);
 	kDraw.print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
@@ -296,7 +296,7 @@ void draw_sideshot(int selected_item)
 	uint32_t ownd = 0, equipped_items = 0, slot;
 	size_t pidx_index, equipment_index, stats_index, cs_index, spell_index, inventory_index;
 
-	kDraw.menubox(double_buffer, 80 + xofs, 192 + yofs, 18, 4, BLUE);
+	kDraw.menubox(double_buffer, 80 + xofs, 192 + yofs, 18, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
 		wx = pidx_index * 72 + 88 + xofs;
@@ -441,7 +441,7 @@ void inn(const char* iname, uint32_t gold_per_character, int pay)
 	}
 	Game.unpress();
     kDraw.drawmap();
-	kDraw.menubox(double_buffer, 152 - (strlen(iname) * 4) + xofs, yofs, strlen(iname), 1, BLUE);
+	kDraw.menubox(double_buffer, 152 - (strlen(iname) * 4) + xofs, yofs, strlen(iname), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 160 - (strlen(iname) * 4) + xofs, 8 + yofs, iname, eFontColor::FONTCOLOR_GOLD);
 	total_gold_cost = gold_per_character;
 	for (party_index = 0; party_index < numchrs; party_index++)
@@ -471,27 +471,27 @@ void inn(const char* iname, uint32_t gold_per_character, int pay)
         kDraw.drawmap();
 
 		sprintf(strbuf, _("The cost is %u gp for the night."), total_gold_cost);
-		kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4) + xofs, 48 + yofs, strlen(strbuf), 1, BLUE);
+		kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4) + xofs, 48 + yofs, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 56 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
-		kDraw.menubox(double_buffer, 248 + xofs, 168 + yofs, 7, 2, BLUE);
+		kDraw.menubox(double_buffer, 248 + xofs, 168 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 256 + xofs, 176 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
 		sprintf(strbuf, "%d", gp);
 		kDraw.print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 184 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		if ((uint32_t)gp >= total_gold_cost)
 		{
-			kDraw.menubox(double_buffer, 52 + xofs, 96 + yofs, 25, 2, BLUE);
+			kDraw.menubox(double_buffer, 52 + xofs, 96 + yofs, 25, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, 60 + xofs, 108 + yofs, _("Do you wish to stay?"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		else
 		{
-			kDraw.menubox(double_buffer, 32 + xofs, 96 + yofs, 30, 2, BLUE);
+			kDraw.menubox(double_buffer, 32 + xofs, 96 + yofs, 30, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			kDraw.print_font(double_buffer, 40 + xofs, 108 + yofs, _("You can't afford to stay here."), eFontColor::FONTCOLOR_NORMAL);
             kDraw.blit2screen(xofs, yofs);
 			Game.wait_enter();
 			return;
 		}
 
-		kDraw.menubox(double_buffer, 220 + xofs, 96 + yofs, 4, 2, DARKBLUE);
+		kDraw.menubox(double_buffer, 220 + xofs, 96 + yofs, 4, 2, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 236 + xofs, 104 + yofs, _("yes"), eFontColor::FONTCOLOR_NORMAL);
 		kDraw.print_font(double_buffer, 236 + xofs, 112 + yofs, _("no"), eFontColor::FONTCOLOR_NORMAL);
 		draw_sprite(double_buffer, menuptr, 220 + xofs, my * 8 + 104 + yofs);
@@ -565,7 +565,7 @@ static void sell_howmany(int item_no, size_t inv_page)
 	max_items = g_inv[inv_page * NUM_ITEMS_PER_PAGE + item_no].quantity;
 	if (max_items == 1)
 	{
-        kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
+        kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
 		sprintf(strbuf, _("Sell for %d gp?"), prc * 50 / 100);
 		kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 		sell_item(inv_page * NUM_ITEMS_PER_PAGE + item_no, 1);
@@ -575,9 +575,9 @@ static void sell_howmany(int item_no, size_t inv_page)
 	{
 		Game.do_check_animation();
         kDraw.drawmap();
-        kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
+        kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 124 + xofs, 176 + yofs, _("How many?"), eFontColor::FONTCOLOR_NORMAL);
-		kDraw.menubox(double_buffer, 32 + xofs, item_no * 8 + 24 + yofs, 30, 1, DARKBLUE);
+		kDraw.menubox(double_buffer, 32 + xofs, item_no * 8 + 24 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
         kDraw.draw_icon(double_buffer, items[l].icon, 48 + xofs, item_no * 8 + 32 + yofs);
 		kDraw.print_font(double_buffer, 56 + xofs, item_no * 8 + 32 + yofs, items[l].itemName, eFontColor::FONTCOLOR_NORMAL);
 		sprintf(strbuf, _("%d of %d"), my, max_items);
@@ -614,7 +614,7 @@ static void sell_howmany(int item_no, size_t inv_page)
 		if (PlayerInput.balt)
 		{
 			Game.unpress();
-			kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, DARKBLUE);
+			kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
 			sprintf(strbuf, _("Sell for %d gp?"), (prc * 50 / 100) * my);
 			kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			sell_item(inv_page * NUM_ITEMS_PER_PAGE + item_no, my);
@@ -642,7 +642,7 @@ static void sell_item(int itno, int ni)
 
 	l = g_inv[itno].item;
 	sp = (items[l].price * 50 / 100) * ni;
-	kDraw.menubox(double_buffer, 96 + xofs, 192 + yofs, 14, 1, DARKBLUE);
+	kDraw.menubox(double_buffer, 96 + xofs, 192 + yofs, 14, 1, eMenuBoxColor::DARKBLUE);
 	kDraw.print_font(double_buffer, 104 + xofs, 200 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
     kDraw.blit2screen(xofs, yofs);
 	while (!stop)
@@ -691,12 +691,12 @@ static void sell_menu(void)
 	{
 		Game.do_check_animation();
         kDraw.drawmap();
-		kDraw.menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, BLUE);
+		kDraw.menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), eFontColor::FONTCOLOR_GOLD);
-		kDraw.menubox(double_buffer, xofs, 208 + yofs, 7, 2, BLUE);
+		kDraw.menubox(double_buffer, xofs, 208 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 20 + xofs, 220 + yofs, _("Sell"), eFontColor::FONTCOLOR_GOLD);
-		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 16, BLUE);
-		kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, BLUE);
+		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 16, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		draw_shopgold();
 		for (p = 0; p < NUM_ITEMS_PER_PAGE; p++)
 		{
@@ -867,10 +867,10 @@ int shop(int shop_num)
 	{
 		Game.do_check_animation();
         kDraw.drawmap();
-		kDraw.menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, BLUE);
+		kDraw.menubox(double_buffer, 152 - (shop_name.length() * 4) + xofs, yofs, shop_name.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kDraw.print_font(double_buffer, 160 - (shop_name.length() * 4) + xofs, 8 + yofs, shop_name.c_str(), eFontColor::FONTCOLOR_GOLD);
-		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 1, BLUE);
-		kDraw.menubox(double_buffer, ptr * 80 + 32 + xofs, 24 + yofs, 10, 1, DARKBLUE);
+		kDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kDraw.menubox(double_buffer, ptr * 80 + 32 + xofs, 24 + yofs, 10, 1, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 68 + xofs, 32 + yofs, _("Buy"), eFontColor::FONTCOLOR_GOLD);
 		kDraw.print_font(double_buffer, 144 + xofs, 32 + yofs, _("Sell"), eFontColor::FONTCOLOR_GOLD);
 		kDraw.print_font(double_buffer, 224 + xofs, 32 + yofs, _("Exit"), eFontColor::FONTCOLOR_GOLD);

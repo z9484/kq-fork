@@ -158,7 +158,7 @@ void camp_item_menu(void)
 								Game.do_check_animation();
 								kDraw.drawmap();
 								draw_itemmenu(ptr, pptr, sel);
-								kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, DARKBLUE);
+								kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, eMenuBoxColor::DARKBLUE);
 								kDraw.print_font(double_buffer, 104 + xofs, 212 + yofs, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
 								kDraw.blit2screen(xofs, yofs);
 								PlayerInput.readcontrols();
@@ -320,12 +320,12 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 	size_t k;
 	size_t item_quantity;
 
-	kDraw.menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 12 + yofs, 20, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 140 + xofs, 20 + yofs, _("Items"), eFontColor::FONTCOLOR_GOLD);
-	kDraw.menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 1, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 36 + yofs, 20, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	if (sl == 1)
 	{
-		kDraw.menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1, DARKBLUE);
+		kDraw.menubox(double_buffer, item_act * 56 + 72 + xofs, 36 + yofs, 6, 1, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, 92 + xofs, 44 + yofs, _("Use"), eFontColor::FONTCOLOR_GOLD);
 		kDraw.print_font(double_buffer, 144 + xofs, 44 + yofs, _("Sort   Drop"), eFontColor::FONTCOLOR_GOLD);
 	}
@@ -340,7 +340,7 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 			kDraw.print_font(double_buffer, 144 + xofs, 44 + yofs, _("Drop"), eFontColor::FONTCOLOR_GOLD);
 		}
 	}
-	kDraw.menubox(double_buffer, 72 + xofs, 60 + yofs, 20, 16, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 60 + yofs, 20, 16, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (k = 0; k < 16; k++)
 	{
 		// item_index == item index #
@@ -366,7 +366,7 @@ static void draw_itemmenu(int ptr, int pg, int sl)
 			kDraw.print_font(double_buffer, 224 + xofs, k * 8 + 68 + yofs, strbuf, palette_color);
 		}
 	}
-	kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, BLUE);
+	kDraw.menubox(double_buffer, 72 + xofs, 204 + yofs, 20, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	if (sl == 0)
 	{
 		item_name_length = strlen(items[g_inv[pg * 16 + ptr].item].desc) * 4;

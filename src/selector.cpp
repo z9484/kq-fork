@@ -197,7 +197,7 @@ static eMiniMenu mini_menu(int omask)
 	while (1)
 	{
 		Game.do_check_animation();
-		kDraw.menubox(double_buffer, mini_menu_x - 13, mini_menu_y - 8, 6, 3, DARKBLUE);
+		kDraw.menubox(double_buffer, mini_menu_x - 13, mini_menu_y - 8, 6, 3, eMenuBoxColor::DARKBLUE);
 		kDraw.print_font(double_buffer, mini_menu_x, mini_menu_y, _("Join"), (omask & MM_JOIN) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK);
 		kDraw.print_font(double_buffer, mini_menu_x, mini_menu_y + 8, _("Leave"), (omask & MM_LEAVE) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK);
 		kDraw.print_font(double_buffer, mini_menu_x, mini_menu_y + 16, _("Lead"), (omask & MM_LEAD) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK);
@@ -372,13 +372,13 @@ ePIDX select_any_player(eTarget csa, unsigned int icn, const char* msg)
         kDraw.drawmap();
 		if (csa != TGT_NONE)
 		{
-            kDraw.menubox(double_buffer, 152 - ((strlen(msg) + 1) * 4) + xofs, 8 + yofs, strlen(msg) + 1, 1, BLUE);
+            kDraw.menubox(double_buffer, 152 - ((strlen(msg) + 1) * 4) + xofs, 8 + yofs, strlen(msg) + 1, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
             kDraw.draw_icon(double_buffer, icn, 160 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs);
             kDraw.print_font(double_buffer, 168 - ((strlen(msg) + 1) * 4) + xofs, 16 + yofs, msg, eFontColor::FONTCOLOR_NORMAL);
 		}
 		for (unsigned int k = 0; k < numchrs; k++)
 		{
-            kDraw.menubox(double_buffer, 80 + xofs, k * 56 + shy + yofs, 18, 5, BLUE);
+            kDraw.menubox(double_buffer, 80 + xofs, k * 56 + shy + yofs, 18, 5, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			draw_playerstat(double_buffer, pidx[k], 88 + xofs, k * 56 + shy + 8 + yofs);
 			// Draw the pointer
 			if (select_all || k == ptr)
@@ -712,7 +712,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		}
 	}
 
-    kDraw.menubox(double_buffer, 16 + xofs, 24 + yofs, 34, 12, BLUE);
+    kDraw.menubox(double_buffer, 16 + xofs, 24 + yofs, 34, 12, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
     kDraw.print_font(double_buffer, 24 + xofs, 32 + yofs, _("Available:"), eFontColor::FONTCOLOR_GOLD);
     kDraw.print_font(double_buffer, 24 + xofs, 80 + yofs, _("In party:"), eFontColor::FONTCOLOR_GOLD);
 	while (running)
@@ -724,7 +724,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		for (fighter_index = 0; fighter_index < n_avail; ++fighter_index)
 		{
 			x = xofs + (KQ_SCREEN_W - 32 * n_avail) / 2 + 32 * fighter_index;
-			kDraw.menubox(double_buffer, x, y, 2, 2, (fighter_index == cur ? DARKRED : DARKBLUE));
+			kDraw.menubox(double_buffer, x, y, 2, 2, (fighter_index == cur ? eMenuBoxColor::DARKRED : eMenuBoxColor::DARKBLUE));
 			if (avail[fighter_index] != PIDX_UNDEFINED)
 			{
 				draw_sprite(double_buffer, frames[avail[fighter_index]][0], x + 8, y + 8);
@@ -735,7 +735,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		y = yofs + 88;
 		for (fighter_index = 0; fighter_index < MAX_PARTY_SIZE; ++fighter_index)
 		{
-			kDraw.menubox(double_buffer, x, y, 2, 2, (cur == MAXCHRS + fighter_index ? DARKRED : DARKBLUE));
+			kDraw.menubox(double_buffer, x, y, 2, 2, (cur == MAXCHRS + fighter_index ? eMenuBoxColor::DARKRED : eMenuBoxColor::DARKBLUE));
 			if (fighter_index < numchrs && pidx[fighter_index] != PIDX_UNDEFINED)
 			{
 				draw_sprite(double_buffer, frames[pidx[fighter_index]][0], x + 8, y + 8);
@@ -743,7 +743,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 			x += 40;
 		}
 		/* Draw the 'Exit' button */
-		kDraw.menubox(double_buffer, x, y, 4, 1, (cur == MAX_PARTY_SIZE + MAXCHRS ? DARKRED : DARKBLUE));
+		kDraw.menubox(double_buffer, x, y, 4, 1, (cur == MAX_PARTY_SIZE + MAXCHRS ? eMenuBoxColor::DARKRED : eMenuBoxColor::DARKBLUE));
 		kDraw.print_font(double_buffer, x + 8, y + 8, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
 		/* See which hero is selected and draw his/her stats */
 		if (cur < n_avail)
@@ -758,7 +758,7 @@ int select_party(ePIDX* avail, size_t n_avail, size_t numchrs_max)
 		{
 			hero = PIDX_UNDEFINED;
 		}
-		kDraw.menubox(double_buffer, 92, 152, 18, 5, DARKBLUE);
+		kDraw.menubox(double_buffer, 92, 152, 18, 5, eMenuBoxColor::DARKBLUE);
 		if (hero != PIDX_UNDEFINED)
 		{
 			draw_playerstat(double_buffer, hero, 100, 160);
