@@ -39,7 +39,7 @@ enum eRunConsoleKeys
 * Set up the global state ready for using the console
 * \author PH
 */
-void init_console(void)
+void init_console()
 {
 	size_t console_line;
 
@@ -113,7 +113,7 @@ void scroll_console(const char* l)
 * Run the console. Does not return until the console
 * is closed.
 */
-void run_console(void)
+void run_console()
 {
 	int c;
 	size_t sl;

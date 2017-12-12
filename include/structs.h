@@ -284,5 +284,5 @@ struct s_sgstats
 		int hp;
 		int mp;
 	} characters[MAX_PARTY_SIZE];
-	static s_sgstats get_current(void);
+	static s_sgstats get_current();
 };

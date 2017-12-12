@@ -39,7 +39,7 @@ void enemy_curecheck(int);
 void enemy_skillcheck(size_t fighterIndex, size_t skillNumber);
 void enemy_spellcheck(size_t, size_t);
 int enemy_stscheck(int, int);
-void load_enemies(void);
+void load_enemies();
 KFighter* make_enemy(size_t enemyFighterIndex, KFighter* en);
 int skill_setup(size_t fighterIndex, size_t skillNumber);
 int spell_setup(int, int);
@@ -383,7 +383,7 @@ void KqFork::EnemyC::enemy_curecheck(int w)
  * \author PH
  * \date 2003????
  */
-void enemy_init(void)
+void enemy_init()
 {
 	size_t fighter_index, frame_index;
 
@@ -698,7 +698,7 @@ int KqFork::EnemyC::enemy_stscheck(int ws, int s)
  * \author PH
  * \date 2003????
  */
-void KqFork::EnemyC::load_enemies(void)
+void KqFork::EnemyC::load_enemies()
 {
 	int tmp, lx, ly, p;
 	FILE* edat = nullptr;

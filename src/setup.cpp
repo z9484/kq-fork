@@ -33,11 +33,11 @@ char slow_computer = 0;
 static DATAFILE* sfx[MAX_SAMPLES];
 
 /*  Internal functions  */
-static int load_samples(void);
+static int load_samples();
 static int getavalue(const char*, int, int, int, bool, void (*)(int));
-static int getakey(void);
-static void parse_allegro_setup(void);
-static void parse_jb_setup(void);
+static int getakey();
+static void parse_allegro_setup();
+static void parse_jb_setup();
 
 /*! \brief Play sound effects / music if adjusting it */
 static void sound_feedback(int val)
@@ -73,7 +73,7 @@ static void citem(int y, const char* caption, const char* value, eFontColor colo
  * menu.  Here you can adjust the music or sound volume, or
  * the speed that the battle gauge moves at.
  */
-void config_menu(void)
+void config_menu()
 {
 	size_t stop = 0, ptr = 0;
 	int p;
@@ -468,7 +468,7 @@ void config_menu(void)
  *
  *  Duh.
  */
-void free_samples(void)
+void free_samples()
 {
 	size_t index;
 
@@ -490,7 +490,7 @@ void free_samples(void)
  *
  * \returns the key being pressed, 0 if error (or cancel?)
  */
-static int getakey(void)
+static int getakey()
 {
 	int a;
 
@@ -631,7 +631,7 @@ const char* kq_keyname(int scancode)
  *
  * \returns 0 on success, 1 on failure.
  */
-static int load_samples(void)
+static int load_samples()
 {
 	AL_CONST char* sndfiles[MAX_SAMPLES] =
 	{
@@ -674,7 +674,7 @@ static int load_samples(void)
  * \author PH
  * \date 20030831
  */
-static void parse_allegro_setup(void)
+static void parse_allegro_setup()
 {
 	std::string cfg = kqres(SETTINGS_DIR, "kq.cfg").c_str();
 
@@ -756,7 +756,7 @@ static void parse_allegro_setup(void)
  *
  * Remember that setup.cfg is found in the /saves dir!
  */
-static void parse_jb_setup(void)
+static void parse_jb_setup()
 {
 	FILE* s = nullptr;
 	int dab = 0;
@@ -905,7 +905,7 @@ static void parse_jb_setup(void)
  * \date 20030831
  * \author PH
  */
-void parse_setup(void) { parse_allegro_setup(); }
+void parse_setup() { parse_allegro_setup(); }
 
 /*! \brief Play sample effect
  *
@@ -1009,7 +1009,7 @@ void play_effect(int efc, int panning)
  * Set the graphics mode, taking into account the Windowed and Stretched
  * settings.
  */
-void set_graphics_mode(void)
+void set_graphics_mode()
 {
 	if (stretch_view == 1)
 	{
@@ -1042,7 +1042,7 @@ void set_graphics_mode(void)
  * \author PH
  * \date 20030527
  */
-void show_help(void)
+void show_help()
 {
 	kDraw.menubox(double_buffer, 116 + xofs, yofs, 9, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 132 + xofs, 8 + yofs, _("KQ Help"), eFontColor::FONTCOLOR_GOLD);
@@ -1077,7 +1077,7 @@ void show_help(void)
  *  20020922 - ML : updated to use DUMB
  *  20020922 - ML : Changed to only reserving 8 voices. (32 seemed over-kill?)
  */
-void sound_init(void)
+void sound_init()
 {
 	if (!sound_avail)
 	{

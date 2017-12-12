@@ -7,12 +7,12 @@ enum eHero
 	HERO2 = 201
 };
 
-void do_autoexec(void);
+void do_autoexec();
 void do_entity(int en_num);
-void do_luacheat(void);
+void do_luacheat();
 void do_luainit(const char* fname, int global);
-void do_luakill(void);
-void do_postexec(void);
+void do_luakill();
+void do_postexec();
 void do_timefunc(const char* funcname);
 void do_zone(int zn_num);
-void lua_user_init(void);
+void lua_user_init();

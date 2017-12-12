@@ -607,7 +607,7 @@ void KEntity::place_ent(t_entity en, int ex, int ey)
 	g_ent[en].y = g_ent[en].tiley * TILE_H;
 }
 
-void KEntity::player_move(void)
+void KEntity::player_move()
 {
 	int oldx = g_ent[0].tilex;
 	int oldy = g_ent[0].tiley;

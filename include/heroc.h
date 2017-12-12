@@ -198,7 +198,7 @@ private:
      * Check whether or not the heroes can run, and then display
      * the little running-away sequence.
      */
-    void hero_run(void);
+    void hero_run();
 
     /*! \brief Draw spell list
      *

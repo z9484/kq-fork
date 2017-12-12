@@ -54,7 +54,7 @@ namespace KqFork
  *
  * This uses qsort to sort the fields, ready for bsearch to search them.
  */
-void fieldsort(void);
+void fieldsort();
 
 /**
  * Read a file chunk.
@@ -310,7 +310,7 @@ static int KQ_warp(lua_State*);
 
 static int KQ_char_getter(lua_State* L);
 static int KQ_char_setter(lua_State* L);
-static int KQ_check_map_change(void);
+static int KQ_check_map_change();
 static int KQ_party_getter(lua_State* L);
 static int KQ_party_setter(lua_State* L);
 #ifdef DEBUGMODE
@@ -569,7 +569,7 @@ static enum
  * Check to see if we can change the map.  Does nothing if we are already in
  * the process of changing the map.
  */
-static int KQ_check_map_change(void)
+static int KQ_check_map_change()
 {
 	switch (changing_map)
 	{
@@ -599,7 +599,7 @@ static int KQ_check_map_change(void)
  * should NOT call any graphical functions because this causes KQ to lock.
  * Instead, use postexec().
  */
-void do_autoexec(void)
+void do_autoexec()
 {
 	int oldtop = lua_gettop(theL);
 
@@ -648,7 +648,7 @@ void do_entity(int en_num)
  * pressed.  This can contain any scripting code, in the function cheat().
  * The cheat can be used repeatedly.
  */
-void do_luacheat(void)
+void do_luacheat()
 {
 	int oldtop;
 
@@ -734,7 +734,7 @@ void do_luainit(const char* fname, int global)
  *
  * Close the Lua virtual machine.
  */
-void do_luakill(void)
+void do_luakill()
 {
 	Game.reset_timer_events();
 	if (theL)
@@ -749,7 +749,7 @@ void do_luakill(void)
  * This function is called after the map is faded back in.  It's possible to
  * show speech, move entities, etc. here.
  */
-void do_postexec(void)
+void do_postexec()
 {
 	int oldtop = lua_gettop(theL);
 
@@ -770,7 +770,7 @@ void do_postexec(void)
  * Call the get_quest_info function. This is called
  * when quest info is selected from the menu
  */
-void do_questinfo(void)
+void do_questinfo()
 {
 	int oldtop = lua_gettop(theL);
 
@@ -852,7 +852,7 @@ void do_zone(int zn_num)
  * world-specific stuff. It does not have any arguments, or
  * return any values.
  */
-void lua_user_init(void)
+void lua_user_init()
 {
 	do_luakill();
 	do_luainit("init", 1);
@@ -868,7 +868,7 @@ static int fieldcmp(const void* pa, const void* pb)
 	return (strcmp(a->name, b->name));
 }
 
-void KqFork::fieldsort(void)
+void KqFork::fieldsort()
 {
 	qsort(fields, sizeof(fields) / sizeof(*fields), sizeof(struct s_field), fieldcmp);
 }

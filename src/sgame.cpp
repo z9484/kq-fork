@@ -90,7 +90,7 @@ int KSaveGame::confirm_action()
  *
  * \returns 1=quit 0=don't quit
  */
-static int confirm_quit(void)
+static int confirm_quit()
 {
 	const char* opts[2];
 	int ans;

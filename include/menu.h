@@ -3,14 +3,14 @@
 #include "kq.h"
 
 void add_questinfo(const char* key, const char* text);
-void do_questinfo(void);
+void do_questinfo();
 void draw_mainmenu(int);
 void draw_playerstat(Raster*, int, int, int);
 int give_xp(int, int, int);
-void menu(void);
-void revert_equipstats(void);
-void spec_items(void);
-void update_equipstats(void);
+void menu();
+void revert_equipstats();
+void spec_items();
+void update_equipstats();
 
 bool player2fighter(size_t partyIndex, KFighter& pf);
 

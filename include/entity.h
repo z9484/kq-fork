@@ -203,7 +203,7 @@ private:
      * done in process_entity... I just had to make this exception for the
      * player-controlled dude.
      */
-    void player_move(void);
+    void player_move();
 
     /**
      * Actions for one entity

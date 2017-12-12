@@ -51,35 +51,35 @@ public:
 	void change_map(const std::string&, int, int, int, int);
 	void change_mapm(const std::string&, const std::string&, int, int);
 	void calc_viewport(int);
-	void zone_check(void);
+	void zone_check();
 	void warp(int, int, int);
-	void do_check_animation(void);
-	void activate(void);
-	void unpress(void);
-	void wait_enter(void);
+	void do_check_animation();
+	void activate();
+	void unpress();
+	void wait_enter();
 	void klog(const char*);
-	void init_players(void);
+	void init_players();
 	void kwait(int);
 	NORETURN void program_death(const char*);
 	size_t in_party(ePIDX);
 	void wait_for_entity(size_t, size_t);
-	char* get_timer_event(void);
+	char* get_timer_event();
 	int add_timer_event(const char*, int);
-	void reset_timer_events(void);
-	void reset_world(void);
+	void reset_timer_events();
+	void reset_world();
 
 	/*! Yield processor to other tasks */
-	void kq_yield(void);
+	void kq_yield();
 
 	Raster* alloc_bmp(int bitmap_width, int bitmap_height, const char* bitmap_name);
 
-	void startup(void);
-	void deallocate_stuff(void);
+	void startup();
+	void deallocate_stuff();
 
-	void allocate_stuff(void);
-	void load_heroes(void);
+	void allocate_stuff();
+	void load_heroes();
 	void prepare_map(int, int, int, int);
-	void data_dump(void);
+	void data_dump();
 
 	std::string GetCurmap() { return m_curmap; }
 	void SetCurmap(std::string curmap) { m_curmap = curmap; }

@@ -30,7 +30,7 @@ namespace KqFork
 int check_xp(int, int);
 void ilist_add(info_list*, const char*, const char*);
 void level_up(int);
-void quest_info(void);
+void quest_info();
 void status_screen(size_t);
 info_list quest_list;
 } // namespace KqFork
@@ -258,7 +258,7 @@ void KqFork::level_up(int pr)
  *
  * Main menu that calls all the other little menus :)
  */
-void menu(void)
+void menu()
 {
 	int stop = 0, ptr = 0, z = -1;
 
@@ -564,7 +564,7 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
  * \author PH
  * \date 20050429
  */
-void KqFork::quest_info(void)
+void KqFork::quest_info()
 {
 	int ii = 0;
 	int i, base;
@@ -644,7 +644,7 @@ void KqFork::quest_info(void)
  *
  * This converts from fighter to player structure.  Used when leaving combat.
  */
-void revert_equipstats(void)
+void revert_equipstats()
 {
 	size_t fighter_index, end_fighter_index;
 	size_t pidx_index;
@@ -696,7 +696,7 @@ void revert_equipstats(void)
  * WK: This function would be more appropriate in a script, such as global.lua.
  * This function is preventing me from completely removing progress.h
  */
-void spec_items(void)
+void spec_items()
 {
 	int a, num_items = 0, stop = 0, ptr = 0;
 	short list_item_which[MAX_PLAYER_SPECIAL_ITEMS];
@@ -914,7 +914,7 @@ void KqFork::status_screen(size_t fighter_index)
  * Just used to convert all characters in party from party structure
  * to fighter structure.
  */
-void update_equipstats(void)
+void update_equipstats()
 {
 	size_t fighter_index;
 

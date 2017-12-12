@@ -55,8 +55,8 @@
 #include "gfx.h"
 #include "random.h"
 
-static void my_counter(void);
-static void time_counter(void);
+static void my_counter();
+static void time_counter();
 
 KGame Game;
 
@@ -347,7 +347,7 @@ KGame::KGame()
  * Things that can be activated are entities and zones that are
  * obstructed.
  */
-void KGame::activate(void)
+void KGame::activate()
 {
 	int zx, zy, looking_at_x = 0, looking_at_y = 0, q, target_char_facing = 0, tf;
 
@@ -493,7 +493,7 @@ Raster* KGame::alloc_bmp(int w, int h, const char* /*n*/)
  *
  * A separate function to create all global bitmaps needed in the game.
  */
-void KGame::allocate_stuff(void)
+void KGame::allocate_stuff()
 {
 	size_t i, p;
 
@@ -734,7 +734,7 @@ void KGame::change_mapm(const std::string& map_name, const std::string& marker_n
  * tile index, and a delay. The smaller the delay value, the faster that the
  * animation cycles through the tiles.
  */
-void KGame::do_check_animation(void)
+void KGame::do_check_animation()
 {
 	int millis = (1000 * animation_count) / KQ_TICKS;
 	animation_count -= (KQ_TICKS * millis) / 1000;
@@ -750,7 +750,7 @@ void KGame::do_check_animation(void)
  * and "progress.log" respectively. This happens in response to user hitting
  * the F11 key.
  */
-void KGame::data_dump(void)
+void KGame::data_dump()
 {
 	if (debugging == 0)
 	{
@@ -788,7 +788,7 @@ void KGame::data_dump(void)
  *
  * This frees memory and such things.
  */
-void KGame::deallocate_stuff(void)
+void KGame::deallocate_stuff()
 {
 	int i, p;
 
@@ -931,7 +931,7 @@ void KGame::deallocate_stuff(void)
  *
  * \returns name of the next event or NULL if none is ready
  */
-char* KGame::get_timer_event(void)
+char* KGame::get_timer_event()
 {
 	static char buf[32];
 	int now = ksec;
@@ -1012,7 +1012,7 @@ void KGame::klog(const char* msg) { TRACE("%s\n", msg); }
  * \author OC
  * \date 20100228
  */
-void KGame::kq_yield(void) { rest(cpu_usage); }
+void KGame::kq_yield() { rest(cpu_usage); }
 
 /**
  * Pause for a time
@@ -1083,7 +1083,7 @@ void KGame::kwait(int dtime)
  * Loads the hero stats from a file.
  *
  */
-void KGame::load_heroes(void)
+void KGame::load_heroes()
 {
 	Raster* eb = get_cached_image("uschrs.png");
 
@@ -1216,7 +1216,7 @@ END_OF_MAIN()
  *
  * New interrupt handler set to keep game time.
  */
-void my_counter(void)
+void my_counter()
 {
 	timer++;
 
@@ -1425,7 +1425,7 @@ void KGame::program_death(const char* message)
  *
  * This removes any events from the list
  */
-void KGame::reset_timer_events(void)
+void KGame::reset_timer_events()
 {
 	int i;
 
@@ -1440,7 +1440,7 @@ void KGame::reset_timer_events(void)
  * Resets the world. Called every new game and load game
  *  This function may be called multiple times in some cases. That should be ok.
  */
-void KGame::reset_world(void)
+void KGame::reset_world()
 {
 	int i, j;
 
@@ -1481,7 +1481,7 @@ void KGame::reset_world(void)
  * Set up allegro, set up variables, load stuff, blah...
  * This is called once per game.
  */
-void KGame::startup(void)
+void KGame::startup()
 {
 	int p, i, q;
 	time_t t;
@@ -1668,7 +1668,7 @@ void KGame::startup(void)
 /**
  * Keep track of the time the game has been in play
  */
-void time_counter(void)
+void time_counter()
 {
 	if (kmin < 60)
 	{
@@ -1691,7 +1691,7 @@ END_OF_FUNCTION(time_counter)
  *
  * \note Waits at most 20 'ticks'
  */
-void KGame::unpress(void)
+void KGame::unpress()
 {
 	timer_count = 0;
 	while (timer_count < 20)
@@ -1710,7 +1710,7 @@ void KGame::unpress(void)
  *
  * Simply wait for the 'alt' key to be pressed.
  */
-void KGame::wait_enter(void)
+void KGame::wait_enter()
 {
 	int stop = 0;
 
@@ -1860,7 +1860,7 @@ void KGame::warp(int wtx, int wty, int fspeed)
  * wish.
  * This function also handles the Repulse functionality
  */
-void KGame::zone_check(void)
+void KGame::zone_check()
 {
 	uint16_t stc, zx, zy;
 

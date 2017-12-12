@@ -1019,7 +1019,7 @@ int KHero::hero_invokeitem(size_t attacker_fighter_index, size_t item_index)
 	return 1;
 }
 
-void KHero::hero_run(void)
+void KHero::hero_run()
 {
 	int a, b = 0, c = 0, bt = 0, ct = 0, fr, fx, fy, g = 0;
 	size_t fighter_index;

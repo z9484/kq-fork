@@ -40,9 +40,9 @@ static uint8_t shop_no;
 
 /*  internal functions  */
 static void draw_sideshot(int);
-static void buy_menu(void);
+static void buy_menu();
 static void buy_item(int, int);
-static void sell_menu(void);
+static void sell_menu();
 static void sell_howmany(int, size_t);
 static void sell_item(int, int);
 
@@ -105,7 +105,7 @@ static void buy_item(int how_many, int item_no)
  * Show the player a list of items which can be bought
  * and wait for him/her to choose something or exit.
  */
-static void buy_menu(void)
+static void buy_menu()
 {
 	bool stop = false;
 	unsigned short xptr = 1, yptr = 0;
@@ -271,7 +271,7 @@ void do_inn_effects(int do_delay)
  *
  * Display the party's funds.
  */
-void draw_shopgold(void)
+void draw_shopgold()
 {
 	kDraw.menubox(double_buffer, 248 + xofs, 208 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 256 + xofs, 216 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
@@ -679,7 +679,7 @@ static void sell_item(int itno, int ni)
  * Display a list of items that are in inventory and ask which
  * item or items to sell.
  */
-static void sell_menu(void)
+static void sell_menu()
 {
 	size_t yptr = 0, stop = 0;
 	int p, sp;

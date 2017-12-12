@@ -9,7 +9,7 @@ enum eItemEffectResult
 	ITEM_EFFECT_SUCCESS_MULTIPLE = 2
 };
 
-void camp_item_menu(void);
+void camp_item_menu();
 int check_inventory(size_t, int);
 eItemEffectResult item_effects(size_t, size_t, int);
 void remove_item(size_t, int);

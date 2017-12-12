@@ -17,12 +17,12 @@
 #define SND_EXPLODE 42
 
 /*  This is in addition to setup.c:  */
-void parse_setup(void);
-void config_menu(void);
-void show_help(void);
-void set_graphics_mode(void);
-void sound_init(void);
-void free_samples(void);
+void parse_setup();
+void config_menu();
+void show_help();
+void set_graphics_mode();
+void sound_init();
+void free_samples();
 void play_effect(int, int);
 
 extern char debugging;
