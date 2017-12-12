@@ -85,9 +85,6 @@
     <ClCompile Include="src\eskill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fade.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\fighter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

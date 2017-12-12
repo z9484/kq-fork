@@ -33,7 +33,6 @@
 #include "draw.h"
 #include "entity.h"
 #include "enums.h"
-#include "fade.h"
 #include "imgcache.h"
 #include "input.h"
 #include "intrface.h"
@@ -1199,7 +1198,7 @@ int main(int argc, const char* argv[])
 				if (alldead)
 				{
 					clear(screen);
-					do_transition(TRANS_FADE_IN, 16);
+                    kDraw.do_transition(TRANS_FADE_IN, 16);
 					stop = 1;
 				}
 			}
@@ -1392,7 +1391,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 	{
 		kDraw.drawmap();
 		kDraw.blit2screen(xofs, yofs);
-		do_transition(TRANS_FADE_IN, 4);
+        kDraw.do_transition(TRANS_FADE_IN, 4);
 	}
 
 	use_sstone = g_map.use_sstone;
@@ -1806,7 +1805,7 @@ void KGame::wait_for_entity(size_t first_entity_index, size_t last_entity_index)
  *
  * \param   wtx New x-coord
  * \param   wty New y-coord
- * \param   fspeed Speed of fading (See do_transition())
+ * \param   fspeed Speed of fading (See KDraw::do_transition())
  */
 void KGame::warp(int wtx, int wty, int fspeed)
 {
@@ -1814,7 +1813,7 @@ void KGame::warp(int wtx, int wty, int fspeed)
 
 	if (hold_fade == 0)
 	{
-		do_transition(TRANS_FADE_OUT, fspeed);
+        kDraw.do_transition(TRANS_FADE_OUT, fspeed);
 	}
 
 	if (numchrs == 0)
@@ -1843,7 +1842,7 @@ void KGame::warp(int wtx, int wty, int fspeed)
 
 	if (hold_fade == 0)
 	{
-		do_transition(TRANS_FADE_IN, fspeed);
+        kDraw.do_transition(TRANS_FADE_IN, fspeed);
 	}
 
 	timer_count = 0;

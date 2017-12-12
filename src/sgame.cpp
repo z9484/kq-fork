@@ -7,8 +7,7 @@
  * Also includes the main menu and the system menu
  * (usually accessible by pressing ESC).
  *
- * \todo PH Do we _really_ want things like controls and screen
- *          mode to be saved/loaded ?
+ * \todo PH Do we _really_ want things like controls and screen mode to be saved/loaded ?
  */
 
 #include <ctype.h>
@@ -20,7 +19,6 @@
 #include "credits.h"
 #include "disk.h"
 #include "draw.h"
-#include "fade.h"
 #include "gfx.h"
 #include "imgcache.h"
 #include "input.h"
@@ -38,16 +36,21 @@
 #include "structs.h"
 #include "timing.h"
 
-/*! \brief No game-wide globals in this file. */
+const size_t KSaveGame::NUMSG = 20;
 
-/*! \brief Confirm save
- *
- * If the save slot selected already has a saved game in it, confirm that we
- * want to overwrite it.
- *
- * \returns 0 if cancelled, 1 if confirmed
- */
-int KSaveGame::confirm_action(void)
+KSaveGame::KSaveGame()
+	: save_ptr{ 0 }
+	, top_pointer{ 0 }
+	, max_onscreen{ 5 }
+{
+	savegame.resize(NUMSG);
+}
+
+KSaveGame::~KSaveGame()
+{
+}
+
+int KSaveGame::confirm_action()
 {
 	int stop = 0;
 	int pointer_offset = (save_ptr - top_pointer) * 48;
@@ -57,9 +60,9 @@ int KSaveGame::confirm_action(void)
 		return 1;
 	}
 	fullblit(double_buffer, back);
-    kDraw.menubox(double_buffer, 128, pointer_offset + 12, 14, 1, eMenuBoxColor::DARKBLUE);
-    kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
-    kDraw.blit2screen(0, 0);
+	kDraw.menubox(double_buffer, 128, pointer_offset + 12, 14, 1, eMenuBoxColor::DARKBLUE);
+	kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
+	kDraw.blit2screen(0, 0);
 	fullblit(back, double_buffer);
 	while (!stop)
 	{
@@ -99,22 +102,17 @@ static int confirm_quit(void)
 	return ans == 0 ? 1 : 0;
 }
 
-/*! \brief Delete game
- *
- * You guessed it... delete the game.
- */
-void KSaveGame::delete_game(void)
+void KSaveGame::delete_game()
 {
-	int stop = 0;
-	int remove_result;
+	bool stop = false;
 	int pointer_offset = (save_ptr - top_pointer) * 48;
 
 	sprintf(strbuf, "sg%d.sav", save_ptr);
-	remove_result = remove(kqres(SAVE_DIR, strbuf).c_str());
+	int remove_result = remove(kqres(SAVE_DIR, strbuf).c_str());
 	if (remove_result == 0)
 	{
-        kDraw.menubox(double_buffer, 128, pointer_offset + 12, 12, 1, eMenuBoxColor::DARKBLUE);
-        kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.menubox(double_buffer, 128, pointer_offset + 12, 12, 1, eMenuBoxColor::DARKBLUE);
+		kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), eFontColor::FONTCOLOR_NORMAL);
 
 		s_sgstats& stats = savegame[save_ptr];
 		stats.num_characters = 0;
@@ -123,10 +121,10 @@ void KSaveGame::delete_game(void)
 	}
 	else
 	{
-        kDraw.menubox(double_buffer, 128, pointer_offset + 12, 16, 1, eMenuBoxColor::DARKBLUE);
-        kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), eFontColor::FONTCOLOR_NORMAL);
+		kDraw.menubox(double_buffer, 128, pointer_offset + 12, 16, 1, eMenuBoxColor::DARKBLUE);
+		kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), eFontColor::FONTCOLOR_NORMAL);
 	}
-    kDraw.blit2screen(0, 0);
+	kDraw.blit2screen(0, 0);
 	fullblit(back, double_buffer);
 
 	while (!stop)
@@ -135,22 +133,15 @@ void KSaveGame::delete_game(void)
 		if (PlayerInput.balt || PlayerInput.bctrl)
 		{
 			Game.unpress();
-			stop = 1;
+			stop = true;
 		}
 		Game.kq_yield();
 	}
 }
 
-/*! \brief Load game
- *
- * Uh-huh.
- * PH 20030805 Made endian-safe
- * PH 20030914 Now ignores keyboard settings etc in the save file
- * \returns 1 if load succeeded, 0 otherwise
- */
-int KSaveGame::load_game(void)
+int KSaveGame::load_game()
 {
-	sprintf(strbuf, "sg%d.xml", save_ptr);
+	sprintf(strbuf, "sg%ld.xml", save_ptr);
 	load_game_xml(kqres(SAVE_DIR, strbuf).c_str());
 	timer_count = 0;
 	ksec = 0;
@@ -162,13 +153,7 @@ int KSaveGame::load_game(void)
 	return 1;
 }
 
-/*! \brief Load mini stats
- *
- * This loads the mini stats for each saved game.
- * These mini stats are just for displaying info about the save game on the
- * save/load game screen.
- */
-void KSaveGame::load_sgstats(void)
+void KSaveGame::load_sgstats()
 {
 	for (int sg = 0; sg < NUMSG; ++sg)
 	{
@@ -184,15 +169,9 @@ void KSaveGame::load_sgstats(void)
 	}
 }
 
-/*! \brief Save game
- *
- * You guessed it... save the game.
- *
- * \returns 0 if save failed, 1 if success
- */
-int KSaveGame::save_game(void)
+int KSaveGame::save_game()
 {
-	sprintf(strbuf, "sg%d.xml", save_ptr);
+	sprintf(strbuf, "sg%ld.xml", save_ptr);
 	int rc = save_game_xml(kqres(SAVE_DIR, strbuf).c_str());
 	if (rc)
 	{
@@ -201,14 +180,6 @@ int KSaveGame::save_game(void)
 	return rc;
 }
 
-/*! \brief Save/Load menu
- *
- * This is the actual save/load menu.  The only parameter to
- * the function indicates whether we are saving or loading.
- *
- * \param   am_saving 0 if loading, 1 if saving
- * \returns 0 if an error occurred or save/load cancelled
- */
 int KSaveGame::saveload(int am_saving)
 {
 	int stop = 0;
@@ -226,14 +197,17 @@ int KSaveGame::saveload(int am_saving)
 		Game.do_check_animation();
 		double_buffer->fill(0);
 		show_sgstats(am_saving);
-        kDraw.blit2screen(0, 0);
+		kDraw.blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
 		{
 			Game.unpress();
-			save_ptr--;
-			if (save_ptr < 0)
+			if (save_ptr > 0)
+			{
+				save_ptr--;
+			}
+			else
 			{
 				save_ptr = NUMSG - 1;
 			}
@@ -253,8 +227,11 @@ int KSaveGame::saveload(int am_saving)
 		if (PlayerInput.down)
 		{
 			Game.unpress();
-			save_ptr++;
-			if (save_ptr > NUMSG - 1)
+			if (save_ptr < NUMSG - 1)
+			{
+				save_ptr++;
+			}
+			else
 			{
 				save_ptr = 0;
 			}
@@ -339,16 +316,9 @@ int KSaveGame::saveload(int am_saving)
 	return stop - 1;
 }
 
-/*! \brief Display saved game statistics
- *
- * This is the routine that displays the information about
- * each saved game for the save/load screen.
- *
- * \param   saving 0 if loading, 1 if saving.
- */
 void KSaveGame::show_sgstats(int saving)
 {
-	int a, sg, hx, hy, b;
+	int a, hx, hy, b;
 	int pointer_offset;
 
 	/* TT UPDATE:
@@ -373,18 +343,18 @@ void KSaveGame::show_sgstats(int saving)
 	pointer_offset = (save_ptr - top_pointer) * 48;
 	if (saving == 0)
 	{
-        kDraw.menubox(double_buffer, 0, pointer_offset + 12, 7, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-        kDraw.print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.menubox(double_buffer, 0, pointer_offset + 12, 7, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kDraw.print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 1)
 	{
-        kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-        kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), eFontColor::FONTCOLOR_GOLD);
+		kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 2 || saving == 3)
 	{
-        kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-        kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), eFontColor::FONTCOLOR_RED);
+		kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), eFontColor::FONTCOLOR_RED);
 	}
 
 	if (top_pointer > 0)
@@ -396,28 +366,28 @@ void KSaveGame::show_sgstats(int saving)
 		draw_sprite(double_buffer, dnptr, 32, KQ_SCREEN_H - 8);
 	}
 
-	for (sg = top_pointer; sg < top_pointer + max_onscreen; sg++)
+	for (size_t sg = top_pointer; sg < top_pointer + max_onscreen; sg++)
 	{
 		s_sgstats& stats = savegame[sg];
 		pointer_offset = (sg - top_pointer) * 48;
 		if (sg == save_ptr)
 		{
-            kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::DARKBLUE);
+			kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::DARKBLUE);
 		}
 		else
 		{
-            kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		}
 
 		if (savegame[sg].num_characters == -1)
 		{
-            kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), eFontColor::FONTCOLOR_NORMAL);
+			kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		else
 		{
 			if (stats.num_characters == 0)
 			{
-                kDraw.print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), eFontColor::FONTCOLOR_NORMAL);
 			}
 			else
 			{
@@ -441,23 +411,14 @@ void KSaveGame::show_sgstats(int saving)
 					rectfill(double_buffer, hx + 32, hy + 17, hx + 32 + b, hy + 21, 25);
 				}
 				sprintf(strbuf, _("T %u:%02u"), stats.time / 60, stats.time % 60);
-                kDraw.print_font(double_buffer, 236, pointer_offset + 12, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, 236, pointer_offset + 12, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, _("G %u"), stats.gold);
-                kDraw.print_font(double_buffer, 236, pointer_offset + 28, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kDraw.print_font(double_buffer, 236, pointer_offset + 28, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 	}
 }
 
-/*! \brief Main menu screen
- *
- * This is the main menu... just display the opening and then the menu and
- * then wait for input.  Also handles loading a saved game, and the config menu.
- *
- * \param   c zero if the splash (the bit with the staff and the eight heroes)
- *            should be displayed.
- * \returns 1 if new game, 0 if continuing, 2 if exit
- */
 int KSaveGame::start_menu(int skip_splash)
 {
 	int stop = 0, ptr = 0, redraw = 1, a;
@@ -503,12 +464,12 @@ int KSaveGame::start_menu(int skip_splash)
 			delete (dudes);
 			delete (tdudes);
 			/*
-			    TODO: this fade should actually be to white
-			    if (_color_depth == 8)
-			    fade_from (pal, whp, 1);
-			    else
+			 *  TODO: this fade should actually be to white
+			 *  if (_color_depth == 8)
+			 *  fade_from (pal, whp, 1);
+			 *  else
 			 */
-			do_transition(TRANS_FADE_WHITE, 1);
+            kDraw.do_transition(TRANS_FADE_WHITE, 1);
 		}
 		clear_to_color(double_buffer, 15);
 		kDraw.blit2screen(0, 0);
@@ -639,16 +600,7 @@ int KSaveGame::start_menu(int skip_splash)
 	return stop - 1;
 }
 
-/*! \brief Display system menu
- *
- * This is the system menu that is invoked from within the game.
- * From here you can save, load, configure a couple of options or
- * exit the game altogether.
- * \date 20040229 PH added 'Save anytime' facility when cheat mode is ON
- *
- * \returns 0 if cancelled or nothing happened, 1 otherwise
- */
-int KSaveGame::system_menu(void)
+int KSaveGame::system_menu()
 {
 	int stop = 0, ptr = 0;
 	char save_str[10];

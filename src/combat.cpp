@@ -5,7 +5,6 @@
 #include "effects.h"
 #include "enemyc.h"
 #include "enums.h"
-#include "fade.h"
 #include "gfx.h"
 #include "heroc.h"
 #include "imgcache.h"
@@ -627,9 +626,9 @@ int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is
 	Music.play_music(mus, 0);
 	if (stretch_view == 2)
 	{
-		do_transition(TRANS_FADE_OUT, 2);
+        kDraw.do_transition(TRANS_FADE_OUT, 2);
 		clear_bitmap(double_buffer);
-		do_transition(TRANS_FADE_IN, 64);
+        kDraw.do_transition(TRANS_FADE_IN, 64);
 	}
 	else
 	{
@@ -945,7 +944,7 @@ void KCombat::enemies_win() const
 	kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	kDraw.blit2screen(0, 0);
 	Game.wait_enter();
-	do_transition(TRANS_FADE_OUT, 4);
+    kDraw.do_transition(TRANS_FADE_OUT, 4);
 	alldead = 1;
 }
 

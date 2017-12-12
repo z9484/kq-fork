@@ -13,7 +13,6 @@
 #include "constants.h"
 #include "draw.h"
 #include "effects.h"
-#include "fade.h"
 #include "gfx.h"
 #include "heroc.h"
 #include "hskill.h"
@@ -419,7 +418,7 @@ void reveal(int tgt)
 	int draw_x, draw_y;
 	char resistance;
 
-	do_transition(TRANS_FADE_OUT, 4);
+    kDraw.do_transition(TRANS_FADE_OUT, 4);
 	kDraw.menubox(double_buffer, 84, 56, 17, 13, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	sprintf(strbuf, _("Name: %s"), fighter[tgt].fighterName.c_str());
 	kDraw.print_font(double_buffer, 92, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
@@ -472,7 +471,7 @@ void reveal(int tgt)
 		}
 	}
 	kDraw.blit2screen(0, 0);
-	do_transition(TRANS_FADE_IN, 4);
+    kDraw.do_transition(TRANS_FADE_IN, 4);
 	Game.wait_enter();
 }
 

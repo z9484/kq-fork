@@ -1,5 +1,7 @@
 #pragma once
 
+#include <allegro.h>
+#include <allegro/internal/aintern.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
@@ -45,6 +47,15 @@ enum eBubbleStyle
 	BUBBLE_MESSAGE = 2,
 
 	NUM_BUBBLE_STYLES // always last
+};
+
+enum eTransitionFade
+{
+    TRANS_FADE_IN = 1,
+    TRANS_FADE_OUT = 2,
+    TRANS_FADE_WHITE = 3,
+
+    NUM_TRANSITIONS
 };
 
 /* These should correspond with the stems found in MISC.
@@ -330,6 +341,16 @@ public:
      */
     Raster* copy_bitmap(Raster* target, Raster* source);
 
+
+    /*! \brief Perform one of a range of palette transitions
+     *
+     * Fade to black, white or to the game palette (pal)
+     *
+     * \param   transitionFade Any of TRANS_FADE_IN, TRANS_FADE_OUT, TRANS_FADE_WHITE
+     * \param   transitionSpeed Speed of transition
+     */
+    void do_transition(eTransitionFade transitionFade, int transitionSpeed);
+
 private:
 
     /*! \brief Get glyph index
@@ -503,6 +524,22 @@ private:
      */
     void set_textpos(uint32_t entity_index);
 
+    /*! \brief Fade between sub-ranges of two palettes
+     *
+     *  Fades from source to dest, at the specified speed (1 is the slowest, 64
+     *  is instantaneous). Only affects colors between 'from' and 'to' (inclusive,
+     *  pass 0 and 255 to fade the entire palette).
+     *  Calls poll_music() to ensure the song keeps playing smoothly.
+     *  Based on the Allegro function of the same name.
+     *
+     * \param   source Palette to fade from
+     * \param   dest Palette to fade to
+     * \param   speed How fast to fade (1..64)
+     * \param   from Starting palette index (0..255)
+     * \param   to Ending palette index (0..255)
+     * \date    20040731 PH added check for out-of-range speed
+     */
+    void _fade_from_range(AL_CONST PALETTE source, AL_CONST PALETTE dest, uint32_t speed, int from, int to);
 };
 
 extern KDraw kDraw;

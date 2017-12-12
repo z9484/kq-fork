@@ -16,7 +16,6 @@ extern "C" {
 #include "effects.h"
 #include "enemyc.h"
 #include "enums.h"
-#include "fade.h"
 #include "heroc.h"
 #include "input.h"
 #include "intrface.h"
@@ -1627,13 +1626,13 @@ static int KQ_dark_mbox(lua_State* L)
 
 static int KQ_do_fadein(lua_State* L)
 {
-	do_transition(TRANS_FADE_IN, (int)lua_tonumber(L, 1));
+    kDraw.do_transition(TRANS_FADE_IN, (int)lua_tonumber(L, 1));
 	return 0;
 }
 
 static int KQ_do_fadeout(lua_State* L)
 {
-	do_transition(TRANS_FADE_OUT, (int)lua_tonumber(L, 1));
+    kDraw.do_transition(TRANS_FADE_OUT, (int)lua_tonumber(L, 1));
 	return 0;
 }
 

@@ -1,19 +1,19 @@
+#include <iterator>
 #include <map>
+#include <memory>
 #include <string>
 #include <tinyxml2.h>
 #include <vector>
-#include <memory>
-#include <iterator>
 #define ZLIB_CONST
+#include <zlib.h>
 #include "animation.h"
+#include "draw.h"
 #include "enums.h"
-#include "fade.h"
 #include "imgcache.h"
 #include "kq.h"
 #include "platform.h"
 #include "structs.h"
 #include "tiledmap.h"
-#include <zlib.h>
 
 using namespace tinyxml2;
 KTiledMap TiledMap;
@@ -77,7 +77,7 @@ void KTiledMap::load_tmx(const std::string& name)
 	Game.reset_timer_events();
 	if (hold_fade == 0)
 	{
-		do_transition(TRANS_FADE_OUT, 4);
+		kDraw.do_transition(TRANS_FADE_OUT, 4);
 	}
 
 	auto loaded_map = load_tmx_map(tmx.RootElement());

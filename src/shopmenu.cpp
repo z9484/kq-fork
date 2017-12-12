@@ -10,7 +10,6 @@
 
 #include "constants.h"
 #include "draw.h"
-#include "fade.h"
 #include "gfx.h"
 #include "input.h"
 #include "itemdefs.h"
@@ -258,11 +257,11 @@ void do_inn_effects(int do_delay)
 	play_effect(36, 128);
 	if (do_delay != 0)
 	{
-		do_transition(TRANS_FADE_OUT, 2);
+        kDraw.do_transition(TRANS_FADE_OUT, 2);
         kDraw.drawmap();
         kDraw.blit2screen(xofs, yofs);
 		kq_wait(1500);
-		do_transition(TRANS_FADE_IN, 2);
+        kDraw.do_transition(TRANS_FADE_IN, 2);
 	}
 	save_spells[P_REPULSE] = 0;
 	Music.resume_music();

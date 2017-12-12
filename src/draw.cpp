@@ -1,7 +1,7 @@
-/*! \file
- * \brief Character and Map drawing
- * \author JB
- * \date ????????
+#include "draw.h"
+
+/**
+ * Character and Map drawing
  *
  * Includes functions to draw characters, text and maps.
  * Also some color manipulation.
@@ -16,7 +16,6 @@
 #include "combat.h"
 #include "console.h"
 #include "constants.h"
-#include "draw.h"
 #include "entity.h"
 #include "gfx.h"
 #include "input.h"
@@ -26,6 +25,7 @@
 #include "res.h"
 #include "setup.h"
 #include "timing.h"
+
 
 /* Globals */
 #define MSG_ROWS 4
@@ -241,6 +241,81 @@ Raster* KDraw::copy_bitmap(Raster* target, Raster* source)
 	/* ...and copy */
 	source->blitTo(target);
 	return target;
+}
+
+void KDraw::_fade_from_range(AL_CONST PALETTE source, AL_CONST PALETTE dest, uint32_t speed, int from, int to)
+{
+	PALETTE temp;
+	int c, start, last;
+	size_t pal_index;
+
+	/* make sure fade speed is in range */
+	if (speed < 1)
+	{
+		speed = 1;
+	}
+	if (speed > 64)
+	{
+		speed = 64;
+	}
+
+	for (pal_index = 0; pal_index < PAL_SIZE; pal_index++)
+	{
+		temp[pal_index] = source[pal_index];
+	}
+	start = retrace_count;
+	last = -1;
+	while ((c = (retrace_count - start) * speed / 2) < 64)
+	{
+		Music.poll_music();
+		if (c != last)
+		{
+			fade_interpolate(source, dest, temp, c, from, to);
+			set_palette_range(temp, from, to, TRUE);
+			if (_color_depth > 8)
+			{
+				kDraw.blit2screen(xofs, yofs);
+			}
+			last = c;
+		}
+	}
+	set_palette_range(dest, from, to, TRUE);
+}
+
+void KDraw::do_transition(eTransitionFade transitionFade, int transitionSpeed)
+{
+    switch (transitionFade)
+    {
+        case eTransitionFade::TRANS_FADE_IN:
+        {
+            _fade_from_range(black_palette, pal, transitionSpeed, 0, PAL_SIZE - 1);
+            break;
+        }
+        case eTransitionFade::TRANS_FADE_OUT:
+        {
+            PALETTE temp;
+
+            get_palette(temp);
+            _fade_from_range(temp, black_palette, transitionSpeed, 0, PAL_SIZE - 1);
+            break;
+        }
+        case eTransitionFade::TRANS_FADE_WHITE:
+        {
+            PALETTE temp, whp;
+
+            get_palette(temp);
+            for (size_t a = 0; a < 256; a++)
+            {
+                whp[a].r = 63;
+                whp[a].g = 63;
+                whp[a].b = 63;
+            }
+            _fade_from_range(temp, whp, transitionSpeed, 0, PAL_SIZE - 1);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void KDraw::draw_backlayer()
