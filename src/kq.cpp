@@ -165,7 +165,7 @@ char* strbuf = nullptr;
  * party[pidx[1]] is the follower, if there are 2 in the party.
  * We need to store all of them, because heroes join and leave during the game.
  */
-s_player party[MAXCHRS];
+KPlayer party[MAXCHRS];
 
 /*! Initial character data
  *

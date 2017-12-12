@@ -7,10 +7,11 @@
  * Also some color manipulation.
  */
 
+#include <algorithm>
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
 #include "bounds.h"
 #include "combat.h"
@@ -950,10 +951,10 @@ void KDraw::draw_porttextbox(eBubbleStyle bstyle, int chr)
 	linexofs = a * 12;
 
 	menubox(double_buffer, 19, 172 - linexofs, 4, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-	menubox(double_buffer, 66, 196 - linexofs, strlen(party[chr].playerName), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	menubox(double_buffer, 66, 196 - linexofs, party[chr].playerName.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 
 	draw_sprite(double_buffer, players[chr].portrait, 24, 177 - linexofs);
-	print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName, eFontColor::FONTCOLOR_NORMAL);
+	print_font(double_buffer, 74, 204 - linexofs, party[chr].playerName.c_str(), eFontColor::FONTCOLOR_NORMAL);
 }
 
 void KDraw::drawmap()
@@ -1154,38 +1155,29 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 	}
 }
 
-const char* KDraw::parse_string(const char* the_string)
+std::string KDraw::replaceAll(std::string str, const std::string& from, const std::string& to)
 {
-	static char strbuf[1024];
-	const char* ap = nullptr;
-	char* bp = nullptr;
-	char* name = nullptr;
+    size_t startPosition = 0;
+    while ((startPosition = str.find(from, startPosition)) != std::string::npos)
+    {
+        str.replace(startPosition, from.length(), to);
+        startPosition += to.length(); // Handles case where 'to' is a substring of 'from'
+    }
+    return str;
+}
 
-	name = nullptr;
-	memset(strbuf, 0, sizeof(strbuf));
-	bp = strbuf;
-	for (ap = the_string; *ap; ++ap)
-	{
-		if (*ap == '$')
-		{
-			for (name = party[pidx[ap[1] - '0']].playerName; *name; ++name)
-			{
-				if (bp < strbuf + sizeof(strbuf))
-				{
-					*bp++ = *name;
-				}
-			}
-			++ap;
-		}
-		else
-		{
-			if (bp < strbuf + sizeof(strbuf))
-			{
-				*bp++ = *ap;
-			}
-		}
-	}
-	return name == nullptr ? the_string : strbuf;
+const char* KDraw::parse_string(const std::string& the_string)
+{
+    std::string replacedString(the_string);
+    replacedString = replaceAll(replacedString, std::string("$0"), party[pidx[0]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$1"), party[pidx[1]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$2"), party[pidx[2]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$3"), party[pidx[3]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$4"), party[pidx[4]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$5"), party[pidx[5]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$6"), party[pidx[6]].playerName);
+    replacedString = replaceAll(replacedString, std::string("$7"), party[pidx[7]].playerName);
+    return replacedString.c_str();
 }
 
 const char* KDraw::decode_utf8(const char* inputString, uint32_t* cp)

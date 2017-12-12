@@ -354,7 +354,7 @@ int learn_new_spells(int who)
 			{
 				if (in_combat == 1)
 				{
-					sprintf(strbuf, _("%s learned %s"), party[who].playerName, magic[a].spellName);
+					sprintf(strbuf, _("%s learned %s"), party[who].playerName.c_str(), magic[a].spellName);
 					fullblit(back, double_buffer);
 					kDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), 152, strlen(strbuf) + 1, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 					kDraw.draw_icon(double_buffer, magic[a].icon, 156 - (strlen(strbuf) * 4), 160);

@@ -39,6 +39,7 @@
 #include "fighter.h"
 #include "heroc.h"
 #include "maps.h"
+#include "player.h"
 #include "structs.h"
 
 class Raster;
@@ -141,7 +142,7 @@ extern const uint8_t kq_version;
 extern uint8_t hold_fade, cansave, skip_intro, wait_retrace, windowed, stretch_view, cpu_usage;
 extern uint16_t adelay[MAX_ANIM];
 extern char* strbuf, *savedir;
-extern s_player party[MAXCHRS];
+extern KPlayer party[MAXCHRS];
 extern s_heroinfo players[MAXCHRS];
 extern bool display_attack_string;
 extern std::string shop_name;

@@ -241,14 +241,12 @@ static void buy_menu()
  */
 void do_inn_effects(int do_delay)
 {
-	size_t pidx_index, stats_index, party_index;
-
-	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
+	for (size_t pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
-		party_index = pidx[pidx_index];
+		size_t party_index = pidx[pidx_index];
 		party[party_index].hp = party[party_index].mhp;
 		party[party_index].mp = party[party_index].mmp;
-		for (stats_index = 0; stats_index < 8; stats_index++)
+		for (size_t stats_index = 0; stats_index < 8; stats_index++)
 		{
 			party[party_index].sts[stats_index] = 0;
 		}

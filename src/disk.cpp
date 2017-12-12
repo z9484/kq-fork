@@ -162,7 +162,7 @@ bool range_is_default(_InputIterator first, _InputIterator last)
 	return true;
 }
 
-static int load_resistances(s_player* s, XMLElement* node)
+static int load_resistances(KPlayer* s, XMLElement* node)
 {
 	std::fill(std::begin(s->res), std::end(s->res), 0);
 	XMLElement* resistances = node->FirstChildElement("resistances");
@@ -185,7 +185,7 @@ static int load_resistances(s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int load_spelltypes(s_player* s, XMLElement* node)
+static int load_spelltypes(KPlayer* s, XMLElement* node)
 {
 	std::fill(std::begin(s->sts), std::end(s->sts), 0);
 	XMLElement* spelltypes = node->FirstChildElement("spelltypes");
@@ -207,7 +207,7 @@ static int load_spelltypes(s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int load_spells(s_player* s, XMLElement* node)
+static int load_spells(KPlayer* s, XMLElement* node)
 {
 	std::fill(std::begin(s->spells), std::end(s->spells), 0);
 	XMLElement* spells = node->FirstChildElement("spells");
@@ -229,7 +229,7 @@ static int load_spells(s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int load_equipment(s_player* s, XMLElement* node)
+static int load_equipment(KPlayer* s, XMLElement* node)
 {
 	std::fill(std::begin(s->eqp), std::end(s->eqp), 0);
 	XMLElement* eqp = node->FirstChildElement("equipment");
@@ -251,7 +251,7 @@ static int load_equipment(s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int load_attributes(s_player* s, XMLElement* node)
+static int load_attributes(KPlayer* s, XMLElement* node)
 {
 	XMLElement* attributes = node->FirstChildElement("attributes");
 	if (attributes)
@@ -315,7 +315,7 @@ static int load_attributes(s_player* s, XMLElement* node)
 	return 0;
 }
 
-static int load_core_properties(s_player* s, XMLElement* node)
+static int load_core_properties(KPlayer* s, XMLElement* node)
 {
 	XMLElement* properties = node->FirstChildElement("properties");
 	if (properties)
@@ -324,8 +324,7 @@ static int load_core_properties(s_player* s, XMLElement* node)
 		{
 			if (property->Attribute("name", "name"))
 			{
-				const char* name = property->Attribute("value");
-				strncpy(s->playerName, name, sizeof(s->playerName) - 1);
+				s->playerName = property->Attribute("value");
 			}
 			else if (property->Attribute("name", "xp"))
 			{
@@ -367,7 +366,7 @@ static int load_core_properties(s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int load_lup(s_player* s, XMLElement* node)
+static int load_lup(KPlayer* s, XMLElement* node)
 {
 	XMLElement* elem = node->FirstChildElement("level-up");
 	if (elem && !elem->NoChildren())
@@ -387,7 +386,7 @@ static int load_lup(s_player* s, XMLElement* node)
  * @param node a node within an XML document.
  * @returns 0 if OK otherwise -1
  */
-int load_s_player(s_player* s, XMLElement* node)
+int load_s_player(KPlayer* s, XMLElement* node)
 {
 	load_core_properties(s, node);
 	load_attributes(s, node);
@@ -415,7 +414,7 @@ static XMLElement* addprop(XMLElement* parent, const char* name, const std::stri
 	return addprop(parent, name, value.c_str());
 }
 // Store spell info or nothing if all spells are 'zero'
-static int store_spells(const s_player* s, XMLElement* node)
+static int store_spells(const KPlayer* s, XMLElement* node)
 {
 	auto startp = std::begin(s->spells);
 	auto endp = std::end(s->spells);
@@ -427,7 +426,7 @@ static int store_spells(const s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int store_equipment(const s_player* s, XMLElement* node)
+static int store_equipment(const KPlayer* s, XMLElement* node)
 {
 	auto startp = std::begin(s->eqp);
 	auto endp = std::end(s->eqp);
@@ -439,7 +438,7 @@ static int store_equipment(const s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int store_spelltypes(const s_player* s, XMLElement* node)
+static int store_spelltypes(const KPlayer* s, XMLElement* node)
 {
 	auto startp = std::begin(s->sts);
 	auto endp = std::end(s->sts);
@@ -451,7 +450,7 @@ static int store_spelltypes(const s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int store_resistances(const s_player* s, XMLElement* node)
+static int store_resistances(const KPlayer* s, XMLElement* node)
 {
 	auto startp = std::begin(s->res);
 	auto endp = std::end(s->res);
@@ -463,7 +462,7 @@ static int store_resistances(const s_player* s, XMLElement* node)
 	}
 	return 0;
 }
-static int store_stats(const s_player* s, XMLElement* node)
+static int store_stats(const KPlayer* s, XMLElement* node)
 {
 	auto startp = std::begin(s->stats);
 	auto endp = std::end(s->stats);
@@ -476,7 +475,7 @@ static int store_stats(const s_player* s, XMLElement* node)
 	return 0;
 }
 
-static int store_lup(const s_player* s, XMLElement* node)
+static int store_lup(const KPlayer* s, XMLElement* node)
 {
 	XMLElement* elem = node->GetDocument()->NewElement("level-up");
 	value_list(elem, std::begin(s->lup), std::end(s->lup));
@@ -500,7 +499,7 @@ static const std::map<const char*, ePIDX, cstring_less> id_lookup =
 };
 /** Store player inside a node that you supply.
  */
-static int save_player(const s_player* s, XMLElement* node)
+static int save_player(const KPlayer* s, XMLElement* node)
 {
 	XMLDocument* doc = node->GetDocument();
 	XMLElement* hero = doc->NewElement("hero");
@@ -518,7 +517,7 @@ static int save_player(const s_player* s, XMLElement* node)
 	XMLElement* properties = doc->NewElement("properties");
 	hero->InsertFirstChild(properties);
 	// Core properties
-	addprop(properties, "name", s->playerName);
+	addprop(properties, "name", s->playerName.c_str());
 	addprop(properties, "hp", s->hp);
 	addprop(properties, "xp", s->xp);
 	addprop(properties, "next", s->next);

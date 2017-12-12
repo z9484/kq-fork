@@ -657,7 +657,7 @@ void KEntity::process_entities()
 void KEntity::process_entity(t_entity target_entity)
 {
 	KQEntity* ent = &g_ent[target_entity];
-	s_player* player = 0;
+	KPlayer* player = 0;
 
 	ent->scount = 0;
 

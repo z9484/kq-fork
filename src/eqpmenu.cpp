@@ -265,7 +265,7 @@ static void draw_equipmenu(int c, int sel)
 	kDraw.menubox(double_buffer, 12 + xofs, 28 + yofs, 25, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.menubox(double_buffer, 228 + xofs, 28 + yofs, 8, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	draw_sprite(double_buffer, players[l].portrait, 248 + xofs, 36 + yofs);
-	kDraw.print_font(double_buffer, 268 - (strlen(party[l].playerName) * 4) + xofs, 76 + yofs, party[l].playerName, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(double_buffer, 268 - (party[l].playerName.length() * 4) + xofs, 76 + yofs, party[l].playerName.c_str(), eFontColor::FONTCOLOR_NORMAL);
 	kDraw.print_font(double_buffer, 28 + xofs, 36 + yofs, _("Hand1:"), eFontColor::FONTCOLOR_GOLD);
 	kDraw.print_font(double_buffer, 28 + xofs, 44 + yofs, _("Hand2:"), eFontColor::FONTCOLOR_GOLD);
 	kDraw.print_font(double_buffer, 28 + xofs, 52 + yofs, _("Head:"), eFontColor::FONTCOLOR_GOLD);

@@ -141,7 +141,7 @@ void draw_playerstat(Raster* where, int player_index_in_party, int dx, int dy)
 {
 	int j;
 	players[player_index_in_party].portrait->maskedBlitTo(where, dx, dy);
-	kDraw.print_font(where, dx + 48, dy, party[player_index_in_party].playerName, eFontColor::FONTCOLOR_NORMAL);
+	kDraw.print_font(where, dx + 48, dy, party[player_index_in_party].playerName.c_str(), eFontColor::FONTCOLOR_NORMAL);
 	kDraw.draw_stsicon(where, 0, player_index_in_party, 8, dx + 48, dy + 8);
 	kDraw.print_font(where, dx + 48, dy + 16, _("LV"), eFontColor::FONTCOLOR_GOLD);
 	sprintf(strbuf, "%d", party[player_index_in_party].lvl);
@@ -366,14 +366,14 @@ bool player2fighter(size_t partyIndex, KFighter& outFighter)
 	{
 		return false;
 	}
-	s_player& playerInParty = party[partyIndex];
+	KPlayer& playerInParty = party[partyIndex];
 
 	KFighter fighterFromPlayer;
 	fighterFromPlayer.imb_s = 0;
 	fighterFromPlayer.imb_a = 0;
 	fighterFromPlayer.imb[0] = 0;
 	fighterFromPlayer.imb[1] = 0;
-	fighterFromPlayer.fighterName = playerInParty.playerName;
+	fighterFromPlayer.fighterName = playerInParty.playerName.c_str();
 	fighterFromPlayer.fighterExperience = playerInParty.xp;
 	fighterFromPlayer.fighterLevel = playerInParty.lvl;
 	fighterFromPlayer.fighterHealth = playerInParty.hp;

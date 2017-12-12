@@ -939,7 +939,7 @@ void KCombat::enemies_win() const
 	/*  RB FIXME: rest()?  */
 	kDraw.blit2screen(0, 0);
 	kq_wait(1000);
-	sprintf(strbuf, _("%s was defeated!"), party[pidx[0]].playerName);
+	sprintf(strbuf, _("%s was defeated!"), party[pidx[0]].playerName.c_str());
 	kDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
 	kDraw.blit2screen(0, 0);

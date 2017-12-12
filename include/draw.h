@@ -488,6 +488,16 @@ private:
      */
     const char* decode_utf8(const char* inputString, uint32_t* cp);
 
+    /**
+     * Replace all occurrences of 'from' with 'to' within string 'str'.
+     * 
+     * @param str Original string.
+     * @param from Substring to replace.
+     * @param to What to replace every 'from' instance with.
+     * @return Original string if no substitution made, or modified string.
+     */
+    std::string replaceAll(std::string str, const std::string& from, const std::string& to);
+
     /*! \brief Insert character names
      *
      * This checks a string for $0, or $1 and replaces with player names.
@@ -498,7 +508,7 @@ private:
      * \param   the_string Input string
      * \returns processed string, in a static buffer strbuf or the_string, if it had no replacement chars.
      */
-    const char* parse_string(const char* the_string);
+    const char* parse_string(const std::string& the_string);
 
     /*! \brief Split text into lines
      * \author PH
