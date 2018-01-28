@@ -599,12 +599,12 @@ void KEntity::parsems(t_entity target_entity)
 	g_ent[target_entity].cmdnum = atoi(tok);
 }
 
-void KEntity::place_ent(t_entity en, int ex, int ey)
+void KEntity::place_ent(t_entity entity_index, int ex, int ey)
 {
-	g_ent[en].tilex = ex;
-	g_ent[en].tiley = ey;
-	g_ent[en].x = g_ent[en].tilex * TILE_W;
-	g_ent[en].y = g_ent[en].tiley * TILE_H;
+	g_ent[entity_index].tilex = ex;
+	g_ent[entity_index].tiley = ey;
+	g_ent[entity_index].x = g_ent[entity_index].tilex * TILE_W;
+	g_ent[entity_index].y = g_ent[entity_index].tiley * TILE_H;
 }
 
 void KEntity::player_move()

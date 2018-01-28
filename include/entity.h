@@ -52,11 +52,11 @@ public:
      *
      * Position an entity manually.
      *
-     * @param en Entity to position
+     * @param entity_index Entity to position
      * @param ex x-coord
      * @param ey y-coord
      */
-    void place_ent(t_entity en, int ex, int ey);
+    void place_ent(t_entity entity_index, int ex, int ey);
 
     /**
      * Recalculate number of active entities on the map.

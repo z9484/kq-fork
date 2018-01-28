@@ -1426,14 +1426,15 @@ int KDraw::prompt(int who, int numopt, eBubbleStyle bstyle, const char* sp1, con
 	return ptr;
 }
 
-int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
+uint32_t KDraw::prompt_ex(uint32_t who, const char* ptext, const char* opt[], uint32_t n_opt)
 {
-	int curopt = 0;
-	int topopt = 0;
-	int winheight;
-	int winwidth = 0;
-	int winx, winy;
-	int running;
+	uint32_t curopt = 0;
+	uint32_t topopt = 0;
+	uint32_t winheight = 0;
+	uint32_t winwidth = 0;
+    uint32_t winx = 0;
+    uint32_t winy = 0;
+	bool running = false;
 
 	ptext = substitutePlayerNameString(ptext);
 	while (1)
@@ -1481,7 +1482,7 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 			winheight = n_opt > 4 ? 4 : n_opt;
 			winx = xofs + (KQ_SCREEN_W - winwidth * 8) / 2;
 			winy = yofs + (KQ_SCREEN_H - 10) - winheight * 12;
-			running = 1;
+			running = true;
 			while (running)
 			{
 				Game.do_check_animation();
@@ -1527,7 +1528,7 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 					/* Selected an option */
 					play_effect(SND_CLICK, 128);
 					Game.unpress();
-					running = 0;
+					running = false;
 				}
 				else if (PlayerInput.bctrl)
 				{

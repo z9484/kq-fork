@@ -297,7 +297,7 @@ public:
      * \param   n_opt The number of options
      * \return  option selected, 0= first option etc.
      */
-    int prompt_ex(int who, const char* ptext, const char* opt[], int n_opt);
+    uint32_t prompt_ex(uint32_t who, const char* ptext, const char* opt[], uint32_t n_opt);
 
     /*! \brief Adjust view
      *

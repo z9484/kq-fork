@@ -1567,8 +1567,8 @@ static int KQ_combat(lua_State* L)
 
 static int KQ_copy_ent(lua_State* L)
 {
-	int a = KqFork::real_entity_num(L, 1);
-	int b = KqFork::real_entity_num(L, 2);
+	size_t a = static_cast<size_t>(KqFork::real_entity_num(L, 1));
+	size_t b = static_cast<size_t>(KqFork::real_entity_num(L, 2));
 
 	g_ent[b] = g_ent[a];
 	return 0;
@@ -2637,7 +2637,7 @@ static int KQ_pause_song(lua_State* L)
 
 static int KQ_place_ent(lua_State* L)
 {
-	int a = KqFork::real_entity_num(L, 1);
+	t_entity entity_index = KqFork::real_entity_num(L, 1);
 	int x = 0, y = 0;
 
 	if (lua_type(L, 2) == LUA_TSTRING)
@@ -2657,7 +2657,7 @@ static int KQ_place_ent(lua_State* L)
 		y = (int)lua_tonumber(L, 3);
 	}
 
-    kEntity.place_ent(a, x, y);
+    kEntity.place_ent(entity_index, x, y);
 	return 0;
 }
 
@@ -2676,7 +2676,7 @@ static int KQ_play_song(lua_State* L)
 
 static int KQ_pnum(lua_State* L)
 {
-	auto a = (int)lua_tointeger(L, 3);
+	int a = lua_tointeger(L, 3);
 
 	sprintf(strbuf, "%d", a);
 	kDraw.print_font(double_buffer, lua_tointeger(L, 1) + xofs, lua_tointeger(L, 2) + yofs, strbuf, (eFontColor)lua_tointeger(L, 4));
@@ -2699,11 +2699,13 @@ static int KQ_prompt(lua_State* L)
 {
 	const char* txt[4];
 	char pbuf[256];
-	int a, b, nopts, nonblank;
+    int b;
+    uint32_t nonblank = 0;
+    uint32_t nopts = 0;
 
 	/* The B_TEXT or B_THOUGHT is ignored */
 	b = KqFork::real_entity_num(L, 1);
-	nopts = (int)lua_tonumber(L, 2);
+	nopts = static_cast<uint32_t>(lua_tonumber(L, 2));
 
 	if (nopts > 4)
 	{
@@ -2713,7 +2715,7 @@ static int KQ_prompt(lua_State* L)
 	pbuf[0] = '\0';
 	nonblank = 0;
 
-	for (a = 0; a < 4; a++)
+	for (size_t a = 0; a < 4; a++)
 	{
 		txt[a] = lua_tostring(L, a + 4);
 		if (txt[a] && (strlen(txt[a]) > 0))
@@ -2725,7 +2727,7 @@ static int KQ_prompt(lua_State* L)
 	if (nonblank > nopts)
 	{
 		/* bug: long strings will crash it! */
-		for (a = 0; a < nonblank - nopts; ++a)
+		for (size_t a = 0; a < nonblank - nopts; ++a)
 		{
 			if (a != 0)
 			{

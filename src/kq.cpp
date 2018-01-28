@@ -77,8 +77,10 @@ Raster* double_buffer, *fx_buffer, *back, *tc, *tc2,
         *bub[8], *b_shield, *b_shell, *b_repulse, *b_mp,
         *cframes[NUM_FIGHTERS][MAXCFRAMES], *tcframes[NUM_FIGHTERS][MAXCFRAMES],
         *frames[MAXCHRS][MAX_PARTY_MOVEMENT_FRAMES], *eframes[TOTAL_MAP_NPC_ENTITIES][MAX_NPC_MOVEMENT_FRAMES], *pgb[9],
-        *sfonts[5], *bord[8], *menuptr, *mptr, *sptr, *stspics, *sicons, *bptr,
+        *sfonts[5], *menuptr, *mptr, *sptr, *stspics, *sicons, *bptr,
         *missbmp, *noway, *upptr, *dnptr, *shadow[MAX_SHADOWS], *kfonts;
+
+Raster* bord[8];
 
 #ifdef DEBUGMODE
 Raster* obj_mesh = nullptr;
@@ -495,11 +497,9 @@ Raster* KGame::alloc_bmp(int w, int h, const char* /*n*/)
  */
 void KGame::allocate_stuff()
 {
-	size_t i, p;
-
 	kfonts = alloc_bmp(1024, 60, "kfonts");
 
-	for (i = 0; i < 5; i++)
+	for (size_t i = 0; i < 5; i++)
 	{
 		sfonts[i] = alloc_bmp(60, 8, "sfonts[i]");
 	}
@@ -515,7 +515,7 @@ void KGame::allocate_stuff()
 	noway = alloc_bmp(16, 16, "noway");
 	missbmp = alloc_bmp(20, 6, "missbmp");
 
-	for (i = 0; i < 9; i++)
+	for (size_t i = 0; i < 9; i++)
 	{
 		pgb[i] = alloc_bmp(9, 9, "pgb[x]");
 	}
@@ -527,25 +527,25 @@ void KGame::allocate_stuff()
 	b_repulse = alloc_bmp(16, 166, "b_repulse");
 	b_mp = alloc_bmp(10, 8, "b_mp");
 
-	for (p = 0; p < TOTAL_MAP_NPC_ENTITIES; p++)
+	for (size_t p = 0; p < TOTAL_MAP_NPC_ENTITIES; p++)
 	{
-		for (i = 0; i < MAX_NPC_MOVEMENT_FRAMES; i++)
+		for (size_t i = 0; i < MAX_NPC_MOVEMENT_FRAMES; i++)
 		{
 			eframes[p][i] = alloc_bmp(16, 16, "eframes[x][x]");
 		}
 	}
 
-	for (i = 0; i < MAXCHRS; i++)
+	for (size_t i = 0; i < MAXCHRS; i++)
 	{
-		for (p = 0; p < MAX_PARTY_MOVEMENT_FRAMES; p++)
+		for (size_t p = 0; p < MAX_PARTY_MOVEMENT_FRAMES; p++)
 		{
 			frames[i][p] = alloc_bmp(16, 16, "frames[x][x]");
 		}
 	}
 
-	for (p = 0; p < MAXCFRAMES; p++)
+	for (size_t p = 0; p < MAXCFRAMES; p++)
 	{
-		for (i = 0; i < NUM_FIGHTERS; i++)
+		for (size_t i = 0; i < NUM_FIGHTERS; i++)
 		{
 			cframes[i][p] = alloc_bmp(32, 32, "cframes[x][x]");
 			tcframes[i][p] = alloc_bmp(32, 32, "tcframes[x][x]");
@@ -556,33 +556,33 @@ void KGame::allocate_stuff()
 	back = alloc_bmp(SCREEN_W2, SCREEN_H2, "back");
 	fx_buffer = alloc_bmp(SCREEN_W2, SCREEN_H2, "fx_buffer");
 
-	for (p = 0; p < MAX_SHADOWS; p++)
+	for (size_t p = 0; p < MAX_SHADOWS; p++)
 	{
 		shadow[p] = alloc_bmp(TILE_W, TILE_H, "shadow[x]");
 	}
 
-	for (p = 0; p < 8; p++)
+	for (size_t p = 0; p < 8; p++)
 	{
 		bub[p] = alloc_bmp(16, 16, "bub[x]");
 	}
 
-	for (p = 0; p < 3; p++)
+	for (size_t p = 0; p < 3; p++)
 	{
 		bord[p] = alloc_bmp(8, 8, "bord[x]");
 		bord[p + 5] = alloc_bmp(8, 8, "bord[x]");
 	}
 
-	for (p = 3; p < 5; p++)
+	for (size_t p = 3; p < 5; p++)
 	{
 		bord[p] = alloc_bmp(8, 12, "bord[x]");
 	}
 
-	for (p = 0; p < 8; p++)
+	for (size_t p = 0; p < 8; p++)
 	{
 		players[p].portrait = alloc_bmp(40, 40, "portrait[x]");
 	}
 
-	for (p = 0; p < MAX_TILES; p++)
+	for (size_t p = 0; p < MAX_TILES; p++)
 	{
 		map_icons[p] = alloc_bmp(TILE_W, TILE_H, "map_icons[x]");
 	}
@@ -1286,7 +1286,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 		}
 	}
 
-	for (i = 0; i < (size_t)numchrs; i++)
+	for (t_entity entity_index = 0; entity_index < (size_t)numchrs; entity_index++)
 	{
 		/* This allows us to either go to the map's default starting coords
 		 * or specify exactly where on the map to go to (like when there
@@ -1295,17 +1295,17 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 		if (msx == 0 && msy == 0)
 		{
 			// Place players at default map starting coords
-            kEntity.place_ent(i, g_map.stx, g_map.sty);
+            kEntity.place_ent(entity_index, g_map.stx, g_map.sty);
 		}
 		else
 		{
 			// Place players at specific coordinates in the map
-            kEntity.place_ent(i, msx, msy);
+            kEntity.place_ent(entity_index, msx, msy);
 		}
 
-		g_ent[i].speed = 4;
-		g_ent[i].obsmode = 1;
-		g_ent[i].moving = 0;
+		g_ent[entity_index].speed = 4;
+		g_ent[entity_index].obsmode = 1;
+		g_ent[entity_index].moving = 0;
 	}
 
 	for (i = 0; i < MAX_ENTITIES; i++)
@@ -1809,7 +1809,7 @@ void KGame::wait_for_entity(size_t first_entity_index, size_t last_entity_index)
  */
 void KGame::warp(int wtx, int wty, int fspeed)
 {
-	size_t entity_index, last_entity;
+    t_entity entity_index, last_entity;
 
 	if (hold_fade == 0)
 	{
