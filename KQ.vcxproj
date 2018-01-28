@@ -134,6 +134,7 @@
     <ClCompile Include="src\setup.cpp" />
     <ClCompile Include="src\sgame.cpp" />
     <ClCompile Include="src\shopmenu.cpp" />
+    <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\tiledmap.cpp" />
     <ClCompile Include="src\timing.cpp" />
     <ClCompile Include="src\win.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="include\skills.h" />
     <ClInclude Include="include\ssprites.h" />
     <ClInclude Include="include\structs.h" />
+    <ClInclude Include="include\text.h" />
     <ClInclude Include="include\tiledmap.h" />
     <ClInclude Include="include\timing.h" />
     <ClInclude Include="include\tmx_animation.h" />

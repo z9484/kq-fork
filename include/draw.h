@@ -243,9 +243,9 @@ public:
      * \sa bubble_text()
      * \param   fmt Format, B_TEXT or B_THOUGHT
      * \param   who Character that is speaking
-     * \param   s The text to display
+     * \param   textToDisplay The text to display
      */
-    void text_ex(eBubbleStyle fmt, int who, const char* s);
+    void text_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay);
 
     /*! \brief Alert player
      *
@@ -325,9 +325,9 @@ public:
      * \sa bubble_text()
      * \param   fmt Format, B_TEXT or B_THOUGHT
      * \param   who Character that is speaking
-     * \param   s The text to display
+     * \param   textToDisplay The text to display
      */
-    void porttext_ex(eBubbleStyle fmt, int who, const char* s);
+    void porttext_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay);
 
     /*! \brief Make a copy of a bitmap
      *
@@ -489,14 +489,14 @@ private:
     const char* decode_utf8(const char* inputString, uint32_t* cp);
 
     /**
-     * Replace all occurrences of 'from' with 'to' within string 'str'.
+     * Replace all occurrences of 'searchForText' with 'replaceWithText' within 'originalString'.
      * 
-     * @param str Original string.
-     * @param from Substring to replace.
-     * @param to What to replace every 'from' instance with.
+     * @param originalString A copy of the original text string.
+     * @param searchForText Substring to replace.
+     * @param replaceWithText What to replace every 'searchForText' instance with.
      * @return Original string if no substitution made, or modified string.
      */
-    std::string replaceAll(std::string str, const std::string& from, const std::string& to);
+    std::string replaceAll(std::string originalString, const std::string& searchForText, const std::string& replaceWithText);
 
     /*! \brief Insert character names
      *
@@ -508,7 +508,7 @@ private:
      * \param   the_string Input string
      * \returns processed string, in a static buffer strbuf or the_string, if it had no replacement chars.
      */
-    const char* parse_string(const std::string& the_string);
+    const char* substitutePlayerNameString(const std::string& the_string);
 
     /*! \brief Split text into lines
      * \author PH
@@ -519,10 +519,10 @@ private:
      * for displaying with generic_text().  Processes as much as it can to
      * fit in one box, and returns a pointer to the next unprocessed character
      *
-     * \param   buf The string to reformat
-     * \returns the rest of the string that has not been processed, or NULL if it has all been processed.
+     * \param   stringToSplit The string to reformat
+     * \returns the rest of the string that has not been processed (will be empty if everything was processed).
      */
-    const char* relay(const char* buf);
+    std::string splitTextOverMultipleLines(const std::string& stringToSplit);
 
     /*! \brief Calculate bubble position
      *

@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string>
+#include <cctype>
 
 #include "bounds.h"
 #include "combat.h"
@@ -32,6 +33,7 @@
 #define MSG_ROWS 4
 #define MSG_COLS 36
 char msgbuf[MSG_ROWS][MSG_COLS];
+std::string messageBuffer[MSG_ROWS];
 int gbx, gby, gbbx, gbby, gbbw, gbbh, gbbs;
 eBubbleStemStyle bubble_stem_style;
 
@@ -927,7 +929,7 @@ void KDraw::draw_textbox(eBubbleStyle bstyle)
 
 	for (a = 0; a < gbbh; a++)
 	{
-		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], eFontColor::FONTCOLOR_BIG);
+		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, messageBuffer[a].c_str(), eFontColor::FONTCOLOR_BIG);
 	}
 }
 
@@ -944,7 +946,7 @@ void KDraw::draw_porttextbox(eBubbleStyle bstyle, int chr)
 
 	for (a = 0; a < gbbh; a++)
 	{
-		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, msgbuf[a], eFontColor::FONTCOLOR_BIG);
+		print_font(double_buffer, gbbx + 8 + xofs, a * 12 + gbby + 8 + yofs, messageBuffer[a].c_str(), eFontColor::FONTCOLOR_BIG);
 	}
 
 	a--;
@@ -1013,14 +1015,13 @@ void KDraw::drawmap()
 void KDraw::generic_text(int who, eBubbleStyle box_style, int isPort)
 {
 	int a, stop = 0;
-	int len;
 
 	gbbw = 1;
 	gbbh = 0;
 	gbbs = 0;
 	for (a = 0; a < 4; a++)
 	{
-		len = strlen(msgbuf[a]);
+		size_t len = messageBuffer[a].length();
 		/* FIXME: PH changed >1 to >0 */
 		if (len > 0)
 		{
@@ -1094,11 +1095,11 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 {
 	char msg[1024];
 	const char* s = nullptr;
-	int i, num_lines, max_len, len;
+	size_t i, num_lines, max_len;
 
 	/* Do the $0 replacement stuff */
 	memset(msg, 0, sizeof(msg));
-	strncpy(msg, parse_string(m), sizeof(msg) - 1);
+	strncpy(msg, substitutePlayerNameString(m), sizeof(msg) - 1);
 	s = msg;
 
 	/* Save a copy of the screen */
@@ -1107,12 +1108,12 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 	/* Loop for each box full of text... */
 	while (s != nullptr)
 	{
-		s = relay(s);
+		s = splitTextOverMultipleLines(s).c_str();
 		/* Calculate the box size */
 		num_lines = max_len = 0;
 		for (i = 0; i < MSG_ROWS; ++i)
 		{
-			len = strlen(msgbuf[i]);
+			size_t len = messageBuffer[i].length();
 			if (len > 0)
 			{
 				if (max_len < len)
@@ -1138,7 +1139,7 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 		/* Draw the text */
 		for (i = 0; i < num_lines; ++i)
 		{
-			print_font(double_buffer, 160 - (max_len * 4) + x_m, 116 + 8 * i + y_m, msgbuf[i], eFontColor::FONTCOLOR_NORMAL);
+			print_font(double_buffer, 160 - (max_len * 4) + x_m, 116 + 8 * i + y_m, messageBuffer[i].c_str(), eFontColor::FONTCOLOR_NORMAL);
 		}
 		/* Show it */
 		blit2screen(x_m, y_m);
@@ -1155,28 +1156,26 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 	}
 }
 
-std::string KDraw::replaceAll(std::string str, const std::string& from, const std::string& to)
+std::string KDraw::replaceAll(std::string originalString, const std::string& searchForText, const std::string& replaceWithText)
 {
     size_t startPosition = 0;
-    while ((startPosition = str.find(from, startPosition)) != std::string::npos)
+    while ((startPosition = originalString.find(searchForText, startPosition)) != std::string::npos)
     {
-        str.replace(startPosition, from.length(), to);
-        startPosition += to.length(); // Handles case where 'to' is a substring of 'from'
+        originalString.replace(startPosition, searchForText.length(), replaceWithText);
+        startPosition += replaceWithText.length(); // Handles case where 'to' is a substring of 'from'
     }
-    return str;
+    return originalString;
 }
 
-const char* KDraw::parse_string(const std::string& the_string)
+const char* KDraw::substitutePlayerNameString(const std::string& the_string)
 {
+    static const std::string pidxDelimiter("$");
     std::string replacedString(the_string);
-    replacedString = replaceAll(replacedString, std::string("$0"), party[pidx[0]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$1"), party[pidx[1]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$2"), party[pidx[2]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$3"), party[pidx[3]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$4"), party[pidx[4]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$5"), party[pidx[5]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$6"), party[pidx[6]].playerName);
-    replacedString = replaceAll(replacedString, std::string("$7"), party[pidx[7]].playerName);
+    for (size_t i = 0; i < MAXCHRS; ++i)
+    {
+        std::string escapedPidx = pidxDelimiter + std::to_string(i);
+        replacedString = replaceAll(replacedString, escapedPidx, party[pidx[i]].playerName);
+    }
     return replacedString.c_str();
 }
 
@@ -1359,20 +1358,20 @@ void KDraw::print_num(Raster* where, int sx, int sy, const std::string& msg, eFo
 
 int KDraw::prompt(int who, int numopt, eBubbleStyle bstyle, const char* sp1, const char* sp2, const char* sp3, const char* sp4)
 {
-	int ly, stop = 0, ptr = 0, a;
-	uint32_t str_len;
+	int ly, stop = 0, ptr = 0;
+	size_t str_len;
 
 	gbbw = 1;
 	gbbh = 0;
 	gbbs = 0;
-	strcpy(msgbuf[0], parse_string(sp1));
-	strcpy(msgbuf[1], parse_string(sp2));
-	strcpy(msgbuf[2], parse_string(sp3));
-	strcpy(msgbuf[3], parse_string(sp4));
+    messageBuffer[0] = substitutePlayerNameString(sp1);
+    messageBuffer[1] = substitutePlayerNameString(sp2);
+    messageBuffer[2] = substitutePlayerNameString(sp3);
+    messageBuffer[3] = substitutePlayerNameString(sp4);
 	Game.unpress();
-	for (a = 0; a < 4; a++)
+	for (size_t a = 0; a < 4; a++)
 	{
-		str_len = strlen(msgbuf[a]);
+		str_len = messageBuffer[a].length();
 		if (str_len > 1)
 		{
 			gbbh = a + 1;
@@ -1434,14 +1433,14 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 	int winheight;
 	int winwidth = 0;
 	int winx, winy;
-	int i, w, running;
+	int running;
 
-	ptext = parse_string(ptext);
+	ptext = substitutePlayerNameString(ptext);
 	while (1)
 	{
 		gbbw = 1;
 		gbbs = 0;
-		ptext = relay(ptext);
+		ptext = splitTextOverMultipleLines(ptext).c_str();
 		if (ptext)
 		{
 			/* print prompt pages prior to the last one */
@@ -1450,12 +1449,11 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 		else
 		{
 			/* do prompt and options */
-			int a;
 
-			/* calc the size of the prompt box */
-			for (a = 0; a < 4; a++)
+            /* calc the size of the prompt box */
+			for (size_t a = 0; a < 4; a++)
 			{
-				int len = strlen(msgbuf[a]);
+				size_t len = messageBuffer[a].length();
 
 				/* FIXME: PH changed >1 to >0 */
 				if (len > 0)
@@ -1468,13 +1466,13 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				}
 			}
 			/* calc the size of the options box */
-			for (i = 0; i < n_opt; ++i)
+			for (size_t i = 0; i < n_opt; ++i)
 			{
 				while (isspace(*opt[i]))
 				{
 					++opt[i];
 				}
-				w = strlen(opt[i]);
+				size_t w = strlen(opt[i]);
 				if (winwidth < w)
 				{
 					winwidth = w;
@@ -1493,7 +1491,7 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 				draw_textbox(eBubbleStyle::BUBBLE_TEXT);
 				/* Draw the  options text */
 				draw_kq_box(double_buffer, winx - 5, winy - 5, winx + winwidth * 8 + 13, winy + winheight * 12 + 5, eMenuBoxColor::SEMI_TRANSPARENT_BLUE, eBubbleStyle::BUBBLE_TEXT);
-				for (i = 0; i < winheight; ++i)
+				for (size_t i = 0; i < winheight; ++i)
 				{
 					print_font(double_buffer, winx + 8, winy + i * 12, opt[i + topopt], eFontColor::FONTCOLOR_BIG);
 				}
@@ -1553,15 +1551,83 @@ int KDraw::prompt_ex(int who, const char* ptext, const char* opt[], int n_opt)
 	}
 }
 
-const char* KDraw::relay(const char* buf)
+std::string word_wrap(std::string text, size_t per_line)
 {
+    size_t line_begin = 0;
+
+    while (line_begin < text.size())
+    {
+        const size_t ideal_end = line_begin + per_line;
+        size_t line_end = ideal_end <= text.size() ? ideal_end : text.size() - 1;
+
+        if (line_end == text.size() - 1)
+        {
+            ++line_end;
+        }
+        else if (std::isspace(text[line_end]))
+        {
+            text[line_end] = '\n';
+            ++line_end;
+        }
+        else    // backtrack
+        {
+            unsigned end = line_end;
+            while (end > line_begin && !std::isspace(text[end]))
+            {
+                --end;
+            }
+
+            if (end != line_begin)
+            {
+                line_end = end;
+                text[line_end++] = '\n';
+            }
+            else
+            {
+                text.insert(line_end++, 1, '\n');
+            }
+        }
+
+        line_begin = line_end;
+    }
+
+    return text;
+}
+
+/**
+ * Given "longtext1 longtext2 longtext3 longtext4 longtext5 longtext6"
+ * split into up to MSG_ROWS lines of text:
+ *     "longtext1"
+ *     "longtext2"
+ *     "longtext3"
+ *     "longtext4"
+ * with all remaining text returned to the caller:
+ *     "longtext5 longtext6"
+ * for it to be processed later.
+ */
+std::string KDraw::splitTextOverMultipleLines(const std::string& stringToSplit)
+{
+    std::string wordWrappedString = word_wrap(stringToSplit, MSG_COLS);
+
+    for (size_t currentRow = 0; currentRow < MSG_ROWS; ++currentRow)
+    {
+        auto singleRowNewlineAt = wordWrappedString.find_first_of('\n');
+        std::string substring = wordWrappedString.substr(0, singleRowNewlineAt);
+        if (singleRowNewlineAt == std::string::npos)
+        {
+            // No newlines, meaning nothing wrapped; everything fit on a single line
+            messageBuffer[currentRow++] = wordWrappedString;
+            return "";
+        }
+    }
+
 	int lasts, lastc, i, cr, cc;
 	char tc;
 	KqFork::m_mode state;
 
-	for (i = 0; i < 4; ++i)
+	for (i = 0; i < MSG_ROWS; ++i)
 	{
-		memset(msgbuf[i], 0, MSG_COLS);
+        messageBuffer[i].clear();
 	}
 	i = 0;
 	cc = 0;
@@ -1571,7 +1637,7 @@ const char* KDraw::relay(const char* buf)
 	state = KqFork::M_UNDEF;
 	while (1)
 	{
-		tc = buf[i];
+		tc = stringToSplit[i];
 		switch (state)
 		{
 		case KqFork::M_UNDEF:
@@ -1584,17 +1650,17 @@ const char* KDraw::relay(const char* buf)
 				break;
 
 			case '\0':
-				msgbuf[cr][cc] = '\0';
+                messageBuffer[cr][cc] = '\0';
 				state = KqFork::M_END;
 				break;
 
 			case '\n':
-				msgbuf[cr][cc] = '\0';
+                messageBuffer[cr][cc] = '\0';
 				cc = 0;
 				++i;
 				if (++cr >= 4)
 				{
-					return &buf[i];
+					return &stringToSplit[i];
 				}
 				break;
 
@@ -1610,7 +1676,8 @@ const char* KDraw::relay(const char* buf)
 			case ' ':
 				if (cc < MSG_COLS - 1)
 				{
-					msgbuf[cr][cc++] = tc;
+                    messageBuffer[cr][cc] = tc;
+                    ++cc;
 				}
 				else
 				{
@@ -1646,7 +1713,7 @@ const char* KDraw::relay(const char* buf)
 					i = lasts;
 					if (cr >= MSG_ROWS)
 					{
-						return &buf[1 + lasts];
+						return &stringToSplit[1 + lasts];
 					}
 				}
 				++i;
@@ -1804,24 +1871,24 @@ void KDraw::set_view(int vw, int x1, int y1, int x2, int y2)
 	}
 }
 
-void KDraw::text_ex(eBubbleStyle fmt, int who, const char* s)
+void KDraw::text_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay)
 {
-	s = parse_string(s);
+	std::string s = substitutePlayerNameString(textToDisplay);
 
-	while (s)
+	while (s.length() > 0)
 	{
-		s = relay(s);
+		s = splitTextOverMultipleLines(s);
 		generic_text(who, fmt, 0);
 	}
 }
 
-void KDraw::porttext_ex(eBubbleStyle fmt, int who, const char* s)
+void KDraw::porttext_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay)
 {
-	s = parse_string(s);
+    std::string s = substitutePlayerNameString(textToDisplay);
 
-	while (s)
+	while (s.length() > 0)
 	{
-		s = relay(s);
+        s = splitTextOverMultipleLines(s);
 		generic_text(who, fmt, 1);
 	}
 }
