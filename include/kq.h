@@ -49,47 +49,297 @@ class KGame
 public:
 	KGame();
 
-	void change_map(const std::string&, int, int, int, int);
-	void change_mapm(const std::string&, const std::string&, int, int);
-	void calc_viewport(int);
-	void zone_check();
-	void warp(int, int, int);
-	void do_check_animation();
-	void activate();
-	void unpress();
-	void wait_enter();
-	void klog(const char*);
-	void init_players();
-	void kwait(int);
-	NORETURN void program_death(const char*);
-	size_t in_party(ePIDX);
-	void wait_for_entity(size_t, size_t);
-	char* get_timer_event();
-	int add_timer_event(const char*, int);
-	void reset_timer_events();
-	void reset_world();
+    /**
+     * Free old map data and load a new one
+     *
+     * This loads a new map and performs all of the functions
+     * that accompany the loading of a new map.
+     *
+     * \param   map_name Base name of map (xxx -> maps/xxx.map)
+     * \param   msx New x-coord for player. Pass 0 for msx and msy
+     *              to use the 'default' position stored in the
+     *              map file: s_map::stx and s_map::sty
+     * \param   msy New y-coord for player
+     * \param   mvx New x-coord for camera. Pass 0 for mvx and mvy
+     *              to use the default: s_map::stx and s_map::sty)
+     * \param   mvy New y-coord for camera
+     */
+	void change_map(const std::string& map_name, int msx, int msy, int mvx, int mvy);
 
-	/*! Yield processor to other tasks */
+    /**
+     * Free old map data and load a new one
+     *
+     * This loads a new map and performs all of the functions
+     * that accompany the loading of a new map and is 99% identical to the
+     * change_map function, but uses Markers to specify the starting
+     * coords of the player instead of hard-coded coords.
+     *
+     * \param   map_name Base name of map (xxx -> maps/xxx.map)
+     * \param   marker_name Marker containing both x and y coords for player.  If
+     *              the marker's name doesn't exist on the map, pass 0 for msx and
+     *              msy to use the 'default' position stored in the map file
+     *              (s_map::stx and s_map::sty)
+     * \param   offset_x Push player left/right this many tiles from the marker
+     * \param   offset_y Push player up/down this many tiles from the marker
+     */
+    void change_mapm(const std::string& map_name, const std::string& marker_name, int offset_x, int offset_y);
+
+    /**
+     * Move the viewport if necessary to include the players
+     *
+     * This is used to determine what part of the map is
+     * visible on the screen.  Usually, the party can walk around
+     * in the center of the screen a bit without causing it to
+     * scroll.  The center parameter is mostly used for warps and
+     * such, so that the players start in the center of the screen.
+     *
+     * \param   center Unused variable
+     */
+    void calc_viewport(int center);
+
+    /**
+     * Zone event handler
+     *
+     * This routine is called after every final step onto
+     * a new tile (not after warps or such things).  It
+     * just checks if the zone value for this coordinate is
+     * not zero and then it calls the event handler.  However,
+     * there is a member of the map structure called zero_zone
+     * that let's you call the event handler on 0 zones if you
+     * wish.
+     * This function also handles the Repulse functionality
+     */
+    void zone_check() const;
+
+    /**
+     * Move player(s) to new coordinates
+     *
+     * Fade out... change coordinates... fade in.
+     * The wtx/wty coordinates indicate where to put the player.
+     * The wvx/wvy coordinates indicate where to put the camera.
+     *
+     * \param   wtx New x-coord
+     * \param   wty New y-coord
+     * \param   fspeed Speed of fading (See KDraw::do_transition())
+     */
+    void warp(int wtx, int wty, int fspeed);
+
+    /**
+     * Do tile animation
+     *
+     * This updates tile indexes for animation threads.
+     * Animations within tilemaps consist of a starting tile index, an ending
+     * tile index, and a delay. The smaller the delay value, the faster that the
+     * animation cycles through the tiles.
+     */
+    void do_check_animation();
+
+    /**
+     * Alt key handler
+     *
+     * This function is called when the player presses the 'alt' key.
+     * Things that can be activated are entities and zones that are
+     * obstructed.
+     */
+    void activate();
+
+    /**
+     * Wait for key release
+     *
+     * This is used to wait and make sure that the user has
+     * released a key before moving on.
+     * 20030728 PH re-implemented in IMHO a neater way
+     *
+     * \note Waits at most 20 'ticks'
+     */
+    void unpress();
+	
+    /**
+     * Wait for ALT
+     *
+     * Simply wait for the 'alt' key to be pressed.
+     */
+    void wait_enter();
+
+    /**
+     * Log events
+     *
+     * This is for logging events within the program.  Very
+     * useful for debugging and tracing.
+     * \note klog is deprecated; use Allegro's TRACE instead.
+     *
+     * \param   msg String to add to log file
+     */
+    void klog(const char* msg);
+	
+    /**
+     * Pause for a time
+     *
+     * Why not just use rest() you ask?  Well, this function
+     * kills time, but it also processes entities.  This function
+     * is basically used to run entity scripts and for automatic
+     * party movement.
+     *
+     * \param   dtime Time in frames
+     */
+	void kwait(int dtime);
+
+    /**
+     * End program due to fatal error
+     *
+     * Kill the program and spit out a message.
+     *
+     * \param   message Text to put into log
+     */
+    NORETURN void program_death(const char* message);
+
+    /**
+     * Is this character in the party?
+     *
+     * Determine whether the specified character is currently in play.
+     *
+     * \param   pn Character to ask about
+     * \returns index of member's ID if found, else MAXCHRS if NOT in party.
+     */
+    size_t in_party(ePIDX);
+	
+    /**
+     * Wait for scripted movement to finish
+     *
+     * This does like kq_wait() and processes entities...
+     * however, this function waits for particular entities
+     * to finish scripted movement rather than waiting for
+     * a specific amount of time to pass.
+     * Specify a range of entities to wait for.
+     * \note 20030810 PH implemented this in a neater way, need to check if it
+     * always works though.
+     *
+     * \param   first_entity_index First entity
+     * \param   last_entity_index Last entity
+     */
+    void wait_for_entity(size_t first_entity_index, size_t last_entity_index);
+
+    /* \brief Get the next event if any
+     *
+     * Checks the pending events and returns the name
+     * of the next one, or NULL if nothing is ready
+     * to be triggered.
+     * If more than one event is ready, only one will be returned;
+     * the next one will be returned next time.
+     * Each event is removed after it is triggered. If a repeating
+     * event is desired, you should call add_timer_event() again
+     * in the handler function.
+     *
+     * \returns name of the next event or NULL if none is ready
+     */
+    char* get_timer_event();
+
+    /* \brief Add a new timer event to the list
+     *
+     * Up to five pending events can be stored
+     * at once.
+     * \param n the name of the event
+     * \param delta the number of seconds before the
+     *        event will be called. For example 5 means
+     *        five seconds in the future
+     * \returns <0 if an error occurred (i.e. too many pending events)
+     */
+	int add_timer_event(const char*, int);
+
+    /**
+     * Delete any pending events
+     *
+     * This removes any events from the list
+     */
+    void reset_timer_events();
+
+    /**
+     * Resets the world. Called every new game and load game
+     * 
+     * This function may be called multiple times in some cases. That should be ok.
+     */
+    void reset_world();
+
+    /**
+     * Yield processor for other tasks
+     *
+     * This function calls rest() with the value of 'cpu_usage' as its parameter
+     */
 	void kq_yield();
 
+    /**
+     * Creates a bitmap, giving an error message with the specified name if it fails.
+     *
+     * This function terminates the program with an error message if it fails to
+     * allocate the specified bitmap. The name supplied is shown if this happens
+     * to help you trace which bitmap caused the issue.
+     *
+     * \param   bitmap_width Width
+     * \param   bitmap_height Height
+     * \param   bitmap_name Name of bitmap
+     * \returns the pointer to the created bitmap
+     */
 	Raster* alloc_bmp(int bitmap_width, int bitmap_height, const char* bitmap_name);
 
+    /**
+     * Application start-up code
+     *
+     * Set up allegro, set up variables, load stuff, blah...
+     * This is called once per game.
+     */
 	void startup();
-	void deallocate_stuff();
 
+    /**
+     * Free allocated memory
+     *
+     * This frees memory and such things.
+     */
+    void deallocate_stuff();
+
+    /**
+     * Create bitmaps
+     *
+     * A separate function to create all global bitmaps needed in the game.
+     */
 	void allocate_stuff();
-	void load_heroes();
-	void prepare_map(int, int, int, int);
-	void data_dump();
 
-	std::string GetCurmap() { return m_curmap; }
-	void SetCurmap(std::string curmap) { m_curmap = curmap; }
+    /**
+     * Load initial hero stuff from file
+     *
+     * Loads the hero stats from a file.
+     *
+     */
+    void load_heroes();
+	
+    /**
+     * Do everything necessary to load a map
+     *
+     * \param   msx - New x-coord for player
+     * \param   msy - Same, for y-coord
+     * \param   mvx - New x-coord for camera
+     * \param   mvy - Same, for y-coord
+     */
+    void prepare_map(int msx, int msy, int mvx, int mvy);
+	
+    /**
+     * Write debug data to disk
+     *
+     * Writes the treasure and progress arrays in text format to "treasure.log"
+     * and "progress.log" respectively. This happens in response to user hitting
+     * the F11 key.
+     */
+    void data_dump();
 
-	bool IsOverworldMap() { return m_curmap == WORLD_MAP; }
+	std::string GetCurmap();
+
+    void SetCurmap(const std::string& curmap);
+
+	bool IsOverworldMap() const;
 
 public:
 	const std::string WORLD_MAP;
-	/*! The number of frames per second */
+
+    /*! The number of frames per second */
 	const int32_t KQ_TICKS;
 
 protected:
