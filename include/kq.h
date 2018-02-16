@@ -67,25 +67,22 @@ public:
 	void change_map(const std::string& map_name, int msx, int msy, int mvx, int mvy);
 
     /**
-     * Free old map data and load a new one
+     * Free old map data and load a new one.
      *
-     * This loads a new map and performs all of the functions
-     * that accompany the loading of a new map and is 99% identical to the
-     * change_map function, but uses Markers to specify the starting
-     * coords of the player instead of hard-coded coords.
+     * Load the specified map and locate the coordinates where to place the player based
+     * on a marker name.
      *
      * \param   map_name Base name of map (xxx -> maps/xxx.map)
-     * \param   marker_name Marker containing both x and y coords for player.  If
-     *              the marker's name doesn't exist on the map, pass 0 for msx and
-     *              msy to use the 'default' position stored in the map file
-     *              (s_map::stx and s_map::sty)
-     * \param   offset_x Push player left/right this many tiles from the marker
-     * \param   offset_y Push player up/down this many tiles from the marker
+     * \param   marker_name Marker within the map file containing both x and y coords. If
+     *          the marker's name doesn't exist on the map, pass 0 for msx and msy to use
+     *          the 'default' position stored in the map file (s_map::stx and s_map::sty)
+     * \param   offset_x Start player this many tiles left/right from the marker
+     * \param   offset_y Start player this many tiles up/down from the marker
      */
-    void change_mapm(const std::string& map_name, const std::string& marker_name, int offset_x, int offset_y);
+    void change_map(const std::string& map_name, const std::string& marker_name, int offset_x, int offset_y);
 
     /**
-     * Move the viewport if necessary to include the players
+     * Calculate the viewport so the player is displayed within it.
      *
      * This is used to determine what part of the map is
      * visible on the screen.  Usually, the party can walk around
@@ -95,7 +92,7 @@ public:
      *
      * \param   center Unused variable
      */
-    void calc_viewport(int center);
+    void calc_viewport();
 
     /**
      * Zone event handler
@@ -347,7 +344,7 @@ protected:
 	std::string m_curmap;
 };
 
-extern int vx, vy, mx, my, steps, lastm[MAX_PARTY_SIZE];
+extern int camera_viewport_x, camera_viewport_y, mx, my, steps, lastm[MAX_PARTY_SIZE];
 
 extern Raster* double_buffer, *fx_buffer;
 

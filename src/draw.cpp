@@ -337,10 +337,10 @@ void KDraw::draw_backlayer()
 	}
 	if (g_map.map_mode < 2 || g_map.map_mode > 3)
 	{
-		xtc = vx >> 4;
-		ytc = vy >> 4;
-		dx = vx;
-		dy = vy;
+		xtc = camera_viewport_x >> 4;
+		ytc = camera_viewport_y >> 4;
+		dx = camera_viewport_x;
+		dy = camera_viewport_y;
 		box.left = view_x1;
 		box.top = view_y1;
 		box.right = view_x2;
@@ -348,8 +348,8 @@ void KDraw::draw_backlayer()
 	}
 	else
 	{
-		dx = vx * g_map.pmult / g_map.pdiv;
-		dy = vy * g_map.pmult / g_map.pdiv;
+		dx = camera_viewport_x * g_map.pmult / g_map.pdiv;
+		dy = camera_viewport_y * g_map.pmult / g_map.pdiv;
 		xtc = dx >> 4;
 		ytc = dy >> 4;
 		box.left = view_x1 * g_map.pmult / g_map.pdiv;
@@ -397,8 +397,8 @@ void KDraw::draw_char(int xw, int yw)
 	{
 		fighter_index = follower_fighter_index - 1;
 		fighter_type_id = g_ent[fighter_index].eid;
-		dx = g_ent[fighter_index].x - vx + xw;
-		dy = g_ent[fighter_index].y - vy + yw;
+		dx = g_ent[fighter_index].x - camera_viewport_x + xw;
+		dy = g_ent[fighter_index].y - camera_viewport_y + yw;
 		if (!g_ent[fighter_index].moving)
 		{
 			fighter_frame = g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + 2;
@@ -497,9 +497,9 @@ void KDraw::draw_char(int xw, int yw)
 						/* Moving diag down */
 
 						// Final x-coord is one left/right of starting x-coord
-						x = (g_ent[fighter_index].tilex - horiz) * TILE_W - vx + xw;
+						x = (g_ent[fighter_index].tilex - horiz) * TILE_W - camera_viewport_x + xw;
 						// Final y-coord is same as starting y-coord
-						y = g_ent[fighter_index].tiley * TILE_H - vy + yw;
+						y = g_ent[fighter_index].tiley * TILE_H - camera_viewport_y + yw;
 						// Where the tile is on the map that we will draw over
 						there = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
 						// Original position, before you started moving
@@ -510,9 +510,9 @@ void KDraw::draw_char(int xw, int yw)
 						/* Moving diag up */
 
 						// Final x-coord is same as starting x-coord
-						x = g_ent[fighter_index].tilex * TILE_W - vx + xw;
+						x = g_ent[fighter_index].tilex * TILE_W - camera_viewport_x + xw;
 						// Final y-coord is above starting y-coord
-						y = (g_ent[fighter_index].tiley - vert) * TILE_H - vy + yw;
+						y = (g_ent[fighter_index].tiley - vert) * TILE_H - camera_viewport_y + yw;
 						// Where the tile is on the map that we will draw over
 						there = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex;
 						// Target position
@@ -576,8 +576,8 @@ void KDraw::draw_forelayer()
 	}
 	if (g_map.map_mode < 4 || g_map.pdiv == 0)
 	{
-		dx = vx;
-		dy = vy;
+		dx = camera_viewport_x;
+		dy = camera_viewport_y;
 		box.left = view_x1;
 		box.top = view_y1;
 		box.right = view_x2;
@@ -585,8 +585,8 @@ void KDraw::draw_forelayer()
 	}
 	else
 	{
-		dx = vx * g_map.pmult / g_map.pdiv;
-		dy = vy * g_map.pmult / g_map.pdiv;
+		dx = camera_viewport_x * g_map.pmult / g_map.pdiv;
+		dy = camera_viewport_y * g_map.pmult / g_map.pdiv;
 		box.left = view_x1 * g_map.pmult / g_map.pdiv;
 		box.top = view_y1 * g_map.pmult / g_map.pdiv;
 		box.right = view_x2 * g_map.pmult / g_map.pdiv;
@@ -744,10 +744,10 @@ void KDraw::draw_midlayer()
 	}
 	if (g_map.map_mode < 3 || g_map.map_mode == 5)
 	{
-		xtc = vx >> 4;
-		ytc = vy >> 4;
-		dx = vx;
-		dy = vy;
+		xtc = camera_viewport_x >> 4;
+		ytc = camera_viewport_y >> 4;
+		dx = camera_viewport_x;
+		dy = camera_viewport_y;
 		box.left = view_x1;
 		box.top = view_y1;
 		box.right = view_x2;
@@ -755,8 +755,8 @@ void KDraw::draw_midlayer()
 	}
 	else
 	{
-		dx = vx * g_map.pmult / g_map.pdiv;
-		dy = vy * g_map.pmult / g_map.pdiv;
+		dx = camera_viewport_x * g_map.pmult / g_map.pdiv;
+		dy = camera_viewport_y * g_map.pmult / g_map.pdiv;
 		xtc = dx >> 4;
 		ytc = dy >> 4;
 		box.left = view_x1 * g_map.pmult / g_map.pdiv;
@@ -799,11 +799,11 @@ void KDraw::draw_playerbound()
 	}
 	found = g_map.bounds.GetBound(found_index - 1);
 
-	xtc = vx >> 4;
-	ytc = vy >> 4;
+	xtc = camera_viewport_x >> 4;
+	ytc = camera_viewport_y >> 4;
 
-	xofs = 16 - (vx & 15);
-	yofs = 16 - (vy & 15);
+	xofs = 16 - (camera_viewport_x & 15);
+	yofs = 16 - (camera_viewport_y & 15);
 
 	/* If the player is inside the bounded area, draw everything OUTSIDE the
 	 * bounded area with the tile specified by that area.
@@ -861,10 +861,10 @@ void KDraw::draw_shadows()
 		view_x1 = 0;
 		view_x2 = g_map.xsize - 1;
 	}
-	xtc = vx >> 4;
-	ytc = vy >> 4;
-	xofs = 16 - (vx & 15);
-	yofs = 16 - (vy & 15);
+	xtc = camera_viewport_x >> 4;
+	ytc = camera_viewport_y >> 4;
+	xofs = 16 - (camera_viewport_x & 15);
+	yofs = 16 - (camera_viewport_y & 15);
 
 	for (dy = 0; dy < 16; dy++)
 	{
@@ -1771,8 +1771,8 @@ void KDraw::set_textpos(uint32_t entity_index)
 {
 	if (entity_index < MAX_ENTITIES)
 	{
-		gbx = (g_ent[entity_index].tilex * TILE_W) - vx;
-		gby = (g_ent[entity_index].tiley * TILE_H) - vy;
+		gbx = (g_ent[entity_index].tilex * TILE_W) - camera_viewport_x;
+		gby = (g_ent[entity_index].tiley * TILE_H) - camera_viewport_y;
 		gbbx = gbx - (gbbw * 4);
 		if (gbbx < 8)
 		{

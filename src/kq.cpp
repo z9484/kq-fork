@@ -61,7 +61,7 @@ static void time_counter();
 KGame Game;
 
 /*! View and character positions */
-int vx, vy, mx, my;
+int camera_viewport_x, camera_viewport_y, mx, my;
 
 /*! What was the last direction each player moved in */
 int steps = 0;
@@ -556,7 +556,7 @@ void KGame::allocate_stuff()
 	allocate_credits();
 }
 
-void KGame::calc_viewport(int /*center*/)
+void KGame::calc_viewport()
 {
 	int sx, sy, bl, br, bu, bd, zx, zy;
 
@@ -567,8 +567,8 @@ void KGame::calc_viewport(int /*center*/)
 	}
 	else
 	{
-		zx = vx;
-		zy = vy;
+		zx = camera_viewport_x;
+		zy = camera_viewport_y;
 	}
 
 	bl = 152;
@@ -576,55 +576,55 @@ void KGame::calc_viewport(int /*center*/)
 	bu = 112;
 	bd = 112;
 
-	sx = zx - vx;
-	sy = zy - vy;
+	sx = zx - camera_viewport_x;
+	sy = zy - camera_viewport_y;
 	if (sx < bl)
 	{
-		vx = zx - bl;
+		camera_viewport_x = zx - bl;
 
-		if (vx < 0)
+		if (camera_viewport_x < 0)
 		{
-			vx = 0;
+			camera_viewport_x = 0;
 		}
 	}
 
 	if (sy < bu)
 	{
-		vy = zy - bu;
+		camera_viewport_y = zy - bu;
 
-		if (vy < 0)
+		if (camera_viewport_y < 0)
 		{
-			vy = 0;
+			camera_viewport_y = 0;
 		}
 	}
 
 	if (sx > br)
 	{
-		vx = zx - br;
+		camera_viewport_x = zx - br;
 
-		if (vx > mx)
+		if (camera_viewport_x > mx)
 		{
-			vx = mx;
+			camera_viewport_x = mx;
 		}
 	}
 
 	if (sy > bd)
 	{
-		vy = zy - bd;
+		camera_viewport_y = zy - bd;
 
-		if (vy > my)
+		if (camera_viewport_y > my)
 		{
-			vy = my;
+			camera_viewport_y = my;
 		}
 	}
 
-	if (vx > mx)
+	if (camera_viewport_x > mx)
 	{
-		vx = mx;
+		camera_viewport_x = mx;
 	}
-	if (vy > my)
+	if (camera_viewport_y > my)
 	{
-		vy = my;
+		camera_viewport_y = my;
 	}
 }
 
@@ -634,7 +634,7 @@ void KGame::change_map(const std::string& map_name, int msx, int msy, int mvx, i
 	prepare_map(msx, msy, mvx, mvy);
 }
 
-void KGame::change_mapm(const std::string& map_name, const std::string& marker_name, int offset_x, int offset_y)
+void KGame::change_map(const std::string& map_name, const std::string& marker_name, int offset_x, int offset_y)
 {
 	int msx = 0, msy = 0, mvx = 0, mvy = 0;
 
@@ -1199,16 +1199,16 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 	if (mvx == 0 && mvy == 0)
 	{
-		vx = g_map.stx * TILE_W;
-		vy = g_map.sty * TILE_H;
+		camera_viewport_x = g_map.stx * TILE_W;
+		camera_viewport_y = g_map.sty * TILE_H;
 	}
 	else
 	{
-		vx = mvx * TILE_W;
-		vy = mvy * TILE_H;
+		camera_viewport_x = mvx * TILE_W;
+		camera_viewport_y = mvy * TILE_H;
 	}
 
-	calc_viewport(1);
+	calc_viewport();
 
 	for (i = 0; i < MAX_TILES; i++)
 	{
@@ -1627,10 +1627,10 @@ void KGame::warp(int wtx, int wty, int fspeed)
 		g_ent[entity_index].framectr = 0;
 	}
 
-	vx = wtx * TILE_W;
-	vy = wty * TILE_H;
+	camera_viewport_x = wtx * TILE_W;
+	camera_viewport_y = wty * TILE_H;
 
-	calc_viewport(1);
+	calc_viewport();
 	kDraw.drawmap();
 	kDraw.blit2screen(xofs, yofs);
 

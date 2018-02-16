@@ -579,7 +579,7 @@ static int KQ_check_map_change()
 		break;
 
 	case CHANGE_TO_MARKER:
-		Game.change_mapm(tmap_name, marker_name, tmx, tmy);
+		Game.change_map(tmap_name, marker_name, tmx, tmy);
 		changing_map = NOT_CHANGING;
 		break;
 
@@ -1180,7 +1180,7 @@ static int KQ_portbubble_ex(lua_State* L)
 
 static int KQ_calc_viewport(lua_State* L)
 {
-	Game.calc_viewport((int)lua_tonumber(L, 1));
+	Game.calc_viewport();
 	return 0;
 }
 
@@ -2324,13 +2324,13 @@ static int KQ_get_skip_intro(lua_State* L)
 
 static int KQ_get_vx(lua_State* L)
 {
-	lua_pushnumber(L, vx);
+	lua_pushnumber(L, camera_viewport_x);
 	return 1;
 }
 
 static int KQ_get_vy(lua_State* L)
 {
-	lua_pushnumber(L, vy);
+	lua_pushnumber(L, camera_viewport_y);
 	return 1;
 }
 
@@ -2466,25 +2466,25 @@ static int KQ_move_camera(lua_State* L)
 	auto mcy = lua_tointeger(L, 2);
 	auto dtime = lua_tointeger(L, 3);
 
-	if (mcx > vx)
+	if (mcx > camera_viewport_x)
 	{
 		xinc = 1;
-		xtot = mcx - vx;
+		xtot = mcx - camera_viewport_x;
 	}
-	if (mcx < vx)
+	if (mcx < camera_viewport_x)
 	{
 		xinc = -1;
-		xtot = vx - mcx;
+		xtot = camera_viewport_x - mcx;
 	}
-	if (mcy > vy)
+	if (mcy > camera_viewport_y)
 	{
 		yinc = 1;
-		ytot = mcy - vy;
+		ytot = mcy - camera_viewport_y;
 	}
-	if (mcy < vy)
+	if (mcy < camera_viewport_y)
 	{
 		yinc = -1;
-		ytot = vy - mcy;
+		ytot = camera_viewport_y - mcy;
 	}
 	autoparty = 1;
 	timer_count = 0;
@@ -2495,12 +2495,12 @@ static int KQ_move_camera(lua_State* L)
 			timer_count -= dtime;
 			if (xtot > 0)
 			{
-				vx += xinc;
+				camera_viewport_x += xinc;
 				xtot--;
 			}
 			if (ytot > 0)
 			{
-				vy += yinc;
+				camera_viewport_y += yinc;
 				ytot--;
 			}
 		}
@@ -3717,13 +3717,13 @@ static int KQ_set_vfollow(lua_State* L)
 
 static int KQ_set_vx(lua_State* L)
 {
-	vx = (int)lua_tonumber(L, 1);
+	camera_viewport_x = (int)lua_tonumber(L, 1);
 	return 0;
 }
 
 static int KQ_set_vy(lua_State* L)
 {
-	vy = (int)lua_tonumber(L, 1);
+	camera_viewport_y = (int)lua_tonumber(L, 1);
 	return 0;
 }
 
