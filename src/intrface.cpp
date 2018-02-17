@@ -15,6 +15,7 @@ extern "C" {
 #include "draw.h"
 #include "effects.h"
 #include "enemyc.h"
+#include "entity.h"
 #include "enums.h"
 #include "heroc.h"
 #include "input.h"

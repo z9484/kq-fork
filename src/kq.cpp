@@ -1160,7 +1160,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 		g_ent[entity_index].speed = 4;
 		g_ent[entity_index].obsmode = 1;
-		g_ent[entity_index].moving = 0;
+		g_ent[entity_index].moving = false;
 	}
 
 	for (i = 0; i < MAX_ENTITIES; i++)
@@ -1170,7 +1170,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 			g_ent[i].eid = ID_ENEMY;
 			g_ent[i].speed = kqrandom->random_range_exclusive(1, 5);
 			g_ent[i].obsmode = 1;
-			g_ent[i].moving = 0;
+			g_ent[i].moving = false;
 			g_ent[i].movemode = MM_CHASE;
 			g_ent[i].chasing = 0;
 			g_ent[i].extra = kqrandom->random_range_exclusive(50, 100);
@@ -1622,7 +1622,7 @@ void KGame::warp(int wtx, int wty, int fspeed)
 	for (entity_index = 0; entity_index < last_entity; entity_index++)
 	{
         kEntity.place_ent(entity_index, wtx, wty);
-		g_ent[entity_index].moving = 0;
+		g_ent[entity_index].moving = false;
 		g_ent[entity_index].movcnt = 0;
 		g_ent[entity_index].framectr = 0;
 	}

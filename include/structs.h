@@ -49,6 +49,8 @@ enum eHeroBitFlags
 	BITS_ALL_HERO = BITS_SENSAR | BITS_SARINA | BITS_CORIN | BITS_AJATHAR | BITS_CASANDRA | BITS_TEMMIN | BITS_AYLA | BITS_NOSLOM
 };
 
+constexpr uint8_t MAX_FRAMECTR = 20;
+
 /** \brief Entity
  *
  * Contains info on an entities appearance, position and behavior.
@@ -80,12 +82,12 @@ struct KQEntity
 	uint8_t facing;
 
 	// In the middle of a move
-	uint8_t moving;
+	bool moving;
 
 	// How far along the move entity is
 	uint8_t movcnt;
 
-	// Counter for determining animation frame
+	// Counter for determining animation frame: [0..MAX_FRAMECTR)
 	uint8_t framectr;
 
 	// Stand, wander, script or chasing

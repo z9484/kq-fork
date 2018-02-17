@@ -34,7 +34,6 @@
 #define _(s) gettext(s)
 
 #include "constants.h"
-#include "entity.h"
 #include "enums.h"
 #include "fighter.h"
 #include "heroc.h"

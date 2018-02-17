@@ -8,8 +8,9 @@
  * \date March 2005
  */
 
-#include "movement.h"
+#include "entity.h"
 #include "kq.h"
+#include "movement.h"
 #include <stdio.h>
 #include <string.h>
 

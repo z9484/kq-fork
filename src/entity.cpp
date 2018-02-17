@@ -497,7 +497,7 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 	ent->tiley = tile_y + dy;
 	ent->y += dy;
 	ent->x += dx;
-	ent->moving = 1;
+	ent->moving = true;
 	ent->movcnt = 15;
 	return 1;
 }
@@ -715,7 +715,7 @@ void KEntity::process_entity(t_entity target_entity)
 		}
 		ent->movcnt--;
 
-		if (ent->framectr < 20)
+		if (ent->framectr < MAX_FRAMECTR - 1)
 		{
 			ent->framectr++;
 		}
@@ -726,7 +726,7 @@ void KEntity::process_entity(t_entity target_entity)
 
 		if (ent->movcnt == 0)
 		{
-			ent->moving = 0;
+			ent->moving = false;
 			if (target_entity < MAX_PARTY_SIZE)
 			{
 				player = &party[pidx[target_entity]];
@@ -765,7 +765,7 @@ void KEntity::process_entity(t_entity target_entity)
 
 void KEntity::set_script(t_entity target_entity, const char* movestring)
 {
-	g_ent[target_entity].moving = 0; // Stop entity from moving
+	g_ent[target_entity].moving = false; // Stop entity from moving
 	g_ent[target_entity].movcnt = 0; // Reset the move counter to 0
 	g_ent[target_entity].cmd = eCommands::COMMAND_NONE;
 	g_ent[target_entity].sidx = 0;   // Reset script command index

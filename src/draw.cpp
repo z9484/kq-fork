@@ -9,10 +9,11 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <cctype>
+#include <cstdlib>
 #include <ctype.h>
 #include <stdio.h>
 #include <string>
-#include <cctype>
 
 #include "bounds.h"
 #include "combat.h"
@@ -379,186 +380,209 @@ void KDraw::draw_backlayer()
 	}
 }
 
-void KDraw::draw_char(int xw, int yw)
+void KDraw::draw_char()
 {
-	signed int dx, dy;
-	int f;
-	int x, y;
-	signed int horiz, vert;
-	unsigned int here, there;
-	Raster** sprite_base = nullptr;
-	Raster* spr = nullptr;
-	size_t follower_fighter_index;
-	size_t fighter_index;
-	size_t fighter_frame, fighter_frame_add;
-	size_t fighter_type_id;
-
-	for (follower_fighter_index = MAX_PARTY_SIZE + kEntity.getNumberOfMapEntities(); follower_fighter_index > 0; follower_fighter_index--)
+	// Draw back-to-front characters so the lead character is rendered over all others.
+	for (size_t follower_fighter_index = MAX_PARTY_SIZE + kEntity.getNumberOfMapEntities(); follower_fighter_index > 0; follower_fighter_index--)
 	{
-		fighter_index = follower_fighter_index - 1;
-		fighter_type_id = g_ent[fighter_index].eid;
-		dx = g_ent[fighter_index].x - camera_viewport_x + xw;
-		dy = g_ent[fighter_index].y - camera_viewport_y + yw;
-		if (!g_ent[fighter_index].moving)
+		size_t fighter_frame = 0;
+		size_t fighter_index = follower_fighter_index - 1;
+		auto& follower_ent = g_ent[fighter_index];
+		int32_t dx = follower_ent.x - camera_viewport_x + TILE_W;
+		int32_t dy = follower_ent.y - camera_viewport_y + TILE_H;
+
+		if (!follower_ent.moving)
 		{
-			fighter_frame = g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + 2;
+			fighter_frame = follower_ent.facing * ENT_FRAMES_PER_DIR + 2;
+		}
+		else if (follower_ent.framectr >= MAX_FRAMECTR / 2)
+		{
+			// Fighter is moving
+			fighter_frame = follower_ent.facing * ENT_FRAMES_PER_DIR + 1;
 		}
 		else
 		{
-			fighter_frame_add = g_ent[fighter_index].framectr > 10 ? 1 : 0;
-			fighter_frame = g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + fighter_frame_add;
+			// Fighter is moving
+			fighter_frame = follower_ent.facing * ENT_FRAMES_PER_DIR + 0;
 		}
+
 		if (fighter_index < MAX_PARTY_SIZE && fighter_index < numchrs)
 		{
-			/* It's a hero */
-			/* Masquerade: if chrx!=0 then this hero is disguised as someone else...
-			 */
-			sprite_base = g_ent[fighter_index].chrx
-			              ? eframes[g_ent[fighter_index].chrx]
-			              : frames[fighter_type_id];
-
-			if (party[fighter_type_id].sts[S_DEAD] != 0)
-			{
-				fighter_frame = g_ent[fighter_index].facing * ENT_FRAMES_PER_DIR + 2;
-			}
-			if (party[fighter_type_id].sts[S_POISON] != 0)
-			{
-				/* PH: we are calling this every frame? */
-				color_scale(sprite_base[fighter_frame], tc2, 32, 47);
-				spr = tc2;
-			}
-			else
-			{
-				spr = sprite_base[fighter_frame];
-			}
-			if (is_forestsquare(g_ent[fighter_index].tilex, g_ent[fighter_index].tiley))
-			{
-				f = !g_ent[fighter_index].moving;
-				if (g_ent[fighter_index].moving && is_forestsquare(g_ent[fighter_index].x / TILE_W, g_ent[fighter_index].y / TILE_H))
-				{
-					f = 1;
-				}
-				if (f)
-				{
-					clear_to_color(tc, 0);
-					blit(spr, tc, 0, 0, 0, 0, 16, 6);
-					spr = tc;
-				}
-			}
-
-			if (party[fighter_type_id].sts[S_DEAD] == 0)
-			{
-				draw_sprite(double_buffer, spr, dx, dy);
-			}
-			else
-			{
-				draw_trans_sprite(double_buffer, spr, dx, dy);
-			}
-
-			/* After we draw the player's character, we have to know whether they
-			 * are moving diagonally. If so, we need to draw both layers 1&2 on
-			 * the correct tile, which helps correct diagonal movement artifacts.
-			 * We also need to ensure that the target coords has SOMETHING in the
-			 * o_seg[] portion, else there will be graphical glitches.
-			 */
-			if (fighter_index == 0 && g_ent[0].moving)
-			{
-				horiz = 0;
-				vert = 0;
-				/* Determine the direction moving */
-
-				if (g_ent[fighter_index].tilex * TILE_W > g_ent[fighter_index].x)
-				{
-					horiz = 1; // Right
-				}
-				else if (g_ent[fighter_index].tilex * TILE_W < g_ent[fighter_index].x)
-				{
-					horiz = -1; // Left
-				}
-
-				if (g_ent[fighter_index].tiley * TILE_H > g_ent[fighter_index].y)
-				{
-					vert = 1; // Down
-				}
-				else if (g_ent[fighter_index].tiley * TILE_H < g_ent[fighter_index].y)
-				{
-					vert = -1; // Up
-				}
-
-				/* Moving diagonally means both horiz and vert are non-zero */
-				if (horiz && vert)
-				{
-					/* When moving down, we will draw over the spot directly below
-					 * our starting position. Since tile[xy] shows our final coord,
-					 * we will instead draw to the left or right of the final pos.
-					 */
-					if (vert > 0)
-					{
-						/* Moving diag down */
-
-						// Final x-coord is one left/right of starting x-coord
-						x = (g_ent[fighter_index].tilex - horiz) * TILE_W - camera_viewport_x + xw;
-						// Final y-coord is same as starting y-coord
-						y = g_ent[fighter_index].tiley * TILE_H - camera_viewport_y + yw;
-						// Where the tile is on the map that we will draw over
-						there = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
-						// Original position, before you started moving
-						here = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
-					}
-					else
-					{
-						/* Moving diag up */
-
-						// Final x-coord is same as starting x-coord
-						x = g_ent[fighter_index].tilex * TILE_W - camera_viewport_x + xw;
-						// Final y-coord is above starting y-coord
-						y = (g_ent[fighter_index].tiley - vert) * TILE_H - camera_viewport_y + yw;
-						// Where the tile is on the map that we will draw over
-						there = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex;
-						// Target position
-						here = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex;
-					}
-
-					/* Because of possible redraw problems, only draw if there is
-					 * something drawn over the player (f_seg[] != 0)
-					 */
-					if (tilex[f_seg[here]] != 0)
-					{
-						draw_sprite(double_buffer, map_icons[tilex[map_seg[there]]], x, y);
-						draw_sprite(double_buffer, map_icons[tilex[b_seg[there]]], x, y);
-					}
-				}
-			}
-
+			render_hero(fighter_index, fighter_frame);
 		}
 		else
 		{
-			/* It's an NPC */
-			if (g_ent[fighter_index].active &&
-				g_ent[fighter_index].tilex >= view_x1 &&
-				g_ent[fighter_index].tilex <= view_x2 &&
-				g_ent[fighter_index].tiley >= view_y1 &&
-				g_ent[fighter_index].tiley <= view_y2)
-			{
-				if (dx >= TILE_W * -1 && dx <= TILE_W * (ONSCREEN_TILES_W + 1) &&
-					dy >= TILE_H * -1 && dy <= TILE_H * (ONSCREEN_TILES_H + 1))
-				{
-					spr = (g_ent[fighter_index].eid >= ID_ENEMY)
-					      ? eframes[g_ent[fighter_index].chrx][fighter_frame]
-					      : frames[g_ent[fighter_index].eid][fighter_frame];
-
-					if (g_ent[fighter_index].transl == 0)
-					{
-						draw_sprite(double_buffer, spr, dx, dy);
-					}
-					else
-					{
-						draw_trans_sprite(double_buffer, spr, dx, dy);
-					}
-				}
-			}
+			render_npc(fighter_index, dx, dy, fighter_frame);
 		}
 	}
+}
+
+void KDraw::render_npc(size_t fighter_index, int32_t dx, int32_t dy, size_t fighter_frame)
+{
+    auto& npc_entity = g_ent[fighter_index];
+
+    if (npc_entity.active &&
+        npc_entity.tilex >= view_x1 &&
+        npc_entity.tilex <= view_x2 &&
+        npc_entity.tiley >= view_y1 &&
+        npc_entity.tiley <= view_y2)
+    {
+        int32_t tileW = static_cast<int32_t>(TILE_W);
+        int32_t tileH = static_cast<int32_t>(TILE_H);
+        int32_t onscreenTilesW = static_cast<int32_t>(ONSCREEN_TILES_W);
+        int32_t onscreenTilesH = static_cast<int32_t>(ONSCREEN_TILES_H);
+        if (dx >= -tileW && dx <= tileW * (onscreenTilesW + 1) &&
+            dy >= -tileH && dy <= tileH * (onscreenTilesH + 1))
+        {
+            Raster* spr = (npc_entity.eid >= ID_ENEMY)
+                ? eframes[npc_entity.chrx][fighter_frame]
+                : frames[npc_entity.eid][fighter_frame];
+
+            if (npc_entity.transl == 0)
+            {
+                draw_sprite(double_buffer, spr, dx, dy);
+            }
+            else
+            {
+                draw_trans_sprite(double_buffer, spr, dx, dy);
+            }
+        }
+    }
+}
+
+void KDraw::render_hero(size_t fighter_index, size_t fighter_frame)
+{
+    size_t fighter_type_id = g_ent[fighter_index].eid;
+    Raster** sprite_base = nullptr;
+    auto& hero_entity = g_ent[fighter_index];
+    Raster* spr = nullptr;
+
+    /* It's a hero */
+    /* Masquerade: if chrx!=0 then this hero is disguised as someone else...
+     */
+    sprite_base = hero_entity.chrx
+        ? eframes[hero_entity.chrx]
+        : frames[fighter_type_id];
+
+    if (party[fighter_type_id].sts[S_DEAD] != 0)
+    {
+        fighter_frame = hero_entity.facing * ENT_FRAMES_PER_DIR + 2;
+    }
+    if (party[fighter_type_id].sts[S_POISON] != 0)
+    {
+        /* PH: we are calling this every frame? */
+        color_scale(sprite_base[fighter_frame], tc2, 32, 47);
+        spr = tc2;
+    }
+    else
+    {
+        spr = sprite_base[fighter_frame];
+    }
+    if (is_forestsquare(g_ent[fighter_index].tilex, g_ent[fighter_index].tiley))
+    {
+        bool f = !g_ent[fighter_index].moving;
+        if (g_ent[fighter_index].moving && is_forestsquare(g_ent[fighter_index].x / TILE_W, g_ent[fighter_index].y / TILE_H))
+        {
+            f = true;
+        }
+        if (f)
+        {
+            clear_to_color(tc, 0);
+            blit(spr, tc, 0, 0, 0, 0, 16, 6);
+            spr = tc;
+        }
+    }
+
+    int32_t dx = g_ent[fighter_index].x - camera_viewport_x + TILE_W;
+    int32_t dy = g_ent[fighter_index].y - camera_viewport_y + TILE_H;
+    if (party[fighter_type_id].sts[S_DEAD] == 0)
+    {
+        draw_sprite(double_buffer, spr, dx, dy);
+    }
+    else
+    {
+        draw_trans_sprite(double_buffer, spr, dx, dy);
+    }
+
+    /* After we draw the player's character, we have to know whether they
+     * are moving diagonally. If so, we need to draw both layers 1&2 on
+     * the correct tile, which helps correct diagonal movement artifacts.
+     * We also need to ensure that the target coords has SOMETHING in the
+     * o_seg[] portion, else there will be graphical glitches.
+     */
+    if (fighter_index == 0 && g_ent[0].moving)
+    {
+        int32_t horiz = 0;
+        int32_t vert = 0;
+        /* Determine the direction moving */
+
+        if (g_ent[fighter_index].tilex * TILE_W > g_ent[fighter_index].x)
+        {
+            horiz = 1; // Right
+        }
+        else if (g_ent[fighter_index].tilex * TILE_W < g_ent[fighter_index].x)
+        {
+            horiz = -1; // Left
+        }
+
+        if (g_ent[fighter_index].tiley * TILE_H > g_ent[fighter_index].y)
+        {
+            vert = 1; // Down
+        }
+        else if (g_ent[fighter_index].tiley * TILE_H < g_ent[fighter_index].y)
+        {
+            vert = -1; // Up
+        }
+
+        /* Moving diagonally means both horiz and vert are non-zero */
+        if (horiz != 0 && vert != 0)
+        {
+            int x = 0;
+            int y = 0;
+            uint32_t here = 0;
+            uint32_t there = 0;
+
+            /* When moving down, we will draw over the spot directly below
+             * our starting position. Since tile[xy] shows our final coord,
+             * we will instead draw to the left or right of the final pos.
+             */
+            if (vert > 0)
+            {
+                /* Moving diag down */
+
+                // Final x-coord is one left/right of starting x-coord
+                x = (g_ent[fighter_index].tilex - horiz) * TILE_W - camera_viewport_x + TILE_W;
+                // Final y-coord is same as starting y-coord
+                y = g_ent[fighter_index].tiley * TILE_H - camera_viewport_y + TILE_H;
+                // Where the tile is on the map that we will draw over
+                there = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
+                // Original position, before you started moving
+                here = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex - horiz;
+            }
+            else
+            {
+                /* Moving diag up */
+
+                // Final x-coord is same as starting x-coord
+                x = g_ent[fighter_index].tilex * TILE_W - camera_viewport_x + TILE_W;
+                // Final y-coord is above starting y-coord
+                y = (g_ent[fighter_index].tiley - vert) * TILE_H - camera_viewport_y + TILE_H;
+                // Where the tile is on the map that we will draw over
+                there = (g_ent[fighter_index].tiley - vert) * g_map.xsize + g_ent[fighter_index].tilex;
+                // Target position
+                here = (g_ent[fighter_index].tiley) * g_map.xsize + g_ent[fighter_index].tilex;
+            }
+
+            /* Because of possible redraw problems, only draw if there is
+             * something drawn over the player (f_seg[] != 0)
+             */
+            if (tilex[f_seg[here]] != 0)
+            {
+                draw_sprite(double_buffer, map_icons[tilex[map_seg[there]]], x, y);
+                draw_sprite(double_buffer, map_icons[tilex[b_seg[there]]], x, y);
+            }
+        }
+    }
 }
 
 void KDraw::draw_forelayer()
@@ -973,7 +997,7 @@ void KDraw::drawmap()
 	}
 	if (g_map.map_mode == 1 || g_map.map_mode == 3 || g_map.map_mode == 5)
 	{
-		draw_char(16, 16);
+		draw_char();
 	}
 	if (draw_middle)
 	{
@@ -981,7 +1005,7 @@ void KDraw::drawmap()
 	}
 	if (g_map.map_mode == 0 || g_map.map_mode == 2 || g_map.map_mode == 4)
 	{
-		draw_char(16, 16);
+		draw_char();
 	}
 	if (draw_foreground)
 	{

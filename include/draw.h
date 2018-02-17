@@ -411,12 +411,13 @@ private:
      * it takes care of walking in forests and only showing a disembodied head.
      * Does not seem to do any parallaxing. (?)
      * PH modified 20030309 Simplified this a bit, removed one blit() that wasn't
-     * neeeded.
-     *
-     * \param   xw x-offset - always ==16
-     * \param   yw y-offset - always ==16
+     * needed.
      */
-    void draw_char(int xw, int yw);
+    void draw_char();
+
+    void render_npc(size_t fighter_index, int32_t dx, int32_t dy, size_t fighter_frame);
+
+    void render_hero(size_t fighter_index, size_t fighter_frame);
 
     /*! \brief Draw foreground
      *

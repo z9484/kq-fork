@@ -8,6 +8,8 @@
  * \date ??????
  */
 
+#include <cstdint>
+
 using t_entity = uint32_t;
 
 class KEntity

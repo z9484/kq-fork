@@ -401,11 +401,15 @@ std::vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const* el)
 				}
 				if (xprop->Attribute("name", "moving"))
 				{
-					entity.moving = value->IntValue();
+					entity.moving = (value->IntValue() != 0);
 				}
 				if (xprop->Attribute("name", "framectr"))
 				{
 					entity.framectr = value->IntValue();
+					if (entity.framectr >= MAX_FRAMECTR)
+					{
+						entity.framectr = MAX_FRAMECTR - 1;
+					}
 				}
 				if (xprop->Attribute("name", "movemode"))
 				{
