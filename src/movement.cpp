@@ -17,6 +17,13 @@
 
 KMovement kMovement;
 
+namespace {
+
+	constexpr int32_t kImpassibleBlock = -1;
+	constexpr int32_t kNotYetProcessed = 0;
+
+} // anonymous namespace
+
 KMovement::KMovement()
 {
 
@@ -24,17 +31,17 @@ KMovement::KMovement()
 
 KMovement::eStatus KMovement::find_path(std::string& out_buffer, size_t entity_id, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y)
 {
-	// Allocate a 0-filled array for each tile within the map.
+	// Allocate a 0-filled array for each tile within the map (kNotYetProcessed == 0).
 	int32_t* map = (int32_t*)calloc(g_map.xsize * g_map.ysize, sizeof(int32_t));
 	if (map == nullptr)
 	{
 		return eStatus::OUT_OF_MEMORY;
 	}
 
-	// Set all impassible tile values to -1.
+	// Set all impassible tile values to kImpassibleBlock (-1).
 	mark_obstacles_in_map(map);
 
-	eStatus result = search_paths(entity_id, map, 1, source_x, source_y, target_x, target_y, 0, 0, g_map.xsize, g_map.ysize);
+	eStatus result = search_paths(map, entity_id, 1, source_x, source_y, target_x, target_y);
 
 	if (result != eStatus::PATH_FOUND)
 	{
@@ -114,9 +121,9 @@ void KMovement::mark_obstacles_in_map(int32_t* map)
 		{
 			size_t index = y * g_map.xsize + x;
 
-			if (o_seg[index] != eObstacle::BLOCK_NONE)
+			if (o_seg[index] == eObstacle::BLOCK_ALL)
 			{
-				map[index] = -1;
+				map[index] = kImpassibleBlock;
 			}
 		}
 	}
@@ -126,7 +133,7 @@ void KMovement::mark_obstacles_in_map(int32_t* map)
 	{
 		if (entity.active && entity.tilex < g_map.xsize && entity.tiley < g_map.ysize)
 		{
-			map[entity.tiley * g_map.xsize + entity.tilex] = -1;
+			map[entity.tiley * g_map.xsize + entity.tilex] = kImpassibleBlock;
 		}
 	}
 }
@@ -227,7 +234,7 @@ KMovement::eStatus KMovement::minimize_path(std::string& out_buffer, const std::
 	return eStatus::PATH_FOUND;
 }
 
-KMovement::eStatus KMovement::search_paths(uint32_t entity_id, int32_t* map, uint32_t step, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, uint32_t start_x, uint32_t start_y, uint32_t limit_x, uint32_t limit_y)
+KMovement::eStatus KMovement::search_paths(int32_t* map, const uint32_t entity_id, const uint32_t recursion_count, const uint32_t source_x, const uint32_t source_y, const uint32_t target_x, const uint32_t target_y)
 {
 	if (map == nullptr)
 	{
@@ -235,48 +242,50 @@ KMovement::eStatus KMovement::search_paths(uint32_t entity_id, int32_t* map, uin
 	}
 
 	eStatus result = eStatus::NO_PATH_FOUND;
-	size_t index = source_y * limit_x + source_x;
+	const size_t index = source_y * g_map.xsize + source_x;
 	const int32_t value = map[index];
 
-	if ((value != -1) && (value == 0 || value > (int32_t)step) && (step == 1 || !kEntity.entityat(source_x, source_y, entity_id)))
+	if ((value != kImpassibleBlock) &&
+		(value == kNotYetProcessed || value > (int32_t)recursion_count) &&
+		(recursion_count == 1 || !kEntity.entityat(source_x, source_y, entity_id)))
 	{
-		map[index] = step;
+		map[index] = recursion_count;
 
 		if (source_x == target_x && source_y == target_y)
 		{
 			return eStatus::PATH_FOUND;
 		}
 
-		if (source_x > start_x)
+		if (source_x > 0)
 		{
-			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x - 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(map, entity_id, recursion_count + 1, source_x - 1, source_y, target_x, target_y);
 			if (recursiveResult == eStatus::PATH_FOUND)
 			{
 				result = eStatus::PATH_FOUND;
 			}
 		}
 
-		if (result != eStatus::PATH_FOUND && source_x < limit_x - 1)
+		if (source_x < g_map.xsize - 1)
 		{
-			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x + 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(map, entity_id, recursion_count + 1, source_x + 1, source_y, target_x, target_y);
 			if (recursiveResult == eStatus::PATH_FOUND)
 			{
 				result = eStatus::PATH_FOUND;
 			}
 		}
 
-		if (result != eStatus::PATH_FOUND && source_y > start_y)
+		if (source_y > 0)
 		{
-			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x, source_y - 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(map, entity_id, recursion_count + 1, source_x, source_y - 1, target_x, target_y);
 			if (recursiveResult == eStatus::PATH_FOUND)
 			{
 				result = eStatus::PATH_FOUND;
 			}
 		}
 
-		if (result != eStatus::PATH_FOUND && source_y < limit_y - 1)
+		if (source_y < g_map.ysize - 1)
 		{
-			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x, source_y + 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(map, entity_id, recursion_count + 1, source_x, source_y + 1, target_x, target_y);
 			if (recursiveResult == eStatus::PATH_FOUND)
 			{
 				result = eStatus::PATH_FOUND;

@@ -51,22 +51,18 @@ private:
 	 * This function uses recursion to find the shortest path to the target
 	 * point. Once it returns 0, a path was successfully found.
 	 *
-	 * @param[in] entity_id The ID of the entity moving around.
 	 * @param[in,out] map   The map in where to write the paths.
-	 * @param[in] step      The current step in recursivity.
+	 * @param[in] entity_id The ID of the entity moving around.
+	 * @param[in] recursion_count How many times this method has been called recursively.
 	 * @param[in] source_x  The x coordinate of the source point.
 	 * @param[in] source_y  The y coordinate of the source point.
 	 * @param[in] target_x  The x coordinate of the target point.
 	 * @param[in] target_y  The y coordinate of the target point.
-	 * @param[in] start_x   The minimum value of the x axis.
-	 * @param[in] start_y   The minimum value of the y axis.
-	 * @param[in] limit_x   The maximum value of the x axis.
-	 * @param[in] limit_y   The maximum value of the y axis.
 	 *
 	 * \returns 0 if a path was successfully found, otherwise non-zero to indicate
 	 * failure.
 	 */
-	eStatus search_paths(uint32_t entity_id, int32_t* map, uint32_t step, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, uint32_t start_x, uint32_t start_y, uint32_t limit_x, uint32_t limit_y);
+	eStatus search_paths(int32_t* map, const uint32_t entity_id, const uint32_t recursion_count, const uint32_t source_x, const uint32_t source_y, const uint32_t target_x, const uint32_t target_y);
 
 	/*! \brief Generates the solution path.
 	 *
