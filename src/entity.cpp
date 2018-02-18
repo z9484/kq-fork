@@ -180,11 +180,11 @@ void KEntity::entscript(t_entity target_entity)
 	}
 	if (g_ent[target_entity].cmd == 0)
 	{
-        getcommand(target_entity);
+		getcommand(target_entity);
 	}
 	switch (g_ent[target_entity].cmd)
 	{
-    case eCommands::COMMAND_MOVE_UP:
+	case eCommands::COMMAND_MOVE_UP:
 		if (move(target_entity, 0, -1))
 		{
 			g_ent[target_entity].cmdnum--;
@@ -279,18 +279,17 @@ void KEntity::follow(int tile_x, int tile_y)
 
 void KEntity::getcommand(t_entity target_entity)
 {
-	char s;
+	char currentCommand = '\0';
 
 	/* PH FIXME: prevented from running off end of string */
-	if (g_ent[target_entity].sidx < sizeof(g_ent[target_entity].script))
+		const auto scriptIndex = g_ent[target_entity].sidx;
+	if (scriptIndex < MAX_SCRIPT)
 	{
-		s = g_ent[target_entity].script[g_ent[target_entity].sidx++];
+		currentCommand = g_ent[target_entity].script[scriptIndex];
+		g_ent[target_entity].sidx++;
 	}
-	else
-	{
-		s = '\0';
-	}
-	switch (s)
+
+	switch (currentCommand)
 	{
 	case 'u':
 	case 'U':
@@ -352,7 +351,7 @@ void KEntity::getcommand(t_entity target_entity)
 #ifdef DEBUGMODE
 		if (debugging > 0)
 		{
-			sprintf(strbuf, _("Invalid entity command (%c) at position %d for ent %d"), s, g_ent[target_entity].sidx, target_entity);
+			sprintf(strbuf, _("Invalid entity command (%c) at position %d for ent %d"), currentCommand, g_ent[target_entity].sidx, target_entity);
 			Game.program_death(strbuf);
 		}
 #endif
@@ -763,15 +762,20 @@ void KEntity::process_entity(t_entity target_entity)
 	}
 }
 
-void KEntity::set_script(t_entity target_entity, const char* movestring)
+void KEntity::set_script(t_entity target_entity, const std::string& movestring)
 {
-	g_ent[target_entity].moving = false; // Stop entity from moving
-	g_ent[target_entity].movcnt = 0; // Reset the move counter to 0
-	g_ent[target_entity].cmd = eCommands::COMMAND_NONE;
-	g_ent[target_entity].sidx = 0;   // Reset script command index
-	g_ent[target_entity].cmdnum = 0; // There are no scripted commands
-	g_ent[target_entity].movemode = MM_SCRIPT; // Force the entity to follow the script
-	strncpy(g_ent[target_entity].script, movestring, sizeof(g_ent[target_entity].script));
+	if (target_entity >= MAX_ENTITIES)
+	{
+		return;
+	}
+	auto& target = g_ent[target_entity];
+	target.moving = false; // Stop entity from moving
+	target.movcnt = 0; // Reset the move counter to 0
+	target.cmd = eCommands::COMMAND_NONE;
+	target.sidx = 0;   // Reset script command index
+	target.cmdnum = 0; // There are no scripted commands
+	target.movemode = MM_SCRIPT; // Force the entity to follow the script
+	strncpy(target.script, movestring.c_str(), sizeof(target.script));
 }
 
 void KEntity::speed_adjust(t_entity target_entity)

@@ -9,6 +9,7 @@
  */
 
 #include <cstdint>
+#include <string>
 
 using t_entity = uint32_t;
 
@@ -43,11 +44,12 @@ public:
      *
      * This is used to set up an entity with a movement script so that
      * it can be automatically controlled.
+     * If target_entity is invalid, nothing happens.
      *
      * @param target_entity Entity to process
      * @param movestring The script
      */
-    void set_script(t_entity target_entity, const char* movestring);
+    void set_script(t_entity target_entity, const std::string& movestring);
 
     /**
      * Set position

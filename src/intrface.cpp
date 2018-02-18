@@ -1371,7 +1371,7 @@ static int KQ_char_setter(lua_State* L)
 		switch (prop)
 		{
 		case 0:
-            pl->playerName = lua_tostring(L, 3);
+			pl->playerName = lua_tostring(L, 3);
 			break;
 
 		case 1:
@@ -1562,7 +1562,7 @@ static int KQ_clear_buffer(lua_State* L)
 
 static int KQ_combat(lua_State* L)
 {
-    gCombat.combat((int)lua_tonumber(L, 1));
+	gCombat.combat((int)lua_tonumber(L, 1));
 	return 0;
 }
 
@@ -1627,13 +1627,13 @@ static int KQ_dark_mbox(lua_State* L)
 
 static int KQ_do_fadein(lua_State* L)
 {
-    kDraw.do_transition(TRANS_FADE_IN, (int)lua_tonumber(L, 1));
+	kDraw.do_transition(TRANS_FADE_IN, (int)lua_tonumber(L, 1));
 	return 0;
 }
 
 static int KQ_do_fadeout(lua_State* L)
 {
-    kDraw.do_transition(TRANS_FADE_OUT, (int)lua_tonumber(L, 1));
+	kDraw.do_transition(TRANS_FADE_OUT, (int)lua_tonumber(L, 1));
 	return 0;
 }
 
@@ -2535,15 +2535,15 @@ static int KQ_move_entity(lua_State* L)
 	int entity_id = KqFork::real_entity_num(L, 1);
 	int kill = 0, target_x = 0, target_y = 0;
 
-	char buffer[1024];
+	std::string buffer;
 
 	if (lua_type(L, 2) == LUA_TSTRING)
 	{
-		std::shared_ptr<KMarker> m = KqFork::KQ_find_marker(lua_tostring(L, 2), true);
-		if (m != nullptr)
+		std::shared_ptr<KMarker> pMarker = KqFork::KQ_find_marker(lua_tostring(L, 2), true);
+		if (pMarker != nullptr)
 		{
-			target_x = m->x;
-			target_y = m->y;
+			target_x = pMarker->x;
+			target_y = pMarker->y;
 			kill = (int)lua_tonumber(L, 3);
 		}
 	}
@@ -2554,15 +2554,15 @@ static int KQ_move_entity(lua_State* L)
 		kill = (int)lua_tonumber(L, 4);
 	}
 
-	find_path(entity_id, g_ent[entity_id].tilex, g_ent[entity_id].tiley, target_x, target_y, buffer, sizeof(buffer));
+	KMovement::eStatus status = kMovement.find_path(buffer, entity_id, g_ent[entity_id].tilex, g_ent[entity_id].tiley, target_x, target_y);
 
 	/*  FIXME: The fourth parameter is a ugly hack for now.  */
 	if (kill)
 	{
-		strcat(buffer, "K");
+		buffer.append("K");
 	}
 
-    kEntity.set_script(entity_id, buffer);
+	kEntity.set_script(entity_id, buffer);
 	return 0;
 }
 
@@ -2658,7 +2658,7 @@ static int KQ_place_ent(lua_State* L)
 		y = (int)lua_tonumber(L, 3);
 	}
 
-    kEntity.place_ent(entity_index, x, y);
+	kEntity.place_ent(entity_index, x, y);
 	return 0;
 }
 
@@ -2700,9 +2700,9 @@ static int KQ_prompt(lua_State* L)
 {
 	const char* txt[4];
 	char pbuf[256];
-    int b;
-    uint32_t nonblank = 0;
-    uint32_t nopts = 0;
+	int b;
+	uint32_t nonblank = 0;
+	uint32_t nopts = 0;
 
 	/* The B_TEXT or B_THOUGHT is ignored */
 	b = KqFork::real_entity_num(L, 1);
@@ -3088,8 +3088,9 @@ static int KQ_set_ent_obsmode(lua_State* L)
 static int KQ_set_ent_script(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
+	std::string script = lua_tostring(L, 2);
 
-    kEntity.set_script(a, lua_tostring(L, 2));
+	kEntity.set_script(a, script.c_str());
 	return 0;
 }
 
@@ -3743,8 +3744,8 @@ static int KQ_set_warp(lua_State* L)
 
 static int KQ_set_can_use_item(lua_State* L)
 {
-    bool canItemBeUsed = (0 != lua_tonumber(L, 1));
-    heroc.allowItemUseDuringBattle(canItemBeUsed);
+	bool canItemBeUsed = (0 != lua_tonumber(L, 1));
+	heroc.allowItemUseDuringBattle(canItemBeUsed);
 	return 0;
 }
 

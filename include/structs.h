@@ -50,6 +50,7 @@ enum eHeroBitFlags
 };
 
 constexpr uint8_t MAX_FRAMECTR = 20;
+constexpr size_t MAX_SCRIPT = 60;
 
 /** \brief Entity
  *
@@ -133,7 +134,7 @@ struct KQEntity
 	uint8_t transl;
 
 	// Movement/action script (pacing, etc.)
-	char script[60];
+	char script[MAX_SCRIPT];
 
 	// Scripted x-coord the ent is moving to
 	uint16_t target_x;

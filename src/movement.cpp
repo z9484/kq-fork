@@ -11,50 +11,62 @@
 #include "entity.h"
 #include "kq.h"
 #include "movement.h"
+#include <sstream>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
-static int compose_path(AL_CONST int*, uint32_t, uint32_t, char*, size_t);
-static void copy_map(int*);
-static int minimize_path(AL_CONST char*, char*, size_t);
-static int search_paths(uint32_t, int*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
+KMovement kMovement;
 
-/*! \brief Generates the solution path.
- *
- * The only way of doing this is walking the path backwards, minimizing and
- * turning it the way around.
- *
- * \param map [in]      The map with the paths.
- * \param target_x [in] Target x coordinate.
- * \param target_y [in] Target y coordinate.
- * \param buffer [out]  Buffer to store the solution.
- * \param size [in]     Size of the solution buffer.
- *
- * \returns If the solution was copied.
- *          0 The solution was copied.
- *          1 The buffer was too small for the solution to be copied.
- *          2 There was no solution, or internal error.
- *
- * \sa search_paths copy_map find_path minimize_path
- */
-static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y, char* buffer, size_t size)
+KMovement::KMovement()
 {
-	char temp[1024];
-	int index = 0;
-	uint32_t x;
-	uint32_t y;
-	int value;
 
-	x = target_x;
-	y = target_y;
-	value = map[y * g_map.xsize + x];
-	index = value - 2;
+}
+
+KMovement::eStatus KMovement::find_path(std::string& out_buffer, size_t entity_id, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y)
+{
+	// Allocate a 0-filled array for each tile within the map.
+	int32_t* map = (int32_t*)calloc(g_map.xsize * g_map.ysize, sizeof(int32_t));
+	if (map == nullptr)
+	{
+		return eStatus::OUT_OF_MEMORY;
+	}
+
+	// Set all impassible tile values to -1.
+	mark_obstacles_in_map(map);
+
+	eStatus result = search_paths(entity_id, map, 1, source_x, source_y, target_x, target_y, 0, 0, g_map.xsize, g_map.ysize);
+
+	if (result != eStatus::PATH_FOUND)
+	{
+		free(map);
+		return result;
+	}
+
+	result = compose_path(out_buffer, map, target_x, target_y);
+
+	free(map);
+	return result;
+}
+
+KMovement::eStatus KMovement::compose_path(std::string& out_buffer, const int32_t* map, uint32_t target_x, uint32_t target_y)
+{
+	if (target_x >= g_map.xsize || target_y >= g_map.ysize || map == nullptr)
+	{
+		return eStatus::UNKNOWN_ERROR;
+	}
+
+	uint32_t x = target_x;
+	uint32_t y = target_y;
+	int32_t value = map[y * g_map.xsize + x];
+	int index = value - 2;
+
+	char temp[1024];
 	memset(temp, '\0', sizeof(temp));
 
 	while (value > 1)
 	{
 		/*  move as many squares up as possible  */
-		while ((y > 0) && (map[(y - 1) * g_map.xsize + x] == (value - 1)) && (value > 1))
+		while (y > 0 && value > 1 && map[(y - 1) * g_map.xsize + x] == value - 1)
 		{
 			value--;
 			y--;
@@ -62,7 +74,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 
 		/*  move as many squares left as possible  */
-		while ((x > 0) && (map[y * g_map.xsize + (x - 1)] == (value - 1)) && (value > 1))
+		while (x > 0 && value > 1 && map[y * g_map.xsize + (x - 1)] == value - 1)
 		{
 			value--;
 			x--;
@@ -70,7 +82,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 
 		/*  move as many squares down as possible  */
-		while ((y < g_map.ysize - 1) && (map[(y + 1) * g_map.xsize + x] == (value - 1)) && (value > 1))
+		while (y < g_map.ysize - 1 && value > 1 && map[(y + 1) * g_map.xsize + x] == value - 1)
 		{
 			value--;
 			y++;
@@ -78,7 +90,7 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 
 		/*  move as many squares right as possible  */
-		while ((x < g_map.xsize - 1) && (map[y * g_map.xsize + (x + 1)] == (value - 1)) && (value > 1))
+		while (x < g_map.xsize - 1 && value > 1 && map[y * g_map.xsize + (x + 1)] == value - 1)
 		{
 			value--;
 			x++;
@@ -86,30 +98,23 @@ static int compose_path(AL_CONST int* map, uint32_t target_x, uint32_t target_y,
 		}
 	}
 
-	return (minimize_path(temp, buffer, size));
+	return (minimize_path(out_buffer, temp));
 }
 
-/*! \brief Generates an internal map.
- *
- * The function generates a map setting to -1 any square that is blocked
- * by either an object or an entity.
- *
- * \param map [out] The map where the result will be copied
- *
- * \sa search_paths compose_path find_path minimize_path
- */
-static void copy_map(int* map)
+void KMovement::mark_obstacles_in_map(int32_t* map)
 {
-	register size_t x, y;
-	size_t index, entity_index;
-
-	for (y = 0; y < g_map.ysize; y++)
+	if (map == nullptr)
 	{
-		for (x = 0; x < g_map.xsize; x++)
-		{
-			index = y * g_map.xsize + x;
+		return;
+	}
 
-			if (o_seg[index] != BLOCK_NONE)
+	for (uint32_t y = 0; y < g_map.ysize; y++)
+	{
+		for (uint32_t x = 0; x < g_map.xsize; x++)
+		{
+			size_t index = y * g_map.xsize + x;
+
+			if (o_seg[index] != eObstacle::BLOCK_NONE)
 			{
 				map[index] = -1;
 			}
@@ -118,7 +123,7 @@ static void copy_map(int* map)
 
 	/*  RB: faster to do this than to check if there is an entity at every square
 	 */
-	for (entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
+	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
 	{
 		if (g_ent[entity_index].active)
 		{
@@ -127,171 +132,156 @@ static void copy_map(int* map)
 	}
 }
 
-/*! \brief Path search implementation for KQ
- *
- * Call this function to calculate the shortest path between a given
- * NPC and a target point.
- *
- * \param entity_id [in] The ID of the entity moving around.
- * \param source_x [in]  The x coordinate of the source point.
- * \param source_y [in]  The y coordinate of the source point.
- * \param target_x [in]  The x coordinate of the target point.
- * \param target_y [in]  The y coordinate of the target point.
- * \param buffer [out]   A buffer where the result will be stored.
- * \param size [in]      The size of the result buffer.
- *
- * \returns Whether it could or not find the path.
- *          0 Success,
- *          1 No path found,
- *          2 Path found but result buffer too small to hold the answer.
- *          3 Misc error.
- *
- * \sa copy_map compose_path search_paths minimize_path
- */
-int find_path(size_t entity_id, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, char* buffer, uint32_t size)
+bool KMovement::isValidCommand(const char input)
 {
-	int* map = nullptr;
-	uint32_t result = 0;
-
-	if (buffer == nullptr || size == 0)
+	// Note: All of these, except default, are implied "fall-through":
+	switch (input)
 	{
-		return 3;
+	default:
+		return false;
+
+	// eCommands::COMMAND_MOVE_UP
+	case 'u':
+	case 'U':
+
+	// eCommands::COMMAND_MOVE_DOWN
+	case 'd':
+	case 'D':
+
+	// eCommands::COMMAND_MOVE_LEFT
+	case 'l':
+	case 'L':
+
+	// eCommands::COMMAND_MOVE_RIGHT
+	case 'r':
+	case 'R':
+
+	// eCommands::COMMAND_WAIT
+	case 'w':
+	case 'W':
+
+	// eCommands:: COMMAND_REPEAT
+	case 'b':
+	case 'B':
+
+	// eCommands::COMMAND_MOVETO_X
+	case 'x':
+	case 'X':
+
+	// eCommands::COMMAND_MOVETO_Y
+	case 'y':
+	case 'Y':
+
+	// eCommands::COMMAND_FACE
+	case 'f':
+	case 'F':
+
+	// eCommands::COMMAND_KILL
+	case 'k':
+	case 'K':
+
+	// eCommands::COMMAND_FINISH_COMMANDS
+	case '\0':
+
+		return true;
 	}
-
-	memset(buffer, '\0', size);
-
-	/*  TODO: Allocate memory once instead of every call  */
-	result = g_map.xsize * g_map.ysize * sizeof(int);
-	map = (int*)malloc(result);
-	if (map == nullptr)
-	{
-		return 3;
-	}
-
-	memset(map, 0, result);
-	copy_map(map);
-	result = search_paths(entity_id, map, 1, source_x, source_y, target_x, target_y, 0, 0, g_map.xsize, g_map.ysize);
-
-	if (result == 0)
-	{
-		result = compose_path(map, target_x, target_y, buffer, size);
-	}
-	else
-	{
-		result = 1;
-	}
-
-	free(map);
-	return result;
 }
 
-/*! \brief Minimizes a path.
- *
- * Given a path like "RRRRDRRDLU", this functions generates "R4D1R2D1L1U1".
- *
- * \param source [in] The original string.
- * \param target [out]The buffer where the result will be stored.
- * \param size   [in] The result buffer size.
- *
- * \returns 0 if the solution was copied,
- *          1 if the buffer was too small for the solution to be copied.
- *
- * \sa search_paths copy_map find_path compose_path
- */
-static int minimize_path(AL_CONST char* source, char* target, size_t size)
+KMovement::eStatus KMovement::minimize_path(std::string& out_buffer, const std::string& source)
 {
-	size_t source_index = 0;
-	uint32_t repetition = 0;
-	char value;
-	char temp[16];
-	char buffer[512];
+	const size_t sourceLength = source.length();
+	out_buffer.clear();
 
-	memset(buffer, '\0', sizeof(buffer));
-	while (source[source_index] != '\0')
+	if (sourceLength == 0)
 	{
-		value = source[source_index];
+		return eStatus::PATH_FOUND;
+	}
 
+	size_t source_index = 0;
+	while (source_index < sourceLength)
+	{
+		// Get the first character, such as the first 'U' in "UUUUU"
+		char value = source[source_index];
 		source_index++;
-		repetition = 1;
-		while ((source[source_index] == value) && (source[source_index] != '\0'))
+
+		// Prevent invalid commands from making it into the output.
+		if (!isValidCommand(value))
+		{
+			continue;
+		}
+
+		uint32_t repetition = 1;
+		// While the next characters are the same as 'value' above, increment repetition.
+		// "UUUUU" will have a value 'U' with repetition of 5.
+		while (source_index < sourceLength && source[source_index] == value)
 		{
 			source_index++;
 			repetition++;
 		}
 
-		/*  FIXME: check to see if the buffer is long enough?  */
-		snprintf(temp, sizeof(temp), "%c%u", value, repetition);
-		strncat(buffer, temp, sizeof(buffer) - strlen(buffer) - 1);
+		// Output format: the command followed by repetitions: "U5" or "D1"
+		std::stringstream ss;
+		ss << value << repetition;
+		out_buffer.append(ss.str());
 	}
 
-	if (strlen(buffer) < size)
-	{
-		strcpy(target, buffer);
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	return eStatus::PATH_FOUND;
 }
 
-/*! \brief Internal path search routine.
- *
- * This function uses recursivity to find the shortest path to the target
- * point. Once it returns 0, a path was successfully found.
- *
- * \param entity_id [in]     The ID of the entity moving around.
- * \param map [in,out] The map in where to write the paths.
- * \param step [in]    The current step in recursivity.
- * \param source_x [in] The x coordinate of the source point.
- * \param source_y [in] The y coordinate of the source point.
- * \param target_x [in] The x coordinate of the target point.
- * \param target_y [in] The y coordinate of the target point.
- * \param start_x [in] The minimum value of the x axis.
- * \param start_y [in] The minimum value of the y axis.
- * \param limit_x [in] The maximum value of the x axis.
- * \param limit_y [in] The maximum value of the y axis.
- *
- * \returns 0 if a path was successfully found, otherwise non-zero to indicate
- * failure.
- *
- * \sa copy_map compose_path find_path minimize_path
- */
-static int search_paths(uint32_t entity_id, int* map, uint32_t step, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, uint32_t start_x, uint32_t start_y, uint32_t limit_x, uint32_t limit_y)
+KMovement::eStatus KMovement::search_paths(uint32_t entity_id, int32_t* map, uint32_t step, uint32_t source_x, uint32_t source_y, uint32_t target_x, uint32_t target_y, uint32_t start_x, uint32_t start_y, uint32_t limit_x, uint32_t limit_y)
 {
-	int index;
-	int value;
-	int result = 1;
+	if (map == nullptr)
+	{
+		return eStatus::UNKNOWN_ERROR;
+	}
 
-	index = source_y * limit_x + source_x;
-	value = map[index];
-	if ((value != -1) && (value == 0 || value > (int)step) && (step == 1 || !kEntity.entityat(source_x, source_y, entity_id)))
+	eStatus result = eStatus::NO_PATH_FOUND;
+	size_t index = source_y * limit_x + source_x;
+	const int32_t value = map[index];
+
+	if ((value != -1) && (value == 0 || value > (int32_t)step) && (step == 1 || !kEntity.entityat(source_x, source_y, entity_id)))
 	{
 		map[index] = step;
 
 		if (source_x == target_x && source_y == target_y)
 		{
-			return 0;
+			return eStatus::PATH_FOUND;
 		}
 
 		if (source_x > start_x)
 		{
-			result &= search_paths(entity_id, map, step + 1, source_x - 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x - 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			if (recursiveResult == eStatus::PATH_FOUND)
+			{
+				result = eStatus::PATH_FOUND;
+			}
 		}
 
-		if (source_x < limit_x - 1)
+		if (result != eStatus::PATH_FOUND && source_x < limit_x - 1)
 		{
-			result &= search_paths(entity_id, map, step + 1, source_x + 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x + 1, source_y, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			if (recursiveResult == eStatus::PATH_FOUND)
+			{
+				result = eStatus::PATH_FOUND;
+			}
 		}
 
-		if (source_y > start_y)
+		if (result != eStatus::PATH_FOUND && source_y > start_y)
 		{
-			result &= search_paths(entity_id, map, step + 1, source_x, source_y - 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x, source_y - 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			if (recursiveResult == eStatus::PATH_FOUND)
+			{
+				result = eStatus::PATH_FOUND;
+			}
 		}
 
-		if (source_y < limit_y - 1)
+		if (result != eStatus::PATH_FOUND && source_y < limit_y - 1)
 		{
-			result &= search_paths(entity_id, map, step + 1, source_x, source_y + 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			eStatus recursiveResult = search_paths(entity_id, map, step + 1, source_x, source_y + 1, target_x, target_y, start_x, start_y, limit_x, limit_y);
+			if (recursiveResult == eStatus::PATH_FOUND)
+			{
+				result = eStatus::PATH_FOUND;
+			}
 		}
 	}
 
