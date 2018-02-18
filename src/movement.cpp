@@ -121,13 +121,12 @@ void KMovement::mark_obstacles_in_map(int32_t* map)
 		}
 	}
 
-	/*  RB: faster to do this than to check if there is an entity at every square
-	 */
-	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
+	// RB: faster to do this than to check if there is an entity at every square
+	for (auto& entity : g_ent)
 	{
-		if (g_ent[entity_index].active)
+		if (entity.active && entity.tilex < g_map.xsize && entity.tiley < g_map.ysize)
 		{
-			map[g_ent[entity_index].tilex * g_map.ysize + g_ent[entity_index].tiley] = -1;
+			map[entity.tiley * g_map.xsize + entity.tilex] = -1;
 		}
 	}
 }
