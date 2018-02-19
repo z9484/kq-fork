@@ -19,4 +19,4 @@ public:
 	const KTmxAnimation animation;
 };
 
-extern KAnimSequence AnimSequence;
+extern KAnimSequence kqAnimSequence;

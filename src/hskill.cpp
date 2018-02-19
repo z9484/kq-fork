@@ -64,7 +64,7 @@ int hero_skillcheck(size_t fighter_index)
 			return 0;
 		}
 		// See whether any enemies CAN be turned to stone.
-		for (target_fighter_index = MAX_PARTY_SIZE; target_fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; target_fighter_index++)
+		for (target_fighter_index = MAX_PARTY_SIZE; target_fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
@@ -109,7 +109,7 @@ int hero_skillcheck(size_t fighter_index)
 		{
 			return 0;
 		}
-		for (target_fighter_index = MAX_PARTY_SIZE; target_fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; target_fighter_index++)
+		for (target_fighter_index = MAX_PARTY_SIZE; target_fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; target_fighter_index++)
 		{
 			if (fighter[target_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[target_fighter_index].unl > 0)
 			{
@@ -500,8 +500,8 @@ int skill_use(size_t attack_fighter_index)
 		}
 		enemy_index = (unsigned int)tgt;
 		temp = std::unique_ptr<Raster>(new Raster(320, 240));
-		blit(gCombat.backart, temp.get(), 0, 0, 0, 0, 320, 240);
-		kqDraw.color_scale(temp.get(), gCombat.backart, 16, 31);
+		blit(kqCombat.backart, temp.get(), 0, 0, 0, 0, 320, 240);
+		kqDraw.color_scale(temp.get(), kqCombat.backart, 16, 31);
 		b = fighter[attack_fighter_index].fighterMaxHealth / 20;
 		strcpy(attack_string, _("Rage"));
 		display_attack_string = true;
@@ -512,10 +512,10 @@ int skill_use(size_t attack_fighter_index)
 			tempa.fighterStats[A_ATT] += b;
 			tempa.fighterStats[A_HIT] += b;
 		}
-        gCombat.fight(attack_fighter_index, enemy_index, 1);
+        kqCombat.fight(attack_fighter_index, enemy_index, 1);
 		if (fighter[enemy_index].fighterSpellEffectStats[S_DEAD] == 1)
 		{
-			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -526,18 +526,18 @@ int skill_use(size_t attack_fighter_index)
 			if (next_target > 0)
 			{
 				enemy_index = nn[kqrandom->random_range_exclusive(0, next_target)];
-                gCombat.fight(attack_fighter_index, enemy_index, 1);
+                kqCombat.fight(attack_fighter_index, enemy_index, 1);
 			}
 		}
 
 		fighter[attack_fighter_index].fighterHealth -= (b * 2);
-        gCombat.ta[attack_fighter_index] = (b * 2);
+        kqCombat.ta[attack_fighter_index] = (b * 2);
 		display_attack_string = false;
-		blit(temp.get(), gCombat.backart, 0, 0, 0, 0, 320, 240);
+		blit(temp.get(), kqCombat.backart, 0, 0, 0, 0, 320, 240);
 		display_amount(attack_fighter_index, eFont::FONT_DECIDE, 0);
 		if (fighter[attack_fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[attack_fighter_index].fighterHealth <= 0)
 		{
-            gCombat.fkill(attack_fighter_index);
+            kqCombat.fkill(attack_fighter_index);
 			death_animation(attack_fighter_index, 0);
 		}
 		break;
@@ -548,12 +548,12 @@ int skill_use(size_t attack_fighter_index)
 		display_attack_string = true;
 		tempa.fighterStats[A_ATT] = tempa.fighterStats[A_ATT] * 75 / 100;
 		fighter[attack_fighter_index].fighterAttackSpriteFrame = 6;
-		gCombat.fighterImageDatafileX = -1;
-		gCombat.fighterImageDatafileY = -1;
-		gCombat.battle_render(0, 0, 0);
+		kqCombat.fighterImageDatafileX = -1;
+		kqCombat.fighterImageDatafileY = -1;
+		kqCombat.battle_render(0, 0, 0);
 		kqDraw.blit2screen(0, 0);
 		kq_wait(150);
-        gCombat.multi_fight(attack_fighter_index);
+        kqCombat.multi_fight(attack_fighter_index);
 		display_attack_string = false;
 		break;
 
@@ -564,13 +564,13 @@ int skill_use(size_t attack_fighter_index)
 		if (heroc.combat_spell_menu(attack_fighter_index) == 1)
 		{
 			draw_castersprite(attack_fighter_index, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
-			gCombat.fighterImageDatafileX = -1;
-			gCombat.fighterImageDatafileY = -1;
+			kqCombat.fighterImageDatafileX = -1;
+			kqCombat.fighterImageDatafileY = -1;
 			play_effect(22, 128);
 			kqDraw.convert_cframes(attack_fighter_index,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor - 3,
 			    eff[magic[fighter[attack_fighter_index].csmem].eff].kolor + 3, 0);
-            gCombat.battle_render(0, 0, 0);
+            kqCombat.battle_render(0, 0, 0);
 			fullblit(double_buffer, back);
 			for (p = 0; p < 2; p++)
 			{
@@ -585,7 +585,7 @@ int skill_use(size_t attack_fighter_index)
 					else
 					{
 						circlefill(double_buffer, tx, ty, 15 - a, eff[magic[fighter[attack_fighter_index].csmem].eff].kolor);
-                        gCombat.draw_fighter(attack_fighter_index, 0);
+                        kqCombat.draw_fighter(attack_fighter_index, 0);
 					}
 					kqDraw.blit2screen(0, 0);
 					kq_wait(50);
@@ -593,7 +593,7 @@ int skill_use(size_t attack_fighter_index)
 				}
 			}
 			kqDraw.revert_cframes(attack_fighter_index, 0);
-			gCombat.battle_render(0, 0, 0);
+			kqCombat.battle_render(0, 0, 0);
 			kqDraw.blit2screen(0, 0);
 			infusion(attack_fighter_index, fighter[attack_fighter_index].csmem);
 			c = mp_needed(attack_fighter_index, fighter[attack_fighter_index].csmem);
@@ -602,7 +602,7 @@ int skill_use(size_t attack_fighter_index)
 				c = 1;
 			}
 			fighter[attack_fighter_index].fighterMagic -= c;
-            gCombat.bIsEtherEffectActive[attack_fighter_index] = false;
+            kqCombat.bIsEtherEffectActive[attack_fighter_index] = false;
 			fighter[attack_fighter_index].aux = 1;
 		}
 		else
@@ -624,11 +624,11 @@ int skill_use(size_t attack_fighter_index)
 			for (a = 0; a < 14; a++)
 			{
 				kqDraw.convert_cframes(MAX_PARTY_SIZE, 1 + a, 15, 1);
-				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
+				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 				{
 					if (is_active(fighter_index))
 					{
-                        gCombat.draw_fighter(fighter_index, 0);
+                        kqCombat.draw_fighter(fighter_index, 0);
 					}
 				}
 				kqDraw.blit2screen(0, 0);
@@ -638,7 +638,7 @@ int skill_use(size_t attack_fighter_index)
 			kqDraw.revert_cframes(MAX_PARTY_SIZE, 1);
 			display_attack_string = false;
 			b = fighter[attack_fighter_index].fighterLevel * 15;
-			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterMaxHealth > 0)
 				{
@@ -664,16 +664,16 @@ int skill_use(size_t attack_fighter_index)
 						if (b >= fighter[fighter_index].fighterHealth)
 						{
 							b -= fighter[fighter_index].fighterHealth;
-							gCombat.deffect[fighter_index] = 1;
-							gCombat.fkill(fighter_index);
+							kqCombat.deffect[fighter_index] = 1;
+							kqCombat.fkill(fighter_index);
 						}
 					}
 				}
 			}
 			death_animation(MAX_PARTY_SIZE, 1);
-			gCombat.fighterImageDatafileX = -1;
-			gCombat.fighterImageDatafileY = -1;
-			gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
+			kqCombat.fighterImageDatafileX = -1;
+			kqCombat.fighterImageDatafileY = -1;
+			kqCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
 		}
 		else
 		{
@@ -703,8 +703,8 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
 					fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
-					gCombat.ta[fighter_index] = b;
-					gCombat.ta[fighter_index] = do_shell_check(fighter_index, gCombat.ta[fighter_index]);
+					kqCombat.ta[fighter_index] = b;
+					kqCombat.ta[fighter_index] = do_shell_check(fighter_index, kqCombat.ta[fighter_index]);
 				}
 			}
 			display_amount(0, eFont::FONT_YELLOW, 1);
@@ -713,7 +713,7 @@ int skill_use(size_t attack_fighter_index)
 				if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 &&
 					fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
-					adjust_hp(fighter_index, gCombat.ta[fighter_index]);
+					adjust_hp(fighter_index, kqCombat.ta[fighter_index]);
 				}
 			}
 		}
@@ -728,7 +728,7 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].mrp = fighter[attack_fighter_index].mrp * 15 / 10;
 		if (heroc.combat_spell_menu(attack_fighter_index) == 1)
 		{
-            gCombat.bIsEtherEffectActive[attack_fighter_index] = false;
+            kqCombat.bIsEtherEffectActive[attack_fighter_index] = false;
 			fighter[attack_fighter_index].aux = 1;
 			fighter[attack_fighter_index].fighterStats[A_AUR] = fighter[attack_fighter_index].atrack[0];
 			fighter[attack_fighter_index].fighterStats[A_SPI] = fighter[attack_fighter_index].atrack[1];
@@ -762,13 +762,13 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].fighterSpriteFacing = 1;
 		strcpy(attack_string, _("Steal"));
 		display_attack_string = true;
-		gCombat.battle_render(0, attack_fighter_index + 1, 0);
+		kqCombat.battle_render(0, attack_fighter_index + 1, 0);
 		kqDraw.blit2screen(0, 0);
 		kq_wait(100);
 		play_effect(SND_MENU, 128);
 		kq_wait(500);
 		display_attack_string = false;
-		gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
+		kqCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
 		found_item = 0;
 #ifdef DEBUGMODE
 		if (debugging > 2)
@@ -856,7 +856,7 @@ int skill_use(size_t attack_fighter_index)
 		fighter[attack_fighter_index].fighterImageDatafileY = ty;
 		display_attack_string = false;
 		fighter[attack_fighter_index].fighterSpriteFacing = 0;
-		gCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
+		kqCombat.battle_render(attack_fighter_index, attack_fighter_index, 0);
 		kqDraw.blit2screen(0, 0);
 		break;
 

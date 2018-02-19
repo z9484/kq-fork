@@ -25,7 +25,7 @@
 #include <memory>
 #include <stdio.h>
 
-KCombat gCombat;
+KCombat kqCombat;
 
 
 KCombat::KCombat()
@@ -820,7 +820,7 @@ void KCombat::do_round()
 			}
 
 			PlayerInput.readcontrols();
-			gCombat.battle_render(0, 0, 0);
+			kqCombat.battle_render(0, 0, 0);
 			kqDraw.blit2screen(0, 0);
 
 			for (fighter_index = 0; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
@@ -935,7 +935,7 @@ void KCombat::draw_fighter(size_t fighter_index, size_t dcur)
 void KCombat::enemies_win() const
 {
 	Music.play_music("rain.s3m", 0);
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	/*  RB FIXME: rest()?  */
 	kqDraw.blit2screen(0, 0);
 	kq_wait(1000);
@@ -1118,7 +1118,7 @@ void KCombat::heroes_win()
 		fighter[fighter_index].fighterAttackSpriteFrame = 4;
 	}
 
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	kqDraw.blit2screen(0, 0);
 	kq_wait(250);
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
@@ -1468,7 +1468,7 @@ void KCombat::roll_initiative()
 		}
 	}
 
-	gCombat.battle_render(-1, -1, 0);
+	kqCombat.battle_render(-1, -1, 0);
 	kqDraw.blit2screen(0, 0);
 	if ((hs == 1) && (ms > 1))
 	{

@@ -655,7 +655,7 @@ void KGame::do_check_animation()
 {
 	int millis = (1000 * animation_count) / KQ_TICKS;
 	animation_count -= (KQ_TICKS * millis) / 1000;
-	Animation.check_animation(millis, tilex);
+	kqAnimation.check_animation(millis, tilex);
 }
 
 #ifdef DEBUGMODE

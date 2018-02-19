@@ -17,4 +17,4 @@ private:
 	std::vector<KAnimSequence> animations;
 };
 
-extern KAnimation Animation;
+extern KAnimation kqAnimation;

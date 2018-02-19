@@ -144,7 +144,7 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 			{
 				if (g_ent[who].eid == ID_ENEMY && i < MAX_PARTY_SIZE)
 				{
-					if (gCombat.combat(0) == 1)
+					if (kqCombat.combat(0) == 1)
 					{
 						g_ent[who].active = 0;
 					}
@@ -156,7 +156,7 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 			{
 				if (g_ent[i].eid == ID_ENEMY)
 				{
-					if (gCombat.combat(0) == 1)
+					if (kqCombat.combat(0) == 1)
 					{
 						g_ent[i].active = 0;
 					}

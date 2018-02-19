@@ -59,7 +59,7 @@ int auto_select_enemy(int whom, int csts)
 {
 	unsigned int i, number_enemies = 0;
 	int tmpd[NUM_FIGHTERS];
-	for (i = MAX_PARTY_SIZE; i < MAX_PARTY_SIZE + gCombat.num_enemies; i++)
+	for (i = MAX_PARTY_SIZE; i < MAX_PARTY_SIZE + kqCombat.num_enemies; i++)
 	{
 		if (fighter[i].fighterSpellEffectStats[S_DEAD] == 0)
 		{
@@ -475,7 +475,7 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 	unsigned int cntr = 0;
 	size_t ptr;
 	int tmpd[NUM_FIGHTERS];
-	for (unsigned int fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
+	for (unsigned int fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 	{
 		if (can_attack(fighter_index) == 1)
 		{
@@ -497,11 +497,11 @@ ePIDX select_enemy(size_t attack_fighter_index, eTarget multi_target)
 		Game.do_check_animation();
 		if (select_all)
 		{
-            gCombat.battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 2);
+            kqCombat.battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 2);
 		}
 		else
 		{
-            gCombat.battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 0);
+            kqCombat.battle_render(tmpd[ptr] + 1, attack_fighter_index + 1, 0);
 		}
 
         kqDraw.blit2screen(0, 0);
@@ -605,11 +605,11 @@ ePIDX select_hero(size_t target_fighter_index, eTarget multi_target, bool can_se
 		Game.do_check_animation();
 		if (select_all)
 		{
-            gCombat.battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 1);
+            kqCombat.battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 1);
 		}
 		else
 		{
-            gCombat.battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 0);
+            kqCombat.battle_render(tmpd[ptr] + 1, target_fighter_index + 1, 0);
 		}
 		kqDraw.blit2screen(0, 0);
 

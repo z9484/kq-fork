@@ -695,10 +695,10 @@ void tmx_map::set_current()
 	g_map.entity_tiles = find_tileset("entities").imagedata;
 
 	// Animations
-	Animation.clear_animations();
+	kqAnimation.clear_animations();
 	for (auto& a : find_tileset(primary_tileset_name).animations)
 	{
-		Animation.add_animation(a);
+		kqAnimation.add_animation(a);
 	}
 }
 

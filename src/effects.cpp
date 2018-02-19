@@ -41,17 +41,17 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 	if (target_all_flag == 1)
 	{
 		start_fighter_index = MAX_PARTY_SIZE;
-		num_targets = gCombat.num_enemies;
+		num_targets = kqCombat.num_enemies;
 	}
 	else
 	{
 		start_fighter_index = target_fighter_index;
 		num_targets = 1;
 	}
-	gCombat.fighterImageDatafileX = -1;
-	gCombat.fighterImageDatafileY = -1;
+	kqCombat.fighterImageDatafileX = -1;
+	kqCombat.fighterImageDatafileY = -1;
 	play_effect(24, 128);
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	fullblit(double_buffer, back);
 
 	// TT: slow_computer addition for speed-ups
@@ -64,14 +64,14 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 			kqDraw.convert_cframes(target_fighter_index, 1, 15 - (color_range / 2), target_all_flag);
 			for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_targets; fighter_index++)
 			{
-				if (gCombat.deffect[fighter_index] == 1)
+				if (kqCombat.deffect[fighter_index] == 1)
 				{
 					dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2);
 					dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2);
 					if (p == 0)
 					{
 						circlefill(double_buffer, dx, dy, color_range, 0);
-                        gCombat.draw_fighter(fighter_index, 0);
+                        kqCombat.draw_fighter(fighter_index, 0);
 					}
 					else
 					{
@@ -86,13 +86,13 @@ void death_animation(size_t target_fighter_index, int target_all_flag)
 	}
 	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + num_targets; fighter_index++)
 	{
-		if (gCombat.deffect[fighter_index] == 1)
+		if (kqCombat.deffect[fighter_index] == 1)
 		{
-            gCombat.deffect[fighter_index] = 0;
+            kqCombat.deffect[fighter_index] = 0;
 		}
 	}
 	kqDraw.revert_cframes(target_fighter_index, target_all_flag);
-    gCombat.battle_render(0, 0, 0);
+    kqCombat.battle_render(0, 0, 0);
 	kqDraw.blit2screen(0, 0);
 }
 
@@ -116,7 +116,7 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 		else
 		{
 			start_fighter_index = MAX_PARTY_SIZE;
-			num_fighters = gCombat.num_enemies;
+			num_fighters = kqCombat.num_enemies;
 		}
 	}
 	else
@@ -124,9 +124,9 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 		start_fighter_index = target_fighter_index;
 		num_fighters = 1;
 	}
-	gCombat.fighterImageDatafileX = -1;
-	gCombat.fighterImageDatafileY = -1;
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.fighterImageDatafileX = -1;
+	kqCombat.fighterImageDatafileY = -1;
+	kqCombat.battle_render(0, 0, 0);
 	fullblit(double_buffer, back);
 
 	// TT: slow_computer addition for speed-ups
@@ -152,21 +152,21 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 					{
 						dy = fighter[fighter_index].fighterImageDatafileY + fighter[fighter_index].fighterImageDatafileHeight - 8;
 					}
-					if (gCombat.ta[fighter_index] == NODISPLAY)
+					if (kqCombat.ta[fighter_index] == NODISPLAY)
 					{
 						sprintf(strbuf, "_");
 					}
 					else
 					{
-						sprintf(strbuf, "%d", abs(gCombat.ta[fighter_index]));
+						sprintf(strbuf, "%d", abs(kqCombat.ta[fighter_index]));
 					}
 					string_length = strlen(strbuf) * 3;
 					eFont new_font_color = font_color;
 					if (font_color == eFont::FONT_DECIDE)
 					{
-						new_font_color = (gCombat.ta[fighter_index] > 0 ? eFont::FONT_YELLOW : eFont::FONT_WHITE);
+						new_font_color = (kqCombat.ta[fighter_index] > 0 ? eFont::FONT_YELLOW : eFont::FONT_WHITE);
 					}
-					gCombat.draw_fighter(fighter_index, 0);
+					kqCombat.draw_fighter(fighter_index, 0);
 
 					if (p == 0)
 					{
@@ -177,7 +177,7 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 						sprite_height = dy - 9 + c;
 					}
 
-					if (gCombat.ta[fighter_index] == MISS)
+					if (kqCombat.ta[fighter_index] == MISS)
 					{
 						draw_sprite(double_buffer, missbmp, dx - 10, sprite_height);
 					}
@@ -191,7 +191,7 @@ void display_amount(size_t target_fighter_index, eFont font_color, int multiple_
 			kq_wait(30);
 		}
 	}
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	kqDraw.blit2screen(0, 0);
 }
 
@@ -212,7 +212,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t 
 		else
 		{
 			start_fighter_index = MAX_PARTY_SIZE;
-			num_fighters = gCombat.num_enemies;
+			num_fighters = kqCombat.num_enemies;
 		}
 	}
 	else
@@ -228,13 +228,13 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t 
 			fighter[fighter_index].fighterAttackSpriteFrame = 5;
 		}
 	}
-	gCombat.fighterImageDatafileX = -1;
-	gCombat.fighterImageDatafileY = -1;
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.fighterImageDatafileX = -1;
+	kqCombat.fighterImageDatafileY = -1;
+	kqCombat.battle_render(0, 0, 0);
 	fullblit(double_buffer, back);
 	if (multiple_target == 0)
 	{
-		if (gCombat.ta[start_fighter_index] == MISS)
+		if (kqCombat.ta[start_fighter_index] == MISS)
 		{
 			play_effect(SND_MENU, 128);
 		}
@@ -255,7 +255,7 @@ void draw_attacksprite(size_t target_fighter_index, int multiple_target, size_t 
 			{
 				dx = fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - (eff[magic_effect_index].xsize / 2);
 				dy = fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - (eff[magic_effect_index].ysize / 2);
-				gCombat.draw_fighter(fighter_index, 0);
+				kqCombat.draw_fighter(fighter_index, 0);
 				if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] > 0)
 				{
 					// The shield sprite in MISC is 48x48 pixels, so center it over the
@@ -307,11 +307,11 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color)
 			}
 		}
 	}
-	gCombat.fighterImageDatafileX = -1;
-	gCombat.fighterImageDatafileY = -1;
+	kqCombat.fighterImageDatafileX = -1;
+	kqCombat.fighterImageDatafileY = -1;
 	fighter[caster_fighter_index].fighterAttackSpriteFrame = 2;
 	display_attack_string = true;
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	display_attack_string = false;
 	fullblit(double_buffer, back);
 	play_effect(22, 128);
@@ -323,7 +323,7 @@ void draw_castersprite(size_t caster_fighter_index, int new_pal_color)
 		{
 			dx = fighter[caster_fighter_index].fighterImageDatafileX + (fighter[caster_fighter_index].fighterImageDatafileWidth / 2);
 			dy = fighter[caster_fighter_index].fighterImageDatafileY + (fighter[caster_fighter_index].fighterImageDatafileHeight / 2);
-			gCombat.draw_fighter(caster_fighter_index, 0);
+			kqCombat.draw_fighter(caster_fighter_index, 0);
 			masked_blit(cs, double_buffer, 0, frame_index * 32, dx - 16, dy - 16, 32, 32);
 		}
 		kqDraw.blit2screen(0, 0);
@@ -349,12 +349,12 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy, size_t effect_
 	else
 	{
 		start_fighter_index = MAX_PARTY_SIZE;
-		num_fighters = gCombat.num_enemies;
+		num_fighters = kqCombat.num_enemies;
 	}
-	gCombat.fighterImageDatafileX = -1;
-	gCombat.fighterImageDatafileY = -1;
+	kqCombat.fighterImageDatafileX = -1;
+	kqCombat.fighterImageDatafileY = -1;
 	display_attack_string = true;
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	display_attack_string = false;
 	fullblit(double_buffer, back);
 	play_effect(eff[effect_index].snd, 128);
@@ -374,7 +374,7 @@ void draw_hugesprite(size_t target_fighter_index, int hx, int hy, size_t effect_
 					    fighter[fighter_index].fighterImageDatafileX + (fighter[fighter_index].fighterImageDatafileWidth / 2) - 24,
 					    fighter[fighter_index].fighterImageDatafileY + (fighter[fighter_index].fighterImageDatafileHeight / 2) - 24);
 				}
-				gCombat.draw_fighter(fighter_index, 0);
+				kqCombat.draw_fighter(fighter_index, 0);
 			}
 		}
 		if (eff[effect_index].orient == 1)
@@ -406,7 +406,7 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target, size_t e
 		else
 		{
 			start_fighter_index = MAX_PARTY_SIZE;
-			num_fighers = gCombat.num_enemies;
+			num_fighers = kqCombat.num_enemies;
 		}
 	}
 	else
@@ -414,10 +414,10 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target, size_t e
 		start_fighter_index = target_fighter_index;
 		num_fighers = 1;
 	}
-	gCombat.fighterImageDatafileX = -1;
-	gCombat.fighterImageDatafileY = -1;
+	kqCombat.fighterImageDatafileX = -1;
+	kqCombat.fighterImageDatafileY = -1;
 	display_attack_string = true;
-	gCombat.battle_render(0, 0, 0);
+	kqCombat.battle_render(0, 0, 0);
 	display_attack_string = false;
 	fullblit(double_buffer, back);
 	play_effect(eff[effect_index].snd, 128);
@@ -440,7 +440,7 @@ void draw_spellsprite(size_t target_fighter_index, int multiple_target, size_t e
 					dy = fighter[fighter_index].fighterImageDatafileY + eff[effect_index].ysize;
 					break;
 				}
-				gCombat.draw_fighter(fighter_index, 0);
+				kqCombat.draw_fighter(fighter_index, 0);
 				if (shows == 1 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] > 0)
 				{
 					draw_trans_sprite(double_buffer, b_shell,

@@ -22,7 +22,7 @@ static struct console_state
 	char inputline[80];
 	int cursor;
 	int on;
-} g_console;
+} kqConsole;
 
 enum eRunConsoleKeys
 {
@@ -43,11 +43,11 @@ void init_console()
 {
 	size_t console_line;
 
-	g_console.cursor = 0;
-	g_console.on = 0;
+	kqConsole.cursor = 0;
+	kqConsole.on = 0;
 	for (console_line = 0; console_line < CONSOLE_LINES; ++console_line)
 	{
-		g_console.lines[console_line] = nullptr;
+		kqConsole.lines[console_line] = nullptr;
 	}
 }
 
@@ -65,7 +65,7 @@ void display_console(uint32_t xofs, uint32_t yofs)
 	uint32_t i, y;
 	uint32_t max_y = yofs + 120;
 
-	if (g_console.on != 1)
+	if (kqConsole.on != 1)
 	{
 		return;
 	}
@@ -75,15 +75,15 @@ void display_console(uint32_t xofs, uint32_t yofs)
 	i = CONSOLE_LINES - 1;
 	while (y > max_y)
 	{
-		if (g_console.lines[i])
+		if (kqConsole.lines[i])
 		{
-			kqDraw.print_font(double_buffer, xofs, y, g_console.lines[i], eFontColor::FONTCOLOR_GREEN);
+			kqDraw.print_font(double_buffer, xofs, y, kqConsole.lines[i], eFontColor::FONTCOLOR_GREEN);
 		}
 		y -= text_height(font);
 		--i;
 	}
-	kqDraw.print_font(double_buffer, xofs, yofs + 240 - 8, g_console.inputline, eFontColor::FONTCOLOR_NORMAL);
-	rectfill(double_buffer, xofs + text_length(font, g_console.inputline), yofs + 238, xofs + text_length(font, g_console.inputline) + text_length(font, "_"), yofs + 240, makecol(192, 192, 192));
+	kqDraw.print_font(double_buffer, xofs, yofs + 240 - 8, kqConsole.inputline, eFontColor::FONTCOLOR_NORMAL);
+	rectfill(double_buffer, xofs + text_length(font, kqConsole.inputline), yofs + 238, xofs + text_length(font, kqConsole.inputline) + text_length(font, "_"), yofs + 240, makecol(192, 192, 192));
 }
 
 /*! \brief Display a line on the console
@@ -100,12 +100,12 @@ void scroll_console(const char* l)
 	{
 		return;
 	}
-	free(g_console.lines[0]);
+	free(kqConsole.lines[0]);
 	for (i = 0; i < CONSOLE_LINES - 1; ++i)
 	{
-		g_console.lines[i] = g_console.lines[i + 1];
+		kqConsole.lines[i] = kqConsole.lines[i + 1];
 	}
-	g_console.lines[CONSOLE_LINES - 1] = strcpy((char*)malloc(strlen(l) + 1), l);
+	kqConsole.lines[CONSOLE_LINES - 1] = strcpy((char*)malloc(strlen(l) + 1), l);
 }
 
 /* \brief Enter console mode
@@ -124,8 +124,8 @@ void run_console()
 	static const char ret[] = "return ";
 	static const char set[] = "set_progress(P_";
 
-	g_console.inputline[0] = '\0';
-	g_console.on = 1;
+	kqConsole.inputline[0] = '\0';
+	kqConsole.on = 1;
 
 	/* Wait for all keys up */
 	while (keypressed())
@@ -135,7 +135,7 @@ void run_console()
 	running = 1;
 	while (running == 1)
 	{
-		sl = strlen(g_console.inputline);
+		sl = strlen(kqConsole.inputline);
 
 		/* Get a key */
 		while (!keypressed())
@@ -153,67 +153,67 @@ void run_console()
 			{
 				/* Stop when blank line is entered */
 				running = 0;
-				g_console.on = 0;
+				kqConsole.on = 0;
 			}
 			else
 			{
-				g_console.on = 0;
-				scroll_console(g_console.inputline);
-				do_console_command(g_console.inputline);
-				g_console.inputline[0] = '\0';
-				g_console.on = 1;
+				kqConsole.on = 0;
+				scroll_console(kqConsole.inputline);
+				do_console_command(kqConsole.inputline);
+				kqConsole.inputline[0] = '\0';
+				kqConsole.on = 1;
 			}
 			break;
 
 		case RUNKEY_DELETE: /* delete */
-			if (strlen(g_console.inputline) > 0)
+			if (strlen(kqConsole.inputline) > 0)
 			{
-				g_console.inputline[sl - 1] = '\0';
+				kqConsole.inputline[sl - 1] = '\0';
 			}
 			break;
 
 		case RUNKEY_CTRL_G: /* ctrl g */
-			do_console_command(g_console.inputline);
+			do_console_command(kqConsole.inputline);
 
 			string_len = strlen(get);
 			for (i = 0; i < string_len; i++)
 			{
-				g_console.inputline[i] = get[i];
+				kqConsole.inputline[i] = get[i];
 			}
 			break;
 
 		case RUNKEY_BACKSPACE: /* backspace */
-			if (strlen(g_console.inputline) > 0)
+			if (strlen(kqConsole.inputline) > 0)
 			{
-				g_console.inputline[sl - 1] = '\0';
+				kqConsole.inputline[sl - 1] = '\0';
 			}
 			break;
 
 		case RUNKEY_CTRL_R: /* ctrl r */
-			do_console_command(g_console.inputline);
+			do_console_command(kqConsole.inputline);
 
 			string_len = strlen(ret);
 			for (i = 0; i < string_len; i++)
 			{
-				g_console.inputline[i] = ret[i];
+				kqConsole.inputline[i] = ret[i];
 			}
 			break;
 
 		case RUNKEY_CTRL_S: /* ctrl s */
-			do_console_command(g_console.inputline);
+			do_console_command(kqConsole.inputline);
 
 			string_len = strlen(set);
 			for (i = 0; i < string_len; i++)
 			{
-				g_console.inputline[i] = set[i];
+				kqConsole.inputline[i] = set[i];
 			}
 			break;
 
 		default:
-			if (strlen(g_console.inputline) < sizeof(g_console.inputline) - 1)
+			if (strlen(kqConsole.inputline) < sizeof(kqConsole.inputline) - 1)
 			{
-				g_console.inputline[sl] = c & 0xff;
-				g_console.inputline[sl + 1] = '\0';
+				kqConsole.inputline[sl] = c & 0xff;
+				kqConsole.inputline[sl + 1] = '\0';
 			}
 			break;
 		}

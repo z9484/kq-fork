@@ -25,4 +25,4 @@ void KAnimation::clear_animations()
 	animations.clear();
 }
 
-KAnimation Animation;
+KAnimation kqAnimation;

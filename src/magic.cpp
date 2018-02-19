@@ -92,7 +92,7 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 	if (caster_fighter_index < MAX_PARTY_SIZE)
 	{
 		start_fighter_index = MAX_PARTY_SIZE;
-		end_fighter_index = gCombat.num_enemies;
+		end_fighter_index = kqCombat.num_enemies;
 	}
 	else
 	{
@@ -101,7 +101,7 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 	}
 	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 	{
-        gCombat.ta[fighter_index] = NODISPLAY;
+        kqCombat.ta[fighter_index] = NODISPLAY;
 	}
 	sp_hit = magic[spell_number].hit;
 	switch (spell_number)
@@ -120,24 +120,24 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 					if (fighter[fighter_index].fighterSpellEffectStats[S_TIME] == 0)
 					{
 						fighter[fighter_index].fighterSpellEffectStats[S_TIME] = 1;
-                        gCombat.ta[fighter_index] = NODISPLAY;
+                        kqCombat.ta[fighter_index] = NODISPLAY;
 					}
 					else
 					{
-                        gCombat.ta[fighter_index] = MISS;
+                        kqCombat.ta[fighter_index] = MISS;
 					}
 				}
 			}
 			else
 			{
-                gCombat.ta[fighter_index] = MISS;
+                kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
 	case M_VISION:
-        gCombat.vspell = 1;
+        kqCombat.vspell = 1;
         kqDraw.do_transition(TRANS_FADE_OUT, 2);
-        gCombat.battle_render(0, 0, 0);
+        kqCombat.battle_render(0, 0, 0);
 		kqDraw.blit2screen(0, 0);
         kqDraw.do_transition(TRANS_FADE_IN, 2);
 		break;
@@ -147,11 +147,11 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 			if (non_dmg_save(fighter_index, sp_hit) == 0 && fighter[fighter_index].fighterSpellEffectStats[S_MALISON] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[S_MALISON] = 2;
-                gCombat.ta[fighter_index] = NODISPLAY;
+                kqCombat.ta[fighter_index] = NODISPLAY;
 			}
 			else
 			{
-                gCombat.ta[fighter_index] = MISS;
+                kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
@@ -161,11 +161,11 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 			if (res_throw(fighter_index, magic[spell_number].elem) == 0 && non_dmg_save(fighter_index, sp_hit) == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] = kqrandom->random_range_exclusive(4, 6);
-                gCombat.ta[fighter_index] = NODISPLAY;
+                kqCombat.ta[fighter_index] = NODISPLAY;
 			}
 			else
 			{
-                gCombat.ta[fighter_index] = MISS;
+                kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
@@ -185,15 +185,15 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 	int r, a = 0, sp_hit;
 	size_t stats_index;
 
-    gCombat.ta[target_fighter_index] = NODISPLAY;
+    kqCombat.ta[target_fighter_index] = NODISPLAY;
 	if (fighter[target_fighter_index].fighterSpellEffectStats[S_STONE] > 0)
 	{
-        gCombat.ta[target_fighter_index] = MISS;
+        kqCombat.ta[target_fighter_index] = MISS;
 		return;
 	}
 	if (res_throw(target_fighter_index, magic[spell_number].elem) == 1)
 	{
-        gCombat.ta[target_fighter_index] = MISS;
+        kqCombat.ta[target_fighter_index] = MISS;
 		return;
 	}
 	sp_hit = magic[spell_number].hit;
@@ -206,7 +206,7 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-            gCombat.ta[target_fighter_index] = MISS;
+            kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_CONFUSE:
@@ -216,7 +216,7 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-            gCombat.ta[target_fighter_index] = MISS;
+            kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_STONE:
@@ -233,7 +233,7 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-            gCombat.ta[target_fighter_index] = MISS;
+            kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_DIFFUSE:
@@ -267,12 +267,12 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 			}
 			if (r == 0)
 			{
-				gCombat.ta[target_fighter_index] = MISS;
+				kqCombat.ta[target_fighter_index] = MISS;
 			}
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_HOLD:
@@ -282,7 +282,7 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_SILENCE:
@@ -292,7 +292,7 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_SLEEP:
@@ -302,12 +302,12 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_ABSORB:
 		spell_damage(caster_fighter_index, spell_number, target_fighter_index, 1);
-		r = gCombat.ta[target_fighter_index];
+		r = kqCombat.ta[target_fighter_index];
 		if (non_dmg_save(target_fighter_index, sp_hit) == 1)
 		{
 			r = r / 2;
@@ -316,12 +316,12 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		{
 			r = 0 - fighter[target_fighter_index].fighterMagic;
 		}
-		gCombat.ta[target_fighter_index] = r;
-		gCombat.ta[caster_fighter_index] = 0 - r;
+		kqCombat.ta[target_fighter_index] = r;
+		kqCombat.ta[caster_fighter_index] = 0 - r;
 		break;
 	case M_DRAIN:
 		spell_damage(caster_fighter_index, spell_number, target_fighter_index, 1);
-		r = gCombat.ta[target_fighter_index];
+		r = kqCombat.ta[target_fighter_index];
 		if (non_dmg_save(target_fighter_index, sp_hit) == 1)
 		{
 			r = r / 2;
@@ -332,8 +332,8 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 			{
 				r = 0 - fighter[caster_fighter_index].fighterHealth;
 			}
-			gCombat.ta[target_fighter_index] = 0 - r;
-			gCombat.ta[caster_fighter_index] = r;
+			kqCombat.ta[target_fighter_index] = 0 - r;
+			kqCombat.ta[caster_fighter_index] = r;
 		}
 		else
 		{
@@ -341,8 +341,8 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 			{
 				r = 0 - fighter[target_fighter_index].fighterHealth;
 			}
-			gCombat.ta[target_fighter_index] = r;
-			gCombat.ta[caster_fighter_index] = 0 - r;
+			kqCombat.ta[target_fighter_index] = r;
+			kqCombat.ta[caster_fighter_index] = 0 - r;
 		}
 		break;
 	case M_DOOM:
@@ -357,22 +357,22 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 			{
 				a = fighter[target_fighter_index].fighterHealth - 1;
 			}
-			gCombat.ta[target_fighter_index] = 0 - a;
+			kqCombat.ta[target_fighter_index] = 0 - a;
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_DEATH:
 		if (non_dmg_save(target_fighter_index, sp_hit) == 0)
 		{
 			a = fighter[target_fighter_index].fighterHealth;
-			gCombat.ta[target_fighter_index] = 0 - a;
+			kqCombat.ta[target_fighter_index] = 0 - a;
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_NAUSEA:
@@ -382,7 +382,7 @@ static void beffect_one_enemy(size_t caster_fighter_index, size_t target_fighter
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	}
@@ -462,7 +462,7 @@ int cast_spell(size_t caster_fighter_index, int is_item)
 				/*  DS: The spell fail, so set gCombat.ta[target] to MISS */
 				if (tgt != SEL_ALL_ALLIES)
 				{
-					gCombat.ta[tgt] = MISS;
+					kqCombat.ta[tgt] = MISS;
 				}
 				else
 				{
@@ -475,12 +475,12 @@ int cast_spell(size_t caster_fighter_index, int is_item)
 					}
 					else
 					{
-						end_fighter_index = gCombat.num_enemies;
+						end_fighter_index = kqCombat.num_enemies;
 						start_fighter_index = MAX_PARTY_SIZE;
 					}
 					for (i = start_fighter_index; i < end_fighter_index; i++)
 					{
-						gCombat.ta[i] = MISS;
+						kqCombat.ta[i] = MISS;
 					}
 				}
 
@@ -575,7 +575,7 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 			}
 			else
 			{
-				end_fighter_index = gCombat.num_enemies;
+				end_fighter_index = kqCombat.num_enemies;
 				start_fighter_index = MAX_PARTY_SIZE;
 			}
 		}
@@ -587,7 +587,7 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 			tall = 1;
 			if (caster_fighter_index < MAX_PARTY_SIZE)
 			{
-				end_fighter_index = gCombat.num_enemies;
+				end_fighter_index = kqCombat.num_enemies;
 				start_fighter_index = MAX_PARTY_SIZE;
 			}
 			else
@@ -654,36 +654,36 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 	{
 		if (spell_number == M_ABSORB)
 		{
-			if (gCombat.ta[tgt] <= 0)
+			if (kqCombat.ta[tgt] <= 0)
 			{
 				display_amount(tgt, eFont::FONT_RED, 0);
-				adjust_mp(tgt, gCombat.ta[tgt]);
+				adjust_mp(tgt, kqCombat.ta[tgt]);
 				display_amount(caster_fighter_index, eFont::FONT_GREEN, 0);
-				adjust_mp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
+				adjust_mp(caster_fighter_index, kqCombat.ta[caster_fighter_index]);
 			}
 			else
 			{
 				display_amount(caster_fighter_index, eFont::FONT_RED, 0);
-				adjust_mp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
+				adjust_mp(caster_fighter_index, kqCombat.ta[caster_fighter_index]);
 				display_amount(tgt, eFont::FONT_GREEN, 0);
-				adjust_mp(tgt, gCombat.ta[tgt]);
+				adjust_mp(tgt, kqCombat.ta[tgt]);
 			}
 		}
 		else
 		{
-			if (gCombat.ta[tgt] <= 0)
+			if (kqCombat.ta[tgt] <= 0)
 			{
 				display_amount(tgt, eFont::FONT_WHITE, 0);
-				adjust_hp(tgt, gCombat.ta[tgt]);
+				adjust_hp(tgt, kqCombat.ta[tgt]);
 				display_amount(caster_fighter_index, eFont::FONT_YELLOW, 0);
-				adjust_hp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
+				adjust_hp(caster_fighter_index, kqCombat.ta[caster_fighter_index]);
 			}
 			else
 			{
 				display_amount(caster_fighter_index, eFont::FONT_WHITE, 0);
-				adjust_hp(caster_fighter_index, gCombat.ta[caster_fighter_index]);
+				adjust_hp(caster_fighter_index, kqCombat.ta[caster_fighter_index]);
 				display_amount(tgt, eFont::FONT_YELLOW, 0);
-				adjust_hp(tgt, gCombat.ta[tgt]);
+				adjust_hp(tgt, kqCombat.ta[tgt]);
 			}
 		}
 	}
@@ -694,7 +694,7 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 			b = 0;
 			for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 			{
-				if (gCombat.ta[fighter_index] == MISS)
+				if (kqCombat.ta[fighter_index] == MISS)
 				{
 					b++;
 				}
@@ -709,7 +709,7 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 			display_amount(start_fighter_index, eFont::FONT_DECIDE, tall);
 			for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 			{
-				adjust_hp(fighter_index, gCombat.ta[fighter_index]);
+				adjust_hp(fighter_index, kqCombat.ta[fighter_index]);
 			}
 		}
 	}
@@ -718,13 +718,13 @@ int combat_spell(size_t caster_fighter_index, int is_item)
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth <= 0)
 		{
-            gCombat.fkill(fighter_index);
-			gCombat.ta[fighter_index] = 1;
+            kqCombat.fkill(fighter_index);
+			kqCombat.ta[fighter_index] = 1;
 			b++;
 		}
 		else
 		{
-			gCombat.ta[fighter_index] = 0;
+			kqCombat.ta[fighter_index] = 0;
 		}
 	}
 	if (b > 0)
@@ -758,7 +758,7 @@ static void cure_oneall_allies(size_t caster_fighter_index, int tgt, size_t spel
 		}
 		else
 		{
-			end_fighter_index = gCombat.num_enemies;
+			end_fighter_index = kqCombat.num_enemies;
 			start_fighter_index = MAX_PARTY_SIZE;
 		}
 	}
@@ -808,8 +808,8 @@ static void cure_oneall_allies(size_t caster_fighter_index, int tgt, size_t spel
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 		{
-			gCombat.ta[fighter_index] = b;
-			gCombat.ta[fighter_index] = do_shell_check(fighter_index, gCombat.ta[fighter_index]);
+			kqCombat.ta[fighter_index] = b;
+			kqCombat.ta[fighter_index] = do_shell_check(fighter_index, kqCombat.ta[fighter_index]);
 		}
 	}
 }
@@ -828,7 +828,7 @@ static void damage_all_enemies(size_t caster_fighter_index, size_t spell_number)
 	if (caster_fighter_index < MAX_PARTY_SIZE)
 	{
 		start_fighter_index = MAX_PARTY_SIZE;
-		end_fighter_index = gCombat.num_enemies;
+		end_fighter_index = kqCombat.num_enemies;
 	}
 	else
 	{
@@ -854,7 +854,7 @@ static void damage_oneall_enemies(size_t caster_fighter_index, int tgt, size_t s
 	{
 		if (caster_fighter_index < MAX_PARTY_SIZE)
 		{
-			end_fighter_index = gCombat.num_enemies;
+			end_fighter_index = kqCombat.num_enemies;
 			start_fighter_index = MAX_PARTY_SIZE;
 		}
 		else
@@ -945,14 +945,14 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 	}
 	else
 	{
-		end_fighter_index = gCombat.num_enemies;
+		end_fighter_index = kqCombat.num_enemies;
 		start_fighter_index = MAX_PARTY_SIZE;
 	}
 	if (kqrandom->random_range_exclusive(1, 101) > fighter[caster_fighter_index].fighterStats[A_AUR + magic[spell_number].stat])
 	{
 		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 		{
-			gCombat.ta[fighter_index] = MISS;
+			kqCombat.ta[fighter_index] = MISS;
 		}
 		return;
 	}
@@ -971,11 +971,11 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 				fighter[fighter_index].fighterHealth += fighter_hp;
 				fighter[fighter_index].fighterMaxHealth += fighter_hp;
 				fighter[fighter_index].fighterSpellEffectStats[S_BLESS]++;
-				gCombat.ta[fighter_index] = NODISPLAY;
+				kqCombat.ta[fighter_index] = NODISPLAY;
 			}
 			else
 			{
-				gCombat.ta[fighter_index] = MISS;
+				kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
@@ -985,11 +985,11 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 			if (fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] < 2)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] = 2;
-				gCombat.ta[fighter_index] = NODISPLAY;
+				kqCombat.ta[fighter_index] = NODISPLAY;
 			}
 			else
 			{
-				gCombat.ta[fighter_index] = MISS;
+				kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
@@ -1009,7 +1009,7 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 			}
 			else
 			{
-				gCombat.ta[fighter_index] = MISS;
+				kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
@@ -1025,12 +1025,12 @@ static void geffect_all_allies(size_t caster_fighter_index, size_t spell_number)
 				else
 				{
 					fighter[fighter_index].fighterSpellEffectStats[S_TIME] = 2;
-					gCombat.ta[fighter_index] = NODISPLAY;
+					kqCombat.ta[fighter_index] = NODISPLAY;
 				}
 			}
 			else
 			{
-				gCombat.ta[fighter_index] = MISS;
+				kqCombat.ta[fighter_index] = MISS;
 			}
 		}
 		break;
@@ -1061,7 +1061,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_THROUGH:
@@ -1071,7 +1071,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_REGENERATE:
@@ -1081,7 +1081,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_HOLYMIGHT:
@@ -1091,7 +1091,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_SHELL:
@@ -1101,7 +1101,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_WALL:
@@ -1111,7 +1111,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_SHIELD:
@@ -1121,7 +1121,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_HASTEN:
@@ -1138,7 +1138,7 @@ static void geffect_one_ally(size_t target_fighter_index, size_t spell_number)
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	}
@@ -1188,7 +1188,7 @@ static void heal_one_ally(size_t caster_fighter_index, size_t target_fighter_ind
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	case M_FULLLIFE:
@@ -1203,7 +1203,7 @@ static void heal_one_ally(size_t caster_fighter_index, size_t target_fighter_ind
 		}
 		else
 		{
-			gCombat.ta[target_fighter_index] = MISS;
+			kqCombat.ta[target_fighter_index] = MISS;
 		}
 		break;
 	}
@@ -1343,7 +1343,7 @@ int res_throw(int tgt, int rs)
  */
 static void set_timed_sts_effect(size_t fighter_index, int ss)
 {
-	fighter[fighter_index].fighterSpellEffectStats[ss] = gCombat.rcount + 1;
+	fighter[fighter_index].fighterSpellEffectStats[ss] = kqCombat.rcount + 1;
 }
 
 /*! \brief Special damage on one or all enemies
@@ -1370,8 +1370,8 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
 		{
 			/* Enemies are the monsters; you are attacking */
 			first_target = MAX_PARTY_SIZE;
-			last_target = gCombat.num_enemies;
-			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
+			last_target = kqCombat.num_enemies;
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -1440,7 +1440,7 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
 			{
 				b /= 10;
 			}
-			gCombat.ta[fighter_index] = 0 - b;
+			kqCombat.ta[fighter_index] = 0 - b;
 			if (b < 0 && rune_type == R_POISON)
 			{
 				if (!res_throw(fighter_index, rune_type) && !non_dmg_save(fighter_index, 75))
@@ -1448,22 +1448,22 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
 					set_timed_sts_effect(fighter_index, S_POISON);
 				}
 			}
-			if (gCombat.ta[fighter_index] != 0)
+			if (kqCombat.ta[fighter_index] != 0)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] = 0;
 			}
 		}
 		else
 		{
-			gCombat.ta[fighter_index] = 0;
+			kqCombat.ta[fighter_index] = 0;
 		}
 	}
 	display_amount(first_target, eFont::FONT_DECIDE, multiple_targets);
 	for (fighter_index = first_target; fighter_index < first_target + last_target; fighter_index++)
 	{
-		if (gCombat.ta[fighter_index] != MISS)
+		if (kqCombat.ta[fighter_index] != MISS)
 		{
-			adjust_hp(fighter_index, gCombat.ta[fighter_index]);
+			adjust_hp(fighter_index, kqCombat.ta[fighter_index]);
 		}
 	}
 	b = 0;
@@ -1471,13 +1471,13 @@ void special_damage_oneall_enemies(size_t caster_index, int spell_dmg, int rune_
 	{
 		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth <= 0)
 		{
-            gCombat.fkill(fighter_index);
-			gCombat.ta[fighter_index] = 1;
+            kqCombat.fkill(fighter_index);
+			kqCombat.ta[fighter_index] = 1;
 			b++;
 		}
 		else
 		{
-			gCombat.ta[fighter_index] = 0;
+			kqCombat.ta[fighter_index] = 0;
 		}
 	}
 	if (b > 0)
@@ -1504,8 +1504,8 @@ static void special_spells(size_t caster_fighter_index, size_t spell_number)
 	{
 	case M_VISION:
         kqDraw.do_transition(TRANS_FADE_OUT, 2);
-		gCombat.vspell = 1;
-		gCombat.battle_render(0, 0, 0);
+		kqCombat.vspell = 1;
+		kqCombat.battle_render(0, 0, 0);
 		kqDraw.blit2screen(0, 0);
         kqDraw.do_transition(TRANS_FADE_IN, 2);
 		break;
@@ -1517,7 +1517,7 @@ static void special_spells(size_t caster_fighter_index, size_t spell_number)
 			kqDraw.drawmap();
 			kqDraw.blit2screen(xofs, yofs);
             kqDraw.do_transition(TRANS_FADE_IN, 2);
-            gCombat.combatend = ESCAPED_COMBAT;
+            kqCombat.combatend = ESCAPED_COMBAT;
 		}
 		else
 		{
@@ -1561,7 +1561,7 @@ static void spell_damage(size_t caster_fighter_index, int spell_number, size_t s
 	{
 		if (caster_fighter_index < MAX_PARTY_SIZE)
 		{
-			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + gCombat.num_enemies; fighter_index++)
+			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 			{
 				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
 				{
@@ -1628,7 +1628,7 @@ static void spell_damage(size_t caster_fighter_index, int spell_number, size_t s
 			{
 				b = b / 10;
 			}
-			gCombat.ta[fighter_index] = 0 - b;
+			kqCombat.ta[fighter_index] = 0 - b;
 			if (b < 0 && rt == R_POISON)
 			{
 				if (!res_throw(fighter_index, rt) && !non_dmg_save(fighter_index, magic[spell_number].hit))
@@ -1636,14 +1636,14 @@ static void spell_damage(size_t caster_fighter_index, int spell_number, size_t s
 					set_timed_sts_effect(fighter_index, S_POISON);
 				}
 			}
-			if (gCombat.ta[fighter_index] != 0)
+			if (kqCombat.ta[fighter_index] != 0)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] = 0;
 			}
 		}
 		else
 		{
-			gCombat.ta[fighter_index] = 0;
+			kqCombat.ta[fighter_index] = 0;
 		}
 	}
 }

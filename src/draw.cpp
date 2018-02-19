@@ -202,7 +202,7 @@ void KDraw::convert_cframes(size_t fighter_index, int output_range_start, int ou
 		else
 		{
 			start_fighter_index = MAX_PARTY_SIZE;
-			end_fighter_index = MAX_PARTY_SIZE + gCombat.num_enemies;
+			end_fighter_index = MAX_PARTY_SIZE + kqCombat.num_enemies;
 		}
 	}
 	else
@@ -1772,7 +1772,7 @@ void KDraw::revert_cframes(size_t fighter_index, int revert_heroes)
 		else
 		{
 			start_fighter_index = MAX_PARTY_SIZE;
-			end_fighter_index = MAX_PARTY_SIZE + gCombat.num_enemies;
+			end_fighter_index = MAX_PARTY_SIZE + kqCombat.num_enemies;
 		}
 	}
 	else

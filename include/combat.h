@@ -265,4 +265,4 @@ private:
 };
 
 // Global
-extern KCombat gCombat;
+extern KCombat kqCombat;
