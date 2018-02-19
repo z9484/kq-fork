@@ -404,8 +404,8 @@ void KGame::activate()
 			g_ent[p - 1].facing = target_char_facing;
 		}
 
-		kDraw.drawmap();
-		kDraw.blit2screen(xofs, yofs);
+		kqDraw.drawmap();
+		kqDraw.blit2screen(xofs, yofs);
 
 		zx = abs(g_ent[p - 1].x - g_ent[0].x);
 		zy = abs(g_ent[p - 1].y - g_ent[0].y);
@@ -914,8 +914,8 @@ void KGame::kwait(int dtime)
 		}
 		Game.do_check_animation();
 
-		kDraw.drawmap();
-		kDraw.blit2screen(xofs, yofs);
+		kqDraw.drawmap();
+		kqDraw.blit2screen(xofs, yofs);
 #ifdef DEBUGMODE
 		if (debugging > 0)
 		{
@@ -1040,8 +1040,8 @@ int main(int argc, const char* argv[])
                     kEntity.process_entities();
 				}
 				Game.do_check_animation();
-				kDraw.drawmap();
-				kDraw.blit2screen(xofs, yofs);
+				kqDraw.drawmap();
+				kqDraw.blit2screen(xofs, yofs);
 				Music.poll_music();
 
 				if (key[PlayerInput.kesc])
@@ -1061,7 +1061,7 @@ int main(int argc, const char* argv[])
 				if (alldead)
 				{
 					clear(screen);
-                    kDraw.do_transition(TRANS_FADE_IN, 16);
+                    kqDraw.do_transition(TRANS_FADE_IN, 16);
 					stop = 1;
 				}
 			}
@@ -1227,7 +1227,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 		g_ent[i].delayctr = 0;
 	}
 
-	kDraw.set_view(0, 0, 0, 0, 0);
+	kqDraw.set_view(0, 0, 0, 0, 0);
 
 	if (g_map.map_desc.length() > 0)
 	{
@@ -1244,9 +1244,9 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 	if (hold_fade == 0 && numchrs > 0)
 	{
-		kDraw.drawmap();
-		kDraw.blit2screen(xofs, yofs);
-        kDraw.do_transition(TRANS_FADE_IN, 4);
+		kqDraw.drawmap();
+		kqDraw.blit2screen(xofs, yofs);
+        kqDraw.do_transition(TRANS_FADE_IN, 4);
 	}
 
 	use_sstone = g_map.use_sstone;
@@ -1573,8 +1573,8 @@ void KGame::wait_for_entity(size_t first_entity_index, size_t last_entity_index)
 		}
 		Music.poll_music();
 		Game.do_check_animation();
-		kDraw.drawmap();
-		kDraw.blit2screen(xofs, yofs);
+		kqDraw.drawmap();
+		kqDraw.blit2screen(xofs, yofs);
 
 		if (key[KEY_W] && key[KEY_ALT])
 		{
@@ -1607,7 +1607,7 @@ void KGame::warp(int wtx, int wty, int fspeed)
 
 	if (hold_fade == 0)
 	{
-        kDraw.do_transition(TRANS_FADE_OUT, fspeed);
+        kqDraw.do_transition(TRANS_FADE_OUT, fspeed);
 	}
 
 	if (numchrs == 0)
@@ -1631,12 +1631,12 @@ void KGame::warp(int wtx, int wty, int fspeed)
 	camera_viewport_y = wty * TILE_H;
 
 	calc_viewport();
-	kDraw.drawmap();
-	kDraw.blit2screen(xofs, yofs);
+	kqDraw.drawmap();
+	kqDraw.blit2screen(xofs, yofs);
 
 	if (hold_fade == 0)
 	{
-        kDraw.do_transition(TRANS_FADE_IN, fspeed);
+        kqDraw.do_transition(TRANS_FADE_IN, fspeed);
 	}
 
 	timer_count = 0;
@@ -1669,7 +1669,7 @@ void KGame::zone_check() const
 
 		if (save_spells[P_REPULSE] < 1)
 		{
-			kDraw.message(_("Repulse has worn off!"), 255, 0, xofs, yofs);
+			kqDraw.message(_("Repulse has worn off!"), 255, 0, xofs, yofs);
 		}
 	}
 

@@ -77,7 +77,7 @@ void KTiledMap::load_tmx(const std::string& name)
 	Game.reset_timer_events();
 	if (hold_fade == 0)
 	{
-		kDraw.do_transition(TRANS_FADE_OUT, 4);
+		kqDraw.do_transition(TRANS_FADE_OUT, 4);
 	}
 
 	auto loaded_map = load_tmx_map(tmx.RootElement());

@@ -136,10 +136,10 @@ static void beffect_all_enemies(size_t caster_fighter_index, size_t spell_number
 		break;
 	case M_VISION:
         gCombat.vspell = 1;
-        kDraw.do_transition(TRANS_FADE_OUT, 2);
+        kqDraw.do_transition(TRANS_FADE_OUT, 2);
         gCombat.battle_render(0, 0, 0);
-		kDraw.blit2screen(0, 0);
-        kDraw.do_transition(TRANS_FADE_IN, 2);
+		kqDraw.blit2screen(0, 0);
+        kqDraw.do_transition(TRANS_FADE_IN, 2);
 		break;
 	case M_MALISON:
 		for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
@@ -1503,20 +1503,20 @@ static void special_spells(size_t caster_fighter_index, size_t spell_number)
 	switch (spell_number)
 	{
 	case M_VISION:
-        kDraw.do_transition(TRANS_FADE_OUT, 2);
+        kqDraw.do_transition(TRANS_FADE_OUT, 2);
 		gCombat.vspell = 1;
 		gCombat.battle_render(0, 0, 0);
-		kDraw.blit2screen(0, 0);
-        kDraw.do_transition(TRANS_FADE_IN, 2);
+		kqDraw.blit2screen(0, 0);
+        kqDraw.do_transition(TRANS_FADE_IN, 2);
 		break;
 	case M_WARP:
 		if (in_combat == 1)
 		{
-            kDraw.do_transition(TRANS_FADE_OUT, 2);
+            kqDraw.do_transition(TRANS_FADE_OUT, 2);
 			revert_equipstats();
-			kDraw.drawmap();
-			kDraw.blit2screen(xofs, yofs);
-            kDraw.do_transition(TRANS_FADE_IN, 2);
+			kqDraw.drawmap();
+			kqDraw.blit2screen(xofs, yofs);
+            kqDraw.do_transition(TRANS_FADE_IN, 2);
             gCombat.combatend = ESCAPED_COMBAT;
 		}
 		else

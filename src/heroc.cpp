@@ -183,14 +183,14 @@ void KHero::combat_draw_items(int pg)
 	int a, b, c;
 	eFontColor k;
 
-	kDraw.menubox(double_buffer, 72, 8, 20, 16, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kqDraw.menubox(double_buffer, 72, 8, 20, 16, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (a = 0; a < 16; a++)
 	{
 		// b == item index #
 		b = g_inv[pg * 16 + a].item;
 		// c == quantity of item
 		c = g_inv[pg * 16 + a].quantity;
-		kDraw.draw_icon(double_buffer, items[b].icon, 88, a * 8 + 16);
+		kqDraw.draw_icon(double_buffer, items[b].icon, 88, a * 8 + 16);
 		if (combat_item_usable(b) == 1)
 		{
 			k = eFontColor::FONTCOLOR_NORMAL;
@@ -199,11 +199,11 @@ void KHero::combat_draw_items(int pg)
 		{
 			k = eFontColor::FONTCOLOR_DARK;
 		}
-		kDraw.print_font(double_buffer, 96, a * 8 + 16, items[b].itemName, k);
+		kqDraw.print_font(double_buffer, 96, a * 8 + 16, items[b].itemName, k);
 		if (c > 1)
 		{
 			sprintf(strbuf, "^%d", c);
-			kDraw.print_font(double_buffer, 224, a * 8 + 16, strbuf, k);
+			kqDraw.print_font(double_buffer, 224, a * 8 + 16, strbuf, k);
 		}
 	}
 	draw_sprite(double_buffer, pgb[pg], 238, 142);
@@ -213,24 +213,24 @@ void KHero::combat_draw_spell_menu(int c, int ptr, int pg)
 {
 	int z, j, b;
 
-	kDraw.menubox(double_buffer, 80, 24, 18, 12, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kqDraw.menubox(double_buffer, 80, 24, 18, 12, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (j = 0; j < NUM_SPELLS_PER_PAGE; j++)
 	{
 		z = party[pidx[c]].spells[pg * NUM_SPELLS_PER_PAGE + j];
 		if (z > 0)
 		{
-			kDraw.draw_icon(double_buffer, magic[z].icon, 96, j * 8 + 32);
+			kqDraw.draw_icon(double_buffer, magic[z].icon, 96, j * 8 + 32);
 			if (combat_castable(c, pg * NUM_SPELLS_PER_PAGE + j) == 1)
 			{
-				kDraw.print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, eFontColor::FONTCOLOR_NORMAL);
+				kqDraw.print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, eFontColor::FONTCOLOR_NORMAL);
 			}
 			else
 			{
-				kDraw.print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, eFontColor::FONTCOLOR_DARK);
+				kqDraw.print_font(double_buffer, 104, j * 8 + 32, magic[z].spellName, eFontColor::FONTCOLOR_DARK);
 			}
 			b = mp_needed(c, z);
 			sprintf(strbuf, "%d", b);
-			kDraw.print_font(double_buffer, 222 - (strlen(strbuf) * 8), j * 8 + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.print_font(double_buffer, 222 - (strlen(strbuf) * 8), j * 8 + 32, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			draw_sprite(double_buffer, b_mp, 222, j * 8 + 32);
 		}
 	}
@@ -306,9 +306,9 @@ int KHero::combat_item_menu(int whom)
 		combat_draw_items(pptr);
 		draw_sprite(double_buffer, menuptr, 72, ptr * 8 + 16);
 		/* put description of selected item */
-		kDraw.menubox(double_buffer, 72, 152, 20, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		kDraw.print_font(double_buffer, 80, 160, items[g_inv[ptr + pptr * 16].item].desc, eFontColor::FONTCOLOR_NORMAL);
-		kDraw.blit2screen(0, 0);
+		kqDraw.menubox(double_buffer, 72, 152, 20, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.print_font(double_buffer, 80, 160, items[g_inv[ptr + pptr * 16].item].desc, eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
@@ -417,7 +417,7 @@ int KHero::combat_spell_menu(int c)
 		Game.do_check_animation();
 		fullblit(back, double_buffer);
 		combat_draw_spell_menu(c, ptr, pgno);
-		kDraw.blit2screen(0, 0);
+		kqDraw.blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
 
@@ -545,13 +545,13 @@ void KHero::draw_invokable(int dud)
 	int a, tt;
 	eFontColor grd;
 
-	kDraw.menubox(double_buffer, 72, 80, 20, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kqDraw.menubox(double_buffer, 72, 80, 20, 6, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	for (a = 0; a < NUM_EQUIPMENT; a++)
 	{
 		tt = party[dud].eqp[a];
 		grd = can_invoke_item(tt) ? eFontColor::FONTCOLOR_NORMAL : eFontColor::FONTCOLOR_DARK;
-		kDraw.draw_icon(double_buffer, items[tt].icon, 88, a * 8 + 88);
-		kDraw.print_font(double_buffer, 96, a * 8 + 88, items[tt].itemName, grd);
+		kqDraw.draw_icon(double_buffer, items[tt].icon, 88, a * 8 + 88);
+		kqDraw.print_font(double_buffer, 96, a * 8 + 88, items[tt].itemName, grd);
 	}
 }
 
@@ -584,7 +584,7 @@ int KHero::hero_attack(int whom)
 	gCombat.fighterImageDatafileX = -1;
 	gCombat.fighterImageDatafileY = -1;
 	gCombat.battle_render(0, 0, 0);
-	kDraw.blit2screen(0, 0);
+	kqDraw.blit2screen(0, 0);
 	kq_wait(150);
 	gCombat.fight(whom, tgt, 0);
 	return 1;
@@ -669,10 +669,10 @@ void KHero::hero_choose_action(size_t fighter_index)
 		{
 			amy = 184;
 		}
-		kDraw.menubox(double_buffer, 120, amy, 8, my, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.menubox(double_buffer, 120, amy, 8, my, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		for (ca_index = 0; ca_index < my; ca_index++)
 		{
-			kDraw.print_font(double_buffer, 136, ca_index * 8 + amy + 8, ca[ca_index], eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.print_font(double_buffer, 136, ca_index * 8 + amy + 8, ca[ca_index], eFontColor::FONTCOLOR_NORMAL);
 		}
 		if (sptr == 1)
 		{
@@ -680,15 +680,15 @@ void KHero::hero_choose_action(size_t fighter_index)
 		}
 		if (sptr == 0)
 		{
-			kDraw.menubox(double_buffer, 64, amy, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-			kDraw.print_font(double_buffer, 72, amy + 8, _("Defend"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.menubox(double_buffer, 64, amy, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kqDraw.print_font(double_buffer, 72, amy + 8, _("Defend"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		if (sptr == 2)
 		{
-			kDraw.menubox(double_buffer, 192, amy, 3, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-			kDraw.print_font(double_buffer, 200, amy + 8, _("Run"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.menubox(double_buffer, 192, amy, 3, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kqDraw.print_font(double_buffer, 200, amy + 8, _("Run"), eFontColor::FONTCOLOR_NORMAL);
 		}
-		kDraw.blit2screen(0, 0);
+		kqDraw.blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
@@ -888,7 +888,7 @@ void KHero::hero_init()
 		}
 		for (unsigned int frame_index = 0; frame_index < MAXCFRAMES; frame_index++)
 		{
-			tcframes[fighter_index][frame_index] = kDraw.copy_bitmap(tcframes[fighter_index][frame_index], cframes[fighter_index][frame_index]);
+			tcframes[fighter_index][frame_index] = kqDraw.copy_bitmap(tcframes[fighter_index][frame_index], cframes[fighter_index][frame_index]);
 		}
 
 		fighter[fighter_index].fighterImageDatafileWidth = 32;
@@ -910,7 +910,7 @@ int KHero::hero_invoke(int whom)
 		fullblit(back, double_buffer);
 		draw_invokable(dud);
 		draw_sprite(double_buffer, menuptr, 72, ptr * 8 + 88);
-		kDraw.blit2screen(0, 0);
+		kqDraw.blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
@@ -1089,9 +1089,9 @@ void KHero::hero_run()
 	}
 	else
 	{
-		kDraw.menubox(double_buffer, 84, 32, 17, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		kDraw.print_font(double_buffer, 92, 40, _("Could not escape!"), eFontColor::FONTCOLOR_NORMAL);
-		kDraw.blit2screen(0, 0);
+		kqDraw.menubox(double_buffer, 84, 32, 17, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.print_font(double_buffer, 92, 40, _("Could not escape!"), eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.blit2screen(0, 0);
 		Game.wait_enter();
 		return;
 	}
@@ -1120,8 +1120,8 @@ void KHero::hero_run()
 		for (a = 0; a < count; a++)
 		{
 			clear_bitmap(double_buffer);
-			kDraw.menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-			kDraw.print_font(double_buffer, 160 - g, 40, strbuf, eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kqDraw.print_font(double_buffer, 160 - g, 40, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{
 				fx = fighter[fighter_index].fighterImageDatafileX;
@@ -1137,7 +1137,7 @@ void KHero::hero_run()
 					draw_sprite(double_buffer, frames[pidx[fighter_index]][fr], fx, fy);
 				}
 			}
-			kDraw.blit2screen(0, 0);
+			kqDraw.blit2screen(0, 0);
 			kq_wait(10);
 		}
 	}

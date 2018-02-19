@@ -190,10 +190,10 @@ private:
     int obstruction(int origin_x, int origin_y, int move_x, int move_y, int check_entity);
 
     /**
-     * Read an int from a script
+     * Read the integer portion after a command in a script.
      *
-     * This parses the movement script for a value that relates
-     * to a command.  This is from Verge1.
+     * This parses the movement script for a value that relates to a command.
+     * This is from Verge1.
      *
      * @param target_entity Entity to process
      */

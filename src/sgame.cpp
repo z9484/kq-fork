@@ -60,9 +60,9 @@ int KSaveGame::confirm_action()
 		return 1;
 	}
 	fullblit(double_buffer, back);
-	kDraw.menubox(double_buffer, 128, pointer_offset + 12, 14, 1, eMenuBoxColor::DARKBLUE);
-	kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
-	kDraw.blit2screen(0, 0);
+	kqDraw.menubox(double_buffer, 128, pointer_offset + 12, 14, 1, eMenuBoxColor::DARKBLUE);
+	kqDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Confirm/Cancel"), eFontColor::FONTCOLOR_NORMAL);
+	kqDraw.blit2screen(0, 0);
 	fullblit(back, double_buffer);
 	while (!stop)
 	{
@@ -98,7 +98,7 @@ static int confirm_quit()
 	opts[0] = _("Yes");
 	opts[1] = _("No");
 	/*strcpy(opts[1], "No"); */
-	ans = kDraw.prompt_ex(0, _("Are you sure you want to quit this game?"), opts, 2);
+	ans = kqDraw.prompt_ex(0, _("Are you sure you want to quit this game?"), opts, 2);
 	return ans == 0 ? 1 : 0;
 }
 
@@ -111,8 +111,8 @@ void KSaveGame::delete_game()
 	int remove_result = remove(kqres(SAVE_DIR, strbuf).c_str());
 	if (remove_result == 0)
 	{
-		kDraw.menubox(double_buffer, 128, pointer_offset + 12, 12, 1, eMenuBoxColor::DARKBLUE);
-		kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.menubox(double_buffer, 128, pointer_offset + 12, 12, 1, eMenuBoxColor::DARKBLUE);
+		kqDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Deleted"), eFontColor::FONTCOLOR_NORMAL);
 
 		s_sgstats& stats = savegame[save_ptr];
 		stats.num_characters = 0;
@@ -121,10 +121,10 @@ void KSaveGame::delete_game()
 	}
 	else
 	{
-		kDraw.menubox(double_buffer, 128, pointer_offset + 12, 16, 1, eMenuBoxColor::DARKBLUE);
-		kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.menubox(double_buffer, 128, pointer_offset + 12, 16, 1, eMenuBoxColor::DARKBLUE);
+		kqDraw.print_font(double_buffer, 136, pointer_offset + 20, _("File Not Deleted"), eFontColor::FONTCOLOR_NORMAL);
 	}
-	kDraw.blit2screen(0, 0);
+	kqDraw.blit2screen(0, 0);
 	fullblit(back, double_buffer);
 
 	while (!stop)
@@ -197,7 +197,7 @@ int KSaveGame::saveload(int am_saving)
 		Game.do_check_animation();
 		double_buffer->fill(0);
 		show_sgstats(am_saving);
-		kDraw.blit2screen(0, 0);
+		kqDraw.blit2screen(0, 0);
 
 		PlayerInput.readcontrols();
 		if (PlayerInput.up)
@@ -343,18 +343,18 @@ void KSaveGame::show_sgstats(int saving)
 	pointer_offset = (save_ptr - top_pointer) * 48;
 	if (saving == 0)
 	{
-		kDraw.menubox(double_buffer, 0, pointer_offset + 12, 7, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		kDraw.print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), eFontColor::FONTCOLOR_GOLD);
+		kqDraw.menubox(double_buffer, 0, pointer_offset + 12, 7, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.print_font(double_buffer, 8, pointer_offset + 20, _("Loading"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 1)
 	{
-		kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), eFontColor::FONTCOLOR_GOLD);
+		kqDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Saving"), eFontColor::FONTCOLOR_GOLD);
 	}
 	else if (saving == 2 || saving == 3)
 	{
-		kDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		kDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), eFontColor::FONTCOLOR_RED);
+		kqDraw.menubox(double_buffer, 8, pointer_offset + 12, 6, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.print_font(double_buffer, 16, pointer_offset + 20, _("Delete"), eFontColor::FONTCOLOR_RED);
 	}
 
 	if (top_pointer > 0)
@@ -372,22 +372,22 @@ void KSaveGame::show_sgstats(int saving)
 		pointer_offset = (sg - top_pointer) * 48;
 		if (sg == save_ptr)
 		{
-			kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::DARKBLUE);
+			kqDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::DARKBLUE);
 		}
 		else
 		{
-			kDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kqDraw.menubox(double_buffer, 72, pointer_offset, 29, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		}
 
 		if (savegame[sg].num_characters == -1)
 		{
-			kDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.print_font(double_buffer, 136, pointer_offset + 20, _("Wrong version"), eFontColor::FONTCOLOR_NORMAL);
 		}
 		else
 		{
 			if (stats.num_characters == 0)
 			{
-				kDraw.print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), eFontColor::FONTCOLOR_NORMAL);
+				kqDraw.print_font(double_buffer, 168, pointer_offset + 20, _("Empty"), eFontColor::FONTCOLOR_NORMAL);
 			}
 			else
 			{
@@ -398,9 +398,9 @@ void KSaveGame::show_sgstats(int saving)
 					hy = pointer_offset + 12;
 					draw_sprite(double_buffer, frames[chr.id][1], hx, hy + 4);
 					sprintf(strbuf, _("L: %02d"), chr.level);
-					kDraw.print_font(double_buffer, hx + 16, hy, strbuf, eFontColor::FONTCOLOR_NORMAL);
-					kDraw.print_font(double_buffer, hx + 16, hy + 8, _("H:"), eFontColor::FONTCOLOR_NORMAL);
-					kDraw.print_font(double_buffer, hx + 16, hy + 16, _("M:"), eFontColor::FONTCOLOR_NORMAL);
+					kqDraw.print_font(double_buffer, hx + 16, hy, strbuf, eFontColor::FONTCOLOR_NORMAL);
+					kqDraw.print_font(double_buffer, hx + 16, hy + 8, _("H:"), eFontColor::FONTCOLOR_NORMAL);
+					kqDraw.print_font(double_buffer, hx + 16, hy + 16, _("M:"), eFontColor::FONTCOLOR_NORMAL);
 					rectfill(double_buffer, hx + 33, hy + 9, hx + 65, hy + 15, 2);
 					rectfill(double_buffer, hx + 32, hy + 8, hx + 64, hy + 14, 35);
 					rectfill(double_buffer, hx + 33, hy + 17, hx + 65, hy + 23, 2);
@@ -411,9 +411,9 @@ void KSaveGame::show_sgstats(int saving)
 					rectfill(double_buffer, hx + 32, hy + 17, hx + 32 + b, hy + 21, 25);
 				}
 				sprintf(strbuf, _("T %u:%02u"), stats.time / 60, stats.time % 60);
-				kDraw.print_font(double_buffer, 236, pointer_offset + 12, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kqDraw.print_font(double_buffer, 236, pointer_offset + 12, strbuf, eFontColor::FONTCOLOR_NORMAL);
 				sprintf(strbuf, _("G %u"), stats.gold);
-				kDraw.print_font(double_buffer, 236, pointer_offset + 28, strbuf, eFontColor::FONTCOLOR_NORMAL);
+				kqDraw.print_font(double_buffer, 236, pointer_offset + 28, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			}
 		}
 	}
@@ -441,24 +441,24 @@ int KSaveGame::start_menu(int skip_splash)
 			blit(splash, dudes, 80, 0, 0, 0, 112, 112);
 			double_buffer->fill(0);
 			blit(staff, double_buffer, 0, 0, 124, 22, 72, 226);
-			kDraw.blit2screen(0, 0);
+			kqDraw.blit2screen(0, 0);
 
 			kq_wait(1000);
 			for (a = 0; a < 42; a++)
 			{
 				stretch_blit(staff, double_buffer, 0, 0, 72, 226, 124 - (a * 32), 22 - (a * 96), 72 + (a * 64), 226 + (a * 192));
-				kDraw.blit2screen(0, 0);
+				kqDraw.blit2screen(0, 0);
 				kq_wait(100);
 			}
 			for (a = 0; a < 5; a++)
 			{
-				kDraw.color_scale(dudes, tdudes, 53 - a, 53 + a);
+				kqDraw.color_scale(dudes, tdudes, 53 - a, 53 + a);
 				draw_sprite(double_buffer, tdudes, 106, 64);
-				kDraw.blit2screen(0, 0);
+				kqDraw.blit2screen(0, 0);
 				kq_wait(100);
 			}
 			draw_sprite(double_buffer, dudes, 106, 64);
-			kDraw.blit2screen(0, 0);
+			kqDraw.blit2screen(0, 0);
 			kq_wait(1000);
 			delete (staff);
 			delete (dudes);
@@ -469,17 +469,17 @@ int KSaveGame::start_menu(int skip_splash)
 			 *  fade_from (pal, whp, 1);
 			 *  else
 			 */
-            kDraw.do_transition(TRANS_FADE_WHITE, 1);
+            kqDraw.do_transition(TRANS_FADE_WHITE, 1);
 		}
 		clear_to_color(double_buffer, 15);
-		kDraw.blit2screen(0, 0);
+		kqDraw.blit2screen(0, 0);
 		set_palette(pal);
 
 		for (fade_color = 0; fade_color < 16; fade_color++)
 		{
 			clear_to_color(double_buffer, 15 - fade_color);
 			masked_blit(title, double_buffer, 0, 0, 0, 60 - (fade_color * 4), KQ_SCREEN_W, 124);
-			kDraw.blit2screen(0, 0);
+			kqDraw.blit2screen(0, 0);
 			kq_wait(fade_color == 0 ? 500 : 100);
 		}
 		if (skip_splash == 0)
@@ -502,16 +502,16 @@ int KSaveGame::start_menu(int skip_splash)
 		{
 			clear_bitmap(double_buffer);
 			masked_blit(title, double_buffer, 0, 0, 0, 0, KQ_SCREEN_W, 124);
-			kDraw.menubox(double_buffer, 112, 116, 10, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-			kDraw.print_font(double_buffer, 128, 124, _("Continue"), eFontColor::FONTCOLOR_NORMAL);
-			kDraw.print_font(double_buffer, 128, 132, _("New Game"), eFontColor::FONTCOLOR_NORMAL);
-			kDraw.print_font(double_buffer, 136, 140, _("Config"), eFontColor::FONTCOLOR_NORMAL);
-			kDraw.print_font(double_buffer, 144, 148, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.menubox(double_buffer, 112, 116, 10, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kqDraw.print_font(double_buffer, 128, 124, _("Continue"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.print_font(double_buffer, 128, 132, _("New Game"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.print_font(double_buffer, 136, 140, _("Config"), eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.print_font(double_buffer, 144, 148, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
 			draw_sprite(double_buffer, menuptr, 112, ptr * 8 + 124);
 			redraw = 0;
 		}
 		display_credits(double_buffer);
-		kDraw.blit2screen(0, 0);
+		kqDraw.blit2screen(0, 0);
 		PlayerInput.readcontrols();
 		if (PlayerInput.bhelp)
 		{
@@ -623,16 +623,16 @@ int KSaveGame::system_menu()
 	while (!stop)
 	{
 		Game.do_check_animation();
-		kDraw.drawmap();
-		kDraw.menubox(double_buffer, xofs, yofs, 8, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.drawmap();
+		kqDraw.menubox(double_buffer, xofs, yofs, 8, 4, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 
-		kDraw.print_font(double_buffer, 16 + xofs, 8 + yofs, save_str, text_color);
-		kDraw.print_font(double_buffer, 16 + xofs, 16 + yofs, _("Load"), eFontColor::FONTCOLOR_NORMAL);
-		kDraw.print_font(double_buffer, 16 + xofs, 24 + yofs, _("Config"), eFontColor::FONTCOLOR_NORMAL);
-		kDraw.print_font(double_buffer, 16 + xofs, 32 + yofs, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.print_font(double_buffer, 16 + xofs, 8 + yofs, save_str, text_color);
+		kqDraw.print_font(double_buffer, 16 + xofs, 16 + yofs, _("Load"), eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.print_font(double_buffer, 16 + xofs, 24 + yofs, _("Config"), eFontColor::FONTCOLOR_NORMAL);
+		kqDraw.print_font(double_buffer, 16 + xofs, 32 + yofs, _("Exit"), eFontColor::FONTCOLOR_NORMAL);
 
 		draw_sprite(double_buffer, menuptr, 0 + xofs, ptr * 8 + 8 + yofs);
-		kDraw.blit2screen(xofs, yofs);
+		kqDraw.blit2screen(xofs, yofs);
 		PlayerInput.readcontrols();
 
 		// TT:

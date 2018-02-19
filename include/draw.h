@@ -553,4 +553,4 @@ private:
     void _fade_from_range(AL_CONST PALETTE source, AL_CONST PALETTE dest, uint32_t speed, int from, int to);
 };
 
-extern KDraw kDraw;
+extern KDraw kqDraw;

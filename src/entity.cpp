@@ -581,18 +581,27 @@ void KEntity::parsems(t_entity target_entity)
 {
 	uint32_t p = 0;
 	char tok[10];
-	char s;
 
-	s = g_ent[target_entity].script[g_ent[target_entity].sidx];
+	size_t scriptIndex = g_ent[target_entity].sidx;
+	if (scriptIndex >= MAX_SCRIPT)
+	{
+		return;
+	}
 
 	// 48..57 are '0'..'9' ASCII
-	while (s >= '0' && s <= '9')
+	char s = g_ent[target_entity].script[scriptIndex];
+	while (s >= '0' && s <= '9' && p < sizeof(tok) - 1)
 	{
 		tok[p] = s;
 		p++;
 
 		g_ent[target_entity].sidx++;
-		s = g_ent[target_entity].script[g_ent[target_entity].sidx];
+		scriptIndex = g_ent[target_entity].sidx;
+		if (scriptIndex >= MAX_SCRIPT)
+		{
+			break;
+		}
+		s = g_ent[target_entity].script[scriptIndex];
 	}
 	tok[p] = 0;
 	g_ent[target_entity].cmdnum = atoi(tok);

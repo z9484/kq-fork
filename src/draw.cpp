@@ -278,7 +278,7 @@ void KDraw::_fade_from_range(AL_CONST PALETTE source, AL_CONST PALETTE dest, uin
 			set_palette_range(temp, from, to, TRUE);
 			if (_color_depth > 8)
 			{
-				kDraw.blit2screen(xofs, yofs);
+				kqDraw.blit2screen(xofs, yofs);
 			}
 			last = c;
 		}
@@ -1918,4 +1918,4 @@ void KDraw::porttext_ex(eBubbleStyle fmt, int who, const std::string& textToDisp
 	}
 }
 
-KDraw kDraw;
+KDraw kqDraw;

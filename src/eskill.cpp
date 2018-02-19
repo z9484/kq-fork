@@ -40,7 +40,7 @@ void combat_skill(size_t fighter_index)
 
 	tempa = status_adjust(fighter_index);
 	gCombat.battle_render(0, 0, 0);
-	kDraw.blit2screen(0, 0);
+	kqDraw.blit2screen(0, 0);
 	switch (fighterCombatSkill)
 	{
 	case 101:
