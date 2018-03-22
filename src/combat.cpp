@@ -54,8 +54,17 @@ KCombat::~KCombat()
 {
 }
 
-KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
+KCombat::eAttackResult KCombat::attack_result(size_t fighterIndexAttacker, size_t fighterIndexDefender)
 {
+	if (fighterIndexAttacker >= NUM_FIGHTERS)
+	{
+		return eAttackResult::ATTACK_MISS;
+	}
+	if (fighterIndexDefender >= NUM_FIGHTERS)
+	{
+		return eAttackResult::ATTACK_MISS;
+	}
+
 	int check_for_critical_hit;
 	int attacker_critical_status = 0;
 	int crit_hit = 0;
@@ -101,7 +110,7 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 	/*  JB: if the attacker is empowered by trueshot  */
 	if (tempa.fighterSpellEffectStats[S_TRUESHOT] > 0)
 	{
-		fighter[ar].fighterSpellEffectStats[S_TRUESHOT] = 0;
+		fighter[fighterIndexAttacker].fighterSpellEffectStats[S_TRUESHOT] = 0;
 		defender_evade = 0;
 	}
 
@@ -150,7 +159,7 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 			}
 
 			/* PH I _think_ this makes Sensar 2* as likely to make a critical hit */
-			if (pidx[ar] == SENSAR)
+			if (pidx[fighterIndexAttacker] == SENSAR)
 			{
 				check_for_critical_hit = check_for_critical_hit * 2;
 			}
@@ -189,7 +198,7 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 		case R_WATER:
 		case R_ICE:
 		{
-			base = res_adjust(dr, defenderRes, base);
+			base = res_adjust(fighterIndexDefender, defenderRes, base);
 			break;
 		}
 		case R_POISON:
@@ -201,9 +210,9 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 		case R_SLEEP:
 		{
 			uint8_t spellEffectStatIndex = defenderRes - R_POISON;
-			if ((res_throw(dr, defenderRes) == 0) && (fighter[dr].fighterSpellEffectStats[spellEffectStatIndex] == 0))
+			if ((res_throw(fighterIndexDefender, defenderRes) == 0) && (fighter[fighterIndexDefender].fighterSpellEffectStats[spellEffectStatIndex] == 0))
 			{
-				if (non_dmg_save(dr, 50) == 0)
+				if (non_dmg_save(fighterIndexDefender, 50) == 0)
 				{
 					if ((defenderRes == R_POISON) || (defenderRes == R_PETRIFY) || (defenderRes == R_SILENCE))
 					{
@@ -232,7 +241,7 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 #ifdef KQ_CHEATS
 	if (hasCheatEnabled && every_hit_999)
 	{
-		ta[dr] = -999;
+		ta[fighterIndexDefender] = -999;
 		return ATTACK_SUCCESS;
 	}
 #endif
@@ -241,11 +250,11 @@ KCombat::eAttackResult KCombat::attack_result(int ar, int dr)
 	if (dmg == 0)
 	{
 		dmg = MISS;
-		ta[dr] = dmg;
+		ta[fighterIndexDefender] = dmg;
 		return ATTACK_MISS;
 	}
 
-	ta[dr] = 0 - dmg;
+	ta[fighterIndexDefender] = 0 - dmg;
 	return crit_hit == 1
 		? ATTACK_CRITICAL
 		: ATTACK_SUCCESS;

@@ -28,6 +28,11 @@
  */
 void combat_skill(size_t fighter_index)
 {
+	if (fighter_index >= NUM_FIGHTERS)
+	{
+		return;
+	}
+
 	if (fighter[fighter_index].csmem >= 8)
 	{
 		return;

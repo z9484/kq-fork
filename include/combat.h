@@ -149,13 +149,13 @@ private:
      * This does the actual attack calculation. The damage done to
      * the target is kept in the ta[] array.
      *
-     * \param   ar Attacker
-     * \param   dr Defender
+     * \param   fighterIndexAttacker Attacker
+     * \param   fighterIndexDefender Defender
      * \returns ATTACK_MISS if attack was a miss,
      *          ATTACK_SUCCESS if attack was successful,
      *          ATTACK_CRITICAL if attack was a critical hit.
      */
-    eAttackResult attack_result(int ar, int dr);
+    eAttackResult attack_result(size_t fighterIndexAttacker, size_t fighterIndexDefender);
 
     /**
      * Check whether all heroes or enemies are dead.

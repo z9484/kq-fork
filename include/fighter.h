@@ -16,6 +16,54 @@ class Raster;
 class KFighter
 {
 public:
+	static constexpr uint32_t kMaxCombatSkills = 8;
+
+	/** Combat skills: 1..99 seem to be player-owned; 100..253 appear to be enemy. 0, 254, 255: not specified.
+	 * 1..60 are found under the EMagic enum.
+	 * 101: "Venomous Bite"
+	 * 102: "Double Slash"
+	 * 103: "Chill Touch"
+	 * 104: "Flash Flood"
+	 * 105: "Sweep"
+	 * 106: "ParaClaw"
+	 * 107: "Dragon Bite"
+	 * 108: "Stone Gas"
+	 * 109: "Zemmel Rod"
+	 * 110: "Poison Gas"
+	 * 111: "Tangle Root"
+	 * 112: "Petrifying Bite"
+	 * 113: "Maul of the Titans"
+	 * 114: "Stunning Strike"
+	 * 115: "Howl"
+	 * 116: "Rasp"
+	 * 117: "Shadow Blast"
+	 * fighter[fighter_index].csmem is often used as the 0..7 index. This seems dangerous...
+	 */
+	enum class eCombatSkill
+	{
+		kUnset = 0,
+
+		kVenomousBite = 101,
+		kDoubleSlash = 102,
+		kChillTouch = 103,
+		kFlashFlood = 104,
+		kSweep = 105,
+		kParaClaw = 106,
+		kDragonBite = 107,
+		kStoneGas = 108,
+		kZemmelRod = 109,
+		kPoisonGas = 110,
+		kTangleRoot = 111,
+		kPetrifyingBite = 112,
+		kMaulOfTheTitans = 113,
+		kStunningStrike = 114,
+		kHowl = 115,
+		kRasp = 116,
+		kShadowBlast = 117,
+
+		kTotal // always last
+	};
+
 	KFighter();
     ~KFighter();
 
@@ -38,8 +86,6 @@ private:
     int fighterMagicCriticalWarning;
 
 public:
-
-
 	/** Name */
 	std::string fighterName;
 
