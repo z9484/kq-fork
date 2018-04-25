@@ -18,13 +18,16 @@
  * fixes
  */
 
-#include <assert.h>
-#include <locale.h>
+#include <cassert>
+#include <cstdio>
+#include <ctime>
+#include <locale>
 #include <memory>
-#include <stdio.h>
 #include <string>
-#include <time.h>
 #include <vector>
+
+#include "gfx.h"
+#include "random.h"
 
 #include "animation.h"
 #include "console.h"
@@ -51,9 +54,6 @@
 #include "shopmenu.h"
 #include "structs.h"
 #include "tiledmap.h"
-
-#include "gfx.h"
-#include "random.h"
 
 static void my_counter();
 static void time_counter();
@@ -1317,9 +1317,6 @@ void KGame::reset_world()
 
 void KGame::startup()
 {
-	int p, i, q;
-	time_t t;
-
 	allegro_init();
 
 	/* Buffers to allocate */
@@ -1359,7 +1356,7 @@ void KGame::startup()
 		if (poll_joystick() == 0)
 		{
 			// Use first compatible joystick attached to computer
-			for (i = 0; i < num_joysticks; ++i)
+			for (auto i = 0; i < num_joysticks; ++i)
 			{
 				if (joy[i].num_buttons >= 4)
 				{
@@ -1376,7 +1373,8 @@ void KGame::startup()
 		}
 	}
 
-	srand((unsigned)time(&t));
+	time_t dummyTime;
+	srand((unsigned)time(&dummyTime));
 	Raster* misc = get_cached_image("misc.png");
 	misc->blitTo(menuptr, 24, 0, 0, 0, 16, 8);
 	misc->blitTo(sptr, 0, 0, 0, 0, 8, 8);
@@ -1411,32 +1409,32 @@ void KGame::startup()
 		}
 	}
 
-	for (p = 0; p < 27; p++)
+	for (auto p = 0; p < 27; p++)
 	{
 		misc->blitTo(stspics, p * 8 + 40, 0, 0, p * 8, 8, 8);
 	}
 
-	for (p = 0; p < 40; p++)
+	for (auto p = 0; p < 40; p++)
 	{
 		misc->blitTo(sicons, p * 8, 32, 0, p * 8, 8, 8);
 	}
 
-	for (p = 0; p < 40; p++)
+	for (auto p = 0; p < 40; p++)
 	{
 		misc->blitTo(sicons, p * 8, 40, 0, p * 8 + 320, 8, 8);
 	}
 
-	for (p = 0; p < MAX_SHADOWS; p++)
+	for (auto p = 0; p < MAX_SHADOWS; p++)
 	{
 		misc->blitTo(shadow[p], p * 16, 160, 0, 0, 16, 16);
 	}
 
-	for (p = 0; p < 8; p++)
+	for (auto p = 0; p < 8; p++)
 	{
 		misc->blitTo(bub[p], p * 16, 144, 0, 0, 16, 16);
 	}
 
-	for (p = 0; p < 3; p++)
+	for (auto p = 0; p < 3; p++)
 	{
 		misc->blitTo(bord[p], p * 8 + 96, 64, 0, 0, 8, 8);
 		misc->blitTo(bord[5 + p], p * 8 + 96, 84, 0, 0, 8, 8);
@@ -1445,7 +1443,7 @@ void KGame::startup()
 	misc->blitTo(bord[3], 96, 72, 0, 0, 8, 12);
 	misc->blitTo(bord[4], 112, 72, 0, 0, 8, 12);
 
-	for (i = 0; i < 9; i++)
+	for (auto i = 0; i < 9; i++)
 	{
 		misc->blitTo(pgb[i], i * 16, 48, 0, 0, 9, 9);
 	}
@@ -1455,9 +1453,9 @@ void KGame::startup()
 	Raster* allfonts = get_cached_image("fonts.png");
 	allfonts->blitTo(kfonts, 0, 0, 0, 0, 1024, 60);
 	Raster* entities = get_cached_image("entities.png");
-	for (q = 0; q < TOTAL_MAP_NPC_ENTITIES; q++)
+	for (auto q = 0; q < TOTAL_MAP_NPC_ENTITIES; q++)
 	{
-		for (p = 0; p < MAX_NPC_MOVEMENT_FRAMES; p++)
+		for (auto p = 0; p < MAX_NPC_MOVEMENT_FRAMES; p++)
 		{
 			entities->blitTo(eframes[q][p], p * 16, q * 16, 0, 0, 16, 16);
 		}
@@ -1483,13 +1481,13 @@ void KGame::startup()
 	/* TT: Create the mesh object to see 4-way obstacles (others ignored) */
 	obj_mesh = new Raster(16, 16);
 	clear_bitmap(obj_mesh);
-	for (q = 0; q < 16; q += 2)
+	for (auto q = 0; q < 16; q += 2)
 	{
-		for (p = 0; p < TILE_W; p += 2)
+		for (auto p = 0; p < TILE_W; p += 2)
 		{
 			putpixel(obj_mesh, p, q, 255);
 		}
-		for (p = 1; p < TILE_W; p += 2)
+		for (auto p = 1; p < TILE_W; p += 2)
 		{
 			putpixel(obj_mesh, p, q + 1, 255);
 		}
