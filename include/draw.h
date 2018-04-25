@@ -507,7 +507,7 @@ private:
      * NB. Values for $ other than $0 or $1 will cause errors.
      *
      * \param   the_string Input string
-     * \returns processed string, in a static buffer strbuf or the_string, if it had no replacement chars.
+     * \returns string with player name incoporated.
      */
     const char* substitutePlayerNameString(const std::string& the_string);
 

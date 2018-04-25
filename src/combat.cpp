@@ -22,8 +22,11 @@
 #include "structs.h"
 #include "timing.h"
 
+#include <cstdio>
+#include <iomanip>
 #include <memory>
-#include <stdio.h>
+#include <sstream>
+#include <string>
 
 KCombat kqCombat;
 
@@ -348,7 +351,9 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			? eFontColor::FONTCOLOR_GOLD : eFontColor::FONTCOLOR_NORMAL;
 		kqDraw.print_font(double_buffer, b + 8, 192, curFighter.fighterName.c_str(), nameTextColor);
 
-		sprintf(strbuf, _("HP: %3d/%3d"), curFighter.fighterHealth, curFighter.fighterMaxHealth);
+		std::stringstream ss;
+		ss << "HP: " << std::setw(3) << curFighter.fighterHealth << "/" << std::setw(3) << curFighter.fighterMaxHealth;
+		std::string hpStr = ss.str();
 		/*  RB IDEA: If the character has less than 1/5 of his/her max    */
 		/*           health points, it shows the amount with red (the     */
 		/*           character is in danger). I suggest setting that '5'  */
@@ -362,7 +367,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 
 		eFontColor healthTextColor = curFighter.isFighterHealthCritical()
 			? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
-		kqDraw.print_font(double_buffer, b + 8, 208, strbuf, healthTextColor);
+		kqDraw.print_font(double_buffer, b + 8, 208, _(hpStr.c_str()), healthTextColor);
 
 		hline(double_buffer, b + 8, 216, b + 95, 21);
 		sz = (curFighter.fighterHealth > 0)
@@ -370,12 +375,14 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 			: 88;
 
 		hline(double_buffer, b + 8, 216, b + 8 + sz, 12);
-		sprintf(strbuf, _("MP: %3d/%3d"), curFighter.fighterMagic, curFighter.fighterMaxMagic);
+		ss.str("");
+		ss << "HP: " << std::setw(3) << curFighter.fighterMagic<< "/" << std::setw(3) << curFighter.fighterMaxMagic;
+		std::string mpStr = ss.str();
 
 		/*  RB IDEA: Same suggestion as with health, just above. */
 		eFontColor magicTextColor = curFighter.isFighterMagicCritical()
 			? eFontColor::FONTCOLOR_RED : eFontColor::FONTCOLOR_NORMAL;
-		kqDraw.print_font(double_buffer, b + 8, 218, strbuf, magicTextColor);
+		kqDraw.print_font(double_buffer, b + 8, 218, _(mpStr.c_str()), magicTextColor);
 		hline(double_buffer, b + 8, 226, b + 95, 21);
 		sz = (curFighter.fighterMagic > 0)
 			? curFighter.fighterMagic * 88 / curFighter.fighterMaxMagic
@@ -455,9 +462,9 @@ int KCombat::combat(size_t battleIdentifier)
 	/* PH: some checking! */
 	if (battleIdentifier >= NUM_BATTLES)
 	{
-		sprintf(strbuf, _("Combat: battle %ld does not exist."), battleIdentifier);
+		//std::string errorStr = "Combat: battle " + std::to_string(battleIdentifier) + " does not exist.";
+		// program_death(errorStr.c_str());
 		return 1;
-		// program_death(strbuf);
 	}
 
 	/* TT: no battles during scripted/target movements */
@@ -948,9 +955,9 @@ void KCombat::enemies_win() const
 	/*  RB FIXME: rest()?  */
 	kqDraw.blit2screen(0, 0);
 	kq_wait(1000);
-	sprintf(strbuf, _("%s was defeated!"), party[pidx[0]].playerName.c_str());
-	kqDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 48, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-	kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	std::string defeatStr = party[pidx[0]].playerName + " was defeated!";
+	kqDraw.menubox(double_buffer, 152 - (defeatStr.length() * 4), 48, defeatStr.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kqDraw.print_font(double_buffer, 160 - (defeatStr.length() * 4), 56, _(defeatStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 	kqDraw.blit2screen(0, 0);
 	Game.wait_enter();
     kqDraw.do_transition(TRANS_FADE_OUT, 4);
@@ -1153,17 +1160,18 @@ void KCombat::heroes_win()
 	}
 
 	gp += tgp;
+	std::string gainedStr;
 	if (tgp > 0)
 	{
-		sprintf(strbuf, _("Gained %d xp and found %d gp."), txp, tgp);
+		gainedStr = "Gained " + std::to_string(txp) + " xp and found " + std::to_string(tgp) + " gp.";
 	}
 	else
 	{
-		sprintf(strbuf, _("Gained %d xp."), txp);
+		gainedStr = "Gained " + std::to_string(txp) + " xp.";
 	}
 
-	kqDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4), 8, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-	kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4), 16, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	kqDraw.menubox(double_buffer, 152 - (gainedStr.length() * 4), 8, gainedStr.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+	kqDraw.print_font(double_buffer, 160 - (gainedStr.length() * 4), 16, _(gainedStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 	kqDraw.blit2screen(0, 0);
 	fullblit(double_buffer, back);
 	for (fighter_index = 0; fighter_index < num_enemies; fighter_index++)
@@ -1190,10 +1198,10 @@ void KCombat::heroes_win()
 			{
 				if (check_inventory(found_item, 1) != 0)
 				{
-					sprintf(strbuf, _("%s found!"), items[found_item].itemName);
-					kqDraw.menubox(double_buffer, 148 - (strlen(strbuf) * 4), nr * 24 + 48, strlen(strbuf) + 1, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-					kqDraw.draw_icon(double_buffer, items[found_item].icon, 156 - (strlen(strbuf) * 4), nr * 24 + 56);
-					kqDraw.print_font(double_buffer, 164 - (strlen(strbuf) * 4), nr * 24 + 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
+					std::string foundStr = std::string(items[found_item].itemName) + " found!";
+					kqDraw.menubox(double_buffer, 148 - (foundStr.length() * 4), nr * 24 + 48, foundStr.length() + 1, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+					kqDraw.draw_icon(double_buffer, items[found_item].icon, 156 - (foundStr.length() * 4), nr * 24 + 56);
+					kqDraw.print_font(double_buffer, 164 - (foundStr.length() * 4), nr * 24 + 56, _(foundStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 					nr++;
 				}
 			}
@@ -1226,28 +1234,31 @@ void KCombat::heroes_win()
 				kqDraw.print_font(double_buffer, b + 8, 88, _("Vitality"), eFontColor::FONTCOLOR_NORMAL);
 				kqDraw.print_font(double_buffer, b + 8, 96, _("Intellect"), eFontColor::FONTCOLOR_NORMAL);
 				kqDraw.print_font(double_buffer, b + 8, 104, _("Sagacity"), eFontColor::FONTCOLOR_NORMAL);
-				sprintf(strbuf, "%3d>", t1.fighterMaxHealth);
-				kqDraw.print_font(double_buffer, b + 96, 56, strbuf, eFontColor::FONTCOLOR_NORMAL);
-				sprintf(strbuf, "%3d", t2.fighterMaxHealth);
-				kqDraw.print_font(double_buffer, b + 128, 56, strbuf, eFontColor::FONTCOLOR_GREEN);
-				sprintf(strbuf, "%3d>", t1.fighterMaxMagic);
-				kqDraw.print_font(double_buffer, b + 96, 64, strbuf, eFontColor::FONTCOLOR_NORMAL);
-				sprintf(strbuf, "%3d", t2.fighterMaxMagic);
-				kqDraw.print_font(double_buffer, b + 128, 64, strbuf, eFontColor::FONTCOLOR_GREEN);
+				{
+					std::stringstream ss1, ss2;
+					ss1 << std::setw(3) << t1.fighterMaxHealth << ">";
+					kqDraw.print_font(double_buffer, b + 96, 56, ss1.str().c_str(), eFontColor::FONTCOLOR_NORMAL);
+					ss2 << std::setw(3) << t2.fighterMaxHealth;
+					kqDraw.print_font(double_buffer, b + 128, 56, ss2.str().c_str(), eFontColor::FONTCOLOR_GREEN);
+				}
+				{
+					std::stringstream ss1, ss2;
+					ss1 << std::setw(3) << t1.fighterMaxMagic << ">";
+					kqDraw.print_font(double_buffer, b + 96, 64, ss1.str().c_str(), eFontColor::FONTCOLOR_NORMAL);
+					ss2 << std::setw(3) << t2.fighterMaxMagic;
+					kqDraw.print_font(double_buffer, b + 128, 64, ss2.str().c_str(), eFontColor::FONTCOLOR_GREEN);
+				}
 
 				for (int z = 0; z < 5; z++)
 				{
-					sprintf(strbuf, "%3d>", t1.fighterStats[z]);
-					kqDraw.print_font(double_buffer, b + 96, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
-					sprintf(strbuf, "%3d", t2.fighterStats[z]);
-					if (t2.fighterStats[z] > t1.fighterStats[z])
-					{
-						kqDraw.print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_GREEN);
-					}
-					else
-					{
-						kqDraw.print_font(double_buffer, b + 128, z * 8 + 72, strbuf, eFontColor::FONTCOLOR_NORMAL);
-					}
+					std::stringstream ss1, ss2;
+					auto fontColor = (t2.fighterStats[z] > t1.fighterStats[z])
+						? eFontColor::FONTCOLOR_GREEN
+						: eFontColor::FONTCOLOR_NORMAL;
+					ss1 << std::setw(3) << t1.fighterStats[z] << ">";
+					kqDraw.print_font(double_buffer, b + 96, z * 8 + 72, ss1.str().c_str(), eFontColor::FONTCOLOR_NORMAL);
+					ss2 << std::setw(3) << t2.fighterStats[z];
+					kqDraw.print_font(double_buffer, b + 128, z * 8 + 72, ss2.str().c_str(), fontColor);
 				}
 
 				nr++;
@@ -1257,8 +1268,10 @@ void KCombat::heroes_win()
 				kqDraw.menubox(double_buffer, b, 104, 18, 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 			}
 
-			sprintf(strbuf, _("Next level %7d"), party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);
-			kqDraw.print_font(double_buffer, b + 8, 112, strbuf, eFontColor::FONTCOLOR_GOLD);
+			std::stringstream nextLevelStr;
+			nextLevelStr << "Next level " << std::setw(7) << std::right
+				<< (party[pidx[pidx_index]].next - party[pidx[pidx_index]].xp);
+			kqDraw.print_font(double_buffer, b + 8, 112, nextLevelStr.str().c_str(), eFontColor::FONTCOLOR_GOLD);
 		}
 	}
 

@@ -7,14 +7,6 @@
  * Also some color manipulation.
  */
 
-#include <algorithm>
-#include <assert.h>
-#include <cctype>
-#include <cstdlib>
-#include <ctype.h>
-#include <stdio.h>
-#include <string>
-
 #include "bounds.h"
 #include "combat.h"
 #include "console.h"
@@ -29,6 +21,13 @@
 #include "setup.h"
 #include "timing.h"
 
+#include <algorithm>
+#include <cassert>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <sstream>
 
 /* Globals */
 #define MSG_ROWS 4
@@ -1182,11 +1181,12 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 
 std::string KDraw::replaceAll(std::string originalString, const std::string& searchForText, const std::string& replaceWithText)
 {
-    size_t startPosition = 0;
-    while ((startPosition = originalString.find(searchForText, startPosition)) != std::string::npos)
+    size_t startPosition = originalString.find(searchForText, startPosition);
+    while (startPosition != std::string::npos)
     {
         originalString.replace(startPosition, searchForText.length(), replaceWithText);
         startPosition += replaceWithText.length(); // Handles case where 'to' is a substring of 'from'
+		startPosition = originalString.find(searchForText, startPosition);
     }
     return originalString;
 }
@@ -1325,8 +1325,8 @@ int KDraw::get_glyph_index(uint32_t cp)
 	}
 
 	/* didn't find it */
-	sprintf(strbuf, _("Invalid glyph index: %d"), cp);
-	Game.klog(strbuf);
+	std::string glyphStr = "Invalid glyph index: " + std::to_string(cp);
+	Game.klog(_(glyphStr.c_str()));
 	return 0;
 }
 
@@ -1338,8 +1338,8 @@ void KDraw::print_font(Raster* where, int sx, int sy, const char* msg, eFontColo
 
 	if (font_index < 0 || font_index >= eFontColor::NUM_FONT_COLORS)
 	{
-		sprintf(strbuf, _("print_font: Bad font index, %d"), (int)font_index);
-		Game.klog(strbuf);
+		std::string errorStr = "print_font: Bad font index, " + std::to_string(static_cast<int>(font_index));
+		Game.klog(_(errorStr.c_str()));
 		return;
 	}
 	if (font_index == eFontColor::FONTCOLOR_BIG)
@@ -1365,8 +1365,8 @@ void KDraw::print_num(Raster* where, int sx, int sy, const std::string& msg, eFo
 	// Check ought not to be necessary if using the enum correctly.
 	if (font_index >= eFont::NUM_FONTS)
 	{
-		sprintf(strbuf, _("print_num: Bad font index, %d"), (int)font_index);
-		Game.klog(strbuf);
+		std::string errorStr = "print_num: Bad font index, " + std::to_string(static_cast<int>(font_index));
+		Game.klog(_(errorStr.c_str()));
 		return;
 	}
 	for (size_t z = 0; z < msg.length(); z++)

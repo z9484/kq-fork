@@ -5,8 +5,10 @@
  * \date ????????
  */
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <iomanip>
+#include <string>
+#include <sstream>
 
 #include "constants.h"
 #include "draw.h"
@@ -155,13 +157,13 @@ static void buy_menu()
             kqDraw.print_font(double_buffer, 56 + xofs, shop_item_index * 8 + 32 + yofs, items[item_index].itemName, font_color);
 			if (max > 1)
 			{
-				sprintf(strbuf, "(%u)", max);
-                kqDraw.print_font(double_buffer, 256 + xofs, shop_item_index * 8 + 32 + yofs, strbuf, font_color);
+				std::string maxStr{ "(" + std::to_string(max) + ")" };
+                kqDraw.print_font(double_buffer, 256 + xofs, shop_item_index * 8 + 32 + yofs, maxStr.c_str(), font_color);
 			}
 			if (max > 0)
 			{
-				sprintf(strbuf, "%d", cost);
-                kqDraw.print_font(double_buffer, 248 - (strlen(strbuf) * 8) + xofs, shop_item_index * 8 + 32 + yofs, strbuf, font_color);
+				std::string castStr{ std::to_string(cost) };
+				kqDraw.print_font(double_buffer, 248 - (castStr.length() * 8) + xofs, shop_item_index * 8 + 32 + yofs, castStr.c_str(), font_color);
 			}
 			else
 			{
@@ -273,8 +275,8 @@ void draw_shopgold()
 {
 	kqDraw.menubox(double_buffer, 248 + xofs, 208 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 	kqDraw.print_font(double_buffer, 256 + xofs, 216 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
-	sprintf(strbuf, "%d", gp);
-	kqDraw.print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	std::string gpStr{ std::to_string(gp) };
+	kqDraw.print_font(double_buffer, 312 - (gpStr.length() * 8) + xofs, 224 + yofs, gpStr.c_str(), eFontColor::FONTCOLOR_NORMAL);
 }
 
 /*! \brief Show status info
@@ -340,13 +342,17 @@ void draw_sideshot(int selected_item)
 				{
 					if (cs[cs_index + 8] < 0)
 					{
-						sprintf(strbuf, "%-4d", cs[cs_index + 8]);
-						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_RED);
+						std::stringstream str;
+						str << std::setw(4) << cs[cs_index + 8];
+						//sprintf(strbuf, "%-4d", cs[cs_index + 8]);
+						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, str.str().c_str(), eFontColor::FONTCOLOR_RED);
 					}
 					else if (cs[cs_index + 8] > 0)
 					{
-						sprintf(strbuf, "+%-3d", cs[cs_index + 8]);
-						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_GREEN);
+						std::stringstream str;
+						str << "+" << std::setw(3) << cs[cs_index + 8];
+						//sprintf(strbuf, "+%-3d", cs[cs_index + 8]);
+						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, str.str().c_str(), eFontColor::FONTCOLOR_GREEN);
 					}
 					else if (cs[cs_index + 8] == 0)
 					{
@@ -363,13 +369,17 @@ void draw_sideshot(int selected_item)
 				{
 					if (cs[cs_index + 10] < 0)
 					{
-						sprintf(strbuf, "%-4d", cs[cs_index + 10]);
-						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_RED);
+						std::stringstream str;
+						str << std::setw(4) << cs[cs_index + 8];
+						//sprintf(strbuf, "%-4d", cs[cs_index + 10]);
+						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, str.str().c_str(), eFontColor::FONTCOLOR_RED);
 					}
 					else if (cs[cs_index + 10] > 0)
 					{
-						sprintf(strbuf, "+%-3d", cs[cs_index + 10]);
-						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, strbuf, eFontColor::FONTCOLOR_GREEN);
+						std::stringstream str;
+						str << "+" << std::setw(3) << cs[cs_index + 8];
+						//sprintf(strbuf, "+%-3d", cs[cs_index + 10]);
+						kqDraw.print_font(double_buffer, wx + 24, cs_index * 8 + wy, str.str().c_str(), eFontColor::FONTCOLOR_GREEN);
 					}
 					else if (cs[cs_index + 10] == 0)
 					{
@@ -403,12 +413,12 @@ void draw_sideshot(int selected_item)
 			ownd += g_inv[inventory_index].quantity; // quantity of this item
 		}
 	}
-	sprintf(strbuf, _("Own: %d"), ownd);
-	kqDraw.print_font(double_buffer, 88 + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+	std::string owndStr = "Own: " + std::to_string(ownd);
+	kqDraw.print_font(double_buffer, 88 + xofs, 224 + yofs, _(owndStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 	if (slot < 6)
 	{
-		sprintf(strbuf, _("Eqp: %d"), equipped_items);
-		kqDraw.print_font(double_buffer, 160 + xofs, 224 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		std::string equippedItemsStr = "Eqp: " + std::to_string(equipped_items);
+		kqDraw.print_font(double_buffer, 160 + xofs, 224 + yofs, _(equippedItemsStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 	}
 }
 
@@ -467,13 +477,13 @@ void inn(const char* iname, uint32_t gold_per_character, int pay)
 		Game.do_check_animation();
         kqDraw.drawmap();
 
-		sprintf(strbuf, _("The cost is %u gp for the night."), total_gold_cost);
-		kqDraw.menubox(double_buffer, 152 - (strlen(strbuf) * 4) + xofs, 48 + yofs, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 56 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		std::string totalGoldCostStr = "The cost is " + std::to_string(total_gold_cost) + " gp for the night.";
+		kqDraw.menubox(double_buffer, 152 - (totalGoldCostStr.length() * 4) + xofs, 48 + yofs, totalGoldCostStr.length(), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+		kqDraw.print_font(double_buffer, 160 - (totalGoldCostStr.length() * 4) + xofs, 56 + yofs, _(totalGoldCostStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 		kqDraw.menubox(double_buffer, 248 + xofs, 168 + yofs, 7, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 		kqDraw.print_font(double_buffer, 256 + xofs, 176 + yofs, _("Gold:"), eFontColor::FONTCOLOR_GOLD);
-		sprintf(strbuf, "%d", gp);
-		kqDraw.print_font(double_buffer, 312 - (strlen(strbuf) * 8) + xofs, 184 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		std::string gpStr = std::to_string(gp);
+		kqDraw.print_font(double_buffer, 312 - (gpStr.length() * 8) + xofs, 184 + yofs, gpStr.c_str(), eFontColor::FONTCOLOR_NORMAL);
 		if ((uint32_t)gp >= total_gold_cost)
 		{
 			kqDraw.menubox(double_buffer, 52 + xofs, 96 + yofs, 25, 2, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
@@ -563,8 +573,8 @@ static void sell_howmany(int item_no, size_t inv_page)
 	if (max_items == 1)
 	{
         kqDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
-		sprintf(strbuf, _("Sell for %d gp?"), prc * 50 / 100);
-		kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		std::string prcStr = "Sell for " + std::to_string(prc * 50 / 100) + " gp?";
+		kqDraw.print_font(double_buffer, 160 - (prcStr.length() * 4) + xofs, 176 + yofs, _(prcStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 		sell_item(inv_page * NUM_ITEMS_PER_PAGE + item_no, 1);
 		stop = 1;
 	}
@@ -577,8 +587,8 @@ static void sell_howmany(int item_no, size_t inv_page)
 		kqDraw.menubox(double_buffer, 32 + xofs, item_no * 8 + 24 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
         kqDraw.draw_icon(double_buffer, items[l].icon, 48 + xofs, item_no * 8 + 32 + yofs);
 		kqDraw.print_font(double_buffer, 56 + xofs, item_no * 8 + 32 + yofs, items[l].itemName, eFontColor::FONTCOLOR_NORMAL);
-		sprintf(strbuf, _("%d of %d"), my, max_items);
-		kqDraw.print_font(double_buffer, 280 - (strlen(strbuf) * 8) + xofs, item_no * 8 + 32 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+		std::string itemsStr = std::to_string(my) + " of " + std::to_string(max_items);
+		kqDraw.print_font(double_buffer, 280 - (itemsStr.length() * 8) + xofs, item_no * 8 + 32 + yofs, _(itemsStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
         kqDraw.blit2screen(xofs, yofs);
 
 		PlayerInput.readcontrols();
@@ -612,8 +622,8 @@ static void sell_howmany(int item_no, size_t inv_page)
 		{
 			Game.unpress();
 			kqDraw.menubox(double_buffer, 32 + xofs, 168 + yofs, 30, 1, eMenuBoxColor::DARKBLUE);
-			sprintf(strbuf, _("Sell for %d gp?"), (prc * 50 / 100) * my);
-			kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
+			std::string prcStr = "Sell for " + std::to_string((prc * 50 / 100) * my) + " gp?";
+			kqDraw.print_font(double_buffer, 160 - (prcStr.length() * 4) + xofs, 176 + yofs, _(prcStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 			sell_item(inv_page * NUM_ITEMS_PER_PAGE + item_no, my);
 			stop = 1;
 		}
@@ -709,29 +719,22 @@ static void sell_menu()
             kqDraw.draw_icon(double_buffer, items[inventory_item_index].icon, 48 + xofs, p * 8 + 32 + yofs);
 			kqDraw.print_font(double_buffer, 56 + xofs, p * 8 + 32 + yofs, items[inventory_item_index].itemName, k);
 			// Check if quantity of this item > 1
-			if (g_inv[inv_page * NUM_ITEMS_PER_PAGE + p].quantity > 1)
+			auto quantity = g_inv[inv_page * NUM_ITEMS_PER_PAGE + p].quantity;
+			if (quantity > 1)
 			{
 				// The '^' in this is an 'x' in allfonts.pcx
-				sprintf(strbuf, "^%d", g_inv[inv_page * NUM_ITEMS_PER_PAGE + p].quantity);
-				kqDraw.print_font(double_buffer, 264 + xofs, p * 8 + 32 + yofs, strbuf, k);
+				std::string qtyStr = "^" + std::to_string(quantity);
+				kqDraw.print_font(double_buffer, 264 + xofs, p * 8 + 32 + yofs, qtyStr.c_str(), k);
 			}
 		}
 		s_inventory& inv = g_inv[inv_page * NUM_ITEMS_PER_PAGE + yptr];
 		sp = items[inv.item].price * 50 / 100;
 		if (items[inv.item].price > 0)
 		{
-			if (inv.quantity > 1)
-			{
-				// Check if there is more than one item
-				sprintf(strbuf, _("%d gp for each one."), sp);
-				kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
-			}
-			else
-			{
-				// There is only one of this item
-				sprintf(strbuf, _("That's worth %d gp."), sp);
-				kqDraw.print_font(double_buffer, 160 - (strlen(strbuf) * 4) + xofs, 176 + yofs, strbuf, eFontColor::FONTCOLOR_NORMAL);
-			}
+			std::string qtyStr = (inv.quantity > 1)
+				? std::to_string(sp) + " gp for each one."
+				: "That's worth " + std::to_string(sp) + " gp.";
+			kqDraw.print_font(double_buffer, 160 - (qtyStr.length() * 4) + xofs, 176 + yofs, _(qtyStr.c_str()), eFontColor::FONTCOLOR_NORMAL);
 		}
 		else
 		{
