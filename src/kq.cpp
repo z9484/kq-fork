@@ -1165,6 +1165,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 	for (i = 0; i < MAX_ENTITIES; i++)
 	{
+		// 38 looks like some kind of empty cloak with no face.
 		if (g_ent[i].chrx == 38 && g_ent[i].active)
 		{
 			g_ent[i].eid = ID_ENEMY;
