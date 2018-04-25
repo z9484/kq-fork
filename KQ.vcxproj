@@ -100,7 +100,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\animation.cpp" />
-    <ClCompile Include="src\anim_sequence.cpp" />
     <ClCompile Include="src\bounds.cpp" />
     <ClCompile Include="src\combat.cpp" />
     <ClCompile Include="src\console.cpp" />
@@ -141,7 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\animation.h" />
-    <ClInclude Include="include\anim_sequence.h" />
     <ClInclude Include="include\bounds.h" />
     <ClInclude Include="include\combat.h" />
     <ClInclude Include="include\console.h" />

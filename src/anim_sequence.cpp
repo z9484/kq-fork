@@ -1,32 +1,24 @@
-#include "anim_sequence.h"
 #include "tmx_animation.h"
 
 // Note: *copy* the base animation into this instance. The base animation
 // comes from a tmx_map which may be destroyed.
 KAnimSequence::KAnimSequence(const KTmxAnimation& base)
-	: animation(base)
+	: animation_(base)
 {
-	index = 0;
-	nexttime = current().delay;
+	index_ = 0;
+	nexttime_ = current().delay;
 }
 
-// Move constructor to aid efficiency
-KAnimSequence::KAnimSequence(KAnimSequence&& other)
-	: animation(other.animation)
+KTmxAnimation::animation_frame KAnimSequence::current() const
 {
-	nexttime = other.nexttime;
-	index = other.index;
-}
-
-const KTmxAnimation::animation_frame& KAnimSequence::current()
-{
-	return animation.frames[index];
+	return animation_.frames[index_];
 }
 
 void KAnimSequence::advance()
 {
-	if (++index >= animation.frames.size())
+	if (index_ < animation_.frames.size() - 1)
+	if (++index_ >= animation_.frames.size())
 	{
-		index = 0;
+		index_ = 0;
 	}
 }

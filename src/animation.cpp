@@ -1,28 +1,55 @@
 #include "animation.h"
 #include "anim_sequence.h"
+#include "tmx_animation.h"
 
 void KAnimation::check_animation(int millis, uint16_t* tilex)
 {
-	for (auto& a : animations)
+	for (auto& anim : animations_)
 	{
-		a.nexttime -= millis;
-		while (a.nexttime < 0)
+		anim.nexttime_ -= millis;
+		
+		// If several frames are skipped, this loop ensures that the correct animation
+		// tile is rendered.
+		while (anim.nexttime_ < 0)
 		{
-			a.nexttime += a.current().delay;
-			a.advance();
+			anim.nexttime_ += anim.current().delay;
+			anim.advance();
 		}
-		tilex[a.animation.tilenumber] = a.current().tile;
+		tilex[anim.animation_.tilenumber] = anim.current().tile;
 	}
 }
 
 void KAnimation::add_animation(const KTmxAnimation& base)
 {
-	animations.push_back(KAnimSequence(base));
+	animations_.push_back(KAnimSequence(base));
 }
 
 void KAnimation::clear_animations()
 {
-	animations.clear();
+	animations_.clear();
+}
+
+// Note: *copy* the base animation into this instance. The base animation
+// comes from a tmx_map which may be destroyed.
+KAnimation::KAnimSequence::KAnimSequence(const KTmxAnimation& base)
+	: animation_(base)
+{
+	index_ = 0;
+	nexttime_ = current().delay;
+}
+
+KTmxAnimation::animation_frame KAnimation::KAnimSequence::current() const
+{
+	return animation_.frames[index_];
+}
+
+void KAnimation::KAnimSequence::advance()
+{
+	if (index_ < animation_.frames.size() - 1)
+		if (++index_ >= animation_.frames.size())
+		{
+			index_ = 0;
+		}
 }
 
 KAnimation kqAnimation;

@@ -33,41 +33,47 @@ KEntity::~KEntity()
 
 void KEntity::ChaseAfterMainPlayer(t_entity target_entity)
 {
-	int emoved = 0;
-
-	if (g_ent[target_entity].chasing == 0)
+	if (target_entity >= MAX_ENTITIES)
 	{
-		if (entity_near(target_entity, 0, 3) == 1 && kqrandom->random_range_exclusive(0, 100) <= g_ent[target_entity].extra)
+		return;
+	}
+
+	auto& entity = g_ent[target_entity];
+	if (entity.chasing == 0)
+	{
+		if (entity_near(target_entity, 0, 3) == 1 && kqrandom->random_range_exclusive(0, 100) <= entity.extra)
 		{
-			g_ent[target_entity].chasing = 1;
-			if (g_ent[target_entity].speed < 7)
+			entity.chasing = 1;
+			if (entity.speed < 7)
 			{
-				g_ent[target_entity].speed++;
+				entity.speed++;
 			}
-			g_ent[target_entity].delay = 0;
+			entity.delay = 0;
 		}
 		else
 		{
 			wander(target_entity);
 		}
 	}
-	if (g_ent[target_entity].chasing == 1)
+	if (entity.chasing == 1)
 	{
 		if (entity_near(target_entity, 0, 4) == 1)
 		{
-			if (g_ent[0].tilex > g_ent[target_entity].tilex)
+			int emoved = 0;
+
+			if (g_ent[0].tilex > entity.tilex)
 			{
 				emoved = move(target_entity, 1, 0);
 			}
-			if (g_ent[0].tilex < g_ent[target_entity].tilex && !emoved)
+			if (g_ent[0].tilex < entity.tilex && !emoved)
 			{
 				emoved = move(target_entity, -1, 0);
 			}
-			if (g_ent[0].tiley > g_ent[target_entity].tiley && !emoved)
+			if (g_ent[0].tiley > entity.tiley && !emoved)
 			{
 				emoved = move(target_entity, 0, 1);
 			}
-			if (g_ent[0].tiley < g_ent[target_entity].tiley && !emoved)
+			if (g_ent[0].tiley < entity.tiley && !emoved)
 			{
 				emoved = move(target_entity, 0, -1);
 			}
@@ -78,12 +84,12 @@ void KEntity::ChaseAfterMainPlayer(t_entity target_entity)
 		}
 		else
 		{
-			g_ent[target_entity].chasing = 0;
-			if (g_ent[target_entity].speed > 1)
+			entity.chasing = 0;
+			if (entity.speed > 1)
 			{
-				g_ent[target_entity].speed--;
+				entity.speed--;
 			}
-			g_ent[target_entity].delay = kqrandom->random_range_exclusive(25, 50);
+			entity.delay = kqrandom->random_range_exclusive(25, 50);
 			wander(target_entity);
 		}
 	}
@@ -174,85 +180,91 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 
 void KEntity::entscript(t_entity target_entity)
 {
-	if (g_ent[target_entity].active == 0)
+	if (target_entity >= MAX_ENTITIES)
 	{
 		return;
 	}
-	if (g_ent[target_entity].cmd == 0)
+
+	auto& entity = g_ent[target_entity];
+	if (entity.active == 0)
+	{
+		return;
+	}
+	if (entity.cmd == 0)
 	{
 		getcommand(target_entity);
 	}
-	switch (g_ent[target_entity].cmd)
+	switch (entity.cmd)
 	{
 	case eCommands::COMMAND_MOVE_UP:
 		if (move(target_entity, 0, -1))
 		{
-			g_ent[target_entity].cmdnum--;
+			entity.cmdnum--;
 		}
 		break;
 	case eCommands::COMMAND_MOVE_DOWN:
 		if (move(target_entity, 0, 1))
 		{
-			g_ent[target_entity].cmdnum--;
+			entity.cmdnum--;
 		}
 		break;
 	case eCommands::COMMAND_MOVE_LEFT:
 		if (move(target_entity, -1, 0))
 		{
-			g_ent[target_entity].cmdnum--;
+			entity.cmdnum--;
 		}
 		break;
 	case eCommands::COMMAND_MOVE_RIGHT:
 		if (move(target_entity, 1, 0))
 		{
-			g_ent[target_entity].cmdnum--;
+			entity.cmdnum--;
 		}
 		break;
 	case eCommands::COMMAND_WAIT:
-		g_ent[target_entity].cmdnum--;
+		entity.cmdnum--;
 		break;
 	case eCommands::COMMAND_FINISH_COMMANDS:
 		return;
 	case eCommands::COMMAND_REPEAT:
-		g_ent[target_entity].sidx = 0;
-		g_ent[target_entity].cmdnum = 0;
+		entity.sidx = 0;
+		entity.cmdnum = 0;
 		break;
 	case eCommands::COMMAND_MOVETO_X:
-		if (g_ent[target_entity].tilex < g_ent[target_entity].cmdnum)
+		if (entity.tilex < entity.cmdnum)
 		{
 			move(target_entity, 1, 0);
 		}
-		if (g_ent[target_entity].tilex > g_ent[target_entity].cmdnum)
+		if (entity.tilex > entity.cmdnum)
 		{
 			move(target_entity, -1, 0);
 		}
-		if (g_ent[target_entity].tilex == g_ent[target_entity].cmdnum)
+		if (entity.tilex == entity.cmdnum)
 		{
-			g_ent[target_entity].cmdnum = 0;
+			entity.cmdnum = 0;
 		}
 		break;
 	case eCommands::COMMAND_MOVETO_Y:
-		if (g_ent[target_entity].tiley < g_ent[target_entity].cmdnum)
+		if (entity.tiley < entity.cmdnum)
 		{
 			move(target_entity, 0, 1);
 		}
-		if (g_ent[target_entity].tiley > g_ent[target_entity].cmdnum)
+		if (entity.tiley > entity.cmdnum)
 		{
 			move(target_entity, 0, -1);
 		}
-		if (g_ent[target_entity].tiley == g_ent[target_entity].cmdnum)
+		if (entity.tiley == entity.cmdnum)
 		{
-			g_ent[target_entity].cmdnum = 0;
+			entity.cmdnum = 0;
 		}
 		break;
 	case eCommands::COMMAND_FACE:
-		g_ent[target_entity].facing = g_ent[target_entity].cmdnum;
-		g_ent[target_entity].cmdnum = 0;
+		entity.facing = entity.cmdnum;
+		entity.cmdnum = 0;
 		break;
 	}
-	if (g_ent[target_entity].cmdnum == 0)
+	if (entity.cmdnum == 0)
 	{
-		g_ent[target_entity].cmd = 0;
+		entity.cmd = 0;
 	}
 }
 
@@ -279,79 +291,85 @@ void KEntity::follow(int tile_x, int tile_y)
 
 void KEntity::getcommand(t_entity target_entity)
 {
-	char currentCommand = '\0';
+	if (target_entity >= MAX_ENTITIES)
+	{
+		return;
+	}
+
+	auto& entity = g_ent[target_entity];
 
 	/* PH FIXME: prevented from running off end of string */
-		const auto scriptIndex = g_ent[target_entity].sidx;
+	char currentCommand = '\0';
+	const auto scriptIndex = entity.sidx;
 	if (scriptIndex < MAX_SCRIPT)
 	{
-		currentCommand = g_ent[target_entity].script[scriptIndex];
-		g_ent[target_entity].sidx++;
+		currentCommand = entity.script[scriptIndex];
+		entity.sidx++;
 	}
 
 	switch (currentCommand)
 	{
 	case 'u':
 	case 'U':
-		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_UP;
+		entity.cmd = eCommands::COMMAND_MOVE_UP;
 		parsems(target_entity);
 		break;
 	case 'd':
 	case 'D':
-		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_DOWN;
+		entity.cmd = eCommands::COMMAND_MOVE_DOWN;
 		parsems(target_entity);
 		break;
 	case 'l':
 	case 'L':
-		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_LEFT;
+		entity.cmd = eCommands::COMMAND_MOVE_LEFT;
 		parsems(target_entity);
 		break;
 	case 'r':
 	case 'R':
-		g_ent[target_entity].cmd = eCommands::COMMAND_MOVE_RIGHT;
+		entity.cmd = eCommands::COMMAND_MOVE_RIGHT;
 		parsems(target_entity);
 		break;
 	case 'w':
 	case 'W':
-		g_ent[target_entity].cmd = eCommands::COMMAND_WAIT;
+		entity.cmd = eCommands::COMMAND_WAIT;
 		parsems(target_entity);
 		break;
 	case '\0':
-		g_ent[target_entity].cmd = eCommands::COMMAND_FINISH_COMMANDS;
-		g_ent[target_entity].movemode = MM_STAND;
-		g_ent[target_entity].cmdnum = 0;
-		g_ent[target_entity].sidx = 0;
+		entity.cmd = eCommands::COMMAND_FINISH_COMMANDS;
+		entity.movemode = MM_STAND;
+		entity.cmdnum = 0;
+		entity.sidx = 0;
 		break;
 	case 'b':
 	case 'B':
-		g_ent[target_entity].cmd = eCommands::COMMAND_REPEAT;
+		entity.cmd = eCommands::COMMAND_REPEAT;
 		break;
 	case 'x':
 	case 'X':
-		g_ent[target_entity].cmd = eCommands::COMMAND_MOVETO_X;
+		entity.cmd = eCommands::COMMAND_MOVETO_X;
 		parsems(target_entity);
 		break;
 	case 'y':
 	case 'Y':
-		g_ent[target_entity].cmd = eCommands::COMMAND_MOVETO_Y;
+		entity.cmd = eCommands::COMMAND_MOVETO_Y;
 		parsems(target_entity);
 		break;
 	case 'f':
 	case 'F':
-		g_ent[target_entity].cmd = eCommands::COMMAND_FACE;
+		entity.cmd = eCommands::COMMAND_FACE;
 		parsems(target_entity);
 		break;
 	case 'k':
 	case 'K':
 		/* PH add: command K makes the ent disappear */
-		g_ent[target_entity].cmd = eCommands::COMMAND_KILL;
-		g_ent[target_entity].active = 0;
+		entity.cmd = eCommands::COMMAND_KILL;
+		entity.active = 0;
 		break;
 	default:
 #ifdef DEBUGMODE
 		if (debugging > 0)
 		{
-			sprintf(strbuf, _("Invalid entity command (%c) at position %d for ent %d"), currentCommand, g_ent[target_entity].sidx, target_entity);
+			sprintf(strbuf, _("Invalid entity command (%c) at position %d for ent %d"), currentCommand, entity.sidx, target_entity);
 			Game.program_death(strbuf);
 		}
 #endif
@@ -361,50 +379,54 @@ void KEntity::getcommand(t_entity target_entity)
 
 int KEntity::move(t_entity target_entity, int dx, int dy)
 {
-	int tile_x, tile_y, source_tile, oldfacing;
-	KQEntity* ent = &g_ent[target_entity];
+	if (target_entity >= MAX_ENTITIES)
+	{
+		return 0;
+	}
+
+	auto& entity = g_ent[target_entity];
 
 	if (dx == 0 && dy == 0) // Speed optimization.
 	{
 		return 0;
 	}
 
-	tile_x = ent->x / TILE_W;
-	tile_y = ent->y / TILE_H;
-	oldfacing = ent->facing;
+	int tile_x = entity.x / TILE_W;
+	int tile_y = entity.y / TILE_H;
+	int oldfacing = entity.facing;
 	if (dx < 0)
 	{
-		ent->facing = FACE_LEFT;
+		entity.facing = FACE_LEFT;
 	}
 	else if (dx > 0)
 	{
-		ent->facing = FACE_RIGHT;
+		entity.facing = FACE_RIGHT;
 	}
 	else if (dy > 0)
 	{
-		ent->facing = FACE_DOWN;
+		entity.facing = FACE_DOWN;
 	}
 	else if (dy < 0)
 	{
-		ent->facing = FACE_UP;
+		entity.facing = FACE_UP;
 	}
 	if (tile_x + dx < 0 || tile_x + dx >= (int)g_map.xsize ||
 		tile_y + dy < 0 || tile_y + dy >= (int)g_map.ysize)
 	{
 		return 0;
 	}
-	if (ent->obsmode == 1)
+	if (entity.obsmode == 1)
 	{
 		// Try to automatically walk/run around obstacle.
 		if (dx && obstruction(tile_x, tile_y, dx, 0, FALSE))
 		{
-			if (dy != -1 && oldfacing == ent->facing &&
+			if (dy != -1 && oldfacing == entity.facing &&
 				!obstruction(tile_x, tile_y + 1, dx, 0, TRUE) &&
 				!obstruction(tile_x, tile_y, 0, 1, TRUE))
 			{
 				dy = 1;
 			}
-			else if (dy != 1 && oldfacing == ent->facing &&
+			else if (dy != 1 && oldfacing == entity.facing &&
 				!obstruction(tile_x, tile_y - 1, dx, 0, TRUE) &&
 				!obstruction(tile_x, tile_y, 0, -1, TRUE))
 			{
@@ -417,13 +439,13 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 		}
 		if (dy && obstruction(tile_x, tile_y, 0, dy, FALSE))
 		{
-			if (dx != -1 && oldfacing == ent->facing &&
+			if (dx != -1 && oldfacing == entity.facing &&
 				!obstruction(tile_x + 1, tile_y, 0, dy, TRUE) &&
 				!obstruction(tile_x, tile_y, 1, 0, TRUE))
 			{
 				dx = 1;
 			}
-			else if (dx != 1 && oldfacing == ent->facing &&
+			else if (dx != 1 && oldfacing == entity.facing &&
 				!obstruction(tile_x - 1, tile_y, 0, dy, TRUE) &&
 				!obstruction(tile_x, tile_y, -1, 0, TRUE))
 			{
@@ -440,12 +462,12 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 		}
 	}
 
-	if (!dx && !dy && oldfacing == ent->facing)
+	if (!dx && !dy && oldfacing == entity.facing)
 	{
 		return 0;
 	}
 
-	if (ent->obsmode == 1 && entityat(tile_x + dx, tile_y + dy, target_entity))
+	if (entity.obsmode == 1 && entityat(tile_x + dx, tile_y + dy, target_entity))
 	{
 		return 0;
 	}
@@ -453,11 +475,11 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 	// Make sure that the player can't avoid special zones by moving diagonally.
 	if (dx && dy)
 	{
-		source_tile = tile_y * g_map.xsize + tile_x;
+		int source_tile = tile_y * g_map.xsize + tile_x;
 		if (z_seg[source_tile] != z_seg[source_tile + dx] ||
 			z_seg[source_tile] != z_seg[source_tile + dy * g_map.xsize])
 		{
-			if (ent->facing == FACE_LEFT || ent->facing == FACE_RIGHT)
+			if (entity.facing == FACE_LEFT || entity.facing == FACE_RIGHT)
 			{
 				if (!obstruction(tile_x, tile_y, dx, 0, TRUE))
 				{
@@ -492,12 +514,12 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 		}
 	}
 
-	ent->tilex = tile_x + dx;
-	ent->tiley = tile_y + dy;
-	ent->y += dy;
-	ent->x += dx;
-	ent->moving = true;
-	ent->movcnt = 15;
+	entity.tilex = tile_x + dx;
+	entity.tiley = tile_y + dy;
+	entity.y += dy;
+	entity.x += dx;
+	entity.moving = true;
+	entity.movcnt = 15;
 	return 1;
 }
 
@@ -579,32 +601,38 @@ int KEntity::obstruction(int origin_x, int origin_y, int move_x, int move_y, int
 
 void KEntity::parsems(t_entity target_entity)
 {
-	uint32_t p = 0;
-	char tok[10];
+	if (target_entity >= MAX_ENTITIES)
+	{
+		return;
+	}
 
-	size_t scriptIndex = g_ent[target_entity].sidx;
+	auto& entity = g_ent[target_entity];
+
+	size_t scriptIndex = entity.sidx;
 	if (scriptIndex >= MAX_SCRIPT)
 	{
 		return;
 	}
 
 	// 48..57 are '0'..'9' ASCII
-	char s = g_ent[target_entity].script[scriptIndex];
+	char s = entity.script[scriptIndex];
+	uint32_t p = 0;
+	char tok[10];
 	while (s >= '0' && s <= '9' && p < sizeof(tok) - 1)
 	{
 		tok[p] = s;
 		p++;
 
-		g_ent[target_entity].sidx++;
-		scriptIndex = g_ent[target_entity].sidx;
+		entity.sidx++;
+		scriptIndex = entity.sidx;
 		if (scriptIndex >= MAX_SCRIPT)
 		{
 			break;
 		}
-		s = g_ent[target_entity].script[scriptIndex];
+		s = entity.script[scriptIndex];
 	}
 	tok[p] = 0;
-	g_ent[target_entity].cmdnum = atoi(tok);
+	entity.cmdnum = atoi(tok);
 }
 
 void KEntity::place_ent(t_entity entity_index, int ex, int ey)
@@ -664,28 +692,28 @@ void KEntity::process_entities()
 
 void KEntity::process_entity(t_entity target_entity)
 {
-	KQEntity* ent = &g_ent[target_entity];
-	KPlayer* player = 0;
+	auto& entity = g_ent[target_entity];
+	KPlayer* player = nullptr;
 
-	ent->scount = 0;
+	entity.scount = 0;
 
-	if (!ent->active)
+	if (!entity.active)
 	{
 		return;
 	}
 
-	if (!ent->moving)
+	if (!entity.moving)
 	{
 		if (target_entity == 0 && !autoparty)
 		{
 			player_move();
-			if (ent->moving && display_desc == 1)
+			if (entity.moving && display_desc == 1)
 			{
 				display_desc = 0;
 			}
 			return;
 		}
-		switch (ent->movemode)
+		switch (entity.movemode)
 		{
 		case MM_STAND:
 			return;
@@ -705,36 +733,36 @@ void KEntity::process_entity(t_entity target_entity)
 	}
 	else   /* if (.moving==0) */
 	{
-		if (ent->tilex * TILE_W > ent->x)
+		if (entity.tilex * TILE_W > entity.x)
 		{
-			++ent->x;
+			++entity.x;
 		}
-		if (ent->tilex * TILE_W < ent->x)
+		if (entity.tilex * TILE_W < entity.x)
 		{
-			--ent->x;
+			--entity.x;
 		}
-		if (ent->tiley * TILE_H > ent->y)
+		if (entity.tiley * TILE_H > entity.y)
 		{
-			++ent->y;
+			++entity.y;
 		}
-		if (ent->tiley * TILE_H < ent->y)
+		if (entity.tiley * TILE_H < entity.y)
 		{
-			--ent->y;
+			--entity.y;
 		}
-		ent->movcnt--;
+		entity.movcnt--;
 
-		if (ent->framectr < MAX_FRAMECTR - 1)
+		if (entity.framectr < MAX_FRAMECTR - 1)
 		{
-			ent->framectr++;
+			entity.framectr++;
 		}
 		else
 		{
-			ent->framectr = 0;
+			entity.framectr = 0;
 		}
 
-		if (ent->movcnt == 0)
+		if (entity.movcnt == 0)
 		{
-			ent->moving = false;
+			entity.moving = false;
 			if (target_entity < MAX_PARTY_SIZE)
 			{
 				player = &party[pidx[target_entity]];
@@ -777,50 +805,53 @@ void KEntity::set_script(t_entity target_entity, const std::string& movestring)
 	{
 		return;
 	}
-	auto& target = g_ent[target_entity];
-	target.moving = false; // Stop entity from moving
-	target.movcnt = 0; // Reset the move counter to 0
-	target.cmd = eCommands::COMMAND_NONE;
-	target.sidx = 0;   // Reset script command index
-	target.cmdnum = 0; // There are no scripted commands
-	target.movemode = MM_SCRIPT; // Force the entity to follow the script
-	strncpy(target.script, movestring.c_str(), sizeof(target.script));
+	auto& entity = g_ent[target_entity];
+
+	entity.moving = false; // Stop entity from moving
+	entity.movcnt = 0; // Reset the move counter to 0
+	entity.cmd = eCommands::COMMAND_NONE;
+	entity.sidx = 0;   // Reset script command index
+	entity.cmdnum = 0; // There are no scripted commands
+	entity.movemode = MM_SCRIPT; // Force the entity to follow the script
+	strncpy(entity.script, movestring.c_str(), sizeof(entity.script));
 }
 
 void KEntity::speed_adjust(t_entity target_entity)
 {
-	if (g_ent[target_entity].speed < 4)
+	auto& entity = g_ent[target_entity];
+
+	if (entity.speed < 4)
 	{
-		switch (g_ent[target_entity].speed)
+		switch (entity.speed)
 		{
 		case 1:
-			if (g_ent[target_entity].scount < 3)
+			if (entity.scount < 3)
 			{
-				g_ent[target_entity].scount++;
+				entity.scount++;
 				return;
 			}
 			break;
 		case 2:
-			if (g_ent[target_entity].scount < 2)
+			if (entity.scount < 2)
 			{
-				g_ent[target_entity].scount++;
+				entity.scount++;
 				return;
 			}
 			break;
 		case 3:
-			if (g_ent[target_entity].scount < 1)
+			if (entity.scount < 1)
 			{
-				g_ent[target_entity].scount++;
+				entity.scount++;
 				return;
 			}
 			break;
 		}
 	}
-	if (g_ent[target_entity].speed < 5)
+	if (entity.speed < 5)
 	{
 		process_entity(target_entity);
 	}
-	switch (g_ent[target_entity].speed)
+	switch (entity.speed)
 	{
 	case 5:
 		process_entity(target_entity);
@@ -848,10 +879,10 @@ void KEntity::speed_adjust(t_entity target_entity)
 void KEntity::target(t_entity target_entity)
 {
 	int dx, dy, ax, ay, emoved = 0;
-	KQEntity* ent = &g_ent[target_entity];
+	auto& entity = g_ent[target_entity];
 
-	ax = dx = ent->target_x - ent->tilex;
-	ay = dy = ent->target_y - ent->tiley;
+	ax = dx = entity.target_x - entity.tilex;
+	ay = dy = entity.target_y - entity.tiley;
 	if (ax < 0)
 	{
 		ax = -ax;
@@ -911,18 +942,20 @@ void KEntity::target(t_entity target_entity)
 	if (dx == 0 && dy == 0)
 	{
 		/* Got there */
-		ent->movemode = MM_STAND;
+		entity.movemode = MM_STAND;
 	}
 }
 
 void KEntity::wander(t_entity target_entity)
 {
-	if (g_ent[target_entity].delayctr < g_ent[target_entity].delay)
+	auto& entity = g_ent[target_entity];
+
+	if (entity.delayctr < entity.delay)
 	{
-		g_ent[target_entity].delayctr++;
+		entity.delayctr++;
 		return;
 	}
-	g_ent[target_entity].delayctr = 0;
+	entity.delayctr = 0;
 	switch (kqrandom->random_range_exclusive(0, 8))
 	{
 	case 0:
