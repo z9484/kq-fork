@@ -77,7 +77,7 @@ struct KQEntity
 	uint8_t eid;
 
 	// "Alive" or not
-	uint8_t active;
+	bool active;
 
 	// Direction
 	uint8_t facing;

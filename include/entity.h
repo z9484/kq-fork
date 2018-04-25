@@ -172,8 +172,9 @@ private:
      * @param target_entity Index of entity to move
      * @param dx tiles to move in x direction
      * @param dy tiles to move in y direction
+     * @return true if the entity moved, false if the entity stayed in the same place
      */
-    int move(t_entity target_entity, int dx, int dy);
+    bool move(t_entity target_entity, int dx, int dy);
 
     /**
      * Check for obstruction

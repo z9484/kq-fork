@@ -2,14 +2,6 @@
  * Entity functions
  */
 
-#include <assert.h>
-#include <ctype.h>
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "combat.h"
 #include "entity.h"
 #include "enums.h"
@@ -59,21 +51,21 @@ void KEntity::ChaseAfterMainPlayer(t_entity target_entity)
 	{
 		if (entity_near(target_entity, 0, 4) == 1)
 		{
-			int emoved = 0;
+			bool emoved = false;
 
 			if (g_ent[0].tilex > entity.tilex)
 			{
 				emoved = move(target_entity, 1, 0);
 			}
-			if (g_ent[0].tilex < entity.tilex && !emoved)
+			if (!emoved && g_ent[0].tilex < entity.tilex)
 			{
 				emoved = move(target_entity, -1, 0);
 			}
-			if (g_ent[0].tiley > entity.tiley && !emoved)
+			if (!emoved && g_ent[0].tiley > entity.tiley)
 			{
 				emoved = move(target_entity, 0, 1);
 			}
-			if (g_ent[0].tiley < entity.tiley && !emoved)
+			if (!emoved && g_ent[0].tiley < entity.tiley)
 			{
 				emoved = move(target_entity, 0, -1);
 			}
@@ -100,7 +92,7 @@ void KEntity::recalculateNumberOfActiveMapEntities()
 	noe = 0;
 	for (size_t entity_index = 0; entity_index < MAX_ENTITIES; entity_index++)
 	{
-		if (g_ent[entity_index].active == 1)
+		if (g_ent[entity_index].active)
 		{
 			noe = entity_index + 1;
 		}
@@ -152,7 +144,7 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 				{
 					if (kqCombat.combat(0) == 1)
 					{
-						g_ent[who].active = 0;
+						g_ent[who].active = false;
 					}
 					return 0;
 				}
@@ -164,7 +156,7 @@ int KEntity::entityat(int ox, int oy, t_entity who)
 				{
 					if (kqCombat.combat(0) == 1)
 					{
-						g_ent[i].active = 0;
+						g_ent[i].active = false;
 					}
 					return 0;
 				}
@@ -186,7 +178,7 @@ void KEntity::entscript(t_entity target_entity)
 	}
 
 	auto& entity = g_ent[target_entity];
-	if (entity.active == 0)
+	if (!entity.active)
 	{
 		return;
 	}
@@ -363,7 +355,7 @@ void KEntity::getcommand(t_entity target_entity)
 	case 'K':
 		/* PH add: command K makes the ent disappear */
 		entity.cmd = eCommands::COMMAND_KILL;
-		entity.active = 0;
+		entity.active = false;
 		break;
 	default:
 #ifdef DEBUGMODE
@@ -377,18 +369,18 @@ void KEntity::getcommand(t_entity target_entity)
 	}
 }
 
-int KEntity::move(t_entity target_entity, int dx, int dy)
+bool KEntity::move(t_entity target_entity, int dx, int dy)
 {
 	if (target_entity >= MAX_ENTITIES)
 	{
-		return 0;
+		return false;
 	}
 
 	auto& entity = g_ent[target_entity];
 
 	if (dx == 0 && dy == 0) // Speed optimization.
 	{
-		return 0;
+		return false;
 	}
 
 	int tile_x = entity.x / TILE_W;
@@ -413,7 +405,7 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 	if (tile_x + dx < 0 || tile_x + dx >= (int)g_map.xsize ||
 		tile_y + dy < 0 || tile_y + dy >= (int)g_map.ysize)
 	{
-		return 0;
+		return false;
 	}
 	if (entity.obsmode == 1)
 	{
@@ -464,12 +456,12 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 
 	if (!dx && !dy && oldfacing == entity.facing)
 	{
-		return 0;
+		return false;
 	}
 
 	if (entity.obsmode == 1 && entityat(tile_x + dx, tile_y + dy, target_entity))
 	{
-		return 0;
+		return false;
 	}
 
 	// Make sure that the player can't avoid special zones by moving diagonally.
@@ -510,7 +502,7 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 		if (obstruction(tile_x, tile_y, dx, 0, TRUE) &&
 			obstruction(tile_x, tile_y, 0, dy, TRUE))
 		{
-			return 0;
+			return false;
 		}
 	}
 
@@ -520,7 +512,7 @@ int KEntity::move(t_entity target_entity, int dx, int dy)
 	entity.x += dx;
 	entity.moving = true;
 	entity.movcnt = 15;
-	return 1;
+	return true;
 }
 
 int KEntity::obstruction(int origin_x, int origin_y, int move_x, int move_y, int check_entity)
@@ -665,7 +657,9 @@ void KEntity::player_move()
 	}
 #endif
 
-	move(0, PlayerInput.right ? 1 : PlayerInput.left ? -1 : 0, PlayerInput.down ? 1 : PlayerInput.up ? -1 : 0);
+	move(0,
+	     PlayerInput.right ? 1 : PlayerInput.left ? -1 : 0,
+	     PlayerInput.down  ? 1 : PlayerInput.up   ? -1 : 0);
 	if (g_ent[0].moving)
 	{
 		follow(oldx, oldy);
@@ -676,7 +670,7 @@ void KEntity::process_entities()
 {
 	for (t_entity i = 0; i < MAX_ENTITIES; i++)
 	{
-		if (g_ent[i].active == 1)
+		if (g_ent[i].active)
 		{
 			speed_adjust(i);
 		}

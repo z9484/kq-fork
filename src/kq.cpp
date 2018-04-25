@@ -1165,7 +1165,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 	for (i = 0; i < MAX_ENTITIES; i++)
 	{
-		if (g_ent[i].chrx == 38 && g_ent[i].active == 1)
+		if (g_ent[i].chrx == 38 && g_ent[i].active)
 		{
 			g_ent[i].eid = ID_ENEMY;
 			g_ent[i].speed = kqrandom->random_range_exclusive(1, 5);
@@ -1217,7 +1217,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 	for (i = 0; i < (size_t)numchrs; i++)
 	{
-		g_ent[i].active = 1;
+		g_ent[i].active = true;
 	}
 
 	kEntity.recalculateNumberOfActiveMapEntities();
@@ -1590,7 +1590,7 @@ void KGame::wait_for_entity(size_t first_entity_index, size_t last_entity_index)
 		for (entity_index = first_entity_index; entity_index <= last_entity_index; ++entity_index)
 		{
 			move_mode = g_ent[entity_index].movemode;
-			if (g_ent[entity_index].active == 1 && (move_mode == MM_SCRIPT || move_mode == MM_TARGET))
+			if (g_ent[entity_index].active && (move_mode == MM_SCRIPT || move_mode == MM_TARGET))
 			{
 				any_following_entities = 1;
 				break; // for()

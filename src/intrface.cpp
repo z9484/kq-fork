@@ -1047,7 +1047,7 @@ int KQ_add_chr(lua_State* L)
 	if (numchrs < MAX_PARTY_SIZE)
 	{
 		pidx[numchrs] = a;
-		g_ent[numchrs].active = 1;
+		g_ent[numchrs].active = true;
 		g_ent[numchrs].eid = (int)a;
 		g_ent[numchrs].chrx = 0;
 		numchrs++;
@@ -1313,7 +1313,7 @@ int KQ_char_getter(lua_State* L)
 			break;
 
 		case 15:
-			lua_pushnumber(L, ent->active);
+			lua_pushnumber(L, ent->active ? 1 : 0);
 			break;
 
 		case 16:
@@ -1439,7 +1439,7 @@ int KQ_char_setter(lua_State* L)
 			break;
 
 		case 15:
-			ent->active = (int)lua_tonumber(L, 3);
+			ent->active = (lua_tonumber(L, 3) != 0);
 			break;
 
 		default:
@@ -1864,7 +1864,7 @@ int KQ_get_ent_active(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
 
-	lua_pushnumber(L, g_ent[a].active);
+	lua_pushnumber(L, g_ent[a].active ? 1 : 0);
 	return 1;
 }
 
@@ -3003,12 +3003,9 @@ int KQ_set_desc(lua_State* L)
 int KQ_set_ent_active(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
-	auto b = lua_tointeger(L, 2);
+	bool isActive = (lua_tointeger(L, 2) != 0);
 
-	if (b == 0 || b == 1)
-	{
-		g_ent[a].active = b;
-	}
+	g_ent[a].active = isActive;
 	return 0;
 }
 
@@ -4204,7 +4201,7 @@ int KQ_party_setter(lua_State* L)
 				memcpy(&g_ent[i], &g_ent[i + 1], sizeof(KQEntity));
 			}
 			--numchrs;
-			g_ent[numchrs].active = 0;
+			g_ent[numchrs].active = false;
 			pidx[numchrs] = PIDX_UNDEFINED;
 		}
 		else if (lua_istable(L, 3))
