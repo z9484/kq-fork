@@ -507,9 +507,9 @@ private:
      * NB. Values for $ other than $0 or $1 will cause errors.
      *
      * \param   the_string Input string
-     * \returns string with player name incoporated.
+     * \returns string with player name incorporated.
      */
-    const char* substitutePlayerNameString(const std::string& the_string);
+    std::string substitutePlayerNameString(const std::string& the_string);
 
     /*! \brief Split text into lines
      * \author PH

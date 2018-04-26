@@ -26,12 +26,13 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
-#include <string>
+#include <map>
 #include <sstream>
+#include <string>
 
 /* Globals */
-#define MSG_ROWS 4
-#define MSG_COLS 36
+constexpr size_t MSG_ROWS{ 4 };
+constexpr size_t MSG_COLS{ 36 };
 char msgbuf[MSG_ROWS][MSG_COLS];
 std::string messageBuffer[MSG_ROWS];
 int gbx, gby, gbbx, gbby, gbbw, gbbh, gbbs;
@@ -43,7 +44,7 @@ namespace KqFork
  *
  * \sa relay()
  */
-enum m_mode
+enum class eTextFormat
 {
     M_UNDEF,
     M_SPACE,
@@ -51,28 +52,34 @@ enum m_mode
     M_END
 };
 
-/*! \brief glyph look up table
- *
- * maps unicode char to glyph index for characters > 128.
- * { unicode, glyph }
- * n.b. must be sorted in order of unicode char and terminated by {0, 0}
+/**
+ * Find the offset of the unicode glyph within the font.
+ * 
+ * @param glyph Character code to look up, value 128..255
+ * @return Offset within font file on success, or 0 if not found
  */
-const uint32_t glyph_lookup[][2] =
-{
-	{ 0x00c9, 'E' - 32 }, /* E-acute */
-	{ 0x00d3, 'O' - 32 }, /* O-acute */
-	{ 0x00df, 107 },      /* sharp s */
-	{ 0x00e1, 92 },       /* a-grave */
-	{ 0x00e4, 94 },       /* a-umlaut */
-	{ 0x00e9, 95 },       /* e-acute */
-	{ 0x00ed, 'i' - 32 }, /* i-acute */
-	{ 0x00f1, 108 },      /* n-tilde */
-	{ 0x00f3, 99 },       /* o-acute */
-	{ 0x00f6, 102 },      /* o-umlaut */
-	{ 0x00fa, 103 },      /* u-acute */
-	{ 0x00fc, 106 },      /* u-umlaut */
-	{ 0, 0 },
-};
+int glyphLookup(uint32_t glyph) {
+	static const std::map<uint32_t, int> glyphMap = {
+		{ 0x00c9, 'E' - 32 }, /* E-acute */
+		{ 0x00d3, 'O' - 32 }, /* O-acute */
+		{ 0x00df, 107 },      /* sharp s */
+		{ 0x00e1, 92 },       /* a-grave */
+		{ 0x00e4, 94 },       /* a-umlaut */
+		{ 0x00e9, 95 },       /* e-acute */
+		{ 0x00ed, 'i' - 32 }, /* i-acute */
+		{ 0x00f1, 108 },      /* n-tilde */
+		{ 0x00f3, 99 },       /* o-acute */
+		{ 0x00f6, 102 },      /* o-umlaut */
+		{ 0x00fa, 103 },      /* u-acute */
+		{ 0x00fc, 106 },      /* u-umlaut */
+	};
+	auto glyphIter = glyphMap.find(glyph);
+	if (glyphIter != glyphMap.end())
+	{
+		return glyphIter->second;
+	}
+	return 0;
+}
 
 } // namespace KqFork
 
@@ -1122,7 +1129,7 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 
 	/* Do the $0 replacement stuff */
 	memset(msg, 0, sizeof(msg));
-	strncpy(msg, substitutePlayerNameString(m), sizeof(msg) - 1);
+	strncpy(msg, substitutePlayerNameString(m).c_str(), sizeof(msg) - 1);
 	s = msg;
 
 	/* Save a copy of the screen */
@@ -1181,7 +1188,7 @@ void KDraw::message(const char* m, int icn, int delay, int x_m, int y_m)
 
 std::string KDraw::replaceAll(std::string originalString, const std::string& searchForText, const std::string& replaceWithText)
 {
-    size_t startPosition = originalString.find(searchForText, startPosition);
+    size_t startPosition = originalString.find(searchForText, 0);
     while (startPosition != std::string::npos)
     {
         originalString.replace(startPosition, searchForText.length(), replaceWithText);
@@ -1191,14 +1198,27 @@ std::string KDraw::replaceAll(std::string originalString, const std::string& sea
     return originalString;
 }
 
-const char* KDraw::substitutePlayerNameString(const std::string& the_string)
+std::string getPlayerName(const size_t playerId)
 {
-    static const std::string pidxDelimiter("$");
+	static std::map<size_t, std::string> playerNames;
+	if (playerNames.size() == 0)
+	{
+		for (size_t i = 0; i < MAXCHRS; ++i)
+		{
+			playerNames[i] = party[i].playerName;
+		}
+	}
+	return playerNames[playerId];
+}
+
+std::string KDraw::substitutePlayerNameString(const std::string& the_string)
+{
+	static const std::string pidxDelimiter("$");
     std::string replacedString(the_string);
     for (size_t i = 0; i < MAXCHRS; ++i)
     {
         std::string escapedPidx = pidxDelimiter + std::to_string(i);
-        replacedString = replaceAll(replacedString, escapedPidx, party[pidx[i]].playerName);
+        replacedString = replaceAll(replacedString, escapedPidx, getPlayerName(pidx[i]));
     }
     return replacedString.c_str();
 }
@@ -1207,22 +1227,22 @@ const char* KDraw::decode_utf8(const char* inputString, uint32_t* cp)
 {
 	char ch = *inputString;
 
-	if ((ch & 0x80) == 0x0)
+	if ((ch & 0b10000000) == 0x00)
 	{
 		/* single byte */
 		*cp = (int)ch;
 		++inputString;
 	}
-	else if ((ch & 0xe0) == 0xc0)
+	else if ((ch & 0b11100000) == 0b11000000)
 	{
 		/* double byte */
-		*cp = ((ch & 0x1f) << 6);
+		*cp = ((ch & 0b00011111) << 6);
 		++inputString;
 		ch = *inputString;
 
-		if ((ch & 0xc0) == 0x80)
+		if ((ch & 0b11000000) == 0b10000000)
 		{
-			*cp |= (ch & 0x3f);
+			*cp |= (ch & 0b00111111);
 			++inputString;
 		}
 		else
@@ -1230,20 +1250,20 @@ const char* KDraw::decode_utf8(const char* inputString, uint32_t* cp)
 			inputString = nullptr;
 		}
 	}
-	else if ((ch & 0xf0) == 0xe0)
+	else if ((ch & 0b11110000) == 0b11100000)
 	{
 		/* triple */
-		*cp = (ch & 0x0f) << 12;
+		*cp = (ch & 0b00001111) << 12;
 		++inputString;
 		ch = *inputString;
-		if ((ch & 0xc0) == 0x80)
+		if ((ch & 0b11000000) == 0b10000000)
 		{
-			*cp |= (ch & 0x3f) << 6;
+			*cp |= (ch & 0b00111111) << 6;
 			++inputString;
 			ch = *inputString;
-			if ((ch & 0xc0) == 0x80)
+			if ((ch & 0b11000000) == 0b10000000)
 			{
-				*cp |= (ch & 0x3f);
+				*cp |= (ch & 0b00111111);
 				++inputString;
 			}
 			else
@@ -1256,25 +1276,25 @@ const char* KDraw::decode_utf8(const char* inputString, uint32_t* cp)
 			inputString = nullptr;
 		}
 	}
-	else if ((ch & 0xf8) == 0xe0)
+	else if ((ch & 0b11111000) == 0b11100000)
 	{
 		/* Quadruple */
-		*cp = (ch & 0x0f) << 18;
+		*cp = (ch & 0b00001111) << 18;
 		++inputString;
 		ch = *inputString;
-		if ((ch & 0xc0) == 0x80)
+		if ((ch & 0b11000000) == 0b10000000)
 		{
-			*cp |= (ch & 0x3f) << 12;
+			*cp |= (ch & 0b00111111) << 12;
 			++inputString;
 			ch = *inputString;
-			if ((ch & 0xc0) == 0x80)
+			if ((ch & 0b11000000) == 0b10000000)
 			{
-				*cp |= (ch & 0x3f) << 6;
+				*cp |= (ch & 0b00111111) << 6;
 				++inputString;
 				ch = *inputString;
-				if ((ch & 0xc0) == 0x80)
+				if ((ch & 0b11000000) == 0b10000000)
 				{
-					*cp |= (ch & 0x3f);
+					*cp |= (ch & 0b00111111);
 					++inputString;
 				}
 				else
@@ -1306,22 +1326,16 @@ const char* KDraw::decode_utf8(const char* inputString, uint32_t* cp)
 
 int KDraw::get_glyph_index(uint32_t cp)
 {
-	int i;
-
 	if (cp < 128)
 	{
 		return cp - 32;
 	}
 
 	/* otherwise look up */
-	i = 0;
-	while (KqFork::glyph_lookup[i][0] != 0)
+	auto glyph = KqFork::glyphLookup(cp);
+	if (glyph != 0)
 	{
-		if (KqFork::glyph_lookup[i][0] == cp)
-		{
-			return KqFork::glyph_lookup[i][1];
-		}
-		++i;
+		return glyph;
 	}
 
 	/* didn't find it */
@@ -1460,7 +1474,7 @@ uint32_t KDraw::prompt_ex(uint32_t who, const char* ptext, const char* opt[], ui
     uint32_t winy = 0;
 	bool running = false;
 
-	ptext = substitutePlayerNameString(ptext);
+	ptext = substitutePlayerNameString(ptext).c_str();
 	while (1)
 	{
 		gbbw = 1;
@@ -1648,7 +1662,7 @@ std::string KDraw::splitTextOverMultipleLines(const std::string& stringToSplit)
 
 	int lasts, lastc, i, cr, cc;
 	char tc;
-	KqFork::m_mode state;
+	KqFork::eTextFormat state;
 
 	for (i = 0; i < MSG_ROWS; ++i)
 	{
@@ -1659,28 +1673,30 @@ std::string KDraw::splitTextOverMultipleLines(const std::string& stringToSplit)
 	cr = 0;
 	lasts = -1;
 	lastc = 0;
-	state = KqFork::M_UNDEF;
+	state = KqFork::eTextFormat::M_UNDEF;
 	while (1)
 	{
 		tc = stringToSplit[i];
 		switch (state)
 		{
-		case KqFork::M_UNDEF:
+		case KqFork::eTextFormat::M_UNDEF:
 			switch (tc)
 			{
 			case ' ':
 				lasts = i;
 				lastc = cc;
-				state = KqFork::M_SPACE;
+				state = KqFork::eTextFormat::M_SPACE;
 				break;
 
 			case '\0':
-                messageBuffer[cr][cc] = '\0';
-				state = KqFork::M_END;
+                //strbuf
+				messageBuffer[cr][cc] = '\0';
+				state = KqFork::eTextFormat::M_END;
 				break;
 
 			case '\n':
-                messageBuffer[cr][cc] = '\0';
+                //strbuf
+				messageBuffer[cr][cc] = '\0';
 				cc = 0;
 				++i;
 				if (++cr >= 4)
@@ -1690,18 +1706,19 @@ std::string KDraw::splitTextOverMultipleLines(const std::string& stringToSplit)
 				break;
 
 			default:
-				state = KqFork::M_NONSPACE;
+				state = KqFork::eTextFormat::M_NONSPACE;
 				break;
 			}
 			break;
 
-		case KqFork::M_SPACE:
+		case KqFork::eTextFormat::M_SPACE:
 			switch (tc)
 			{
 			case ' ':
 				if (cc < MSG_COLS - 1)
 				{
-                    messageBuffer[cr][cc] = tc;
+                    //strbuf
+					messageBuffer[cr][cc] = tc;
                     ++cc;
 				}
 				else
@@ -1712,18 +1729,18 @@ std::string KDraw::splitTextOverMultipleLines(const std::string& stringToSplit)
 				break;
 
 			default:
-				state = KqFork::M_UNDEF;
+				state = KqFork::eTextFormat::M_UNDEF;
 				break;
 			}
 			break;
 
-		case KqFork::M_NONSPACE:
+		case KqFork::eTextFormat::M_NONSPACE:
 			switch (tc)
 			{
 			case ' ':
 			case '\0':
 			case '\n':
-				state = KqFork::M_UNDEF;
+				state = KqFork::eTextFormat::M_UNDEF;
 				break;
 
 			default:
@@ -1746,7 +1763,7 @@ std::string KDraw::splitTextOverMultipleLines(const std::string& stringToSplit)
 			}
 			break;
 
-		case KqFork::M_END:
+		case KqFork::eTextFormat::M_END:
 			return nullptr;
 			break;
 
@@ -1898,7 +1915,7 @@ void KDraw::set_view(int vw, int x1, int y1, int x2, int y2)
 
 void KDraw::text_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay)
 {
-	std::string s = substitutePlayerNameString(textToDisplay);
+	auto s = substitutePlayerNameString(textToDisplay);
 
 	while (s.length() > 0)
 	{
@@ -1909,7 +1926,7 @@ void KDraw::text_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay)
 
 void KDraw::porttext_ex(eBubbleStyle fmt, int who, const std::string& textToDisplay)
 {
-    std::string s = substitutePlayerNameString(textToDisplay);
+    auto s = substitutePlayerNameString(textToDisplay);
 
 	while (s.length() > 0)
 	{
