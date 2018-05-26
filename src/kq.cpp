@@ -558,7 +558,10 @@ void KGame::allocate_stuff()
 
 void KGame::calc_viewport()
 {
-	int sx, sy, bl, br, bu, bd, zx, zy;
+	static const uint16_t screen_center_x = 152;
+	static const uint16_t screen_center_y = 112;
+
+	uint16_t zx, zy;
 
 	if (vfollow && numchrs > 0)
 	{
@@ -571,36 +574,20 @@ void KGame::calc_viewport()
 		zy = camera_viewport_y;
 	}
 
-	bl = 152;
-	br = 152;
-	bu = 112;
-	bd = 112;
-
-	sx = zx - camera_viewport_x;
-	sy = zy - camera_viewport_y;
-	if (sx < bl)
+	int sx = zx - camera_viewport_x;
+	int sy = zy - camera_viewport_y;
+	if (sx < screen_center_x)
 	{
-		camera_viewport_x = zx - bl;
+		camera_viewport_x = zx - screen_center_x;
 
 		if (camera_viewport_x < 0)
 		{
 			camera_viewport_x = 0;
 		}
 	}
-
-	if (sy < bu)
+	else if (sx > screen_center_x)
 	{
-		camera_viewport_y = zy - bu;
-
-		if (camera_viewport_y < 0)
-		{
-			camera_viewport_y = 0;
-		}
-	}
-
-	if (sx > br)
-	{
-		camera_viewport_x = zx - br;
+		camera_viewport_x = zx - screen_center_x;
 
 		if (camera_viewport_x > mx)
 		{
@@ -608,9 +595,18 @@ void KGame::calc_viewport()
 		}
 	}
 
-	if (sy > bd)
+	if (sy < screen_center_y)
 	{
-		camera_viewport_y = zy - bd;
+		camera_viewport_y = zy - screen_center_y;
+
+		if (camera_viewport_y < 0)
+		{
+			camera_viewport_y = 0;
+		}
+	}
+	else if (sy > screen_center_y)
+	{
+		camera_viewport_y = zy - screen_center_y;
 
 		if (camera_viewport_y > my)
 		{
@@ -1165,8 +1161,7 @@ void KGame::prepare_map(int msx, int msy, int mvx, int mvy)
 
 	for (i = 0; i < MAX_ENTITIES; i++)
 	{
-		// 38 looks like some kind of empty cloak with no face.
-		if (g_ent[i].chrx == 38 && g_ent[i].active)
+		if (g_ent[i].isIdentityAnEnemy() && g_ent[i].active)
 		{
 			g_ent[i].eid = ID_ENEMY;
 			g_ent[i].speed = kqrandom->random_range_exclusive(1, 5);

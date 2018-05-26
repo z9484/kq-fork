@@ -385,7 +385,7 @@ std::vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const* el)
 				auto value = xprop->FindAttribute("value");
 				if (xprop->Attribute("name", "chrx"))
 				{
-					entity.chrx = value->IntValue();
+					entity.setIdentity(value->IntValue());
 				}
 				if (xprop->Attribute("name", "eid"))
 				{
@@ -465,7 +465,7 @@ std::vector<KQEntity> KTiledMap::load_tmx_entities(XMLElement const* el)
 				}
 				if (xprop->Attribute("name", "transl"))
 				{
-					entity.transl = value->IntValue();
+					entity.isSemiTransparent = (value->IntValue() != 0);
 				}
 				if (xprop->Attribute("name", "script"))
 				{

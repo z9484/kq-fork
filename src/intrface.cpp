@@ -1049,7 +1049,7 @@ int KQ_add_chr(lua_State* L)
 		pidx[numchrs] = a;
 		g_ent[numchrs].active = true;
 		g_ent[numchrs].eid = (int)a;
-		g_ent[numchrs].chrx = 0;
+		g_ent[numchrs].setIdentity(0);
 		numchrs++;
 	}
 	return 0;
@@ -1305,7 +1305,7 @@ int KQ_char_getter(lua_State* L)
 			break;
 
 		case 13:
-			lua_pushnumber(L, ent->chrx);
+			lua_pushnumber(L, ent->identity());
 			break;
 
 		case 14:
@@ -1431,7 +1431,7 @@ int KQ_char_setter(lua_State* L)
 			break;
 
 		case 13:
-			ent->chrx = (int)lua_tonumber(L, 3);
+			ent->setIdentity(lua_tonumber(L, 3));
 			break;
 
 		case 14:
@@ -1880,7 +1880,7 @@ int KQ_get_ent_chrx(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
 
-	lua_pushnumber(L, g_ent[a].chrx);
+	lua_pushnumber(L, g_ent[a].identity());
 	return 1;
 }
 
@@ -1976,7 +1976,7 @@ int KQ_get_ent_transl(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
 
-	lua_pushnumber(L, g_ent[a].transl);
+	lua_pushnumber(L, g_ent[a].isSemiTransparent ? 1 : 0);
 	return 1;
 }
 
@@ -3021,7 +3021,7 @@ int KQ_set_ent_chrx(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
 
-	g_ent[a].chrx = (int)lua_tonumber(L, 2);
+	g_ent[a].setIdentity(lua_tonumber(L, 2));
 	return 0;
 }
 
@@ -3155,12 +3155,9 @@ int KQ_set_ent_tiley(lua_State* L)
 int KQ_set_ent_transl(lua_State* L)
 {
 	int a = KqFork::real_entity_num(L, 1);
-	auto b = lua_tointeger(L, 2);
+	auto b = (lua_tointeger(L, 2) != 0);
 
-	if (b == 0 || b == 1)
-	{
-		g_ent[a].transl = b;
-	}
+	g_ent[a].isSemiTransparent = b;
 	return 0;
 }
 
@@ -4180,22 +4177,20 @@ int KQ_party_getter(lua_State* L)
  */
 int KQ_party_setter(lua_State* L)
 {
-	size_t which = (size_t)lua_tonumber(L, 2);
+	size_t which = static_cast<size_t>(lua_tonumber(L, 2));
 
 	if (which < MAX_PARTY_SIZE)
 	{
 		/* check if it is a valid hero object */
 		if (lua_isnil(L, 3))
 		{
-			size_t i;
-
 			/* is there a character there anyway? */
 			if (which >= numchrs)
 			{
 				return 0;
 			}
 			/* it was nil, erase a character */
-			for (i = which; i < (MAX_PARTY_SIZE - 1); ++i)
+			for (size_t i = which; i < (MAX_PARTY_SIZE - 1); ++i)
 			{
 				pidx[i] = pidx[i + 1];
 				memcpy(&g_ent[i], &g_ent[i + 1], sizeof(KQEntity));
@@ -4227,7 +4222,7 @@ int KQ_party_setter(lua_State* L)
 					g_ent[which].x = g_ent[0].x;
 					g_ent[which].y = g_ent[0].y;
 				}
-				g_ent[which].chrx = 0;
+				g_ent[which].setIdentity(0);
 				g_ent[which].eid = pidx[which];
 			}
 			/* else, it was a table but not a hero */

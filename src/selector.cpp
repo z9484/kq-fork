@@ -292,7 +292,7 @@ static void party_add(ePIDX id, int lead)
 		++numchrs;
 		t->eid = (uint8_t)id;
 		t->active = true;
-		t->chrx = 0;
+		t->setIdentity(0);
 	}
 }
 
@@ -300,23 +300,9 @@ static void party_add(ePIDX id, int lead)
  */
 void party_newlead()
 {
-	uint32_t i;
-	uint8_t j;
-	ePIDX t;
-
-	for (i = 1; i < numchrs; ++i)
+	for (uint32_t i = 1; i < numchrs; ++i)
 	{
-		t = pidx[0];
-		pidx[0] = pidx[i];
-		pidx[i] = t;
-
-		j = g_ent[0].eid;
-		g_ent[0].eid = g_ent[i].eid;
-		g_ent[i].eid = j;
-
-		j = g_ent[0].chrx;
-		g_ent[0].chrx = g_ent[i].chrx;
-		g_ent[i].chrx = j;
+		g_ent[0].swapWithIdentity(g_ent[i]);
 	}
 }
 

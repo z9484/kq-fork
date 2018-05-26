@@ -58,6 +58,22 @@ constexpr size_t MAX_SCRIPT = 60;
  */
 struct KQEntity
 {
+	void setIdentity(uint8_t identity) {
+		chrx = identity;
+	}
+	uint8_t identity() const {
+		return chrx;
+	}
+	bool isIdentityAnEnemy() const {
+		// 38 looks like some kind of empty cloak with no face.
+		return chrx == 38;
+	}
+	void swapWithIdentity(KQEntity& rhs) {
+		std::swap(eid, rhs.eid);
+		std::swap(chrx, rhs.chrx);
+		std::swap(active, rhs.active);
+	}
+
 	// Entity's identity (what s/he looks like)
 	uint8_t chrx;
 
@@ -131,7 +147,7 @@ struct KQEntity
 	uint8_t facehero;
 
 	// Entity is see-through or not
-	uint8_t transl;
+	bool isSemiTransparent;
 
 	// Movement/action script (pacing, etc.)
 	char script[MAX_SCRIPT];

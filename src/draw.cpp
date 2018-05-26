@@ -441,10 +441,10 @@ void KDraw::render_npc(size_t fighter_index, int32_t dx, int32_t dy, size_t figh
             dy >= -tileH && dy <= tileH * (onscreenTilesH + 1))
         {
             Raster* spr = (npc_entity.eid >= ID_ENEMY)
-                ? eframes[npc_entity.chrx][fighter_frame]
+                ? eframes[npc_entity.identity()][fighter_frame]
                 : frames[npc_entity.eid][fighter_frame];
 
-            if (npc_entity.transl == 0)
+            if (!npc_entity.isSemiTransparent)
             {
                 draw_sprite(double_buffer, spr, dx, dy);
             }
@@ -466,8 +466,8 @@ void KDraw::render_hero(size_t fighter_index, size_t fighter_frame)
     /* It's a hero */
     /* Masquerade: if chrx!=0 then this hero is disguised as someone else...
      */
-    sprite_base = hero_entity.chrx
-        ? eframes[hero_entity.chrx]
+    sprite_base = hero_entity.identity()
+        ? eframes[hero_entity.identity()]
         : frames[fighter_type_id];
 
     if (party[fighter_type_id].sts[S_DEAD] != 0)
@@ -1198,6 +1198,8 @@ std::string KDraw::replaceAll(std::string originalString, const std::string& sea
     return originalString;
 }
 
+// TODO(onlinecop): Potential bug: if player changes order of party members and this
+// was previously filled, it may not be updated to reflect that.
 std::string getPlayerName(const size_t playerId)
 {
 	static std::map<size_t, std::string> playerNames;
