@@ -29,6 +29,8 @@ char debugging = 0;
 /*! Speed-up for slower machines */
 char slow_computer = 0;
 
+bool isWindowed = true;
+
 /*  Internal variables  */
 static DATAFILE* sfx[MAX_SAMPLES];
 
@@ -140,7 +142,7 @@ void config_menu()
 		kqDraw.print_font(double_buffer, 96 + xofs, 8 + yofs, _("KQ Configuration"), eFontColor::FONTCOLOR_GOLD);
 		kqDraw.menubox(double_buffer, 32 + xofs, 24 + yofs, 30, MENU_SIZE + 3, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
 
-		citem(row[0], _("Windowed mode:"), windowed == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
+		citem(row[0], _("Windowed mode:"), isWindowed ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
 		citem(row[1], _("Stretch Display:"), stretch_view == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
 		citem(row[2], _("Show Frame Rate:"), show_frate == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
 		citem(row[3], _("Wait for Retrace:"), wait_retrace == 1 ? _("YES") : _("NO"), eFontColor::FONTCOLOR_NORMAL);
@@ -254,7 +256,7 @@ void config_menu()
                 kqDraw.text_ex(eBubbleStyle::BUBBLE_TEXT, 255, _("Changing the display mode to or from windowed "
 				                       "view could have serious ramifications. It is "
 				                       "advised that you save first."));
-				if (windowed == 0)
+				if (!isWindowed)
 				{
 					sprintf(strbuf, _("Switch to windowed mode?"));
 				}
@@ -265,8 +267,8 @@ void config_menu()
 				p = kqDraw.prompt(255, 2, eBubbleStyle::BUBBLE_TEXT, strbuf, _("  no"), _("  yes"), "");
 				if (p == 1)
 				{
-					windowed = !windowed;
-					set_config_int(nullptr, "windowed", windowed);
+					isWindowed = !isWindowed;
+					set_config_int(nullptr, "windowed", isWindowed ? 1 : 0);
 					set_graphics_mode();
 				}
 				break;
@@ -687,7 +689,7 @@ static void parse_allegro_setup()
 		set_config_file(kqres(SETTINGS_DIR, "kq.cfg").c_str());
 
 		set_config_int(nullptr, "skip_intro", skip_intro);
-		set_config_int(nullptr, "windowed", windowed);
+		set_config_int(nullptr, "windowed", isWindowed ? 1 : 0);
 
 		set_config_int(nullptr, "stretch_view", stretch_view);
 		set_config_int(nullptr, "show_frate", show_frate);
@@ -716,7 +718,7 @@ static void parse_allegro_setup()
 
 	/* NB. JB's config file uses intro=yes --> skip_intro=0 */
 	skip_intro = get_config_int(nullptr, "skip_intro", 0);
-	windowed = get_config_int(nullptr, "windowed", 1);
+	isWindowed = get_config_int(nullptr, "windowed", 1) != 0;
 	stretch_view = get_config_int(nullptr, "stretch_view", 1);
 	wait_retrace = get_config_int(nullptr, "wait_retrace", 1);
 	show_frate = get_config_int(nullptr, "show_frate", 0);
@@ -812,7 +814,7 @@ static void parse_jb_setup()
 			fscanf(s, "%s", strbuf);
 			if (!strcmp(strbuf, "yes"))
 			{
-				windowed = 1;
+				isWindowed = true;
 			}
 		}
 		if (!strcmp(strbuf, "stretch"))
@@ -1011,27 +1013,15 @@ void play_effect(int efc, int panning)
  */
 void set_graphics_mode()
 {
+	const auto fsOrWindowed = isWindowed ? GFX_AUTODETECT_WINDOWED : GFX_AUTODETECT;
+
 	if (stretch_view == 1)
 	{
-		if (windowed == 1)
-		{
-			set_gfx_mode(GFX_AUTODETECT_WINDOWED, KQ_SCALED_SCREEN_W, KQ_SCALED_SCREEN_H, 0, 0);
-		}
-		else
-		{
-			set_gfx_mode(GFX_AUTODETECT, KQ_SCALED_SCREEN_W, KQ_SCALED_SCREEN_H, 0, 0);
-		}
+		set_gfx_mode(fsOrWindowed, KQ_SCALED_SCREEN_W, KQ_SCALED_SCREEN_H, 0, 0);
 	}
 	else
 	{
-		if (windowed == 1)
-		{
-			set_gfx_mode(GFX_AUTODETECT_WINDOWED, KQ_SCREEN_W, KQ_SCREEN_H, 0, 0);
-		}
-		else
-		{
-			set_gfx_mode(GFX_AUTODETECT, KQ_SCREEN_W, KQ_SCREEN_H, 0, 0);
-		}
+		set_gfx_mode(fsOrWindowed, KQ_SCREEN_W, KQ_SCREEN_H, 0, 0);
 	}
 
 	set_palette(pal);

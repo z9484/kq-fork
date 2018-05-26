@@ -153,7 +153,7 @@ uint8_t cansave = 0;
 uint8_t skip_intro = 0;
 
 /*! Graphics mode settings */
-uint8_t wait_retrace = 1, windowed = 1, stretch_view = 1, cpu_usage = 1;
+uint8_t wait_retrace = 1, stretch_view = 1, cpu_usage = 1;
 
 /*! Current 'time' for animated tiles. When this increments to adata[].delay,
  * the next tile is shown */

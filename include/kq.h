@@ -386,7 +386,7 @@ extern int gp, xofs, yofs, gsvol, gmvol;
 extern ePIDX pidx[MAXCHRS];
 extern uint8_t autoparty, alldead, is_sound, deadeffect, vfollow, use_sstone, sound_avail;
 extern const uint8_t kq_version;
-extern uint8_t hold_fade, cansave, skip_intro, wait_retrace, windowed, stretch_view, cpu_usage;
+extern uint8_t hold_fade, cansave, skip_intro, wait_retrace, stretch_view, cpu_usage;
 extern uint16_t adelay[MAX_ANIM];
 extern char* strbuf, *savedir;
 extern KPlayer party[MAXCHRS];

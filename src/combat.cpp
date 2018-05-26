@@ -605,8 +605,6 @@ int KCombat::do_combat(size_t bno)
 
 int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is_rnd)
 {
-	int zoom_step;
-
 	in_combat = 1;
 	backart = get_cached_image(backgroundImageName);
 	if (is_rnd)
@@ -655,7 +653,7 @@ int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is
 		 * player is, so if he's on the side of the map somewhere...
 		 */
 		std::unique_ptr<Raster> temp(kqDraw.copy_bitmap(nullptr, double_buffer));
-		for (zoom_step = 0; zoom_step <= NUM_ZOOM_STEPS; zoom_step++)
+		for (auto zoom_step = 0; zoom_step <= NUM_ZOOM_STEPS; zoom_step++)
 		{
 			Music.poll_music();
 			stretch_blit(temp.get(), double_buffer,

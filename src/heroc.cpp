@@ -1024,9 +1024,6 @@ void KHero::hero_run()
 	int a, b = 0, c = 0, bt = 0, ct = 0, fr, fx, fy, g = 0;
 	size_t fighter_index;
 
-	// TT: slow_computer additions for speed-ups
-	int count;
-
 	if (kqCombat.ms == 1)
 	{
 		a = 125;
@@ -1106,18 +1103,11 @@ void KHero::hero_run()
 	g = strlen(strbuf) * 4;
 
 	/* TT: slow_computer addition for speed-ups */
-	if (slow_computer)
-	{
-		count = 3;
-	}
-	else
-	{
-		count = 20;
-	}
+	const unsigned int count = slow_computer ? 3 : 20;
 
-	for (c = 0; c < 5; c++)
+	for (unsigned int i = 0; i < 5; i++)
 	{
-		for (a = 0; a < count; a++)
+		for (unsigned int frame_counter = 0; frame_counter < count; frame_counter++)
 		{
 			clear_bitmap(double_buffer);
 			kqDraw.menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
@@ -1127,7 +1117,7 @@ void KHero::hero_run()
 				fx = fighter[fighter_index].fighterImageDatafileX;
 				fy = fighter[fighter_index].fighterImageDatafileY;
 				fr = 0;
-				if (a > 10)
+				if (frame_counter > count / 2) // integer division for count/2
 				{
 					fr++;
 				}
