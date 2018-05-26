@@ -410,7 +410,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 	case I_MHERB:
 	case I_SALVE:
 	case I_PCURING:
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD)
 		{
 			return ITEM_EFFECT_INEFFECTIVE;
 		}
@@ -433,7 +433,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		break;
 	case I_OSEED:
 	case I_EDROPS:
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD)
 		{
 			return ITEM_EFFECT_INEFFECTIVE;
 		}
@@ -457,7 +457,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 	case I_NLEAF:
 	case I_NPOULTICE:
 	case I_KBREW:
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterSpellEffectStats[S_STONE] != 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD || fighter[fighter_index].fighterSpellEffectStats[S_STONE] != 0)
 		{
 			return ITEM_EFFECT_INEFFECTIVE;
 		}
@@ -475,7 +475,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 		}
 		break;
 	case I_WENSAI:
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD)
 		{
 			return ITEM_EFFECT_INEFFECTIVE;
 		}
@@ -501,11 +501,7 @@ eItemEffectResult item_effects(size_t attack_fighter_index, size_t fighter_index
 				tmp++;
 			}
 		}
-		if (tmp == 0 || fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0)
-		{
-			return ITEM_EFFECT_INEFFECTIVE;
-		}
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0)
+		if (tmp == 0 || fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD)
 		{
 			return ITEM_EFFECT_INEFFECTIVE;
 		}

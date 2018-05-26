@@ -54,7 +54,7 @@ void KHero::auto_herochooseact(int who)
 	{
 		return;
 	}
-	if (fighter[who].fighterSpellEffectStats[S_DEAD] != 0 || fighter[who].fighterHealth <= 0)
+	if (fighter[who].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD || fighter[who].fighterHealth <= 0)
 	{
 		kqCombat.bIsEtherEffectActive[who] = false;
 		return;
@@ -277,7 +277,7 @@ int KHero::combat_item(int ss, int t1, int tg)
 	b = 0;
 	for (a = st; a < st + tt; a++)
 	{
-		if (fighter[a].fighterSpellEffectStats[S_DEAD] == 0 && fighter[a].fighterHealth <= 0)
+		if (fighter[a].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[a].fighterHealth <= 0)
 		{
 			kqCombat.fkill(a);
 			b++;
@@ -994,7 +994,7 @@ int KHero::hero_invokeitem(size_t attacker_fighter_index, size_t item_index)
 		draw_spellsprite(0, 1, 27, 0);
 		for (unsigned int fighter_index = 0; fighter_index < numchrs; fighter_index++)
 		{
-			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 			{
 				fighter[fighter_index].fighterSpellEffectStats[S_POISON] = 0;
 			}
@@ -1008,7 +1008,7 @@ int KHero::hero_invokeitem(size_t attacker_fighter_index, size_t item_index)
 		kqCombat.ta[defender_fighter_index] = 0;
 		for (unsigned fighter_index = 0; fighter_index < random_fighter_index; fighter_index++)
 		{
-			if (fighter[defender_fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+			if (fighter[defender_fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 			{
 				draw_attacksprite(defender_fighter_index, 0, 4, 1);
 				special_damage_oneall_enemies(attacker_fighter_index, 16, -1, defender_fighter_index, 0);
@@ -1021,10 +1021,10 @@ int KHero::hero_invokeitem(size_t attacker_fighter_index, size_t item_index)
 
 void KHero::hero_run()
 {
-	int a, b = 0, c = 0, bt = 0, ct = 0, fr, fx, fy, g = 0;
+	int a, b = 0, c = 0, bt = 0, ct = 0, fr, fx, fy, goldDropped = 0;
 	size_t fighter_index;
 
-	if (kqCombat.ms == 1)
+	if (kqCombat.getChanceEnemiesSurpriseYou() == 1)
 	{
 		a = 125;
 	}
@@ -1034,12 +1034,13 @@ void KHero::hero_run()
 	}
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			b++;
 			bt += fighter[fighter_index].fighterStats[A_SPD];
 		}
 	}
+
 	if (b == 0)
 	{
 		Game.program_death(_("Fatal error: How can a dead party run?"));
@@ -1048,9 +1049,10 @@ void KHero::hero_run()
 	{
 		bt = bt / b;
 	}
+
 	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			c++;
 			ct += fighter[fighter_index].fighterStats[A_SPD];
@@ -1064,24 +1066,28 @@ void KHero::hero_run()
 	{
 		ct = ct / c;
 	}
+
 	if (bt > ct)
 	{
 		a += 25;
 	}
-	if (bt < ct)
+	else if (bt < ct)
 	{
 		a -= 25;
 	}
-	if (kqrandom->random_range_exclusive(0, 100) < a)
+
+	const auto random1 = kqrandom->random_range_exclusive(0, 100);
+	if (random1 < a)
 	{
-		if (kqrandom->random_range_exclusive(0, 100) < (100 - a))
+		const auto random2 = kqrandom->random_range_exclusive(0, 100);
+		if (random2 < (100 - a))
 		{
-			g = b * fighter[MAX_PARTY_SIZE].fighterLevel * c;
-			if (gp < g)
+			goldDropped = b * fighter[MAX_PARTY_SIZE].fighterLevel * c;
+			if (gp < goldDropped)
 			{
-				g = gp;
+				goldDropped = gp;
 			}
-			gp -= g;
+			gp -= goldDropped;
 		}
 	}
 	else
@@ -1092,15 +1098,17 @@ void KHero::hero_run()
 		Game.wait_enter();
 		return;
 	}
-	if (g > 0)
+
+	if (goldDropped > 0)
 	{
-		sprintf(strbuf, _("Escaped! Dropped %d gold!"), g);
+		sprintf(strbuf, _("Escaped! Dropped %d gold!"), goldDropped);
 	}
 	else
 	{
 		sprintf(strbuf, _("Escaped!"));
 	}
-	g = strlen(strbuf) * 4;
+
+	size_t stringLength = strlen(strbuf) * 4;
 
 	/* TT: slow_computer addition for speed-ups */
 	const unsigned int count = slow_computer ? 3 : 20;
@@ -1110,8 +1118,8 @@ void KHero::hero_run()
 		for (unsigned int frame_counter = 0; frame_counter < count; frame_counter++)
 		{
 			clear_bitmap(double_buffer);
-			kqDraw.menubox(double_buffer, 152 - g, 32, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-			kqDraw.print_font(double_buffer, 160 - g, 40, strbuf, eFontColor::FONTCOLOR_NORMAL);
+			kqDraw.menubox(double_buffer, 152 - stringLength, 32, strlen(strbuf), 1, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
+			kqDraw.print_font(double_buffer, 160 - stringLength, 40, strbuf, eFontColor::FONTCOLOR_NORMAL);
 			for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 			{
 				fx = fighter[fighter_index].fighterImageDatafileX;
@@ -1122,7 +1130,7 @@ void KHero::hero_run()
 					fr++;
 				}
 
-				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 				{
 					draw_sprite(double_buffer, frames[pidx[fighter_index]][fr], fx, fy);
 				}

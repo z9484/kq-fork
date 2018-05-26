@@ -38,10 +38,10 @@ KCombat::KCombat()
 	, num_enemies()
 	, rcount()
 	, vspell()
-	, ms()
+	, chanceEnemiesSurpriseYou()
 	, backart(nullptr)
 	, curw()
-	, hs()
+	, changeYouSurpriseEnemies()
 {
 	for (size_t i = 0; i < NUM_FIGHTERS; ++i)
 	{
@@ -312,7 +312,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		b = currentFighterIndex * x_offset;
 		KFighter curFighter = fighter[currentFighterIndex];
 
-		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
+		if (curFighter.fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			draw_fighter(currentFighterIndex, (sall == 1));
 		}
@@ -323,7 +323,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 		}
 
 		kqDraw.menubox(double_buffer, b, 184, 11, 5, eMenuBoxColor::SEMI_TRANSPARENT_BLUE);
-		if (curFighter.fighterSpellEffectStats[S_DEAD] == 0)
+		if (curFighter.fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			sz = bspeed[currentFighterIndex] * 88 / ROUND_MAX;
 			if (sz > 88)
@@ -393,7 +393,7 @@ void KCombat::battle_render(signed int plyr, size_t hl, int sall)
 
 	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			draw_fighter(fighter_index, (sall == 2));
 		}
@@ -413,7 +413,7 @@ bool KCombat::hasBattleEnded()
 	bool anyHeroesAlive = false;
 	for (size_t fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			anyHeroesAlive = true;
 			// No need to continue checking if any are still alive.
@@ -431,7 +431,7 @@ bool KCombat::hasBattleEnded()
 	bool anyEnemiesAlive = false;
 	for (size_t fighter_index = 0; fighter_index < num_enemies; fighter_index++)
 	{
-		if (fighter[fighter_index + MAX_PARTY_SIZE].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index + MAX_PARTY_SIZE].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			anyEnemiesAlive = true;
 			// No need to continue checking if any are still alive.
@@ -611,27 +611,27 @@ int KCombat::do_combat(const std::string& backgroundImageName, char* mus, int is
 	{
 		if ((numchrs == 1) && (pidx[0] == AYLA))
 		{
-			hs = kqrandom->random_range_exclusive(1, 101);
-			ms = kqrandom->random_range_exclusive(1, 4);
+			changeYouSurpriseEnemies = kqrandom->random_range_exclusive(1, 101);
+			chanceEnemiesSurpriseYou = kqrandom->random_range_exclusive(1, 4);
 		}
 		else
 		{
 			if (numchrs > 1 && (Game.in_party(AYLA) < MAXCHRS))
 			{
-				hs = kqrandom->random_range_exclusive(1, 21);
-				ms = kqrandom->random_range_exclusive(1, 6);
+				changeYouSurpriseEnemies = kqrandom->random_range_exclusive(1, 21);
+				chanceEnemiesSurpriseYou = kqrandom->random_range_exclusive(1, 6);
 			}
 			else
 			{
-				hs = kqrandom->random_range_exclusive(1, 11);
-				ms = kqrandom->random_range_exclusive(1, 11);
+				changeYouSurpriseEnemies = kqrandom->random_range_exclusive(1, 11);
+				chanceEnemiesSurpriseYou = kqrandom->random_range_exclusive(1, 11);
 			}
 		}
 	}
 	else
 	{
-		hs = 10;
-		ms = 10;
+		changeYouSurpriseEnemies = 10;
+		chanceEnemiesSurpriseYou = 10;
 	}
 
 	/*  RB: do the zoom at the beginning of the combat.  */
@@ -802,7 +802,7 @@ void KCombat::do_round()
 					bIsEtherEffectActive[fighter_index] = false;
 				}
 
-				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] != 0 || fighter[fighter_index].fighterMaxHealth <= 0)
+				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] = eDeathType::IS_DEAD || fighter[fighter_index].fighterMaxHealth <= 0)
 				{
 					if (pidx[fighter_index] == TEMMIN)
 					{
@@ -1056,7 +1056,7 @@ int KCombat::fight(size_t attack_fighter_index, size_t defend_fighter_index, int
 			cast_imbued_spell(attack_fighter_index, fighter[attack_fighter_index].imb_s, fighter[attack_fighter_index].imb_a, defend_fighter_index);
 		}
 
-		if ((fighter[defend_fighter_index].fighterHealth <= 0) && (fighter[defend_fighter_index].fighterSpellEffectStats[S_DEAD] == 0))
+		if ((fighter[defend_fighter_index].fighterHealth <= 0) && (fighter[defend_fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD))
 		{
 			fkill(defend_fighter_index);
 			death_animation(defend_fighter_index, 0);
@@ -1099,7 +1099,7 @@ void KCombat::fkill(size_t fighter_index)
 		fighter[fighter_index].fighterSpellEffectStats[spell_index] = 0;
 	}
 
-	fighter[fighter_index].fighterSpellEffectStats[S_DEAD] = 1;
+	fighter[fighter_index].fighterSpellEffectStats[S_DEAD] = eDeathType::IS_DEAD;
 	fighter[fighter_index].fighterHealth = 0;
 	if (fighter_index < MAX_PARTY_SIZE)
 	{
@@ -1108,6 +1108,11 @@ void KCombat::fkill(size_t fighter_index)
 
 	deffect[fighter_index] = 1;
 	bIsEtherEffectActive[fighter_index] = false;
+}
+
+uint8_t KCombat::getChanceEnemiesSurpriseYou() const
+{
+	return chanceEnemiesSurpriseYou;
 }
 
 void KCombat::heroes_win()
@@ -1137,7 +1142,7 @@ void KCombat::heroes_win()
 	kq_wait(250);
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0)
+		if (fighter[fighter_index].fighterSpellEffectStats[S_STONE] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			nc++;
 		}
@@ -1216,7 +1221,7 @@ void KCombat::heroes_win()
 	nr = 0;
 	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
-		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == 0)
+		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			b = pidx_index * 160;
 			player2fighter(pidx[pidx_index], t1);
@@ -1276,7 +1281,7 @@ void KCombat::heroes_win()
 	kqDraw.blit2screen(0, 0);
 	for (pidx_index = 0; pidx_index < numchrs; pidx_index++)
 	{
-		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == 0)
+		if (party[pidx[pidx_index]].sts[S_STONE] == 0 && party[pidx[pidx_index]].sts[S_DEAD] == eDeathType::NOT_DEAD)
 		{
 			ent += learn_new_spells(pidx[pidx_index]);
 		}
@@ -1345,7 +1350,7 @@ void KCombat::multi_fight(size_t attack_fighter_index)
 	for (fighter_index = start_fighter_index; fighter_index < start_fighter_index + end_fighter_index; fighter_index++)
 	{
 		tempd = status_adjust(fighter_index);
-		if ((fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0) && (fighter[fighter_index].fighterMaxHealth > 0))
+		if ((fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD) && (fighter[fighter_index].fighterMaxHealth > 0))
 		{
 			// ares[fighter_index] = attack_result(attack_fighter_index, fighter_index);
 			for (spell_index = 0; spell_index < NUM_SPELL_TYPES; spell_index++)
@@ -1362,7 +1367,7 @@ void KCombat::multi_fight(size_t attack_fighter_index)
 			}
 
 			fighter[fighter_index].fighterHealth += ta[fighter_index];
-			if ((fighter[fighter_index].fighterHealth <= 0) && (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0))
+			if ((fighter[fighter_index].fighterHealth <= 0) && (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD))
 			{
 				fighter[fighter_index].fighterHealth = 0;
 				killed_warrior[fighter_index] = 1;
@@ -1427,10 +1432,10 @@ void KCombat::roll_initiative()
 {
 	size_t fighter_index, j;
 
-	if (hs == 1 && ms == 1)
+	if (changeYouSurpriseEnemies == 1 && chanceEnemiesSurpriseYou == 1)
 	{
-		hs = 10;
-		ms = 10;
+		changeYouSurpriseEnemies = 10;
+		chanceEnemiesSurpriseYou = 10;
 	}
 
 	for (fighter_index = 0; fighter_index < NUM_FIGHTERS; fighter_index++)
@@ -1449,11 +1454,11 @@ void KCombat::roll_initiative()
 
 	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
-		if (ms == 1)
+		if (chanceEnemiesSurpriseYou == 1)
 		{
 			bspeed[fighter_index] = ROUND_MAX;
 		}
-		else if (hs == 1)
+		else if (changeYouSurpriseEnemies == 1)
 		{
 			bspeed[fighter_index] = 0;
 		}
@@ -1461,11 +1466,11 @@ void KCombat::roll_initiative()
 
 	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
-		if (hs == 1)
+		if (changeYouSurpriseEnemies == 1)
 		{
 			bspeed[fighter_index] = ROUND_MAX;
 		}
-		else if (ms == 1)
+		else if (chanceEnemiesSurpriseYou == 1)
 		{
 			bspeed[fighter_index] = 0;
 		}
@@ -1490,12 +1495,12 @@ void KCombat::roll_initiative()
 
 	kqCombat.battle_render(-1, -1, 0);
 	kqDraw.blit2screen(0, 0);
-	if ((hs == 1) && (ms > 1))
+	if ((changeYouSurpriseEnemies == 1) && (chanceEnemiesSurpriseYou > 1))
 	{
 		kqDraw.message(_("You have been ambushed!"), 255, 1500, 0, 0);
 	}
 
-	if ((hs > 1) && (ms == 1))
+	if ((changeYouSurpriseEnemies > 1) && (chanceEnemiesSurpriseYou == 1))
 	{
 		kqDraw.message(_("You've surprised the enemy!"), 255, 1500, 0, 0);
 	}
@@ -1503,33 +1508,32 @@ void KCombat::roll_initiative()
 
 void KCombat::snap_togrid()
 {
-	size_t fighter_index;
 	int hf = 0;
 	int mf = 1;
 	int a;
 
-	if (hs == 1)
+	if (changeYouSurpriseEnemies == 1)
 	{
 		hf = 1;
 	}
 
-	if (ms == 1)
+	if (chanceEnemiesSurpriseYou == 1)
 	{
 		mf = 0;
 	}
 
-	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
+	for (size_t fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
 		fighter[fighter_index].fighterSpriteFacing = hf;
 	}
 
-	for (fighter_index = MAX_PARTY_SIZE; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
+	for (size_t fighter_index = MAX_PARTY_SIZE; fighter_index < (MAX_PARTY_SIZE + num_enemies); fighter_index++)
 	{
 		fighter[fighter_index].fighterSpriteFacing = mf;
 	}
 
 	hf = 170 - (numchrs * 24);
-	for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
+	for (size_t fighter_index = 0; fighter_index < numchrs; fighter_index++)
 	{
 		fighter[fighter_index].fighterImageDatafileX = fighter_index * 48 + hf;
 		fighter[fighter_index].fighterImageDatafileY = 128;
@@ -1537,7 +1541,7 @@ void KCombat::snap_togrid()
 
 	a = fighter[MAX_PARTY_SIZE].fighterImageDatafileWidth + 16;
 	mf = 170 - (num_enemies * a / 2);
-	for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
+	for (size_t fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + num_enemies; fighter_index++)
 	{
 		fighter[fighter_index].fighterImageDatafileX = (fighter_index - MAX_PARTY_SIZE) * a + mf;
 

@@ -476,5 +476,5 @@ void fight_animation(size_t target_fighter_index, size_t fighter_index, int mult
 
 int is_active(int guy)
 {
-	return (fighter[guy].fighterSpellEffectStats[S_DEAD] == deadeffect ? 1 : 0);
+	return (fighter[guy].fighterSpellEffectStats[S_DEAD] == deadeffect ? eDeathType::IS_DEAD : eDeathType::NOT_DEAD);
 }

@@ -226,7 +226,7 @@ void enemy_charmaction(size_t fighter_index)
 	{
 		return;
 	}
-	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0)
+	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD || fighter[fighter_index].fighterHealth <= 0)
 	{
         kqCombat.bIsEtherEffectActive[fighter_index] = false;
 		return;
@@ -272,7 +272,7 @@ void enemy_chooseaction(size_t fighter_index)
 	{
 		return;
 	}
-	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 1 || fighter[fighter_index].fighterHealth <= 0)
+	if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD || fighter[fighter_index].fighterHealth <= 0)
 	{
 		kqCombat.bIsEtherEffectActive[fighter_index] = false;
 		return;
@@ -444,7 +444,7 @@ void KqFork::EnemyC::enemy_skillcheck(size_t fighterIndex, size_t skillNumber)
 			{
 				fighter[fighterIndex].atrack[skillNumber] = 1;
 			}
-			if (numchrs == 2 && (fighter[0].fighterSpellEffectStats[S_DEAD] > 0 || fighter[1].fighterSpellEffectStats[S_DEAD] > 0))
+			if (numchrs == 2 && (fighter[0].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD || fighter[1].fighterSpellEffectStats[S_DEAD] == eDeathType::IS_DEAD))
 			{
 				fighter[fighterIndex].atrack[skillNumber] = 1;
 			}
@@ -487,7 +487,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_STRENGTH] < 2)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[S_STRENGTH] < 2)
 					{
 						aux++;
 					}
@@ -501,7 +501,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_BLESS] < 3)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[S_BLESS] < 3)
 					{
 						aux++;
 					}
@@ -525,7 +525,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 2)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 2)
 					{
 						aux++;
 					}
@@ -562,7 +562,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 1)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[S_TIME] != 1)
 					{
 						aux++;
 					}
@@ -576,7 +576,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] == 0)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[S_SLEEP] == 0)
 					{
 						aux++;
 					}
@@ -590,7 +590,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] == 0)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[S_SHIELD] == 0 && fighter[fighter_index].fighterSpellEffectStats[S_RESIST] == 0)
 					{
 						aux++;
 					}
@@ -604,7 +604,7 @@ void KqFork::EnemyC::enemy_spellcheck(size_t attack_fighter_index, size_t defend
 				aux = 0;
 				for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 				{
-					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth >= fighter[fighter_index].fighterMaxHealth / 3)
+					if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterHealth >= fighter[fighter_index].fighterMaxHealth / 3)
 					{
 						aux++;
 					}
@@ -655,7 +655,7 @@ int KqFork::EnemyC::enemy_stscheck(int ws, int s)
 	{
 		for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 		{
-			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[ws] == 0)
+			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[ws] == 0)
 			{
 				fighter_affected++;
 			}
@@ -669,7 +669,7 @@ int KqFork::EnemyC::enemy_stscheck(int ws, int s)
 	{
 		for (fighter_index = 0; fighter_index < numchrs; fighter_index++)
 		{
-			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterSpellEffectStats[ws] == 0)
+			if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterSpellEffectStats[ws] == 0)
 			{
 				fighter_affected++;
 			}
@@ -1073,7 +1073,7 @@ int KqFork::EnemyC::spell_setup(int whom, int z)
 			aux = 0;
 			for (fighter_index = MAX_PARTY_SIZE; fighter_index < MAX_PARTY_SIZE + kqCombat.num_enemies; fighter_index++)
 			{
-				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == 0 && fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 75 / 100)
+				if (fighter[fighter_index].fighterSpellEffectStats[S_DEAD] == eDeathType::NOT_DEAD && fighter[fighter_index].fighterHealth < fighter[fighter_index].fighterMaxHealth * 75 / 100)
 				{
 					aux++;
 				}

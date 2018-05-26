@@ -119,6 +119,8 @@ public:
      */
     void fkill(size_t fighter_index);
 
+    uint8_t getChanceEnemiesSurpriseYou() const;
+
 public:
     ECombatEnd combatend;
     bool bIsEtherEffectActive[NUM_FIGHTERS];
@@ -129,7 +131,6 @@ public:
     int deffect[NUM_FIGHTERS];
     uint16_t rcount;
     uint8_t vspell;
-    uint8_t ms;
     Raster* backart;
 
 private:
@@ -261,7 +262,8 @@ private:
     int curw;
     int nspeed[NUM_FIGHTERS];
     int bspeed[NUM_FIGHTERS];
-    uint8_t hs;
+    uint8_t changeYouSurpriseEnemies;
+    uint8_t chanceEnemiesSurpriseYou;
 };
 
 // Global

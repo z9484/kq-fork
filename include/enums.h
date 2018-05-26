@@ -135,6 +135,11 @@ enum eSpellType
 	NUM_SPELL_TYPES // always last
 };
 
+enum eDeathType {
+	NOT_DEAD = 0,
+	IS_DEAD
+};
+
 /*! \name Special combat skills */
 enum eCombatSkill
 {

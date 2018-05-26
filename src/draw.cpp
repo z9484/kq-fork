@@ -470,11 +470,12 @@ void KDraw::render_hero(size_t fighter_index, size_t fighter_frame)
         ? eframes[hero_entity.identity()]
         : frames[fighter_type_id];
 
-    if (party[fighter_type_id].sts[S_DEAD] != 0)
+    if (party[fighter_type_id].sts[S_DEAD] == eDeathType::IS_DEAD)
     {
         fighter_frame = hero_entity.facing * ENT_FRAMES_PER_DIR + 2;
     }
-    if (party[fighter_type_id].sts[S_POISON] != 0)
+
+	if (party[fighter_type_id].sts[S_POISON] != 0)
     {
         /* PH: we are calling this every frame? */
         color_scale(sprite_base[fighter_frame], tc2, 32, 47);
@@ -501,7 +502,7 @@ void KDraw::render_hero(size_t fighter_index, size_t fighter_frame)
 
     int32_t dx = g_ent[fighter_index].x - camera_viewport_x + TILE_W;
     int32_t dy = g_ent[fighter_index].y - camera_viewport_y + TILE_H;
-    if (party[fighter_type_id].sts[S_DEAD] == 0)
+    if (party[fighter_type_id].sts[S_DEAD] == eDeathType::NOT_DEAD)
     {
         draw_sprite(double_buffer, spr, dx, dy);
     }
