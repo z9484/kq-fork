@@ -19,7 +19,7 @@
        675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "constants.h"
 #include "draw.h"
@@ -428,7 +428,7 @@ void KMenu::display_quest_window(void)
 		}
 
 		// If player pressed any of the inputs, newSelectedQuest will have changed.
-		if (newSelectedQuest != currentQuestSelected)
+		if (newSelectedQuest != (int)currentQuestSelected)
 		{
 			play_effect(SND_CLICK, 128);
 			Game.unpress();
@@ -451,17 +451,9 @@ void KMenu::display_quest_window(void)
  */
 void KMenu::revert_equipstats(void)
 {
-	size_t fighter_index, end_fighter_index;
+	const size_t end_fighter_index = (numchrs > PSIZE) ? PSIZE : numchrs;
 
-	if (numchrs > PSIZE)
-	{
-		end_fighter_index = PSIZE;
-	}
-	else
-	{
-		end_fighter_index = numchrs;
-	}
-	for (fighter_index = 0; fighter_index < end_fighter_index && fighter_index < MAXCHRS; fighter_index++)
+	for (size_t fighter_index = 0; fighter_index < end_fighter_index && fighter_index < MAXCHRS; ++fighter_index)
 	{
 		size_t pidx_index = pidx[fighter_index];
 		party[pidx_index].hp = fighter[fighter_index].hp;
